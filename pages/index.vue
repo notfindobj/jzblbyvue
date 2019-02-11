@@ -30,10 +30,20 @@
                         <li>英式/</li>
                         <li>地中海</li>
                     </ul>
-                    <div class="main-conment-more">查看更多</div>
+                    <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                 </div>
             </div>
-            <Small-Cards/>   
+           
+             <Row>
+                <i-col span="12"> <Big-Cards/> </i-col>
+                <i-col span="12"> 
+                    <Small-Cards/>
+                    <Small-Cards/>
+                    <Small-Cards/>
+                    <Small-Cards/>
+                </i-col>
+            </Row>
+           
         </div>
         <ul>
             <li class="a"><nuxt-link to="/SignIn" >登录</nuxt-link></li>
@@ -149,6 +159,7 @@
             >li {
                 padding: 0 8px 0 0;
                 line-height: 42px;
+                color: #333333;
                 &:first-child{
                     padding-right: 10px;
                     font-size: 30px;
@@ -157,6 +168,10 @@
         }
         &-more {
             line-height: 42px;
+            cursor: pointer;
         }
+    }
+    .jiantou-clolr {
+        color: #FF3C00;
     }
 </style>

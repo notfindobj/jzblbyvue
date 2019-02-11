@@ -1,22 +1,20 @@
 <template>
-    <div>
-        <div class="cards">
-            <div class="cards-top">
-                <img src="http://iph.href.lu/283x194?text=[自定义文字]" alt="" width="283px" height="194px">
-                <div class="cards-eye">
-                    <div>
-                        <i class="iconfont icon-shangchuan"></i>
-                        5245
-                    </div>
-                    <div class="cards-eye-name">
-                        <i class="iconfont icon-shangchuan"></i>
-                        <span>杨小幂</span>
-                    </div>
+    <div class="cards">
+        <div class="cards-top">
+            <img src="http://iph.href.lu/283x194?text=[自定义文字]" alt="" width="283px" height="194px">
+            <div class="cards-eye">
+                <div>
+                    <i class="iconfont icon-shangchuan"></i>
+                    5245
+                </div>
+                <div class="cards-eye-name">
+                    <i class="iconfont icon-shangchuan"></i>
+                    <span>杨小幂</span>
                 </div>
             </div>
-            <div class="cards-foot">
-                广东江门龙溪湖设计建筑游学
-            </div>
+        </div>
+        <div class="cards-foot">
+            广东江门龙溪湖设计建筑游学
         </div>
     </div>
 </template>
@@ -29,7 +27,7 @@ export default {
     },
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
     .cards {
         position: relative;
         display: inline-block;
