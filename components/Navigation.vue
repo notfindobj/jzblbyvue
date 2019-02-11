@@ -56,7 +56,7 @@
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" search enter-button="百度" placeholder="Enter something..." />
+                    <Input style="width:344px;" search enter-button="百度" placeholder="" />
                 </div>
             </div>
             <ul class="main-nav-tab">

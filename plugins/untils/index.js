@@ -16,7 +16,7 @@ import Cards from '../../components/Cards'
 
 const omponents = {
   install: function (Vue) {
-    Vue.component('Cards', Cards)
+    Vue.component('Small-Cards', Cards)
   }
 }
 console.log(omponents)

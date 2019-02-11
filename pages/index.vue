@@ -20,7 +20,20 @@
             <div v-for="(sub, subs) in oneMeun" :key="subs" class="banner-nav-items" v-show="isOneMeun === subs">{{sub.name}}</div>
         </div>
         <div class="main-box">
-            <Cards/>   
+            <div class="main-conment">
+                <div class="main-conment-top">
+                    <ul class="main-conment-sub">
+                        <li>建筑游学</li>
+                        <li>新亚洲/</li>
+                        <li>（新）古典/</li>
+                        <li>现代/</li>
+                        <li>英式/</li>
+                        <li>地中海</li>
+                    </ul>
+                    <div class="main-conment-more">查看更多</div>
+                </div>
+            </div>
+            <Small-Cards/>   
         </div>
         <ul>
             <li class="a"><nuxt-link to="/SignIn" >登录</nuxt-link></li>
@@ -122,5 +135,28 @@
     }
     .nav-atvite {
         background: #FF3C00;
+    }
+    .main-conment {
+        margin-top: 50px;
+        border-top: 1px solid #999999;
+        &-top {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0 8px;
+        }
+        &-sub {
+            display: flex;
+            >li {
+                padding: 0 8px 0 0;
+                line-height: 42px;
+                &:first-child{
+                    padding-right: 10px;
+                    font-size: 30px;
+                }
+            }
+        }
+        &-more {
+            line-height: 42px;
+        }
     }
 </style>

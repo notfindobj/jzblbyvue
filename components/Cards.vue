@@ -2,14 +2,21 @@
     <div>
         <div class="cards">
             <div class="cards-top">
-                <img src="http://iph.href.lu/283x194?text=[自定义文字]" alt="">
+                <img src="http://iph.href.lu/283x194?text=[自定义文字]" alt="" width="283px" height="194px">
                 <div class="cards-eye">
                     <div>
                         <i class="iconfont icon-shangchuan"></i>
+                        5245
+                    </div>
+                    <div class="cards-eye-name">
+                        <i class="iconfont icon-shangchuan"></i>
+                        <span>杨小幂</span>
                     </div>
                 </div>
             </div>
-            <div></div>
+            <div class="cards-foot">
+                广东江门龙溪湖设计建筑游学
+            </div>
         </div>
     </div>
 </template>
@@ -25,15 +32,37 @@ export default {
 <style lang="scss">
     .cards {
         position: relative;
+        display: inline-block;
+        border-radius: 3px;
         &-top {
             position: relative;
             height: 194px;
             display: inline-block;
+            cursor: pointer;
+        }
+        &-foot {
+            padding: 0 6px;
+            line-height: 30px;
+            color: #666666;
         }
         &-eye {
             position: absolute;
+            display: flex;
+            width: 100%;
             bottom: 3px;
-            left: 6px;
+            padding: 0 10px 0 6px;
+            color: #ffffff;
+            justify-content: space-between;
+            > &:hover &-name{
+                background: red;
+                display: block;
+            }
+            &-name {
+                // display: none;
+            }
+        }
+        &:hover {
+            box-shadow: 0 2px 15px #999999;
         }
     }
 </style>
