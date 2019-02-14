@@ -12,8 +12,8 @@ const plugins={
         })
     }
 }
-import Small_Cards from '../../components/Small_Cards'
-import Big_Cards from '../../components/Big_Cards'
+import Small_Cards from '../../components/home/Small_Cards'
+import Big_Cards from '../../components/home/Big_Cards'
 const omponents = {
   install: function (Vue) {
     Vue.component('Small-Cards', Small_Cards)

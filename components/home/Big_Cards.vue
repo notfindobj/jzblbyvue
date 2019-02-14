@@ -14,7 +14,8 @@
             </div>
         </div>
         <div class="cards-foot">
-            广东江门龙溪湖设计建筑游学
+            <div class="cards-foot-title">广东江门龙溪湖公园改造设计</div>
+            <div class="cards-foot-sub">装饰画在酒店的装饰</div>
         </div>
     </div>
 </template>
@@ -30,6 +31,7 @@ export default {
 <style lang="scss" scoped>
     .cards {
         position: relative;
+        margin-top: 5px;
         display: inline-block;
         border-radius: 3px;
         &-top {
@@ -40,8 +42,16 @@ export default {
         }
         &-foot {
             padding: 0 6px;
+            font-size: 14px;
             line-height: 30px;
             color: #666666;
+            &-title {
+                font-size: 20px;
+                padding: 20px 0 10px;
+            }
+            &-sub {
+                padding-bottom: 20px;
+            }
         }
         &-eye {
             position: absolute;

@@ -30,6 +30,7 @@ export default {
 <style lang="scss" scoped>
     .cards {
         position: relative;
+        margin-top: 10px;
         display: inline-block;
         border-radius: 3px;
         &-top {

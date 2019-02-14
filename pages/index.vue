@@ -20,30 +20,185 @@
             <div v-for="(sub, subs) in oneMeun" :key="subs" class="banner-nav-items" v-show="isOneMeun === subs">{{sub.name}}</div>
         </div>
         <div class="main-box">
-            <div class="main-conment">
-                <div class="main-conment-top">
-                    <ul class="main-conment-sub">
-                        <li>建筑游学</li>
-                        <li>新亚洲/</li>
-                        <li>（新）古典/</li>
-                        <li>现代/</li>
-                        <li>英式/</li>
-                        <li>地中海</li>
-                    </ul>
-                    <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+            <!-- 建筑游学 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>建筑游学</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
                 </div>
+                <Row>
+                    <i-col span="12"> <Big-Cards/> </i-col>
+                    <i-col span="12"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                </Row>
             </div>
-           
-             <Row>
-                <i-col span="12"> <Big-Cards/> </i-col>
-                <i-col span="12"> 
-                    <Small-Cards/>
-                    <Small-Cards/>
-                    <Small-Cards/>
-                    <Small-Cards/>
-                </i-col>
-            </Row>
-           
+            <!-- 示范区景观 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>示范区景观</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <!-- <i-col span="12"> <Big-Cards/> </i-col> -->
+                    <i-col span="24"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                </Row>
+            </div>
+            <!-- 楼盘 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>楼盘</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="12"> <Big-Cards/> </i-col>
+                    <i-col span="12"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                </Row>
+            </div>
+            <!-- 效果图 --> 
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>效果图</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="12"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                     <i-col span="12"> <Big-Cards/> </i-col>
+                </Row>
+            </div>
+             <!-- SU模型 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>SU模型</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="12"> <Big-Cards/> </i-col>
+                    <i-col span="12"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                </Row>
+            </div>
+             <!-- 总图 --> 
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>总图</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="12"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                     <i-col span="12"> <Big-Cards/> </i-col>
+                </Row>
+            </div>
+             <!-- 平面 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>平面</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="12"> <Big-Cards/> </i-col>
+                    <i-col span="12"> 
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                </Row>
+            </div>
         </div>
         <ul>
             <li class="a"><nuxt-link to="/SignIn" >登录</nuxt-link></li>
@@ -152,7 +307,7 @@
         &-top {
             display: flex;
             justify-content: space-between;
-            padding: 3px 0 8px;
+            padding: 3px 0;
         }
         &-sub {
             display: flex;
