@@ -37,7 +37,7 @@
                 </div>
                 <Row>
                     <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12"> 
+                    <i-col span="12">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -62,7 +62,7 @@
                 </div>
                 <Row>
                     <!-- <i-col span="12"> <Big-Cards/> </i-col> -->
-                    <i-col span="24"> 
+                    <i-col span="24">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -91,7 +91,7 @@
                 </div>
                 <Row>
                     <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12"> 
+                    <i-col span="12">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -99,7 +99,7 @@
                     </i-col>
                 </Row>
             </div>
-            <!-- 效果图 --> 
+            <!-- 效果图 -->
             <div>
                 <div class="main-conment">
                     <div class="main-conment-top">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12"> 
+                    <i-col span="12">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -141,7 +141,7 @@
                 </div>
                 <Row>
                     <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12"> 
+                    <i-col span="12">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -149,7 +149,7 @@
                     </i-col>
                 </Row>
             </div>
-             <!-- 总图 --> 
+             <!-- 总图 -->
             <div>
                 <div class="main-conment">
                     <div class="main-conment-top">
@@ -165,7 +165,7 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12"> 
+                    <i-col span="12">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -191,7 +191,7 @@
                 </div>
                 <Row>
                     <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12"> 
+                    <i-col span="12">
                         <Small-Cards/>
                         <Small-Cards/>
                         <Small-Cards/>
@@ -201,66 +201,75 @@
             </div>
         </div>
         <ul>
-            <li class="a"><nuxt-link to="/SignIn" >登录</nuxt-link></li>
+            <li class="a" @click="showLogin">登录</li>
             <li><nuxt-link to="/About">关于我们</nuxt-link></li>
         </ul>
+      <sign-in-and-out v-if="showSign"></sign-in-and-out>
     </div>
 </template>
 <script>
-    export default {
-        data () {
-            return {
-                banners: [
-                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
-                    ],
-                swiperOption: {
-                    loop: true,
-                    autoplay:true,
-                    slidesPerView: 'auto',
-                    centeredSlides: true,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        dynamicBullets: true
-                    },
-                    on: {
-                        slideChange() {
-                            // console.log('onSlideChangeEnd', this);
-                        },
-                        tap() {
-                            // console.log('onTap', this);
-                        }
-                    }
-                
-                },
-                isOneMeun: null,
-                // 一级菜单
-                oneMeun: [
-                    {icon: 'icon-erweima', name: '示范区'},
-                    {icon: 'icon-erweima', name: '楼盘'},
-                    {icon: 'icon-erweima', name: '效果图'},
-                    {icon: 'icon-erweima', name: 'su模型'},
-                    {icon: 'icon-erweima', name: '总图'},
-                    {icon: 'icon-erweima', name: '平面'},
-                    {icon: 'icon-erweima', name: '建筑部落'},
-                    {icon: 'icon-erweima', name: '室内设计'},
-                    {icon: 'icon-erweima', name: '文本'},
-                ]
-            }
-        },
-        asyncData () {},
-        beforeCreate () {},
-        created () {},
-        methods: {
-            enter (index) {
-              this.isOneMeun = index  
-            },
-            leave () {
+  import SignInAndOut from '../components/SignInAndOut'
+  export default {
+      data () {
+          return {
+              banners: [
+                  'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                  'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                  'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
+                  ],
+              swiperOption: {
+                  loop: true,
+                  autoplay:true,
+                  slidesPerView: 'auto',
+                  centeredSlides: true,
+                  pagination: {
+                      el: '.swiper-pagination',
+                      dynamicBullets: true
+                  },
+                  on: {
+                      slideChange() {
+                          // console.log('onSlideChangeEnd', this);
+                      },
+                      tap() {
+                          // console.log('onTap', this);
+                      }
+                  }
 
-            }
-        }
-    }
+              },
+              isOneMeun: null,
+              // 一级菜单
+              oneMeun: [
+                  {icon: 'icon-erweima', name: '示范区'},
+                  {icon: 'icon-erweima', name: '楼盘'},
+                  {icon: 'icon-erweima', name: '效果图'},
+                  {icon: 'icon-erweima', name: 'su模型'},
+                  {icon: 'icon-erweima', name: '总图'},
+                  {icon: 'icon-erweima', name: '平面'},
+                  {icon: 'icon-erweima', name: '建筑部落'},
+                  {icon: 'icon-erweima', name: '室内设计'},
+                  {icon: 'icon-erweima', name: '文本'},
+              ],
+            showSign:false
+          }
+      },
+      components: {
+        SignInAndOut
+      },
+      asyncData () {},
+      beforeCreate () {},
+      created () {},
+      methods: {
+          enter (index) {
+            this.isOneMeun = index
+          },
+          leave () {
+
+          },
+          showLogin() {
+            this.showSign = true
+          }
+      }
+  }
 </script>
 <style lang="scss" scope>
     .banner-box {
@@ -273,7 +282,7 @@
     }
     .banner-nav {
         position: absolute;
-        z-index: 999;
+        z-index: 9;
         font-size: 14px;
         top: 0px;
         color: #ffffff;
@@ -290,7 +299,7 @@
         }
     }
     .banner-nav-items {
-        z-index: 999;
+        z-index: 9;
         position: absolute;
         width: 595px;
         min-height: 260px;
