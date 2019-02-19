@@ -19,7 +19,7 @@
         <i></i>
         <i></i>
       </div>
-    </div>
+    </div> 
     <!----------------------------------------注册----------------------------------------------->
     <div class="default-box registered-box"  v-if="isRegistered">
       <i class="close-icon">X</i>

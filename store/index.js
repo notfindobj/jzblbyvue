@@ -2,14 +2,19 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 
 Vue.use(Vuex)
-const store = () => new Vuex.Store({
-  state: {
-    counter: 0
-  },
-  mutations: {
-    increment (state) {
-      state.counter++
-    }
-  },
+export const state = () => ({
+  token:null,
 })
-export default store
+export const getters = {
+  getToken(state){
+    return state.token
+  },
+}
+export const mutations = {
+  setToken(state, token) {
+    state.token = token
+  },
+}
+export const actions = {
+    //TODO ajax here
+}
