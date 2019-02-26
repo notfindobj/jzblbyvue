@@ -2,15 +2,23 @@
   <div class="sign-mask">
     <!----------------------------------------登录----------------------------------------------->
     <div class="sign-box default-box" v-if="isSignIn">
-      <i class="close-icon">X</i>
+      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">用户登录</h4>
-      <input class="sign-input" type="text" placeholder="请输入手机号码">
-      <input class="sign-input" type="password" placeholder="请输入密码">
-      <div class="btn mb15 desabled-btn">登录</div>
+      <Form  ref="formInline" :rules="ruleInline" :model="userItem" :label-width="0">
+        <FormItem  prop="userName">
+          <input v-model="userItem.userName" class="sign-input" type="text" placeholder="请输入手机号码">
+        </FormItem>
+        <FormItem   prop="passWord">
+          <input  v-model="userItem.passWord" class="sign-input" type="password" placeholder="请输入密码">
+        </FormItem>
+        <FormItem>
+          <button type="button" class="btn mb15 desabled-btn" @click="handleSubmit('formInline')">登录</button>
+        </FormItem>
+      </Form>
       <div class="sign-some">
         <p>
           <span>没有账户，</span>
-          <span>免费注册</span>
+          <span @click="goToRegister">免费注册</span>
         </p>
         <p>忘记密码？</p>
       </div>
@@ -22,27 +30,39 @@
     </div>
     <!----------------------------------------注册----------------------------------------------->
     <div class="default-box registered-box"  v-if="isRegistered">
-      <i class="close-icon">X</i>
+      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">注册</h4>
-      <input class="sign-input" type="text" placeholder="请输入手机号码">
-      <div class="validation-box">
-        <input class="sign-input" type="text" placeholder="请输入验证码">
-        <div class="get-validation">获取验证码</div>
-      </div>
-      <input class="sign-input" type="password" placeholder="请设置密码">
-      <input class="sign-input mb15" type="password" placeholder="再次输入密码">
-      <div class="agreement-look"><input class="agreed" type="checkbox"/>我已同意并阅读用户协议</div>
-      <div class="btn mb15 desabled-btn">注册</div>
+      <Form :model="registeredItem" :label-width="0">
+        <FormItem>
+          <input class="sign-input" type="text" placeholder="请输入手机号码">
+        </FormItem>
+        <div class="validation-box">
+          <input class="sign-input" type="text" placeholder="请输入验证码">
+          <div class="get-validation">获取验证码</div>
+        </div>
+        <FormItem>
+          <input class="sign-input" type="password" placeholder="请设置密码">
+        </FormItem>
+        <FormItem>
+          <input class="sign-input mb15" type="password" placeholder="再次输入密码">
+        </FormItem>
+        <FormItem>
+          <div class="agreement-look"><input class="agreed" type="checkbox"/>我已同意并阅读用户协议</div>
+        </FormItem>
+        <FormItem>
+          <button class="btn mb15 desabled-btn" type="button">注册</button>
+        </FormItem>
+      </Form>
       <div class="registered-some">
         <p>
           <span>已有账号，</span>
-          <span>马上登录</span>
+          <span @click="goToSignIn">马上登录</span>
         </p>
       </div>
     </div>
     <!----------------------------------------注册成功----------------------------------------------->
     <div class="default-box registered-true-box"  v-if="isRegisteredTrue">
-      <i class="close-icon">X</i>
+      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">注册成功</h4>
       <div class="registered-true-con">
         <div class="registered-true-img"></div>
@@ -52,7 +72,7 @@
     </div>
     <!----------------------------------------忘记密码----------------------------------------------->
     <div class="default-box forget-password-box"  v-if="isForgetPassword">
-      <i class="close-icon">X</i>
+      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">忘记密码</h4>
       <input class="sign-input" type="text" placeholder="请输入手机号码">
       <div class="validation-box">
@@ -63,7 +83,7 @@
     </div>
     <!----------------------------------------重设密码----------------------------------------------->
     <div class="default-box registered-box"  v-if="isResetPassword">
-      <i class="close-icon">X</i>
+      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">重设密码</h4>
       <input class="sign-input" type="text" placeholder="请输入8-20位数字与字母">
       <input class="sign-input" type="password" placeholder="确认密码">
@@ -71,7 +91,7 @@
     </div>
     <!----------------------------------------重设密码成功----------------------------------------------->
     <div class="default-box registered-true-box"  v-if="isResetPassworTrue">
-      <i class="close-icon">X</i>
+      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">重设密码成功</h4>
       <div class="registered-true-con">
         <div class="registered-true-img"></div>
@@ -87,12 +107,28 @@
     name: 'SignInAndOut',
     data() {
       return {
-        isSignIn:false,
+        isSignIn:true,
         isRegistered:false,
         isRegisteredTrue:false,
         isResetPassworTrue:false,
-        isForgetPassword:true,
-        isResetPassword:false
+        isForgetPassword:false,
+        isResetPassword:false,
+        userItem:{
+          userName:'',
+          passWord:''
+        },
+        ruleInline: {
+          userName: [
+            { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+          ],
+          passWord: [
+            { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+            { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
+          ]
+        },
+        registeredItem:{
+
+        }
       }
     },
     components: {
@@ -100,6 +136,27 @@
     mounted() {
     },
     methods: {
+      //登录
+      handleSubmit(name) {
+        this.$refs[name].validate((valid) => {
+          if (valid) {
+//            this.$Message.success('Success!');
+            this.isSignIn = !this.isSignIn;
+          } else {
+            this.$Message.error('Fail!');
+          }
+        })
+      },
+      //注册
+      goToRegister () {
+        this.isSignIn = !this.isSignIn;
+        this.isRegistered = !this.isRegistered;
+      },
+      //注册中的登录
+      goToSignIn () {
+        this.isSignIn = !this.isSignIn;
+        this.isRegistered = !this.isRegistered;
+      },
       nextStep () {
         this.isResetPassword = true;
         this.isForgetPassword = false;
@@ -155,7 +212,7 @@
         box-sizing: border-box;
         border: 1px solid #CCCCCC;
         border-radius: 3px;
-        margin-bottom: 30px;
+        /*margin-bottom: 30px;*/
       }
       .mb15{
         margin-bottom: 15px;
@@ -331,4 +388,8 @@
   .mb15{
     margin-bottom: 15px;
   }
+  .ivu-form-item{
+    margin-bottom: 30px;
+  }
+
 </style>
