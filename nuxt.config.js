@@ -36,8 +36,8 @@ module.exports = {
   ],
   axios: {
     debug: process.env._ENV == "production" ? false : true,
-    //设置不同环境的请求地址
-    baseURL: process.env._ENV == "production" ? "http://localhost:3000/api" : "http://localhost:3000/api",
+    //设置不同环境的请求地址 
+    baseURL: process.env._ENV == "production" ? "http://www.jzbl.com:8066/api/" : "http://www.jzbl.com/api/",
     withCredentials: true,
   },
   // 解决跨域
@@ -49,8 +49,8 @@ module.exports = {
       [
         '/api', 
         { 
-          target: 'https://www.apiopen.top/', // api主机
-          pathRewrite: { '^/api' : '/' }
+          target: 'http://www.jzbl.com:8066/api/', // api主机
+          pathRewrite: { '^/api' : '/api' }
         }
     ]
   ],

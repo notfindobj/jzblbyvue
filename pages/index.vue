@@ -255,19 +255,26 @@
       components: {
         SignInAndOut
       },
-      asyncData () {},
+      async asyncData (conment) {
+          let data = await conment.app.$axios('apiMenu/GetType').then(res => {console.log('>>>>>>>', res)})
+      },
       beforeCreate () {},
-      created () {},
+      created () {
+          this.getData()
+      },
       methods: {
-          enter (index) {
-            this.isOneMeun = index
-          },
-          leave () {
+            enter (index) {
+                this.isOneMeun = index
+            },
+            leave () {
 
-          },
-          showLogin() {
-            this.showSign = true
-          }
+            },
+            showLogin() {
+                this.showSign = true
+            },
+            getData () {
+                this.$axios('Menu/GetAll').then(res => {console.log('>>>>>>>', res)})
+            }
       }
   }
 </script>

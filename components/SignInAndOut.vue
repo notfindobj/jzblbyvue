@@ -27,7 +27,7 @@
         <i></i>
         <i></i>
       </div>
-    </div>
+    </div> 
     <!----------------------------------------注册----------------------------------------------->
     <div class="default-box registered-box"  v-if="isRegistered">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
