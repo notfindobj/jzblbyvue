@@ -5,14 +5,14 @@
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">用户登录</h4>
       <Form  ref="formInline" :rules="ruleInline" :model="userItem" :label-width="0">
-        <FormItem  prop="userName">
-          <input v-model="userItem.userName" class="sign-input" type="text" placeholder="请输入手机号码">
+        <FormItem prop="userName">
+          <Input v-model="userItem.userName" size="large"  class="asd" type="text" placeholder="请输入手机号码"/>
         </FormItem>
-        <FormItem   prop="passWord">
-          <input  v-model="userItem.passWord" class="sign-input" type="password" placeholder="请输入密码">
+        <FormItem prop="passWord">
+          <Input v-model="userItem.passWord" size="large"  type="password" placeholder="请输入密码"/>
         </FormItem>
         <FormItem>
-          <button type="button" class="btn mb15 desabled-btn" @click="handleSubmit('formInline')">登录</button>
+          <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit('formInline')">登录</Button>
         </FormItem>
       </Form>
       <div class="sign-some">
@@ -61,7 +61,7 @@
       </div>
     </div>
     <!----------------------------------------注册成功----------------------------------------------->
-    <div class="default-box registered-true-box"  v-if="isRegisteredTrue">
+    <!-- <div class="default-box registered-true-box"  v-if="isRegisteredTrue">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">注册成功</h4>
       <div class="registered-true-con">
@@ -69,9 +69,9 @@
       </div>
       <p class="registered-true-tip">请妥善保存您的密码！</p>
       <div class="btn mb15">马上登录</div>
-    </div>
+    </div> -->
     <!----------------------------------------忘记密码----------------------------------------------->
-    <div class="default-box forget-password-box"  v-if="isForgetPassword">
+    <!-- <div class="default-box forget-password-box"  v-if="isForgetPassword">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">忘记密码</h4>
       <input class="sign-input" type="text" placeholder="请输入手机号码">
@@ -80,17 +80,17 @@
         <div class="get-validation">获取验证码</div>
       </div>
       <div class="btn mb15 desabled-btn" @click="nextStep">下一步</div>
-    </div>
+    </div> -->
     <!----------------------------------------重设密码----------------------------------------------->
-    <div class="default-box registered-box"  v-if="isResetPassword">
+    <!-- <div class="default-box registered-box"  v-if="isResetPassword">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">重设密码</h4>
       <input class="sign-input" type="text" placeholder="请输入8-20位数字与字母">
       <input class="sign-input" type="password" placeholder="确认密码">
       <div class="btn mb15 desabled-btn" @click="resetPassworTrue">下一步</div>
-    </div>
+    </div> -->
     <!----------------------------------------重设密码成功----------------------------------------------->
-    <div class="default-box registered-true-box"  v-if="isResetPassworTrue">
+    <!-- <div class="default-box registered-true-box"  v-if="isResetPassworTrue">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">重设密码成功</h4>
       <div class="registered-true-con">
@@ -98,7 +98,7 @@
       </div>
       <p class="registered-true-tip">请妥善保存您的密码！</p>
       <div class="btn mb15">马上登录</div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -168,7 +168,7 @@
     },
   }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
   .sign-mask{
     width: 100%;
     height: 100%;
@@ -229,6 +229,8 @@
       }
       .desabled-btn{
         opacity: 0.3;
+        width: 100%;
+        height: 40px;
         background: #FF3C00;
       }
     }

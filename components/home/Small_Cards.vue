@@ -27,7 +27,7 @@ export default {
     },
 }
 </script>
-<style lang="scss" scoped>
+<style lang="less" scoped>
     .cards {
         position: relative;
         margin-top: 10px;

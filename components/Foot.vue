@@ -58,7 +58,7 @@ export default {
     },
 }
 </script>
-<style lang="scss" scope>
+<style lang="less" scope>
     .foot {
         background: #E8E8E8;
         &-top {

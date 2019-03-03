@@ -22,28 +22,23 @@ module.exports = {
   ],
   // 公共CSS
   css: [
-    'iview/dist/styles/iview.css',
     '~assets/font-face/iconfont.css',
     'swiper/dist/css/swiper.css',
-    {src:'@/assets/commom.scss',lang: 'scss'}
+    {src:'@/assets/commom.less',lang: 'less'}
   ],
   // 插件
   plugins: [
-    { src: '~plugins/iview', ssr: true },
+    { src: '~plugins/my-theme/index', ssr: true },
     { src: "~plugins/vue-swiper.js", ssr: false },
     { src: '~/plugins/axios', ssr: true },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
+  // 解决跨域
   axios: {
     debug: process.env._ENV == "production" ? false : true,
     //设置不同环境的请求地址 
     baseURL: process.env._ENV == "production" ? "http://www.jzbl.com:8066/api/" : "http://www.jzbl.com/api/",
     withCredentials: true,
-  },
-  // 解决跨域
-  axios: {
-      prefix: '/api/',
-      proxy: true // Can be also an object with default options
   },
   proxy:  [
       [
@@ -86,13 +81,14 @@ module.exports = {
           loader: 'eslint-loader',
           exclude: /(node_modules)/
         })
+        config.resolve.extensions.push('.less')
       }
       vendor:['iview']   //防止iview被打包多次
     },
     loaders:[
       {
-        test:/\.scss$/,
-        loader: ExtractTextPlugin.extract("style", 'css!sass')
+        test:/\.less$/,
+        loader: ExtractTextPlugin.extract("style", 'css!less')
       },
       {
         test:/\.(png|jpe?g|gif|svg)$/,

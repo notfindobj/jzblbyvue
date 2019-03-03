@@ -13,7 +13,7 @@
                     </li>
                 </ul>
                  <ul class="home-bar-content-right">
-                    <li>梅赛德斯·赵四</li>
+                    <li @click="SignIn">登录</li>
                     <li class="content">在线地图</li>
                     <li> 
                         <Dropdown placement="bottom-start">
@@ -37,7 +37,7 @@
                         <img :src="loginIng" alt="">
                     </div>
                     <div class="main-content-left-search">
-                        <Input v-model="value11" style="width:450px;" >
+                        <Input v-model="value11" style="width:450px;" size="large">
                          <Dropdown slot="prepend" style="margin-left: 10px">
                             <a href="javascript:void(0)">
                                 菜单(居中)
@@ -51,12 +51,13 @@
                                 <DropdownItem>北京烤鸭</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
-                            <a href="javascript:void(0)" slot="append">搜索</a>
+                            <Button type="primary" slot="append" class="btn-bg" size="large">搜索</Button>
+                            <!-- <a href="javascript:void(0)" >搜索</a> -->
                         </Input>
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" search enter-button="百度" placeholder="" />
+                    <Input style="width:344px;" size="large" search enter-button="百度" placeholder="" />
                 </div>
             </div>
             <ul class="main-nav-tab">
@@ -83,9 +84,18 @@ export default {
             loginIng: require('../assets/images/top_logo.png')
         }
     },
+    methods: {
+        SignIn () {
+            this.$store.commit('SETSIGNIN',  true)
+        }
+    }
 }
 </script>
-<style lang="scss" scope>
+<style lang="less" scoped>
+    .btn-bg {
+        background-color: #FF3C00 !important;
+        color: #ffffff !important;
+    }
     .ad {
         height: 60px;
         background: #bbbbbb;
