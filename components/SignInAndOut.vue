@@ -27,30 +27,32 @@
         <i></i>
         <i></i>
       </div>
-    </div> 
+    </div>
     <!----------------------------------------注册----------------------------------------------->
     <div class="default-box registered-box"  v-if="isRegistered">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">注册</h4>
       <Form :model="registeredItem" :label-width="0">
         <FormItem>
-          <input class="sign-input" type="text" placeholder="请输入手机号码">
-        </FormItem>
-        <div class="validation-box">
-          <input class="sign-input" type="text" placeholder="请输入验证码">
-          <div class="get-validation">获取验证码</div>
-        </div>
-        <FormItem>
-          <input class="sign-input" type="password" placeholder="请设置密码">
+          <Input v-model="registeredItem.userName" size="large"  type="password" placeholder="请输入手机号码"/>
         </FormItem>
         <FormItem>
-          <input class="sign-input mb15" type="password" placeholder="再次输入密码">
+          <Input search  size="large" enter-button="获取验证码" placeholder="请输入验证码" />
         </FormItem>
         <FormItem>
-          <div class="agreement-look"><input class="agreed" type="checkbox"/>我已同意并阅读用户协议</div>
+          <Input v-model="registeredItem.password" size="large"  type="password" placeholder="请设置密码"/>
         </FormItem>
         <FormItem>
-          <button class="btn mb15 desabled-btn" type="button">注册</button>
+          <!--<input class="sign-input mb15" type="password" placeholder="再次输入密码">-->
+          <Input v-model="registeredItem.passWordAgain" size="large"  type="password" placeholder="再次输入密码"/>
+        </FormItem>
+        <FormItem>
+          <Checkbox v-model="registeredItem.single">我已同意并阅读用户协议</Checkbox>
+          <!--<div class="agreement-look"><input class="agreed" type="checkbox"/>我已同意并阅读用户协议</div>-->
+        </FormItem>
+        <FormItem>
+          <!--<button class="btn mb15 desabled-btn" type="button">注册</button>-->
+          <Button type="primary" size="large" class="desabled-btn">注册</Button>
         </FormItem>
       </Form>
       <div class="registered-some">
@@ -127,7 +129,10 @@
           ]
         },
         registeredItem:{
-
+          userName:'',
+          password:'',
+          passWordAgain:'',
+          single:false
         }
       }
     },
