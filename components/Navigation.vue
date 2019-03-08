@@ -95,6 +95,8 @@ export default {
     .btn-bg {
         background-color: #FF3C00 !important;
         color: #ffffff !important;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
     }
     .ad {
         height: 60px;

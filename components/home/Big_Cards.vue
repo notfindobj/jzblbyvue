@@ -40,6 +40,9 @@ export default {
             display: inline-block;
             cursor: pointer;
         }
+        &-top:hover .cards-eye-name{
+            display: block;
+        }
         &-foot {
             padding: 0 6px;
             font-size: 14px;
@@ -55,18 +58,15 @@ export default {
         }
         &-eye {
             position: absolute;
+            display: none;
             display: flex;
             width: 100%;
             bottom: 3px;
             padding: 0 10px 0 6px;
             color: #ffffff;
             justify-content: space-between;
-            > &:hover &-name{
-                background: red;
-                display: block;
-            }
             &-name {
-                // display: none;
+                display: none
             }
         }
         &:hover {

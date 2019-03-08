@@ -39,6 +39,9 @@ export default {
             display: inline-block;
             cursor: pointer;
         }
+        &-top:hover .cards-eye-name{
+            display: block;
+        }
         &-foot {
             padding: 0 6px;
             line-height: 30px;
@@ -52,12 +55,8 @@ export default {
             padding: 0 10px 0 6px;
             color: #ffffff;
             justify-content: space-between;
-            > &:hover &-name{
-                background: red;
-                display: block;
-            }
             &-name {
-                // display: none;
+                display: none;
             }
         }
         &:hover {
