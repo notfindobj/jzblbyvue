@@ -10,14 +10,7 @@
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
-            <ul class="banner-nav" >
-                <!-- nav-atvite -->
-                <li class="" v-for="(items, index) in oneMeun" @mouseenter="enter(index)" @mouseleave="leave" :key="index">
-                   <i :class="`iconfont ${items.icon}`"></i>
-                    <span>{{items.name}}</span>
-                </li>
-            </ul>
-            <div v-for="(sub, subs) in oneMeun" :key="subs" class="banner-nav-items" v-show="isOneMeun === subs">{{sub.name}}</div>
+            <LevelMenu class="banner-nav"></LevelMenu>
         </div>
         <div class="main-box">
             <!-- 建筑游学 -->
@@ -199,6 +192,88 @@
                     </i-col>
                 </Row>
             </div>
+            <!-- 文本 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>文本</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <Col span="8" v-for="i in 3" :key="i">
+                        <div class="text-box">
+                            <div class="text-box-img">
+                                <img src="../assets/images/smail.png" alt="">
+                            </div>
+                            <div class="text-box-content">
+                                <div class="text-box-content-had">
+                                    <span class="text-box-content-had-img"></span>
+                                </div>
+                                <div class="text-box-content-name">包贝尔</div>
+                                <div class="text-box-content-sub-cpntent">
+                                    项目是日本服装品牌 Christian Dada 在台北的旗舰店，也是该品牌在海外的第二家专卖
+                                    项目是日本服装品牌 Christian Dada 在台北的旗舰店，也是该品牌在海外的第二家专卖店…
+                                </div>
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            </div>
+            <!-- 优秀设计师 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>优秀设计师</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="24">
+                        <div id="excellent">
+                            <div v-swiper:mySwipers="excellent">
+                                <div class="swiper-wrapper excellent">
+                                    <div class="swiper-slide excellent-slide" v-for="(banner, index) in banners" :key="index">
+                                        <div class="excellent-slide-title">
+                                            <img src="../assets/images/smail.png" alt="">
+                                        </div>
+                                        <div class="excellent-slide-content">
+                                            <div class="excellent-slide-content-name">张小杰</div>
+                                            <div class="excellent-slide-content-subdel">一个有态度的设计师，给你精彩</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="swiper-pagination swiper-pagination-bullets"></div>
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
+                        </div>
+                    </i-col>
+                </Row> 
+            </div>
+            <!-- 优秀品牌商 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>优秀品牌商</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <div>
+                    <div v-for="i in 12" :key="'2'+i " class="matrix">
+                        <div class="matrix-img">
+                            <img src="../assets/images/matrix.png" alt="">
+                        </div>
+                        <div class="matrix-text">matrix</div>
+                    </div>
+                </div>
+            </div>
         </div>
         <ul>
             <!-- <li class="a" @click="showLogin">登录</li> -->
@@ -209,14 +284,18 @@
 </template>
 <script>
   import SignInAndOut from '../components/SignInAndOut.vue'
+  import LevelMenu from '../components/home/LevelMenu.vue'
   import {mapState} from 'vuex'
   export default {
         data () {
             return {
                 banners: [
-                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
+                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
                     ],
                 swiperOption: {
                     loop: true,
@@ -235,12 +314,25 @@
                             // console.log('onTap', this);
                         }
                     }
-
+                },
+                excellent: {
+                    slidesPerView : 4,
+                    slidesPerGroup : 1,
+                    pagination: {
+                        // el: '.swiper-pagination',
+                        dynamicBullets: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
                 },
                 isOneMeun: null,
                 // 一级菜单
                 oneMeun: [
-                    {icon: 'icon-erweima', name: '示范区'},
+                    {icon: 'icon-erweima', name: '示范区',
+                        children: {}
+                    },
                     {icon: 'icon-erweima', name: '楼盘'},
                     {icon: 'icon-erweima', name: '效果图'},
                     {icon: 'icon-erweima', name: 'su模型'},
@@ -254,7 +346,8 @@
             }
         },
         components: {
-            'SignInAndOut': SignInAndOut
+            SignInAndOut,
+            LevelMenu
         },
         computed: {
             ...mapState([
@@ -264,7 +357,6 @@
         watch: {
             'SignIn': function(data, datas) {
                 console.log(this.showSign = data)
-                // console.log('>>>>>>', data,  datas)
             }
         },
     //   async asyncData (conment) {
@@ -279,7 +371,7 @@
                 this.isOneMeun = index
             },
             leave () {
-
+               
             },
             SignIns(data) {
                 this.showSign = true
@@ -290,7 +382,13 @@
       }
   }
 </script>
-<style lang="less" scope>
+<style lang="less">
+    .ivu-col-span-12 {
+        text-align: center;
+    }
+    .ivu-col-span-8 {
+        text-align: center;
+    }
     .banner-box {
         position: relative;
         width: 1200px;
@@ -298,33 +396,6 @@
     }
     .swiper-box {
         height: 374px;
-    }
-    .banner-nav {
-        position: absolute;
-        z-index: 9;
-        font-size: 14px;
-        top: 0px;
-        color: #ffffff;
-        background: rgba(0,0,0, .6);
-        height: 100%;
-        > li {
-            width: 142.56px;
-            line-height: 40px;
-            padding-left: 20px;
-            cursor: pointer;
-        }
-        li:first-child {
-            margin-top: 4px;
-        }
-    }
-    .banner-nav-items {
-        z-index: 9;
-        position: absolute;
-        width: 595px;
-        min-height: 260px;
-        top: 4px;
-        left: 142.56px;
-        background: #ffffff;
     }
     .nav-atvite {
         background: #FF3C00;
@@ -356,5 +427,133 @@
     }
     .jiantou-clolr {
         color: #FF3C00;
+    }
+    .text-box {
+        width: 384px;
+        display: inline-block;
+        height: 394px;
+        &-img {
+            height: 266px;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        &-content {
+            width: 100%;
+            height: 128px;
+            &-had {
+                position: relative;
+                height: 35px;
+                &-img {
+                    display: inline-block;
+                    position: absolute;
+                    left: 50%;
+                    top: -30px;
+                    transform: translateX(-50%);
+                    width: 60px;
+                    height: 60px;
+                    border-radius: 50%;
+                    background: #FF0;
+                }
+                // height: 60px;
+            }
+            &-name {
+                text-align: center;
+                font-size: 18px;
+                color: #333333;
+            }
+            &-sub-cpntent {
+                padding: 5px 15px;
+                font-size: 14px;
+                color: #666666;
+                height: 45px;
+                overflow:hidden; //超出的文本隐藏
+                text-overflow:ellipsis; //溢出用省略号显示
+                line-clamp: 2;
+            }
+        }
+        &:hover {
+            box-shadow: 0 2px 15px #999999;
+        }
+    }
+    .excellent-slide {
+        width: 282px;
+        height: 383px;
+        text-align: center;
+        &-title {
+            width: 282px;
+            height: 300px;
+            display: inline-block;
+            > img {
+                width: 100%;
+                height: 300px;
+            }
+        }
+        &-content {
+            text-align: left;
+            padding: 10px 15px;
+            line-height: 30px;
+            &-name {
+                font-size: 18px;
+                color: #333333;
+            }
+            &-subdel {
+                font-size: 14px;
+                color: #666666;
+            }
+        }
+        &:hover {
+            box-shadow: 0 2px 15px #999999;
+        }
+    }
+    // 
+    #excellent .swiper-button-prev{
+        top: 145px;
+        background:url(../assets/images/left.png) center center no-repeat;
+        background-size: 48px 141px;
+    }
+    #excellent .swiper-button-next{
+        top: 145px;
+        background:url(../assets/images/right.png) center center no-repeat;
+        background-size: 48px 141px;
+    }
+    .matrix {
+        width: 191px;
+        height: 70px;
+        margin-top: 10px;
+        display: inline-block;
+        line-height: 70px;
+        text-align: center;
+        font-size: 24px;
+        color: #FF3C00;
+        letter-spacing: 0.8px;
+        margin-right: 10px;
+        cursor: pointer;
+        text-align: center;
+        &:nth-child(6n) {
+            margin-right: 0;
+        }
+        .matrix-img {
+            width: 191px;
+            height: 70px;
+            display: inline-block;
+            > img {
+                vertical-align: middle;
+            }
+        }
+        .matrix-text {
+            box-sizing: content-box;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #FF3C00;
+            display: none;
+        }
+        &:hover .matrix-img{
+            display: none;
+        }
+        &:hover .matrix-text{
+            display: inline-block;
+        }
     }
 </style>

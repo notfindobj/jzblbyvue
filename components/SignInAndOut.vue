@@ -2,7 +2,7 @@
   <div class="sign-mask">
     <!----------------------------------------登录----------------------------------------------->
     <div class="sign-box default-box" v-if="isSignIn">
-      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
+      <Icon type="ios-close"  class="close-icon" size="25" @click="SignIn"></Icon>
       <h4 class="sign-in-title">用户登录</h4>
       <Form  ref="formInline" :rules="ruleInline" :model="userItem" :label-width="0">
         <FormItem prop="userName">
@@ -18,9 +18,9 @@
       <div class="sign-some">
         <p>
           <span>没有账户，</span>
-          <span @click="goToRegister">免费注册</span>
+          <span @click="goToRegister" style="cursor: pointer;">免费注册</span>
         </p>
-        <p>忘记密码？</p>
+        <p >忘记密码？</p>
       </div>
       <div class="third-party">第三方登录</div>
       <div class="third-party-iocn">
@@ -30,7 +30,7 @@
     </div>
     <!----------------------------------------注册----------------------------------------------->
     <div class="default-box registered-box"  v-if="isRegistered">
-      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
+      <Icon type="ios-close"  class="close-icon" size="25" @click="SignIn"></Icon>
       <h4 class="sign-in-title">注册</h4>
       <Form :model="registeredItem" :label-width="0">
         <FormItem>
@@ -43,27 +43,24 @@
           <Input v-model="registeredItem.password" size="large"  type="password" placeholder="请设置密码"/>
         </FormItem>
         <FormItem>
-          <!--<input class="sign-input mb15" type="password" placeholder="再次输入密码">-->
           <Input v-model="registeredItem.passWordAgain" size="large"  type="password" placeholder="再次输入密码"/>
         </FormItem>
         <FormItem>
           <Checkbox v-model="registeredItem.single">我已同意并阅读用户协议</Checkbox>
-          <!--<div class="agreement-look"><input class="agreed" type="checkbox"/>我已同意并阅读用户协议</div>-->
         </FormItem>
         <FormItem>
-          <!--<button class="btn mb15 desabled-btn" type="button">注册</button>-->
           <Button type="primary" size="large" class="desabled-btn">注册</Button>
         </FormItem>
       </Form>
       <div class="registered-some">
         <p>
           <span>已有账号，</span>
-          <span @click="goToSignIn">马上登录</span>
+          <span @click="goToSignIn" style="cursor: pointer;">马上登录</span>
         </p>
       </div>
     </div>
     <!----------------------------------------注册成功----------------------------------------------->
-    <!-- <div class="default-box registered-true-box"  v-if="isRegisteredTrue">
+    <div class="default-box registered-true-box"  v-if="isRegisteredTrue">
       <Icon type="ios-close"  class="close-icon" size="25"></Icon>
       <h4 class="sign-in-title">注册成功</h4>
       <div class="registered-true-con">
@@ -71,10 +68,10 @@
       </div>
       <p class="registered-true-tip">请妥善保存您的密码！</p>
       <div class="btn mb15">马上登录</div>
-    </div> -->
+    </div>
     <!----------------------------------------忘记密码----------------------------------------------->
-    <!-- <div class="default-box forget-password-box"  v-if="isForgetPassword">
-      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
+    <div class="default-box forget-password-box"  v-if="isForgetPassword">
+      <Icon type="ios-close"  class="close-icon" size="25" @click="SignIn"></Icon>
       <h4 class="sign-in-title">忘记密码</h4>
       <input class="sign-input" type="text" placeholder="请输入手机号码">
       <div class="validation-box">
@@ -82,25 +79,25 @@
         <div class="get-validation">获取验证码</div>
       </div>
       <div class="btn mb15 desabled-btn" @click="nextStep">下一步</div>
-    </div> -->
+    </div>
     <!----------------------------------------重设密码----------------------------------------------->
-    <!-- <div class="default-box registered-box"  v-if="isResetPassword">
-      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
+    <div class="default-box registered-box"  v-if="isResetPassword">
+      <Icon type="ios-close"  class="close-icon" size="25" @click="SignIn"></Icon>
       <h4 class="sign-in-title">重设密码</h4>
       <input class="sign-input" type="text" placeholder="请输入8-20位数字与字母">
       <input class="sign-input" type="password" placeholder="确认密码">
       <div class="btn mb15 desabled-btn" @click="resetPassworTrue">下一步</div>
-    </div> -->
+    </div>
     <!----------------------------------------重设密码成功----------------------------------------------->
-    <!-- <div class="default-box registered-true-box"  v-if="isResetPassworTrue">
-      <Icon type="ios-close"  class="close-icon" size="25"></Icon>
+    <div class="default-box registered-true-box"  v-if="isResetPassworTrue">
+      <Icon type="ios-close"  class="close-icon" size="25" @click="SignIn"></Icon>
       <h4 class="sign-in-title">重设密码成功</h4>
       <div class="registered-true-con">
         <div class="registered-true-img"></div>
       </div>
       <p class="registered-true-tip">请妥善保存您的密码！</p>
       <div class="btn mb15">马上登录</div>
-    </div> -->
+    </div>
   </div>
 </template>
 
@@ -169,6 +166,10 @@
       resetPassworTrue () {
         this.isResetPassworTrue = true;
         this.isResetPassword = false;
+      },
+      // 关闭model
+      SignIn () {
+          this.$store.commit('SETSIGNIN',  false)
       }
     },
   }
@@ -195,6 +196,7 @@
       position: absolute;
       .close-icon{
         display: block;
+        cursor: pointer;
         width: 25px;
         height: 25px;
         position: absolute;
