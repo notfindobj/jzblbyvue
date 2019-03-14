@@ -276,7 +276,7 @@
             </div>
         </div>
         <ul>
-            <!-- <li class="a" @click="showLogin">登录</li> -->
+            <li class="a" @click="adada">登录</li>
             <!-- <li><nuxt-link to="/About">关于我们</nuxt-link></li> -->
         </ul>
       <SignInAndOut v-if="showSign"></SignInAndOut>
@@ -285,7 +285,7 @@
 <script>
   import SignInAndOut from '../components/SignInAndOut.vue'
   import LevelMenu from '../components/home/LevelMenu.vue'
-  import {mapState} from 'vuex'
+  import { mapState, mapActions, mapGetters } from 'vuex'
   export default {
         data () {
             return {
@@ -329,19 +329,19 @@
                 },
                 isOneMeun: null,
                 // 一级菜单
-                oneMeun: [
-                    {icon: 'icon-erweima', name: '示范区',
-                        children: {}
-                    },
-                    {icon: 'icon-erweima', name: '楼盘'},
-                    {icon: 'icon-erweima', name: '效果图'},
-                    {icon: 'icon-erweima', name: 'su模型'},
-                    {icon: 'icon-erweima', name: '总图'},
-                    {icon: 'icon-erweima', name: '平面'},
-                    {icon: 'icon-erweima', name: '建筑部落'},
-                    {icon: 'icon-erweima', name: '室内设计'},
-                    {icon: 'icon-erweima', name: '文本'},
-                ],
+                // oneMeun: [
+                //     {icon: 'icon-erweima', name: '示范区',
+                //         children: {}
+                //     },
+                //     {icon: 'icon-erweima', name: '楼盘'},
+                //     {icon: 'icon-erweima', name: '效果图'},
+                //     {icon: 'icon-erweima', name: 'su模型'},
+                //     {icon: 'icon-erweima', name: '总图'},
+                //     {icon: 'icon-erweima', name: '平面'},
+                //     {icon: 'icon-erweima', name: '建筑部落'},
+                //     {icon: 'icon-erweima', name: '室内设计'},
+                //     {icon: 'icon-erweima', name: '文本'},
+                // ],
                 showSign: false
             }
         },
@@ -349,37 +349,28 @@
             SignInAndOut,
             LevelMenu
         },
-        computed: {
-            ...mapState([
-                'SignIn'
-            ])
+        watch: {},
+        async asyncData ({app, store}) {
+          let data = await store.dispatch('getMenu')
+          return {oneMeun: data}
         },
-        watch: {
-            'SignIn': function(data, datas) {
-                console.log(this.showSign = data)
-            }
-        },
-    //   async asyncData (conment) {
-    //       let data = await conment.app.$axios('apiMenu/GetType').then(res => {console.log('>>>>>>>', res)})
-    //   },
-      beforeCreate () {},
-      created () {
-        //   this.getData()
-      },
-      methods: {
+        beforeCreate () {},
+        created () {},
+        methods: {
+            adada () {
+                this.$store.dispatch('fetchList', {id:true})
+            },
             enter (index) {
                 this.isOneMeun = index
             },
-            leave () {
-               
-            },
+            leave () {},
             SignIns(data) {
                 this.showSign = true
             },
             getData () {
                 this.$axios('Menu/GetAll').then(res => {console.log('>>>>>>>', res)})
             }
-      }
+        }
   }
 </script>
 <style lang="less">

@@ -36,15 +36,15 @@ module.exports = {
   // 解决跨域
   axios: {
     debug: process.env._ENV == "production" ? false : true,
-    //设置不同环境的请求地址 
-    baseURL: process.env._ENV == "production" ? "http://www.jzbl.com:8066/api/" : "http://www.jzbl.com/api/",
+    //设置不同环境的请求地址
+    baseURL: process.env._ENV == "production" ? "http://www.api.jzbl.com/api/" : "http://www.jzbl.com/api/",
     withCredentials: true,
   },
   proxy:  [
       [
         '/api', 
         { 
-          target: 'http://www.jzbl.com:8066/api/', // api主机
+          target: 'http://www.api.jzbl.com/api/', // api主机
           pathRewrite: { '^/api' : '/api' }
         }
     ]
