@@ -33,6 +33,9 @@ module.exports = {
     { src: '~/plugins/axios', ssr: true },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
+  env: {
+    baseUrl: process.env.BASE_URL || 'http://localhost:3000'
+  },
   // 解决跨域
   axios: {
     debug: process.env._ENV == "production" ? false : true,
