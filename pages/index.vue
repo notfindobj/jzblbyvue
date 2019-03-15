@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- banner -->
-        <div class="banner-box">
+        <div class="banner-box"> 
             <div v-swiper:mySwiper="swiperOption" class="swiper-box">
                 <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(banner, index) in banners" :key="index">
@@ -10,7 +10,7 @@
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
-            <LevelMenu class="banner-nav"></LevelMenu>
+            <LevelMenu class="banner-nav" :oneMeun="oneMeun"></LevelMenu>
         </div>
         <div class="main-box">
             <!-- 建筑游学 -->
@@ -328,20 +328,6 @@
                     },
                 },
                 isOneMeun: null,
-                // 一级菜单
-                // oneMeun: [
-                //     {icon: 'icon-erweima', name: '示范区',
-                //         children: {}
-                //     },
-                //     {icon: 'icon-erweima', name: '楼盘'},
-                //     {icon: 'icon-erweima', name: '效果图'},
-                //     {icon: 'icon-erweima', name: 'su模型'},
-                //     {icon: 'icon-erweima', name: '总图'},
-                //     {icon: 'icon-erweima', name: '平面'},
-                //     {icon: 'icon-erweima', name: '建筑部落'},
-                //     {icon: 'icon-erweima', name: '室内设计'},
-                //     {icon: 'icon-erweima', name: '文本'},
-                // ],
                 showSign: false
             }
         },
@@ -352,7 +338,7 @@
         watch: {},
         async asyncData ({app, store}) {
           let data = await store.dispatch('getMenu')
-          return {oneMeun: data}
+          return {oneMeun: data.Data}
         },
         beforeCreate () {},
         created () {},

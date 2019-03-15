@@ -3,28 +3,28 @@
         <div @mouseleave="mouseleave()">
             <div class="banner-nav">
                 <div
-                v-for="(items, index) in oneMeun" 
-                :key="index" 
-                :data-id="items.id" 
-                :class="items.id === id ?  'banner-nav-items cursorHover': 'banner-nav-items'"
-                @mouseenter="mouseenter(items.id)">
-                    {{items.name}}
-                </div>
-            </div>
-            <div class="sub-banner-nav" v-for="(items, indexs) in oneMeun" :key="'1'+indexs" :class="items.id === id ?  'show': 'hide'">
-                <div class="sub-banner-nav-items">
-                    <div class="sub-banner-nav-items-title">电视:</div>
-                    <div class="sub-banner-nav-items-content">
-                        <span>曲面电视</span>
-                        <span>超薄</span>
-                        <span>超薄电视</span>
-                        <span>HDR电视</span>
-                        <span>曲面</span>
-                        <span>DLED电视</span>
-                        <span>超薄电视</span>
-                        <span>HDR</span>
-                        <span>曲面电</span>
-                        <span>DLED电视</span>
+                v-for="items in oneMeun" 
+                :key="items.ItemAttributesId" 
+                :data-id="items.ItemAttributesId" 
+                :class="items.ItemAttributesId === id ?  'banner-nav-items cursorHover': 'banner-nav-items'"
+                @mouseenter="mouseenter(items.ItemAttributesId)">
+                    {{items.ItemAttributesFullName}}
+                    <div>
+                        <div class="sub-banner-nav" :class="items.ItemAttributesId === id ?  'show': 'hide'">
+                            <div class="sub-banner-nav-items">
+                                <template v-for="item in items.ChildNode">
+                                    <div class="sub-banner-nav-items-title" :key="item.ItemAttributesId">
+                                        <span class="sub-banner-nav-items-title-type">{{item.ItemAttributesFullName}}:</span>
+                                        <div style="display:inline-block;width:85%">
+                                            <div v-for="it in items.ChildNode" :key="it.ItemAttributesId" class="sub-banner-nav-items-title-content" >
+                                                <span>{{it.ItemAttributesFullName}}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>    
+                                
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -34,26 +34,24 @@
 <script>
 import {_debounce} from '../../plugins/untils/public'
 export default {
+    props: {
+        oneMeun: {
+            type: Array,
+            default: () => {
+                return []
+            },
+            required: true
+        }
+    },
     data() {
         return {
             id: '',
-            // 一级菜单
-            oneMeun: [
-                {icon: 'icon-erweima', name: '示范区', id: 'a'},
-                {icon: 'icon-erweima', name: '楼盘', id: 'b'},
-                {icon: 'icon-erweima', name: '效果图', id: 'c'},
-                {icon: 'icon-erweima', name: 'su模型', id: 'd'},
-                {icon: 'icon-erweima', name: '总图', id: 'e'},
-                {icon: 'icon-erweima', name: '平面', id: 'f'},
-                {icon: 'icon-erweima', name: '建筑部落', id: 'g'},
-                {icon: 'icon-erweima', name: '室内设计', id: 'h'},
-                {icon: 'icon-erweima', name: '文本', id: 'i'},
-            ],
         }
     },
     created () {},
     methods: {
         mouseenter: _debounce(function(id)  {
+            console.log(id)
             this.id = id
         }, 200),
         mouseleave:_debounce(function(id) {
@@ -97,27 +95,31 @@ export default {
         position: absolute;
         left: 142px;
         top: 0;
-        width: 595px;
+        min-width: 595px;
         min-height: 367px;
-        padding: 8px 0;
-        top: 4px;
+        padding: 7px 0;
         background: #ffffff;
         &-items {
-            display: flex;
             color: #666666;
             padding: 0 65px 0 27px;
             &-title {
-                width: 95px;
-                text-align: center;
+                text-align: left;
                 font-size: 14px;
-            }
-            &-content {
-                > span {
-                    cursor: pointer;
-                    white-space: nowrap;
-                    padding-right: 11px;
+                &-content {
+                    display: inline-block;
+                    > span {
+                        cursor: pointer;
+                        white-space: nowrap;
+                        padding-right: 11px;
+                    }
+                }
+                &-type {
+                    width: 86px;
+                    display: inline-block;
+                    text-align: center;
                 }
             }
+           
         }
         
     }

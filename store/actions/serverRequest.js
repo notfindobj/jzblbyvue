@@ -1,8 +1,7 @@
-import axios from 'axios'
+import request from '~/service'
 
-export const serverRequest = {
-   async getMenu ({ commit, state }, param) {
-    let {data} = await axios.get('http://www.api.jzbl.com/api/Menu/GetAll')
-    return data
+export const serverRequest ={
+    async getMenu ({ commit, state }, params) {
+        return await request.get('Menu/GetMenuAll')
     }
 }
