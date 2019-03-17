@@ -142,8 +142,7 @@
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
-//            this.$Message.success('Success!');
-            this.isSignIn = !this.isSignIn;
+            // this.isSignIn = !this.isSignIn;
           } else {
             this.$Message.error('Fail!');
           }
@@ -169,7 +168,7 @@
       },
       // 关闭model
       SignIn () {
-          this.$store.commit('SETSIGNIN',  false)
+        this.$store.dispatch('SETUP',  false)
       }
     },
   }

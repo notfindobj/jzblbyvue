@@ -1,14 +1,15 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createLogger from 'vuex/dist/logger'
-import {list} from './modules/index'
+import {requests, overas} from './modules/index'
 
 Vue.use(Vuex)
 
 const createStore = () => {
   return new Vuex.Store({
     modules: {
-      list: list
+      requests,
+      overas
     },
     plugins: [createLogger()],
     strict: process.env.NODE_ENV !== 'production'

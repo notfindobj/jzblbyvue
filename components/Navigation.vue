@@ -86,7 +86,7 @@ export default {
     },
     methods: {
         SignIn () {
-            this.$store.commit('SETSIGNIN',  true)
+            this.$store.dispatch('SETUP',  true)
         }
     }
 }

@@ -328,20 +328,26 @@
                     },
                 },
                 isOneMeun: null,
-                showSign: false
             }
         },
         components: {
             SignInAndOut,
             LevelMenu
         },
+        computed: {
+            ...mapState({
+                showSign: state => state.overas.showSign
+            })
+        },
         watch: {},
         async asyncData ({app, store}) {
-          let data = await store.dispatch('getMenu')
-          return {oneMeun: data.Data}
+            let menuData = await store.dispatch('getMenu')
+          return {oneMeun: menuData.Data, }
         },
         beforeCreate () {},
-        created () {},
+        created () {
+            console.log(this.showSign)
+        },
         methods: {
             adada () {
                 this.$store.dispatch('fetchList', {id:true})
@@ -351,7 +357,7 @@
             },
             leave () {},
             SignIns(data) {
-                this.showSign = true
+                this.$store.dispatch('SETUP', true)
             },
             getData () {
                 this.$axios('Menu/GetAll').then(res => {console.log('>>>>>>>', res)})
