@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- banner -->
-        <div class="banner-box"> 
+        <div class="banner-box">
             <div v-swiper:mySwiper="swiperOption" class="swiper-box">
                 <div class="swiper-wrapper">
                 <div class="swiper-slide" v-for="(banner, index) in banners" :key="index">
@@ -253,7 +253,7 @@
                             <div class="swiper-button-prev"></div>
                         </div>
                     </i-col>
-                </Row> 
+                </Row>
             </div>
             <!-- 优秀品牌商 -->
             <div>
@@ -277,7 +277,7 @@
         </div>
         <ul>
             <li class="a" @click="adada">登录</li>
-            <!-- <li><nuxt-link to="/About">关于我们</nuxt-link></li> -->
+             <li><nuxt-link to="/About">关于我们</nuxt-link></li>
         </ul>
       <SignInAndOut v-if="showSign"></SignInAndOut>
     </div>
@@ -490,7 +490,7 @@
             box-shadow: 0 2px 15px #999999;
         }
     }
-    // 
+    //
     #excellent .swiper-button-prev{
         top: 145px;
         background:url(../assets/images/left.png) center center no-repeat;

@@ -1,10 +1,14 @@
 <template>
-    <div>
-        <div @click="tipClick" class="a">按钮</div>
+    <div class="conten-layout-box">
+        <!--<div @click="tipClick" class="a">按钮</div>-->
+      <conten-nav></conten-nav>
+      <conten></conten>
     </div>
 </template>
 <script>
-export default {
+  import ContenNav from '../../components/contenLayout/ContenNav.vue'
+  import Conten from '../../components/contenLayout/Content.vue'
+  export default {
     head () {
         return {
             title: `关于我们`,
@@ -14,16 +18,20 @@ export default {
             ],
         }
     },
+    components: {
+      ContenNav,
+      Conten
+    },
     asyncData() {
-        $axios.get('/journalismApi').then(res => {
-            console.log(res)
-        })
+//        $axios.get('/journalismApi').then(res => {
+//            console.log(res)
+//        })
     },
     created() {
-        // let 
-        this.$axios.get('/journalismApi').then(res => {
-            console.log(res)
-        })
+        // let
+//        this.$axios.get('/journalismApi').then(res => {
+//            console.log(res)
+//        })
     },
     methods: {
         tipClick () {
@@ -32,6 +40,10 @@ export default {
     }
 }
 </script>
-<style>
-
+<style  lang="less" scoped>
+  .conten-layout-box{
+    width: 1200px;
+    height: auto;
+    margin: 0 auto;
+  }
 </style>
