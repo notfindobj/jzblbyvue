@@ -20,7 +20,6 @@ const omponents = {
     Vue.component('Big-Cards', Big_Cards)
   }
 }
-console.log(omponents)
 const publicComponents = {...omponents}
 
 export {plugins, publicComponents}

@@ -47,7 +47,7 @@ module.exports = {
         '/api', 
         { 
           target: 'http://www.api.jzbl.com/api/', // api主机
-          pathRewrite: { '^/api' : '/api' }
+          pathRewrite: { '^/api' : '/' }
         }
     ]
   ],

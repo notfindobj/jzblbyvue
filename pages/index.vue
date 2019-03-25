@@ -54,17 +54,11 @@
                     </div>
                 </div>
                 <Row>
-                    <!-- <i-col span="12"> <Big-Cards/> </i-col> -->
-                    <i-col span="24">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
+                   <template v-for=" (items, index) in sfqList" v-if="index < 8">
+                         <i-col span="6" :key="index"> 
+                              <Small-Cards :smallCardsDate= "items"/>
+                         </i-col>
+                    </template>
                 </Row>
             </div>
             <!-- 楼盘 -->
@@ -83,13 +77,16 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
+                    <template v-for="(items, index) in lpList">
+                        <template v-if="index === 0">
+                            <i-col span="12" :key="index">
+                                <Big-Cards :bigCardsDate= "items"/>  
+                            </i-col>
+                        </template>
+                        <i-col span="6" v-if="index >0 && index<5" :key="index">
+                            <Small-Cards :smallCardsDate= "items"/> 
+                        </i-col>
+                    </template>
                 </Row>
             </div>
             <!-- 效果图 -->
@@ -108,13 +105,17 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
-                     <i-col span="12"> <Big-Cards/> </i-col>
+                    <template v-for="(items, lp) in lpList">
+                        <i-col v-if="lp < 2" span="6" :key="lp">
+                            <Small-Cards :smallCardsDate= "items"/>  
+                        </i-col>
+                        <i-col v-if="lp === 2" span="12" :key="lp">
+                            <Big-Cards :bigCardsDate= "items"/> 
+                        </i-col>
+                        <i-col v-if="lp >2 && lp <5" span="6" :key="lp">
+                            <Small-Cards :smallCardsDate= "items"/>  
+                        </i-col>
+                    </template>
                 </Row>
             </div>
              <!-- SU模型 -->
@@ -133,13 +134,16 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
+                    <template v-for="(items, index) in suList">
+                        <template v-if="index === 0">
+                            <i-col span="12" :key="index">
+                                <Big-Cards :bigCardsDate= "items"/>  
+                            </i-col>
+                        </template>
+                        <i-col span="6" v-if="index >0 && index<5" :key="index">
+                            <Small-Cards :smallCardsDate= "items"/> 
+                        </i-col>
+                    </template>
                 </Row>
             </div>
              <!-- 总图 -->
@@ -279,13 +283,14 @@
             <li class="a" @click="adada">登录</li>
              <li><nuxt-link to="/About">关于我们</nuxt-link></li>
         </ul>
-      <SignInAndOut v-if="showSign"></SignInAndOut>
+      <!-- <SignInAndOut v-if="true"></SignInAndOut> -->
+      <signPage></signPage>
     </div>
 </template>
 <script>
-  import SignInAndOut from '../components/SignInAndOut.vue'
-  import LevelMenu from '../components/home/LevelMenu.vue'
-  import { mapState, mapActions, mapGetters } from 'vuex'
+  import SignInAndOut from '../components/SignInAndOut'
+  import signPage from '../components/home/signPage'
+  import LevelMenu from '../components/home/LevelMenu'
   export default {
         data () {
             return {
@@ -332,35 +337,41 @@
         },
         components: {
             SignInAndOut,
-            LevelMenu
+            LevelMenu,
+            signPage
         },
-        computed: {
-            ...mapState({
-                showSign: state => state.overas.showSign
-            })
-        },
+        computed: {},
         watch: {},
         async asyncData ({app, store}) {
-            let menuData = await store.dispatch('getMenu')
-          return {oneMeun: menuData.Data, }
+            let menuData = await store.dispatch('getMenu');
+            let homeData = await store.dispatch('getHomeData');
+            return {
+                oneMeun: menuData || [], 
+                homeData: homeData,
+                sfqList: homeData.sfqList || [], // 示范区
+                lpList: homeData.lpList || [], // 楼盘
+                xgtList: homeData.xgtList || [], // 效果图
+                suList: homeData.suList || [], // SU模型 
+                ztList: homeData.ztList || [], // 总图
+                // wbList: homeData.wbList || [], // 平面
+                wbList: homeData.wbList || [], // 文本
+                // wbList: homeData.wbList || [], // 建筑规范
+                // wbList: homeData.wbList || [], // 室内案例
+                
+            }
         },
         beforeCreate () {},
-        created () {
-            console.log(this.showSign)
-        },
+        created () {},
         methods: {
             adada () {
-                this.$store.dispatch('fetchList', {id:true})
+                this.$store.dispatch('fetchList', {id:true});
             },
             enter (index) {
-                this.isOneMeun = index
+                this.isOneMeun = index;
             },
             leave () {},
             SignIns(data) {
-                this.$store.dispatch('SETUP', true)
-            },
-            getData () {
-                this.$axios('Menu/GetAll').then(res => {console.log('>>>>>>>', res)})
+                this.$store.dispatch('SETUP', true);
             }
         }
   }

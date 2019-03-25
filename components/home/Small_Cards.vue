@@ -1,7 +1,7 @@
 <template>
     <div class="cards">
         <div class="cards-top">
-            <img src="http://iph.href.lu/283x194?text=[自定义文字]" alt="" width="283px" height="194px">
+            <img :src="smallCardsDate.ItemTitleImg" alt="" width="283px" height="194px">
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
@@ -9,17 +9,25 @@
                 </div>
                 <div class="cards-eye-name">
                     <i class="iconfont icon-shangchuan"></i>
-                    <span>杨小幂</span>
+                    <span>{{smallCardsDate.CreateUserName}}</span>
                 </div>
             </div>
         </div>
         <div class="cards-foot">
-            广东江门龙溪湖设计建筑游学
+            {{smallCardsDate.ItemName}}
         </div>
     </div>
 </template>
 <script>
 export default {
+    props: {
+        smallCardsDate: {
+            type: Object,
+            default: function () {
+                return {}
+            }
+        }
+    },
     data() {
         return {
             nam: 2.222

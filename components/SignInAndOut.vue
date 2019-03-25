@@ -34,10 +34,10 @@
       <h4 class="sign-in-title">注册</h4>
       <Form :model="registeredItem" :label-width="0">
         <FormItem>
-          <Input v-model="registeredItem.userName" size="large"  type="password" placeholder="请输入手机号码"/>
+          <Input v-model="registeredItem.mobile" size="large"  type="text" placeholder="请输入手机号码"/>
         </FormItem>
         <FormItem>
-          <Input search  size="large" enter-button="获取验证码" placeholder="请输入验证码" />
+          <Input search  size="large" enter-button="获取验证码" @on-search = "getMobile" placeholder="请输入验证码" />
         </FormItem>
         <FormItem>
           <Input v-model="registeredItem.password" size="large"  type="password" placeholder="请设置密码"/>
@@ -102,6 +102,7 @@
 </template>
 
 <script>
+  import {getMobileCode} from '../service/clientAPI'
   export default {
     name: 'SignInAndOut',
     data() {
@@ -126,7 +127,7 @@
           ]
         },
         registeredItem:{
-          userName:'',
+          mobile:'',
           password:'',
           passWordAgain:'',
           single:false
@@ -138,10 +139,20 @@
     mounted() {
     },
     methods: {
+      // 获取验证码
+       async getMobile () {
+        let queruys = {
+          OperationType: 1,
+          SendType: 0,
+          MobileNumber: this.registeredItem.mobile
+        }
+        let mobile = await getMobileCode(queruys)
+      },
       //登录
       handleSubmit(name) {
         this.$refs[name].validate((valid) => {
           if (valid) {
+            let msg = getMenu()
             // this.isSignIn = !this.isSignIn;
           } else {
             this.$Message.error('Fail!');

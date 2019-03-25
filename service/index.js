@@ -1,26 +1,30 @@
 import axios from 'axios'
 // import { Message } from 'element-ui'
-// import qs from 'qs'
+import qs from 'qs'
 import config from './config'
 // 判断是路由跳转还是 axios 请求
-if (process.server) {
+// if (process.server) {
   config.baseURL = `http://www.api.jzbl.com/api/`
-}
+// }
 const service = axios.create(config)
 // POST 传参序列化
-// service.interceptors.request.use(
-//   config => {
-//     if (config.method === 'post') config.data = qs.stringify(config.data)
-//     return config
-//   },
-//   error => {
-//     return Promise.reject(error)
-//   }
-// )
+service.interceptors.request.use(
+  config => {
+    if (config.method === 'post') config.data = qs.stringify(config.data)
+    return config
+  },
+  error => {
+    return Promise.reject(error)
+  }
+)
 // 返回状态判断
 service.interceptors.response.use(
   res => {
-    return res.data
+    if (res.data.Code === 200) {
+      return res.data.Data
+    } else if (res.data.Code === 500) {
+      return {statusCode: 500, message: 'You need back to login again'}
+    }
   },
   error => {
     return Promise.reject(error)
@@ -33,7 +37,7 @@ export default {
     return service({
       method: 'post',
       url,
-      params: data
+      data: data
     })
   },
   get (url, data) {

@@ -3,7 +3,9 @@ import { overallGetters } from '../getters/overallGetters'
 import { overallMutation } from '../mutations/overallMutation'
 export const overas = {
     state: {
-        showSign: false
+        showSign: false, // 打开模态框状态
+        isItLoggedIn: '', // 打开模态框状态
+        auth: null
     },
     actions: overallActions,
     getters: overallGetters,

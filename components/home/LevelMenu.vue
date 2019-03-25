@@ -51,7 +51,6 @@ export default {
     created () {},
     methods: {
         mouseenter: _debounce(function(id)  {
-            console.log(id)
             this.id = id
         }, 200),
         mouseleave:_debounce(function(id) {
