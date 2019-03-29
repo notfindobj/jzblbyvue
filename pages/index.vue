@@ -280,8 +280,7 @@
             </div>
         </div>
         <ul>
-            <li class="a" @click="adada">登录</li>
-             <li><nuxt-link to="/About">关于我们</nuxt-link></li>
+             <li><nuxt-link to="/About">资源库</nuxt-link></li>
         </ul>
       <!-- <SignInAndOut v-if="true"></SignInAndOut> -->
       <signPage></signPage>
@@ -346,17 +345,17 @@
             let menuData = await store.dispatch('getMenu');
             let homeData = await store.dispatch('getHomeData');
             return {
-                oneMeun: menuData || [], 
+                oneMeun: menuData.RetMenuData || [],
                 homeData: homeData,
-                sfqList: homeData.sfqList || [], // 示范区
-                lpList: homeData.lpList || [], // 楼盘
-                xgtList: homeData.xgtList || [], // 效果图
-                suList: homeData.suList || [], // SU模型 
-                ztList: homeData.ztList || [], // 总图
-                // wbList: homeData.wbList || [], // 平面
-                wbList: homeData.wbList || [], // 文本
-                // wbList: homeData.wbList || [], // 建筑规范
-                // wbList: homeData.wbList || [], // 室内案例
+                sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
+                lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
+                xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
+                suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型 
+                ztList: homeData.ItemList.Zt.RecommendedItemModels || [], // 总图
+                wbList: homeData.ItemList.Pm.RecommendedItemModels || [], // 平面
+                wbList: homeData.ItemList.Wb.RecommendedItemModels || [], // 文本
+                wbList: homeData.ItemList.Jzgf.RecommendedItemModels || [], // 建筑规范
+                wbList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
                 
             }
         },

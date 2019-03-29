@@ -2,13 +2,13 @@
     <div>
         <Form ref="formInline" :rules="ruleInline" :model="userItem" :label-width="0">
             <FormItem prop="userName">
-            <Input v-model="userItem.userName" size="large"  class="asd" type="text" placeholder="请输入手机号码"/>
+            <Input v-model="userItem.mobile" size="large"  class="asd" type="text" placeholder="请输入手机号码"/>
             </FormItem>
             <FormItem prop="passWord">
             <Input v-model="userItem.passWord" size="large"  type="password" placeholder="请输入密码"/>
             </FormItem>
             <FormItem>
-                <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit('formInline')">登录</Button>
+                <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit()">登录</Button>
             </FormItem>
         </Form>
         <div class="sign-some">
@@ -27,15 +27,16 @@
     </div>
 </template>
 <script>
+import {lognIn} from '../../../service/clientAPI'
 export default {
     data () {
         return {
             userItem: {
-                userName: '',
+                mobile: '',
                 passWord: ''
             },
             ruleInline: {
-                userName: [
+                mobile: [
                     { required: true, message: 'Please fill in the user name', trigger: 'blur' }
                 ],
                 passWord: [
@@ -52,8 +53,12 @@ export default {
         retrieve (val) {
             this.$store.dispatch('LOGGEDIN', val);
         },
-        handleSubmit () {
-
+        async handleSubmit () {
+            let postData = {
+                mobile: this.userItem.mobile,
+                password: this.userItem.mobile
+            }
+            let data = await lognIn(postData)
         }
     }
 }

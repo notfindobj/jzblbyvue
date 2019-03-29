@@ -6,21 +6,21 @@
                     <Input v-model="registeredItem.mobile" size="large"  type="text" placeholder="请输入手机号码"/>
                 </FormItem>
                 <FormItem>
-                    <Input v-model="registeredItem.authcode" search  size="large" enter-button="获取验证码" @on-search = "getMobile" placeholder="请输入验证码" />
+                    <Input v-model="registeredItem.mobileVerifyCode" search size="large" enter-button="获取验证码" @on-search="getMobile" placeholder="请输入验证码" />
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" size="large" class="desabled-btn" @click="nextStep">下一步</Button>
+                    <Button type="primary" size="large" :disabled="registeredItem.mobileVerifyCode.length < 6" class="desabled-btn" @click="nextStep">下一步</Button>
                 </FormItem>
             </template>
             <template v-if="nextSteps === 1">
                 <FormItem>
-                    <Input v-model="registeredItem.mobile" size="large"  type="text" placeholder="请输入8-20位数字与字母"/>
+                    <Input v-model="registeredItem.newPwd" type="password"  size="large"  placeholder="请输入8-20位数字与字母"/>
                 </FormItem>
                 <FormItem>
-                    <Input v-model="registeredItem.authcode" search  size="large" enter-button="获取验证码" @on-search = "getMobile" placeholder="请输入验证码" />
+                    <Input v-model="registeredItem.affirmNewPwd" type="password"  size="large" placeholder="确认密码"/>
                 </FormItem>
                 <FormItem>
-                    <Button type="primary" size="large" class="desabled-btn" @click="nextStep">下一步</Button>
+                    <Button type="primary" size="large" :disabled="registeredItem.affirmNewPwd.length < 6" class="desabled-btn" @click="nextStep">下一步</Button>
                 </FormItem>
             </template>
         </Form>
@@ -34,22 +34,49 @@
     </div>
 </template>
 <script>
+import {getMobileCode, ResetPwd} from '../../../service/clientAPI'
 export default {
     data () {
         return {
             nextSteps: 0,
             registeredItem: {
                 mobile: '',
-                authcode: ''
+                mobileVerifyCode: '',
+                newPwd: '',
+                affirmNewPwd: ''
+
             }
         }
     },
     methods: {
-        getMobile () {
-
+        async getMobile () {
+             // 获取验证码
+            let queruys = {
+                OperationType: '1',
+                SendType: 0,
+                MobileNumber: this.registeredItem.mobile
+            }
+            let mobile = await getMobileCode(queruys)
+            if (mobile) {
+                this.$Message.success(mobile.Msg);
+            }
         },
-        nextStep (){
-            this.nextSteps++
+        async nextStep (){
+            if (this.nextSteps === 1) {
+                let queruys = {
+                    mobile: this.registeredItem.mobile,
+                    mobileVerifyCode: this.registeredItem.mobileVerifyCode,
+                    newPwd: this.registeredItem.newPwd,
+                    affirmNewPwd: this.registeredItem.affirmNewPwd
+                }
+                let msg = await ResetPwd(queruys)
+                if (msg) {
+                    this.$Message.success(mobile.Msg);
+                }
+            }
+            if (this.nextSteps === 0) {
+                this.nextSteps++
+            }
         },
         nextSignIn () {
             this.$store.dispatch('LOGGEDIN', 'signIn');

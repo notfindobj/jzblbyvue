@@ -1,5 +1,5 @@
 import axios from 'axios'
-// import { Message } from 'element-ui'
+import { Message } from 'iview'
 import qs from 'qs'
 import config from './config'
 // 判断是路由跳转还是 axios 请求
@@ -20,10 +20,22 @@ service.interceptors.request.use(
 // 返回状态判断
 service.interceptors.response.use(
   res => {
-    if (res.data.Code === 200) {
-      return res.data.Data
-    } else if (res.data.Code === 500) {
-      return {statusCode: 500, message: 'You need back to login again'}
+    // 服务器端
+    if (process.server) {
+      if (res.data.Code === 200) {
+        return res.data.Data
+      } else if (res.data.Code === 500) {
+        return {statusCode: 500, message: 'You need back to login again'}
+      }
+    }
+    // 客户端
+    if (process.client) {
+      if (res.data.Code === 200) {
+        return res.data.Data
+      } else {
+        Message.warning(res.data.Msg);
+        return res.data.Data
+      }
     }
   },
   error => {
