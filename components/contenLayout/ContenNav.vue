@@ -3,15 +3,15 @@
     <div class="nav-list">
       <p>在以下分类中找：</p>
       <ul>
-        <li>示范区</li>
-        <li>楼盘</li>
-        <li>效果图</li>
-        <li>SU模型</li>
-        <li>总图</li>
-        <li>平面</li>
-        <li>建筑规范</li>
-        <li>室内案例</li>
-        <li>文本</li>
+        <li class="li-active">示范区<img src="../../assets/images/sanjiao.png" /></li>
+        <li>楼盘<img src="../../assets/images/sanjiao.png" /></li>
+        <li>效果图<img src="../../assets/images/sanjiao.png" /></li>
+        <li>SU模型<img src="../../assets/images/sanjiao.png" /></li>
+        <li>总图<img src="../../assets/images/sanjiao.png" /></li>
+        <li>平面<img src="../../assets/images/sanjiao.png" /></li>
+        <li>建筑规范<img src="../../assets/images/sanjiao.png" /></li>
+        <li>室内案例<img src="../../assets/images/sanjiao.png" /></li>
+        <li>文本<img src="../../assets/images/sanjiao.png" /></li>
       </ul>
     </div>
     <div class="screening-nav">
@@ -190,6 +190,22 @@
           }
           &:hover{
             color: #FF3C00;
+          }
+          img{
+            display: block;
+            width: 17px;
+            height: 16px;
+            position: absolute;
+            bottom: -17px;
+            left: 38%;
+            transform: translateX(-50%);
+            display: none;
+          }
+        }
+        .li-active{
+          color: #FF3C00;
+          img{
+            display: block;
           }
         }
       }

@@ -356,6 +356,10 @@
           height: 66px;
           padding: 8px 0 10px 6px;
           >p{
+            width: 253px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
             font-size: 14px;
             color: #666666;
             margin-bottom: 8px;
