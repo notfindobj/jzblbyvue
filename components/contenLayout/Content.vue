@@ -8,7 +8,7 @@
     </ul>
     <div v-if="show" class="works-list_box">
       <ul class="works-list">
-        <li>
+        <li >
           <div class="img-box">
             <img src="../../assets/images/worksImg.png" alt="">
             <div class="works-like">
@@ -23,213 +23,13 @@
           <div class="works-introduce">
             <p>广东江门龙溪湖设计示范区</p>
             <div>
-              <img src="../../assets/images/a.jpeg" alt="">
+              <img @mouseenter="showWorks(0)" @mouseleave="hideWorks()" src="../../assets/images/a.jpeg" alt="">
               <span>
               杨小幂
-            </span>
+              </span>
             </div>
           </div>
-          <div class="works-con">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
-            <ul class="works-con-introduce">
-              <li>
-                <p>项目</p>
-                <p>1334</p>
-              </li>
-              <li>
-                <p>粉丝</p>
-                <p>1.3万</p>
-              </li>
-            </ul>
-            <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="img-box">
-            <img src="../../assets/images/worksImg.png" alt="">
-            <div class="works-like">
-              <p>
-                <i class="icon iconfont icon-chakan"></i>35588
-              </p>
-              <p>
-                <i class="icon iconfont icon-favorite"></i>收藏
-              </p>
-            </div>
-          </div>
-          <div class="works-introduce">
-            <p>广东江门龙溪湖设计示范区</p>
-            <div>
-              <img src="../../assets/images/a.jpeg" alt="">
-              <span>
-              杨小幂
-            </span>
-            </div>
-          </div>
-          <div class="works-con">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
-            <ul class="works-con-introduce">
-              <li>
-                <p>项目</p>
-                <p>1334</p>
-              </li>
-              <li>
-                <p>粉丝</p>
-                <p>1.3万</p>
-              </li>
-            </ul>
-            <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="img-box">
-            <img src="../../assets/images/worksImg.png" alt="">
-            <div class="works-like">
-              <p>
-                <i class="icon iconfont icon-chakan"></i>35588
-              </p>
-              <p>
-                <i class="icon iconfont icon-favorite"></i>收藏
-              </p>
-            </div>
-          </div>
-          <div class="works-introduce">
-            <p>广东江门龙溪湖设计示范区</p>
-            <div>
-              <img src="../../assets/images/a.jpeg" alt="">
-              <span>
-              杨小幂
-            </span>
-            </div>
-          </div>
-          <div class="works-con">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
-            <ul class="works-con-introduce">
-              <li>
-                <p>项目</p>
-                <p>1334</p>
-              </li>
-              <li>
-                <p>粉丝</p>
-                <p>1.3万</p>
-              </li>
-            </ul>
-            <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="img-box">
-            <img src="../../assets/images/worksImg.png" alt="">
-            <div class="works-like">
-              <p>
-                <i class="icon iconfont icon-chakan"></i>35588
-              </p>
-              <p>
-                <i class="icon iconfont icon-favorite"></i>收藏
-              </p>
-            </div>
-          </div>
-          <div class="works-introduce">
-            <p>广东江门龙溪湖设计示范区</p>
-            <div>
-              <img src="../../assets/images/a.jpeg" alt="">
-              <span>
-              杨小幂
-            </span>
-            </div>
-          </div>
-          <div class="works-con">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
-            <ul class="works-con-introduce">
-              <li>
-                <p>项目</p>
-                <p>1334</p>
-              </li>
-              <li>
-                <p>粉丝</p>
-                <p>1.3万</p>
-              </li>
-            </ul>
-            <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="img-box">
-            <img src="../../assets/images/worksImg.png" alt="">
-            <div class="works-like">
-              <p>
-                <i class="icon iconfont icon-chakan"></i>35588
-              </p>
-              <p>
-                <i class="icon iconfont icon-favorite"></i>收藏
-              </p>
-            </div>
-          </div>
-          <div class="works-introduce">
-            <p>广东江门龙溪湖设计示范区</p>
-            <div>
-              <img src="../../assets/images/a.jpeg" alt="">
-              <span>
-              杨小幂
-            </span>
-            </div>
-          </div>
-          <div class="works-con">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
-            <ul class="works-con-introduce">
-              <li>
-                <p>项目</p>
-                <p>1334</p>
-              </li>
-              <li>
-                <p>粉丝</p>
-                <p>1.3万</p>
-              </li>
-            </ul>
-            <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="img-box">
-            <img src="../../assets/images/worksImg.png" alt="">
-            <div class="works-like">
-              <p>
-                <i class="icon iconfont icon-chakan"></i>35588
-              </p>
-              <p>
-                <i class="icon iconfont icon-favorite"></i>收藏
-              </p>
-            </div>
-          </div>
-          <div class="works-introduce">
-            <p>广东江门龙溪湖设计示范区</p>
-            <div>
-              <img src="../../assets/images/a.jpeg" alt="">
-              <span>
-              杨小幂
-            </span>
-            </div>
-          </div>
-          <div class="works-con">
+          <div :class="currentWorks == 0 ? 'works-active' : ''" class="works-con">
             <img src="../../assets/images/a.jpeg" alt="">
             <p>梅赛德斯·赵四</p>
             <ul class="works-con-introduce">
@@ -270,7 +70,24 @@
               </div>
             </div>
           </div>
-
+          <div class="works-con">
+            <img src="../../assets/images/a.jpeg" alt="">
+            <p>梅赛德斯·赵四</p>
+            <ul class="works-con-introduce">
+              <li>
+                <p>项目</p>
+                <p>1334</p>
+              </li>
+              <li>
+                <p>粉丝</p>
+                <p>1.3万</p>
+              </li>
+            </ul>
+            <div class="btn-group-box">
+              <div>关注</div>
+              <div>私信</div>
+            </div>
+          </div>
         </li>
         <li>
           <div class="works-list-left"></div>
@@ -343,12 +160,19 @@
     name: 'conten',
     data() {
       return {
-        show:false
+        show:true,
+        currentWorks:null
       }
     },
     mounted() {
     },
     methods: {
+      showWorks (inx) {
+        this.currentWorks = inx;
+      },
+      hideWorks () {
+        this.currentWorks = null;
+      },
     },
   }
 </script>
@@ -489,6 +313,7 @@
           position: absolute;
           left: 45px;
           top:7px;
+          display: none;
           >img{
             display: block;
             width: 64px;
@@ -565,6 +390,9 @@
               }
             }
           }
+        }
+        .works-active{
+          display: block;
         }
       }
     }
@@ -653,6 +481,94 @@
                 &:nth-child(2){
                   margin-right: 20px;
                 }
+              }
+            }
+          }
+        }
+        .works-con{
+          width: 163px;
+          height: 217px;
+          padding: 20px 16px;
+          background: #FFFFFF;
+          box-shadow: 0 2px 10px 0 rgba(0,0,0,0.10);
+          border-radius: 4px;
+          position: absolute;
+          left: 45px;
+          top:7px;
+          display: none;
+          >img{
+            display: block;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: red;
+            margin: 0 auto 10px;
+          }
+          >p{
+            font-size: 14px;
+            color: #333333;
+            margin-bottom: 12px;
+            text-align: center;
+          }
+          .works-con-introduce{
+            height: 40px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+            >li{
+              flex: 1;
+              >p{
+                &:nth-child(1){
+                  font-size: 12px;
+                  color: #999999;
+                  text-align: center;
+                }
+                &:nth-child(2){
+                  font-size: 12px;
+                  color: #333333;
+                  text-align: center;
+                }
+              }
+            }
+            &:before{
+              width: 2px;
+              height: 20px;
+              content: '';
+              background: #D9D9D9;
+              border-radius: 2px;
+              position: absolute;
+              left: 50%;
+              top:10px;
+              transform: translateX(-50%);
+            }
+          }
+          .btn-group-box{
+            height: 21px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            >div{
+              width: 60px;
+              height: 21px;
+              border-radius: 4px;
+              box-sizing: border-box;
+              text-align: center;
+              line-height: 21px;
+              font-size: 12px;
+              &:nth-child(1){
+                color: #ffffff;
+                background: #FF3C00 ;
+              }
+              &:nth-child(1){
+                color: #ffffff;
+                background: #FF3C00 ;
+              }
+              &:nth-child(2){
+                border: 1px solid #D9D9D9;
+                background: #ffffff;
+                color: #666666;
               }
             }
           }
