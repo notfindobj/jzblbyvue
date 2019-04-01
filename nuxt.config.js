@@ -1,4 +1,5 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');//css样式从js文件中分离出来,需要通过命令行安装 extract-text-webpack-plugin依赖包
+const webpack=require('webpack');
 module.exports = {
   /*
   ** Headers of the page
@@ -125,7 +126,12 @@ module.exports = {
           grid: true
         }
       }
-    }
+    },
+    plugins: [
+      new webpack.ProvidePlugin({
+        '$': 'jquery'
+      })
+    ]
   }
 }
 
