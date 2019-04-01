@@ -3,15 +3,7 @@
     <div class="nav-list">
       <p>在以下分类中找：</p>
       <ul>
-        <li class="li-active">示范区<img src="../../assets/images/sanjiao.png" /></li>
-        <li>楼盘<img src="../../assets/images/sanjiao.png" /></li>
-        <li>效果图<img src="../../assets/images/sanjiao.png" /></li>
-        <li>SU模型<img src="../../assets/images/sanjiao.png" /></li>
-        <li>总图<img src="../../assets/images/sanjiao.png" /></li>
-        <li>平面<img src="../../assets/images/sanjiao.png" /></li>
-        <li>建筑规范<img src="../../assets/images/sanjiao.png" /></li>
-        <li>室内案例<img src="../../assets/images/sanjiao.png" /></li>
-        <li>文本<img src="../../assets/images/sanjiao.png" /></li>
+        <li v-for="(item, index) in listInfo" :class="index == currentInex ? 'li-active' : ''"  :key="index" @click="choseSome(index,item)">{{item}}<img src="../../assets/images/sanjiao.png" /></li>
       </ul>
     </div>
     <div class="screening-nav">
@@ -31,7 +23,11 @@
             <li>多层办公</li>
             <li>园区办公</li>
             <li>高层酒店</li>
-
+            <li>大沿街商业</li>
+            <li>高层办公</li>
+            <li>多层办公</li>
+            <li>园区办公</li>
+            <li>高层酒店</li>
           </ol>
         </li>
         <li>
@@ -123,7 +119,7 @@
     </div>
     <Breadcrumb separator=">" style="margin-bottom: 20px">
       <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>
-      <BreadcrumbItem style="color: #999999;font-weight: normal">效果图</BreadcrumbItem>
+      <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}</BreadcrumbItem>
     </Breadcrumb>
   </div>
 </template>
@@ -132,11 +128,29 @@
   export default {
     name: 'contenNav',
     data() {
-      return {}
+      return {
+        listInfo:[
+          '示范区',
+          '楼盘',
+          '效果图',
+          'SU模型',
+          '总图',
+          '平面',
+          '建筑规范',
+          '室内案例',
+          '文本',
+        ],
+        currentInex:0,
+        currentName:''
+      }
     },
     mounted() {
     },
     methods: {
+      choseSome (inx,item) {
+        this.currentInex = inx;
+        this.currentName = item;
+      }
     },
   }
 </script>
@@ -244,6 +258,9 @@
             >li{
               float: left;
               margin-right: 24px;
+              &:hover{
+                color: #FF3C00;
+              }
             }
           }
         }
