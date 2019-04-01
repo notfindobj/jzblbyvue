@@ -8,112 +8,12 @@
     </div>
     <div class="screening-nav">
       <ul class="screening-nav-list">
-        <li>
-          <p>类   型：</p>
+        <li v-for="(item,index) in listOneInfo" :key="index" :class="item.value ? 'li-active' : ''">
+          <p>{{item.title}}</p>
           <ol>
-            <li>高层住宅</li>
-            <li>洋房</li>
-            <li>别墅</li>
-            <li>小区入口</li>
-            <li>入口大堂</li>
-            <li>售楼处</li>
-            <li>商业综合体</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
+            <li :class="items.value ? 'li-active' : ''" v-for="(items,index) in  item.children" :key="index" @click="choseSomeOne(item,index)">{{items.name}}</li>
           </ol>
-        </li>
-        <li>
-          <p>风   格：</p>
-          <ol>
-            <li>高层住宅</li>
-            <li>洋房</li>
-            <li>别墅</li>
-            <li>小区入口</li>
-            <li>入口大堂</li>
-            <li>售楼处</li>
-            <li>商业综合体</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
-          </ol>
-        </li>
-        <li>
-          <p>色   调：</p>
-          <ol>
-            <li>高层住宅</li>
-            <li>洋房</li>
-            <li>别墅</li>
-            <li>小区入口</li>
-            <li>入口大堂</li>
-            <li>售楼处</li>
-            <li>商业综合体</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
-          </ol>
-        </li>
-        <li>
-          <p>公司区位：</p>
-          <ol>
-            <li>高层住宅</li>
-            <li>洋房</li>
-            <li>别墅</li>
-            <li>小区入口</li>
-            <li>入口大堂</li>
-            <li>售楼处</li>
-            <li>商业综合体</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
-          </ol>
-        </li>
-        <li>
-          <p>公   司：</p>
-          <ol>
-            <li>高层住宅</li>
-            <li>洋房</li>
-            <li>别墅</li>
-            <li>小区入口</li>
-            <li>入口大堂</li>
-            <li>售楼处</li>
-            <li>商业综合体</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
-          </ol>
-        </li>
-        <li>
-          <p>其他效果图：</p>
-          <ol>
-            <li>高层住宅</li>
-            <li>洋房</li>
-            <li>别墅</li>
-            <li>小区入口</li>
-            <li>入口大堂</li>
-            <li>售楼处</li>
-            <li>商业综合体</li>
-            <li>大沿街商业</li>
-            <li>高层办公</li>
-            <li>多层办公</li>
-            <li>园区办公</li>
-            <li>高层酒店</li>
-          </ol>
+          <img v-if="item.children.length > 13" src="" alt="" @click="upAndDown(item)">
         </li>
       </ul>
     </div>
@@ -141,7 +41,142 @@
           '文本',
         ],
         currentInex:0,
-        currentName:''
+        currentName:'',
+        clicked:-1,
+        listOneInfo:[
+          {
+            "title": "风格",
+            "children": [
+              {
+                "name": "新亚洲",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              }
+            ],
+            "value":false
+          },
+          {
+            "title": "风格",
+            "children": [
+              {
+                "name": "新亚洲",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              }
+            ],
+            "value":false
+          },
+          {
+            "title": "风格",
+            "children": [
+              {
+                "name": "新亚洲",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              }
+            ],
+            "value":false
+          },
+          {
+            "title": "风格",
+            "children": [
+              {
+                "name": "新亚洲",
+                "value":false
+              },
+              {
+                "name": "新亚洲1",
+                "value":false
+              }
+            ],
+            "value":false
+          }
+        ]
       }
     },
     mounted() {
@@ -150,6 +185,18 @@
       choseSome (inx,item) {
         this.currentInex = inx;
         this.currentName = item;
+      },
+      choseSomeOne(item,inx){
+        item.children.map((items,index) => {
+          if(index == inx) {
+            items.value = !item.value
+          }else{
+            items.value = false
+          }
+        })
+      },
+      upAndDown (item) {
+        item.value = !item.value
       }
     },
   }
@@ -237,6 +284,8 @@
       .screening-nav-list{
         width: 100%;
         >li{
+          height: 40px;
+          overflow: hidden;
           line-height: 40px;
           font-size: 14px;
           color: #333333;
@@ -244,6 +293,7 @@
           box-sizing: border-box;
           display: flex;
           flex-direction: row;
+          position: relative;
           &:last-child{
             border-bottom: none;
           }
@@ -262,7 +312,23 @@
                 color: #FF3C00;
               }
             }
+            .li-active{
+              color: #FF3C00;
+            }
           }
+          >img{
+            display: block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: red;
+            position: absolute;
+            right: 0;
+            top: 13px;
+          }
+        }
+        .li-active{
+          height: auto;
         }
       }
     }

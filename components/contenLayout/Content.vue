@@ -6,6 +6,7 @@
       <li>下载</li>
       <li>收藏</li>
     </ul>
+    <!--建筑规范之外的布局 四列-->
     <div v-if="show" class="works-list_box">
       <ul class="works-list">
         <li >
@@ -50,6 +51,7 @@
         </li>
       </ul>
     </div>
+    <!--建筑规范的布局两列-->
     <div  class="works-list-box" v-else>
       <ul class="works-list-change">
         <li>
