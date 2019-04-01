@@ -13,7 +13,8 @@
           <ol>
             <li :class="items.value ? 'li-active' : ''" v-for="(items,index) in  item.children" :key="index" @click="choseSomeOne(item,index)">{{items.name}}</li>
           </ol>
-          <img v-if="item.children.length > 13" src="" alt="" @click="upAndDown(item)">
+          <i :class="item.value ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" v-if="item.children.length > 13"  @click="upAndDown(item)"></i>
+          <!--<img v-if="item.children.length > 13" src="" alt="" @click="upAndDown(item)">-->
         </li>
       </ul>
     </div>
@@ -316,15 +317,12 @@
               color: #FF3C00;
             }
           }
-          >img{
-            display: block;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: red;
+          >i{
+            font-size: 14px;
+            color: #cccccc;
             position: absolute;
             right: 0;
-            top: 13px;
+            top: 0px;
           }
         }
         .li-active{

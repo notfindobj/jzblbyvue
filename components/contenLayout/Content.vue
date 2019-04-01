@@ -9,7 +9,7 @@
     <!--建筑规范之外的布局 四列-->
     <div v-if="show" class="works-list_box">
       <ul class="works-list">
-        <li >
+        <li @mouseleave="hideWorks()">
           <div class="img-box">
             <img src="../../assets/images/worksImg.png" alt="">
             <div class="works-like">
@@ -24,13 +24,13 @@
           <div class="works-introduce">
             <p>广东江门龙溪湖设计示范区</p>
             <div>
-              <img @mouseenter="showWorks(0)" @mouseleave="hideWorks()" src="../../assets/images/a.jpeg" alt="">
+              <img @mouseenter="showWorks(0)" src="../../assets/images/a.jpeg" alt="">
               <span>
               杨小幂
               </span>
             </div>
           </div>
-          <div :class="currentWorks == 0 ? 'works-active' : ''" class="works-con">
+          <div :class="currentWorks == 0 ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks()">
             <img src="../../assets/images/a.jpeg" alt="">
             <p>梅赛德斯·赵四</p>
             <ul class="works-con-introduce">
@@ -44,8 +44,8 @@
               </li>
             </ul>
             <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
+              <div @click="focus()">关注</div>
+              <div @click="direct()">私信</div>
             </div>
           </div>
         </li>
@@ -175,6 +175,12 @@
       hideWorks () {
         this.currentWorks = null;
       },
+      focus(){
+        this.currentWorks = null;
+      },
+      direct() {
+        this.currentWorks = null;
+      }
     },
   }
 </script>
