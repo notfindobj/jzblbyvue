@@ -105,17 +105,14 @@
                     </div>
                 </div>
                 <Row>
-                    <template v-for="(items, lp) in lpList">
-                        <i-col v-if="lp < 2" span="6" :key="lp">
-                            <Small-Cards :smallCardsDate= "items"/>  
-                        </i-col>
-                        <i-col v-if="lp === 2" span="12" :key="lp">
-                            <Big-Cards :bigCardsDate= "items"/> 
-                        </i-col>
-                        <i-col v-if="lp >2 && lp <5" span="6" :key="lp">
-                            <Small-Cards :smallCardsDate= "items"/>  
-                        </i-col>
-                    </template>
+                    <i-col  span="12" >
+                        <template v-for="(items, lp) in lpList"  >
+                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>  
+                        </template>
+                    </i-col>
+                    <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
+                        <Big-Cards :bigCardsDate= "items"/> 
+                    </i-col>
                 </Row>
             </div>
              <!-- SU模型 -->
@@ -280,16 +277,15 @@
             </div>
         </div>
         <ul>
-             <li><nuxt-link to="/About">资源库</nuxt-link></li>
+            <div @click="getDom">jq 获取dom</div>
+             <li id="dad"><nuxt-link to="/About">资源库</nuxt-link></li>
         </ul>
       <!-- <SignInAndOut v-if="true"></SignInAndOut> -->
-      <signPage></signPage>
+      
     </div>
 </template>
 <script>
-  import SignInAndOut from '../components/SignInAndOut'
-  import signPage from '../components/home/signPage'
-  import LevelMenu from '../components/home/LevelMenu'
+import LevelMenu from '../components/home/LevelMenu'
   export default {
         data () {
             return {
@@ -335,9 +331,7 @@
             }
         },
         components: {
-            SignInAndOut,
-            LevelMenu,
-            signPage
+            LevelMenu
         },
         computed: {},
         watch: {},
@@ -362,6 +356,8 @@
         beforeCreate () {},
         created () {},
         methods: {
+            getDom () {
+            },
             adada () {
                 this.$store.dispatch('fetchList', {id:true});
             },

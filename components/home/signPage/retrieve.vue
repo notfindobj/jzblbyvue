@@ -72,6 +72,7 @@ export default {
                 let msg = await ResetPwd(queruys)
                 if (msg) {
                     this.$Message.success(mobile.Msg);
+                    this.nextSteps++
                 }
             }
             if (this.nextSteps === 0) {

@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import createLogger from 'vuex/dist/logger'
-import {requests, overas} from './modules/index'
-
+import createLogger from 'vuex/dist/logger';
+import {requests, overas} from './modules/index';
 Vue.use(Vuex)
 
 const createStore = () => {

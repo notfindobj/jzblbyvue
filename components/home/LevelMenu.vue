@@ -104,6 +104,7 @@ export default {
             &-title {
                 text-align: left;
                 font-size: 14px;
+                display: flex;
                 &-content {
                     display: inline-block;
                     > span {

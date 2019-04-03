@@ -24,13 +24,11 @@
     },
     asyncData() {
 //        $axios.get('/journalismApi').then(res => {
-//            console.log(res)
 //        })
     },
     created() {
         // let
 //        this.$axios.get('/journalismApi').then(res => {
-//            console.log(res)
 //        })
     },
     methods: {
