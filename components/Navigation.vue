@@ -7,7 +7,7 @@
             <div class="home-bar-content">
                 <ul class="home-bar-content-left">
                     <li>欢迎您，来到建筑部落！</li>
-                    <li> 
+                    <li>
                         <i class="iconfont icon-jiantou"></i>
                         <span>上海 [切换城市]</span>
                     </li>
@@ -15,7 +15,7 @@
                  <ul class="home-bar-content-right">
                     <li @click="SignIn">登录</li>
                     <li class="content">在线地图</li>
-                    <li> 
+                    <li>
                         <Dropdown placement="bottom-start">
                             <a href="javascript:void(0)" class="app-down">
                                 APP下载
@@ -132,6 +132,7 @@ export default {
         }
     }
     .main-nav {
+        background: #F2F4F2;
         border-bottom: 1px solid #FF3C00;
         &-tab {
             font-size: 16px;
