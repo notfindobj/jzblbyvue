@@ -13,7 +13,10 @@
                     </li>
                 </ul>
                  <ul class="home-bar-content-right">
-                    <li @click="SignIn">登录</li>
+                    <li>
+                        <span v-if="!auth" @click="SignIn">登录</span>
+                        <span v-else>{{auth.NickName}}</span>
+                    </li>
                     <li class="content">在线地图</li>
                     <li>
                         <Dropdown placement="bottom-start">
@@ -74,15 +77,26 @@
                 <li>我的部落</li>
             </ul>
         </div>
+        <signPage></signPage>
     </div>
 </template>
 <script>
+import signPage from '../components/home/signPage'
+import { mapState, mapActions, mapGetters } from 'vuex'
 export default {
     data() {
         return {
             value11: '',
             loginIng: require('../assets/images/top_logo.png')
         }
+    },
+    computed: {
+        ...mapState({
+            auth: state => state.overas.auth
+        })
+    },
+     components: {
+        signPage
     },
     methods: {
         SignIn () {

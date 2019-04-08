@@ -105,6 +105,7 @@
                     </div>
                 </div>
                 <Row>
+<<<<<<< HEAD
                     <template v-for="(items, lp) in lpList">
                         <i-col v-if="lp < 2" span="6" :key="lp">
                             <Small-Cards :smallCardsDate= "items"/>
@@ -116,6 +117,16 @@
                             <Small-Cards :smallCardsDate= "items"/>
                         </i-col>
                     </template>
+=======
+                    <i-col  span="12" >
+                        <template v-for="(items, lp) in lpList"  >
+                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>
+                        </template>
+                    </i-col>
+                    <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
+                        <Big-Cards :bigCardsDate= "items"/>
+                    </i-col>
+>>>>>>> d5ccad6bb7ce2d3da7a765cf71e5f35acf55967d
                 </Row>
             </div>
              <!-- SU模型 -->
@@ -284,13 +295,11 @@
           <li><nuxt-link to="/DataDetails">资源库详情</nuxt-link></li>
         </ul>
       <!-- <SignInAndOut v-if="true"></SignInAndOut> -->
-      <signPage></signPage>
+
     </div>
 </template>
 <script>
-  import SignInAndOut from '../components/SignInAndOut'
-  import signPage from '../components/home/signPage'
-  import LevelMenu from '../components/home/LevelMenu'
+import LevelMenu from '../components/home/LevelMenu'
   export default {
         data () {
             return {
@@ -336,9 +345,7 @@
             }
         },
         components: {
-            SignInAndOut,
-            LevelMenu,
-            signPage
+            LevelMenu
         },
         computed: {},
         watch: {},
@@ -363,6 +370,8 @@
         beforeCreate () {},
         created () {},
         methods: {
+            getDom () {
+            },
             adada () {
                 this.$store.dispatch('fetchList', {id:true});
             },

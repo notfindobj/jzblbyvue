@@ -8,12 +8,16 @@ export const overallActions ={
     LOGGEDIN ({ commit, state }, params) {
         commit("SETLOGGEDIN", params)
     },
+    LOGININ ({ commit, state }, params) {
+        commit("setAuth", params)
+    },
     nuxtServerInit({ commit }, { req }) {
         let auth = null
+       
         if (req.headers.cookie) {
             const parsed = cookieparser.parse(req.headers.cookie)
             try {
-                auth = JSON.parse(parsed.auth)
+                auth = JSON.parse(parsed.adminToken.split('j:')[1])
             } catch (err) {
                 // 找不到有效的Cookie
             }

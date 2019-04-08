@@ -9,7 +9,7 @@
     <!--建筑规范之外的布局 四列-->
     <div v-if="show" class="works-list_box">
       <ul class="works-list">
-        <li @mouseleave="hideWorks()">
+        <li @mouseleave="hideWorks()" v-for="items in 8" :key="items">
           <div class="img-box">
             <img src="../../assets/images/worksImg.png" alt="">
             <div class="works-like">
@@ -583,5 +583,8 @@
         }
       }
     }
+  }
+  .ivu-page{
+    text-align: center;
   }
 </style>

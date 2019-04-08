@@ -52,7 +52,6 @@ export default {
             MobileNumber: this.registeredItem.mobile
         }
         let mobile = await getMobileCode(queruys)
-        console.log(mobile)
       },
       async register () {
             let queruyDate = {

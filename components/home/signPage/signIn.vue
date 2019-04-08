@@ -1,14 +1,14 @@
 <template>
     <div>
-        <Form ref="formInline" :rules="ruleInline" :model="userItem" :label-width="0">
+        <Form ref="formInline" :model="userItem" :label-width="0">
             <FormItem prop="userName">
-            <Input v-model="userItem.mobile" size="large"  class="asd" type="text" placeholder="请输入手机号码"/>
+            <Input v-model="userItem.mobile" size="large" type="text" placeholder="请输入手机号码"/>
             </FormItem>
             <FormItem prop="passWord">
-            <Input v-model="userItem.passWord" size="large"  type="password" placeholder="请输入密码"/>
+            <Input v-model="userItem.password" size="large"  type="password" placeholder="请输入密码"/>
             </FormItem>
             <FormItem>
-                <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit()">登录</Button>
+                <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit">登录</Button>
             </FormItem>
         </Form>
         <div class="sign-some">
@@ -27,13 +27,15 @@
     </div>
 </template>
 <script>
+import axios from 'axios'
+import qs from 'qs'
 import {lognIn} from '../../../service/clientAPI'
 export default {
     data () {
         return {
             userItem: {
-                mobile: '',
-                passWord: ''
+                mobile: '17601211250',
+                password: '123123'
             },
             ruleInline: {
                 mobile: [
@@ -56,9 +58,23 @@ export default {
         async handleSubmit () {
             let postData = {
                 mobile: this.userItem.mobile,
-                password: this.userItem.mobile
+                password: this.userItem.password
             }
-            let data = await lognIn(postData)
+            let config = {
+                url: 'http://140.143.240.64:8889/front/mobileLogin',
+                withCredentials: true,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                data: qs.stringify(postData)
+            }
+            axios(config)
+            .then(res => {
+                this.$store.dispatch('LOGININ', res.data.Data);
+                this.$store.dispatch('SETUP',  false)
+                this.$Message.success(res.data.Msg);
+            })
         }
     }
 }
