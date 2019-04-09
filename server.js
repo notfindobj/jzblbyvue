@@ -25,7 +25,7 @@ app.post('/front/mobileLogin', function (req, res) {
     const token = data.data.Data;
     if (token) {
       res.cookie('adminToken', token, {
-        maxAge: 60000 * 60 * 24
+        maxAge: 60000 * 60 * 30
       })
     }
     return res.json(data.data)
@@ -33,6 +33,17 @@ app.post('/front/mobileLogin', function (req, res) {
     return res.json(err)
   })
 });
+// 发起 POST /api/logout 请求注销当前用户，并从 req.session 中移除
+app.post('/api/logout', function (req, res) {
+  delete res.clearCookie('adminToken');
+  let response = {
+    Success: true,
+    Data: {},
+    Msg: '退出成功！',
+    Code: 200
+  }
+  res.json(response)
+})
 
 // 我们用这些选项初始化 Nuxt.js：
 let config = require('./nuxt.config.js')

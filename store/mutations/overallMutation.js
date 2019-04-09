@@ -6,7 +6,9 @@ export const overallMutation = {
         state.isItLoggedIn = param
     },
     setAuth(state, auth) {
-        console.log('刷新', auth)
         state.auth = auth
+    },
+    setqueryBase (state, param) {
+        state.queryBaseData = auth
     }
 }

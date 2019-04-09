@@ -15,7 +15,10 @@
                  <ul class="home-bar-content-right">
                     <li>
                         <span v-if="!auth" @click="SignIn">登录</span>
-                        <span v-else>{{auth.NickName}}</span>
+                        <div v-else>
+                            <span>{{auth.NickName}}</span>
+                            <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                        </div>
                     </li>
                     <li class="content">在线地图</li>
                     <li> 
@@ -65,7 +68,7 @@
             </div>
             <ul class="main-nav-tab">
                 <li class="resource">
-                    <span>资源库 <i class="iconfont icon-jiantou"></i></span>
+                    <span @click="backHome">资源库 <i class="iconfont icon-jiantou"></i></span>
                 </li>
                 <li>关注</li>
                 <li>推荐</li>
@@ -82,7 +85,8 @@
 </template>
 <script>
 import signPage from '../components/home/signPage'
-import { mapState, mapActions, mapGetters } from 'vuex'
+import { mapState} from 'vuex'
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -101,6 +105,26 @@ export default {
     methods: {
         SignIn () {
             this.$store.dispatch('SETUP',  true)
+        },
+        async signOut () {
+            debugger
+            let config = {
+                url: 'http://127.0.0.1:8889/api/logout',
+                withCredentials: true,
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            }
+            debugger
+            axios(config)
+            .then(res => {
+                this.$store.dispatch('LOGININ', null);
+                this.$Message.success(res.data.Msg);
+            })
+        },
+        backHome () {
+            this.$router.push({path: "/"})
         }
     }
 }
@@ -136,6 +160,9 @@ export default {
                 width: 50%;
                 display: flex;
                 justify-content: flex-end;
+                &-out {
+                    cursor: pointer;
+                }
                 > li.content {
                     padding: 0 30px;
                 }

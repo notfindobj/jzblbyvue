@@ -278,7 +278,7 @@
         </div>
         <ul>
             <div @click="getDom">jq 获取dom</div>
-             <li id="dad"><nuxt-link to="/About">资源库</nuxt-link></li>
+             <li id="dad"><nuxt-link :to="{name:'dataBase',params:{newsId:3306}}">资源库</nuxt-link></li>
         </ul>
       <!-- <SignInAndOut v-if="true"></SignInAndOut> -->
       
@@ -357,6 +357,7 @@ import LevelMenu from '../components/home/LevelMenu'
         created () {},
         methods: {
             getDom () {
+                this.$router.push({name: "dataBase-id", query: {id:1}})
             },
             adada () {
                 this.$store.dispatch('fetchList', {id:true});

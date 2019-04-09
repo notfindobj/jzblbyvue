@@ -9,12 +9,12 @@
     <!--建筑规范之外的布局 四列-->
     <div v-if="show" class="works-list_box">
       <ul class="works-list">
-        <li @mouseleave="hideWorks()" v-for="items in 8" :key="items">
+        <li @mouseleave="hideWorks()" v-for="items in RspItemDatas" :key="items.ItemId">
           <div class="img-box">
-            <img src="../../assets/images/worksImg.png" alt="">
+            <img :src="items.ItemTitleImg" alt="">
             <div class="works-like">
               <p>
-                <i class="icon iconfont icon-chakan"></i>35588
+                <i class="icon iconfont icon-chakan"></i>{{items.Views}}
               </p>
               <p>
                 <i class="icon iconfont icon-favorite"></i>收藏
@@ -22,15 +22,13 @@
             </div>
           </div>
           <div class="works-introduce">
-            <p>广东江门龙溪湖设计示范区</p>
+            <p>{{items.ItemName}}</p>
             <div>
-              <img @mouseenter="showWorks(0)" src="../../assets/images/a.jpeg" alt="">
-              <span>
-              杨小幂
-              </span>
+              <img class="headPortrait" @mouseenter="showWorks(items.ItemId)" src="../../assets/images/a.jpeg" alt="">
+              <span class="headPortrait">杨小幂</span>
             </div>
           </div>
-          <div :class="currentWorks == 0 ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks()">
+          <div :class="currentWorks == items.ItemId ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks()">
             <img src="../../assets/images/a.jpeg" alt="">
             <p>梅赛德斯·赵四</p>
             <ul class="works-con-introduce">
@@ -160,14 +158,22 @@
 <script>
   export default {
     name: 'conten',
+    props: {
+      RspItemDatas: {
+        type: Array,
+        required: true,
+        default:function () {
+          return []
+        }
+      }
+    },
     data() {
       return {
         show:true,
         currentWorks:null
       }
     },
-    mounted() {
-    },
+    mounted() {},
     methods: {
       showWorks (inx) {
         this.currentWorks = inx;
@@ -320,7 +326,7 @@
           border-radius: 4px;
           position: absolute;
           left: 45px;
-          top:7px;
+          top:8px;
           display: none;
           >img{
             display: block;
@@ -586,5 +592,8 @@
   }
   .ivu-page{
     text-align: center;
+  }
+  .headPortrait {
+    cursor: pointer;
   }
 </style>

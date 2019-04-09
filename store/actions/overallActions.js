@@ -8,12 +8,16 @@ export const overallActions ={
     LOGGEDIN ({ commit, state }, params) {
         commit("SETLOGGEDIN", params)
     },
+    // 设置cookie
     LOGININ ({ commit, state }, params) {
         commit("setAuth", params)
     },
-    nuxtServerInit({ commit }, { req }) {
+    // 设置资料库导航数据
+    BASEDATA ({ commit, state }, params) {
+        commit("setqueryBase", params)
+    },
+    nuxtServerInit({ commit, state }, { req }) {
         let auth = null
-       
         if (req.headers.cookie) {
             const parsed = cookieparser.parse(req.headers.cookie)
             try {
@@ -22,6 +26,8 @@ export const overallActions ={
                 // 找不到有效的Cookie
             }
         }
-        commit('setAuth', auth)
+        commit('setAuth', auth);
+        // 设置资料库导航数据
+        console.log('>>>>>>>>>', state.queryBaseData)
     }
 }

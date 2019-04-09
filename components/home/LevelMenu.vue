@@ -16,13 +16,12 @@
                                     <div class="sub-banner-nav-items-title" :key="item.ItemAttributesId">
                                         <span class="sub-banner-nav-items-title-type">{{item.ItemAttributesFullName}}:</span>
                                         <div style="display:inline-block;width:85%">
-                                            <div v-for="it in items.ChildNode" :key="it.ItemAttributesId" class="sub-banner-nav-items-title-content" >
-                                                <span>{{it.ItemAttributesFullName}}</span>
+                                            <div v-for="it in item.ChildNode" :key="it.ItemAttributesId" class="sub-banner-nav-items-title-content" >
+                                                <span @click="clickFullName(items, item, it)">{{it.ItemAttributesFullName}}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </template>    
-                                
                             </div>
                         </div>
                     </div>
@@ -56,6 +55,20 @@ export default {
         mouseleave:_debounce(function(id) {
             this.id = id
         }, 200),
+        clickFullName (pre, type, ch) {
+            let baseDateId ={
+                parentID :  `${pre.ItemSubAttributeCode}|${pre.ItemAttributesId}`,
+                typeArrList: [
+                    {
+                    ArrId: type.ItemAttributesId,
+                    ArrEnCode: ch.ItemSubAttributeCode
+                    }
+                ]
+            }
+            this.$store.dispatch('BASEDATA', baseDateId);
+            this.$router.push({name: "dataBase"})
+           
+        }
     }
 }
 </script>
@@ -94,7 +107,7 @@ export default {
         position: absolute;
         left: 142px;
         top: 0;
-        min-width: 595px;
+        min-width: 850px;
         min-height: 367px;
         padding: 7px 0;
         background: #ffffff;

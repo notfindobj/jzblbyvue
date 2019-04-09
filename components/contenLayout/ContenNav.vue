@@ -8,13 +8,12 @@
     </div>
     <div class="screening-nav">
       <ul class="screening-nav-list">
-        <li v-for="(item,index) in listOneInfo" :key="index" :class="item.value ? 'li-active' : ''">
-          <p>{{item.title}}</p>
+        <li v-for="(item,index) in itemAttribute" :key="index" :class="item.ItemAttributesId ? 'li-active' : ''">
+          <p>{{item.ItemAttributesFullName}}</p>
           <ol>
-            <li :class="items.value ? 'li-active' : ''" v-for="(items,index) in  item.children" :key="index" @click="choseSomeOne(item,index)">{{items.name}}</li>
+            <li v-for="(items,index) in  item.ChildNode" :key="index" @click="choseSomeOne(item,index)">{{items.ItemAttributesFullName}}</li>
           </ol>
-          <i :class="item.value ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" v-if="item.children.length > 13"  @click="upAndDown(item)"></i>
-          <!--<img v-if="item.children.length > 13" src="" alt="" @click="upAndDown(item)">-->
+          <i :class="item.ItemAttributesId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" v-if="item.ChildNode.length > 13"  @click="upAndDown(item)"></i>
         </li>
       </ul>
     </div>
@@ -28,6 +27,15 @@
 <script>
   export default {
     name: 'contenNav',
+    props: {
+      itemAttribute: {
+        type: Array,
+        required: true,
+        default: function () {
+          return []
+        }
+      }
+    },
     data() {
       return {
         listInfo:[
@@ -44,140 +52,6 @@
         currentInex:0,
         currentName:'',
         clicked:-1,
-        listOneInfo:[
-          {
-            "title": "风格",
-            "children": [
-              {
-                "name": "新亚洲",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              }
-            ],
-            "value":false
-          },
-          {
-            "title": "风格",
-            "children": [
-              {
-                "name": "新亚洲",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              }
-            ],
-            "value":false
-          },
-          {
-            "title": "风格",
-            "children": [
-              {
-                "name": "新亚洲",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              }
-            ],
-            "value":false
-          },
-          {
-            "title": "风格",
-            "children": [
-              {
-                "name": "新亚洲",
-                "value":false
-              },
-              {
-                "name": "新亚洲1",
-                "value":false
-              }
-            ],
-            "value":false
-          }
-        ]
       }
     },
     mounted() {
@@ -188,13 +62,13 @@
         this.currentName = item;
       },
       choseSomeOne(item,inx){
-        item.children.map((items,index) => {
-          if(index == inx) {
-            items.value = !item.value
-          }else{
-            items.value = false
-          }
-        })
+        // item.children.map((items,index) => {
+        //   if(index == inx) {
+        //     items.value = !item.value
+        //   }else{
+        //     items.value = false
+        //   }
+        // })
       },
       upAndDown (item) {
         item.value = !item.value
@@ -309,6 +183,7 @@
             >li{
               float: left;
               margin-right: 24px;
+              cursor: pointer;
               &:hover{
                 color: #FF3C00;
               }
