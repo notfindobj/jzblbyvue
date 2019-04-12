@@ -54,7 +54,7 @@
                 </div>
                 <Row>
                    <template v-for=" (items, index) in sfqList" v-if="index < 8">
-                         <i-col span="6" :key="index"> 
+                         <i-col span="6" :key="index">
                               <Small-Cards :smallCardsDate= "items"/>
                          </i-col>
                     </template>
@@ -79,11 +79,11 @@
                     <template v-for="(items, index) in lpList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards :bigCardsDate= "items"/>  
+                                <Big-Cards :bigCardsDate= "items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards :smallCardsDate= "items"/> 
+                            <Small-Cards :smallCardsDate= "items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -106,11 +106,11 @@
                 <Row>
                     <i-col  span="12" >
                         <template v-for="(items, lp) in lpList"  >
-                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>  
+                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>
                         </template>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards :bigCardsDate= "items"/> 
+                        <Big-Cards :bigCardsDate= "items"/>
                     </i-col>
                 </Row>
             </div>
@@ -133,11 +133,11 @@
                     <template v-for="(items, index) in suList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards :bigCardsDate= "items"/>  
+                                <Big-Cards :bigCardsDate= "items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards :smallCardsDate= "items"/> 
+                            <Small-Cards :smallCardsDate= "items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -160,11 +160,11 @@
                 <Row>
                     <i-col  span="12" >
                         <template v-for="(items, lp) in ztList"  >
-                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>  
+                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>
                         </template>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards :bigCardsDate= "items"/> 
+                        <Big-Cards :bigCardsDate= "items"/>
                     </i-col>
                 </Row>
             </div>
@@ -187,11 +187,11 @@
                     <template v-for="(items, index) in pmList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards :bigCardsDate= "items"/>  
+                                <Big-Cards :bigCardsDate= "items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards :smallCardsDate= "items"/> 
+                            <Small-Cards :smallCardsDate= "items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -280,7 +280,7 @@
             </div>
         </div>
         <ul>
-            <li id="dad"><nuxt-link to="/About">资源库</nuxt-link></li>
+            <li id="dad"><nuxt-link to="/DataDetails">资源库</nuxt-link></li>
         </ul>
     </div>
 </template>
@@ -343,13 +343,13 @@ async asyncData ({app, store}) {
         sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
         lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
         xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
-        suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型 
+        suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型
         ztList: homeData.ItemList.Zt.RecommendedItemModels || [], // 总图
         pmList: homeData.ItemList.Pm.RecommendedItemModels || [], // 平面
         wbList: homeData.ItemList.Wb.RecommendedItemModels || [], // 文本
         jzList: homeData.ItemList.Jzgf.RecommendedItemModels || [], // 建筑规范
         snList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
-        
+
     }
 },
 beforeCreate () {},
