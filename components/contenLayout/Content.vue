@@ -1,10 +1,10 @@
 <template>
   <div class="content-box">
     <ul class="content-screening-list">
-      <li class="li-active">最新上传</li>
-      <li>人气</li>
-      <li>下载</li>
-      <li>收藏</li>
+      <li :class="sortAction === 0 ?'li-active' : ''" @click="entrySorting(0)">最新上传</li>
+      <li :class="sortAction === 1 ?'li-active' : ''" @click="entrySorting(1)">人气</li>
+      <li :class="sortAction === 2 ?'li-active' : ''" @click="entrySorting(2)">下载</li>
+      <li :class="sortAction === 3 ?'li-active' : ''" @click="entrySorting(3)">收藏</li>
     </ul>
     <!--建筑规范之外的布局 四列-->
     <div v-if="show" class="works-list_box">
@@ -151,7 +151,7 @@
         </li>
       </ul>
     </div>
-    <Page :total="100" show-sizer />
+    <Page :total="RspPaginationData.records" :current="RspPaginationData.page" show-sizer @on-change="onChange"/>
   </div>
 </template>
 
@@ -165,16 +165,35 @@
         default:function () {
           return []
         }
+      },
+      RspPaginationData: {
+        type: Object,
+        required: true,
+        default:function () {
+          return {}
+        }
       }
     },
     data() {
       return {
+        sortAction: 0,
         show:true,
         currentWorks:null
       }
     },
+    updated () {
+      let queryData = JSON.parse(this.$route.query.dataBase)
+      this.sortAction = parseInt(queryData.SortType);
+      console.log(this.sortAction)
+    },
     mounted() {},
     methods: {
+      entrySorting (val) {
+        this.$emit('entrySorting', val)
+      },
+      onChange (val) {
+        this.$emit('onChange', val)
+      },
       showWorks (inx) {
         this.currentWorks = inx;
       },
@@ -213,6 +232,7 @@
         font-size: 14px;
         color: #666666;
         margin-right: 36px;
+        cursor: pointer;
       }
       .li-active{
         color: #ED1B24;

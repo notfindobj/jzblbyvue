@@ -44,19 +44,9 @@
                     </div>
                     <div class="main-content-left-search">
                         <Input v-model="value11" style="width:450px;" size="large">
-                         <Dropdown slot="prepend" style="margin-left: 10px">
-                            <a href="javascript:void(0)">
-                                菜单(居中)
-                                <Icon type="ios-arrow-down"></Icon>
-                            </a>
-                            <DropdownMenu slot="list">
-                                <DropdownItem>驴打滚</DropdownItem>
-                                <DropdownItem>炸酱面</DropdownItem>
-                                <DropdownItem>豆汁儿</DropdownItem>
-                                <DropdownItem>冰糖葫芦</DropdownItem>
-                                <DropdownItem>北京烤鸭</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <Select slot="prepend" v-model="value11" style="width:100px">
+                            <Option value="item.value" ></Option>
+                        </Select>
                             <Button type="primary" slot="append" class="btn-bg" size="large">搜索</Button>
                             <!-- <a href="javascript:void(0)" >搜索</a> -->
                         </Input>
@@ -107,16 +97,14 @@ export default {
             this.$store.dispatch('SETUP',  true)
         },
         async signOut () {
-            debugger
             let config = {
-                url: 'http://127.0.0.1:8889/api/logout',
+                url: 'http://140.143.240.64:8889/api/logout',
                 withCredentials: true,
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
             }
-            debugger
             axios(config)
             .then(res => {
                 this.$store.dispatch('LOGININ', null);

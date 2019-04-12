@@ -1,5 +1,13 @@
 <template>
     <div>
-        登录页面
+        <page/>
     </div>
 </template>
+<script>
+import page from '../../components/publicComponents/page'
+export default {
+    components:{
+        page
+    }
+}
+</script>

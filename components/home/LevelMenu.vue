@@ -57,17 +57,21 @@ export default {
         }, 200),
         clickFullName (pre, type, ch) {
             let baseDateId ={
-                parentID :  `${pre.ItemSubAttributeCode}|${pre.ItemAttributesId}`,
-                typeArrList: [
+                ClassTypeId: `${pre.ItemSubAttributeCode}|${pre.ItemAttributesId}`,
+                ClassTypeArrList: [
                     {
-                    ArrId: type.ItemAttributesId,
-                    ArrEnCode: ch.ItemSubAttributeCode
+                        ArrId: type.ItemAttributesId,
+                        ArrEnCode: ch.ItemSubAttributeCode
                     }
-                ]
+                ],
+                SortType: 0,
+                KeyWords: "",
+                Order: true,
+                Page: 0,
+                Rows: 8
             }
             this.$store.dispatch('BASEDATA', baseDateId);
-            this.$router.push({name: "dataBase"})
-           
+            this.$router.push({name: "dataBase", query: {dataBase: JSON.stringify(baseDateId)}})
         }
     }
 }

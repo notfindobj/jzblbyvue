@@ -3,7 +3,7 @@
     <div class="nav-list">
       <p>在以下分类中找：</p>
       <ul>
-        <li v-for="(item, index) in listInfo" :class="index == currentInex ? 'li-active' : ''"  :key="index" @click="choseSome(index,item)">{{item}}<img src="../../assets/images/sanjiao.png" /></li>
+        <li v-for="(item, index) in listInfo" :class="item.ItemAttributesId == currentInex ? 'li-active' : ''"  :key="index" @click="choseSome(index,item)">{{item.ItemAttributesFullName}}<img src="../../assets/images/sanjiao.png" /></li>
       </ul>
     </div>
     <div class="screening-nav">
@@ -11,7 +11,7 @@
         <li v-for="(item,index) in itemAttribute" :key="index" :class="item.ItemAttributesId ? 'li-active' : ''">
           <p>{{item.ItemAttributesFullName}}</p>
           <ol>
-            <li v-for="(items,index) in  item.ChildNode" :key="index" @click="choseSomeOne(item,index)">{{items.ItemAttributesFullName}}</li>
+            <li v-for="(items,index) in  item.ChildNode" :key="index" @click="choseSomeOne(item,items)">{{items.ItemAttributesFullName}}</li>
           </ol>
           <i :class="item.ItemAttributesId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" v-if="item.ChildNode.length > 13"  @click="upAndDown(item)"></i>
         </li>
@@ -34,41 +34,37 @@
         default: function () {
           return []
         }
+      },
+      listInfo: {
+        type: Array,
+        required: true,
+        default: function () {
+          return []
+        }
       }
     },
     data() {
       return {
-        listInfo:[
-          '示范区',
-          '楼盘',
-          '效果图',
-          'SU模型',
-          '总图',
-          '平面',
-          '建筑规范',
-          '室内案例',
-          '文本',
-        ],
-        currentInex:0,
+        currentInex: '',
         currentName:'',
         clicked:-1,
+        asd: {}
       }
     },
-    mounted() {
+    updated () {
+      let queryData = JSON.parse(this.$route.query.dataBase)
+      this.currentInex = queryData.ClassTypeId.split('|')[1];
     },
+    mounted() {},
     methods: {
-      choseSome (inx,item) {
-        this.currentInex = inx;
-        this.currentName = item;
+      choseSome (index,item) {
+        this.currentInex = item.ItemAttributesId;
+        console.log(this.asd)
+        this.currentName = item.ItemAttributesFullName;
+        this.$emit('choseSome', item)
       },
       choseSomeOne(item,inx){
-        // item.children.map((items,index) => {
-        //   if(index == inx) {
-        //     items.value = !item.value
-        //   }else{
-        //     items.value = false
-        //   }
-        // })
+        this.$emit('choseSomeOne', item, inx)
       },
       upAndDown (item) {
         item.value = !item.value

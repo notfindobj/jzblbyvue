@@ -1,6 +1,5 @@
 <template>
     <div>
-        <!-- banner -->
         <div class="banner-box">
             <div v-swiper:mySwiper="swiperOption" class="swiper-box">
                 <div class="swiper-wrapper">
@@ -55,7 +54,7 @@
                 </div>
                 <Row>
                    <template v-for=" (items, index) in sfqList" v-if="index < 8">
-                         <i-col span="6" :key="index">
+                         <i-col span="6" :key="index"> 
                               <Small-Cards :smallCardsDate= "items"/>
                          </i-col>
                     </template>
@@ -80,11 +79,11 @@
                     <template v-for="(items, index) in lpList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards :bigCardsDate= "items"/>
+                                <Big-Cards :bigCardsDate= "items"/>  
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards :smallCardsDate= "items"/>
+                            <Small-Cards :smallCardsDate= "items"/> 
                         </i-col>
                     </template>
                 </Row>
@@ -105,28 +104,14 @@
                     </div>
                 </div>
                 <Row>
-<<<<<<< HEAD
-                    <template v-for="(items, lp) in lpList">
-                        <i-col v-if="lp < 2" span="6" :key="lp">
-                            <Small-Cards :smallCardsDate= "items"/>
-                        </i-col>
-                        <i-col v-if="lp === 2" span="12" :key="lp">
-                            <Big-Cards :bigCardsDate= "items"/>
-                        </i-col>
-                        <i-col v-if="lp >2 && lp <5" span="6" :key="lp">
-                            <Small-Cards :smallCardsDate= "items"/>
-                        </i-col>
-                    </template>
-=======
                     <i-col  span="12" >
                         <template v-for="(items, lp) in lpList"  >
-                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>
+                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>  
                         </template>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards :bigCardsDate= "items"/>
+                        <Big-Cards :bigCardsDate= "items"/> 
                     </i-col>
->>>>>>> d5ccad6bb7ce2d3da7a765cf71e5f35acf55967d
                 </Row>
             </div>
              <!-- SU模型 -->
@@ -148,11 +133,11 @@
                     <template v-for="(items, index) in suList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards :bigCardsDate= "items"/>
+                                <Big-Cards :bigCardsDate= "items"/>  
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards :smallCardsDate= "items"/>
+                            <Small-Cards :smallCardsDate= "items"/> 
                         </i-col>
                     </template>
                 </Row>
@@ -173,13 +158,14 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
+                    <i-col  span="12" >
+                        <template v-for="(items, lp) in ztList"  >
+                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" :key="lp"/>  
+                        </template>
                     </i-col>
-                     <i-col span="12"> <Big-Cards/> </i-col>
+                    <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
+                        <Big-Cards :bigCardsDate= "items"/> 
+                    </i-col>
                 </Row>
             </div>
              <!-- 平面 -->
@@ -198,13 +184,16 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
+                    <template v-for="(items, index) in pmList">
+                        <template v-if="index === 0">
+                            <i-col span="12" :key="index">
+                                <Big-Cards :bigCardsDate= "items"/>  
+                            </i-col>
+                        </template>
+                        <i-col span="6" v-if="index >0 && index<5" :key="index">
+                            <Small-Cards :smallCardsDate= "items"/> 
+                        </i-col>
+                    </template>
                 </Row>
             </div>
             <!-- 文本 -->
@@ -291,100 +280,82 @@
             </div>
         </div>
         <ul>
-            <div @click="getDom">jq 获取dom</div>
-             <li id="dad"><nuxt-link :to="{name:'dataBase',params:{newsId:3306}}">资源库</nuxt-link></li>
+            <li id="dad"><nuxt-link to="/About">资源库</nuxt-link></li>
         </ul>
-      <!-- <SignInAndOut v-if="true"></SignInAndOut> -->
-
     </div>
 </template>
 <script>
 import LevelMenu from '../components/home/LevelMenu'
-  export default {
-        data () {
-            return {
-                banners: [
-                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                        'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
-                    ],
-                swiperOption: {
-                    loop: true,
-                    autoplay:true,
-                    slidesPerView: 'auto',
-                    centeredSlides: true,
-                    pagination: {
-                        el: '.swiper-pagination',
-                        dynamicBullets: true
-                    },
-                    on: {
-                        slideChange() {
-                            // console.log('onSlideChangeEnd', this);
-                        },
-                        tap() {
-                            // console.log('onTap', this);
-                        }
-                    }
+export default {
+data () {
+    return {
+        banners: [
+                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
+            ],
+        swiperOption: {
+            loop: true,
+            autoplay:true,
+            slidesPerView: 'auto',
+            centeredSlides: true,
+            pagination: {
+                el: '.swiper-pagination',
+                dynamicBullets: true
+            },
+            on: {
+                slideChange() {
+                    // console.log('onSlideChangeEnd', this);
                 },
-                excellent: {
-                    slidesPerView : 4,
-                    slidesPerGroup : 1,
-                    pagination: {
-                        // el: '.swiper-pagination',
-                        dynamicBullets: true
-                    },
-                    navigation: {
-                        nextEl: '.swiper-button-next',
-                        prevEl: '.swiper-button-prev',
-                    },
-                },
-                isOneMeun: null,
+                tap() {
+                    // console.log('onTap', this);
+                }
             }
         },
-        components: {
-            LevelMenu
+        excellent: {
+            slidesPerView : 4,
+            slidesPerGroup : 1,
+            pagination: {
+                // el: '.swiper-pagination',
+                dynamicBullets: true
+            },
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
         },
-        computed: {},
-        watch: {},
-        async asyncData ({app, store}) {
-            let menuData = await store.dispatch('getMenu');
-            let homeData = await store.dispatch('getHomeData');
-            return {
-                oneMeun: menuData.RetMenuData || [],
-                homeData: homeData,
-                sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
-                lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
-                xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
-                suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型
-                ztList: homeData.ItemList.Zt.RecommendedItemModels || [], // 总图
-                wbList: homeData.ItemList.Pm.RecommendedItemModels || [], // 平面
-                wbList: homeData.ItemList.Wb.RecommendedItemModels || [], // 文本
-                wbList: homeData.ItemList.Jzgf.RecommendedItemModels || [], // 建筑规范
-                wbList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
-
-            }
-        },
-        beforeCreate () {},
-        created () {},
-        methods: {
-            getDom () {
-                this.$router.push({name: "dataBase-id", query: {id:1}})
-            },
-            adada () {
-                this.$store.dispatch('fetchList', {id:true});
-            },
-            enter (index) {
-                this.isOneMeun = index;
-            },
-            leave () {},
-            SignIns(data) {
-                this.$store.dispatch('SETUP', true);
-            }
-        }
-  }
+    }
+},
+components: {
+    LevelMenu
+},
+computed: {},
+watch: {},
+async asyncData ({app, store}) {
+    let menuData = await store.dispatch('getMenu');
+    let homeData = await store.dispatch('getHomeData');
+    return {
+        oneMeun: menuData.RetMenuData || [],
+        homeData: homeData,
+        sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
+        lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
+        xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
+        suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型 
+        ztList: homeData.ItemList.Zt.RecommendedItemModels || [], // 总图
+        pmList: homeData.ItemList.Pm.RecommendedItemModels || [], // 平面
+        wbList: homeData.ItemList.Wb.RecommendedItemModels || [], // 文本
+        jzList: homeData.ItemList.Jzgf.RecommendedItemModels || [], // 建筑规范
+        snList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
+        
+    }
+},
+beforeCreate () {},
+created () {},
+methods: {}
+}
 </script>
 <style lang="less">
     .ivu-col-span-12 {

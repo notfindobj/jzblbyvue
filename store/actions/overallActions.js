@@ -23,11 +23,9 @@ export const overallActions ={
             try {
                 auth = JSON.parse(parsed.adminToken.split('j:')[1])
             } catch (err) {
-                // 找不到有效的Cookie
+                // 找不到有效的Cookie`
             }
         }
         commit('setAuth', auth);
-        // 设置资料库导航数据
-        console.log('>>>>>>>>>', state.queryBaseData)
     }
 }

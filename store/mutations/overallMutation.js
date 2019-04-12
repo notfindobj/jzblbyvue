@@ -9,6 +9,6 @@ export const overallMutation = {
         state.auth = auth
     },
     setqueryBase (state, param) {
-        state.queryBaseData = auth
+        state.queryBaseData = param
     }
 }
