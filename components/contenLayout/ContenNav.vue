@@ -21,6 +21,12 @@
       <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>
       <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}</BreadcrumbItem>
     </Breadcrumb>
+    <div class="itemAttribute">
+      <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index">
+        <span >{{items.ClassTypeName}}:{{items.ArrName}}</span>
+        <i class="iconfont icon-chahao2" @click="delItems(items)"></i>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -29,6 +35,13 @@
     name: 'contenNav',
     props: {
       itemAttribute: {
+        type: Array,
+        required: true,
+        default: function () {
+          return []
+        }
+      },
+      queryConditions: {
         type: Array,
         required: true,
         default: function () {
@@ -51,8 +64,10 @@
         asd: {}
       }
     },
-    updated () {
-      let queryData = JSON.parse(this.$route.query.dataBase)
+    created () {
+      let queryData = JSON.parse(this.$route.query.dataBase);
+      console.log(queryData)
+      this.currentName = queryData.title;
       this.currentInex = queryData.ClassTypeId.split('|')[1];
     },
     mounted() {},
@@ -65,6 +80,9 @@
       },
       choseSomeOne(item,inx){
         this.$emit('choseSomeOne', item, inx)
+      },
+      delItems (item) {
+        this.$emit('delItems', item)
       },
       upAndDown (item) {
         item.value = !item.value
@@ -204,5 +222,29 @@
   }
   .ivu-breadcrumb-item-separator{
     margin: 0 2px!important;
+  }
+  .ivu-breadcrumb {
+    display: inline-block;
+  }
+  .itemAttribute {
+    display: inline-block;
+    margin-left: 10px;
+    &-items {
+      display: inline-block;
+      margin-right: 10px;
+      border: .5px solid #FF3C00;
+      border-radius: 3px;
+      padding: 0 4px;
+      span {
+        color: #cccccc;
+        line-height: 29px;
+      }
+      i{
+        cursor: pointer;
+        &:hover {
+          color: #FF3C00;
+        }
+      }
+    }
   }
 </style>

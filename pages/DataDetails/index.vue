@@ -1,19 +1,29 @@
 <template>
   <div class="data-details-box">
+    <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
+    {{itemsDetail}}
     <div class="data-details-con-box">
       <div class="data-details-location"></div>
       <div class="data-details-con">
-        <data-details-left></data-details-left>
-        <data-details-right></data-details-right>
+        <data-details-left />
+        <div>
+          <data-details-right 
+          :detaDetails="detaDetails"
+          />
+          <commentsCon 
+          :publish="detaDetails"
+          @thumbsUp="thumbsUp"
+          />
+        </div>
       </div>
     </div>
-
-
   </div>
 </template>
 <script>
   import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
+  import commentsCon from '../../components/comments/commentsCon.vue'
+  import {setthumbsUp} from '../../service/clientAPI'
   export default {
     head () {
       return {
@@ -26,13 +36,29 @@
     },
     components: {
       dataDetailsLeft,
-      dataDetailsRight
+      dataDetailsRight,
+      commentsCon
     },
-    asyncData() {
+    async asyncData({app, store, route}) {
+      let queryData = JSON.parse(route.query.dataBase);
+      delete queryData.title;
+      let getBaseDataDetail = await store.dispatch('getBaseDataDetails', queryData);
+      return {
+        detaDetails: getBaseDataDetail.ItemEntity,
+        itemsDetail: getBaseDataDetail
+      }
     },
     created() {
     },
     methods: {
+      async thumbsUp (item) {
+        let queryData = {
+          ItemId: item.ItemId,
+          LikeType: 1,
+          IsDelete: 0
+        }
+        let thumbsUpMsg = await setthumbsUp(queryData)
+      }
     }
   }
 </script>

@@ -43,7 +43,7 @@
 </script>
 <style lang="less" scoped>
   .data-details-left{
-    width: 840px;
+    // width: 840px;
     height: auto;
     margin-right: 20px;
     .data-details-title{

@@ -68,7 +68,8 @@ export default {
                 KeyWords: "",
                 Order: true,
                 Page: 0,
-                Rows: 8
+                Rows: 8,
+                title: pre.ItemAttributesFullName,
             }
             this.$store.dispatch('BASEDATA', baseDateId);
             this.$router.push({name: "dataBase", query: {dataBase: JSON.stringify(baseDateId)}})

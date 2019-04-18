@@ -34,7 +34,9 @@ module.exports = {
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
   env: {
-    baseUrl: process.env.BASE_URL || 'http://www.api.jzbl.com/api/'
+    baseUrl: process.env.BASE_URL || 'http://www.api.jzbl.com/api/',
+    withCredentials: true,
+    locURL: '127.0.0.1:8889'
   },
   // 解决跨域
   axios: {
@@ -48,6 +50,8 @@ module.exports = {
         '/api', 
         { 
           target: 'http://www.api.jzbl.com/api/', // api主机
+          withCredentials: true,
+          changeOrigin: true,
           pathRewrite: { '^/api' : '/' }
         }
     ]

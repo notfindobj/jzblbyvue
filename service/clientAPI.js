@@ -1,5 +1,7 @@
 import request from './index'
-
+export const getMenu = async (params)=>  {
+    return await request.get('Menu/GetMenuAll', params)
+}
 // 获取验证码
 export const getMobileCode =async (params)=>  {
     return await request.post('Account/GetMobileCode', params)
@@ -16,3 +18,10 @@ export const ResetPwd =async (params)=>  {
 export const getBaseData =async (params)=>  {
   return await request.post('ItemList/GetItemList', params)
 }
+/**
+ * 资源库详情
+ */
+// 点赞
+export const setthumbsUp = async (params)=>  {
+    return await request.post('CollectionOrLike/Like', params)
+  }

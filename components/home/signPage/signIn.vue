@@ -61,7 +61,8 @@ export default {
                 password: this.userItem.password
             }
             let config = {
-                url: 'http://140.143.240.64:8889/front/mobileLogin',
+                url: 'http://127.0.0.1:8889/front/mobileLogin',
+                // url: 'http://140.143.240.64:8889/front/mobileLogin',
                 withCredentials: true,
                 method: 'post',
                 headers: {

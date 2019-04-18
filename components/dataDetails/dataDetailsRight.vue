@@ -3,7 +3,7 @@
     <div class="data-details-right-con">
       <div class="works-info">
         <img :src="worksDatainfo.imgUrl" alt="">
-        <p class="works-name">{{worksDatainfo.worksName}}</p>
+        <p class="works-name">{{detaDetails.ItemName}}</p>
         <div class="focus-btn">+ 关注</div>
       </div>
       <div class="data-info">
@@ -20,9 +20,7 @@
         <div @click="immediatelyDown()">立即下载</div>
         <div @click="customthis()">同款定制</div>
       </div>
-      <div class="box">
-        <comments-con></comments-con>
-      </div>
+      <div class="box"></div>
     </div>
 
   </div>
@@ -32,6 +30,15 @@
   import commentsCon from '../../components/comments/commentsCon.vue'
   export default {
     name: 'detaDetailsRight',
+    props: {
+      detaDetails: {
+        type: Object,
+        required: true,
+        default: function () {
+          return {}
+        }
+      }
+    },
     data() {
       return {
         worksDatainfo:{
@@ -234,7 +241,7 @@
       .box{
         width: 100%;
         border-radius: 4px;
-        height: 1077px;
+        // height: 1077px;
       }
     }
 

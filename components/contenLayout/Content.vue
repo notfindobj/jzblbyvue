@@ -7,10 +7,10 @@
       <li :class="sortAction === 3 ?'li-active' : ''" @click="entrySorting(3)">收藏</li>
     </ul>
     <!--建筑规范之外的布局 四列-->
-    <div v-if="show" class="works-list_box">
+    <div v-if="showLayout" class="works-list_box">
       <ul class="works-list">
         <li @mouseleave="hideWorks()" v-for="items in RspItemDatas" :key="items.ItemId">
-          <div class="img-box">
+          <div class="img-box" @click="viewItem(items)">
             <img :src="items.ItemTitleImg" alt="">
             <div class="works-like">
               <p>
@@ -52,103 +52,44 @@
     <!--建筑规范的布局两列-->
     <div  class="works-list-box" v-else>
       <ul class="works-list-change">
-        <li>
-          <div class="works-list-left"></div>
-          <div class="works-list-right">
-            <p>《建筑设计防火规范》GB50016-2019(2018版)</p>
-            <div class="works-list-con">
-              <div class="works-name">
-                <img src="" alt="">
-                <span>杨小幂</span>
-              </div>
-
-              <div class="works-list-con-box">
-                <i class="icon iconfont icon-chakan"></i>
-                <span>888</span>
-                <i class="icon iconfont icon-favorite"></i>
-                <span>6666</span>
-              </div>
-            </div>
-          </div>
-          <div class="works-con">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
-            <ul class="works-con-introduce">
-              <li>
-                <p>项目</p>
-                <p>1334</p>
-              </li>
-              <li>
-                <p>粉丝</p>
-                <p>1.3万</p>
-              </li>
-            </ul>
-            <div class="btn-group-box">
-              <div>关注</div>
-              <div>私信</div>
-            </div>
-          </div>
-        </li>
-        <li>
-          <div class="works-list-left"></div>
-          <div class="works-list-right">
-            <p>《建筑设计防火规范》GB50016-2019(2018版)</p>
-            <div class="works-list-con">
-              <div class="works-name">
-                <img src="" alt="">
-                <span>杨小幂</span>
-              </div>
-
-              <div class="works-list-con-box">
-                <i class="icon iconfont icon-chakan"></i>
-                <span>888</span>
-                <i class="icon iconfont icon-favorite"></i>
-                <span>6666</span>
+        <template  v-for="items in RspItemDatas">
+          <li :key="items.ItemId">
+            <div class="works-list-left"></div>
+            <div class="works-list-right">
+              <p>{{items.ItemName}}</p>
+              <div class="works-list-con">
+                <div class="works-name">
+                  <img src="" alt="">
+                  <span>杨小幂</span>
+                </div>
+                <div class="works-list-con-box">
+                  <i class="icon iconfont icon-chakan"></i>
+                  <span>{{items.Views}}</span>
+                  <i class="icon iconfont icon-favorite"></i>
+                  <span>{{items.Collections}}</span>
+                </div>
               </div>
             </div>
-          </div>
-
-        </li>
-        <li>
-          <div class="works-list-left"></div>
-          <div class="works-list-right">
-            <p>《建筑设计防火规范》GB50016-2019(2018版)</p>
-            <div class="works-list-con">
-              <div class="works-name">
-                <img src="" alt="">
-                <span>杨小幂</span>
-              </div>
-
-              <div class="works-list-con-box">
-                <i class="icon iconfont icon-chakan"></i>
-                <span>888</span>
-                <i class="icon iconfont icon-favorite"></i>
-                <span>6666</span>
+            <div class="works-con">
+              <img src="../../assets/images/a.jpeg" alt="">
+              <p>梅赛德斯·赵四</p>
+              <ul class="works-con-introduce">
+                <li>
+                  <p>项目</p>
+                  <p>1334</p>
+                </li>
+                <li>
+                  <p>粉丝</p>
+                  <p>1.3万</p>
+                </li>
+              </ul>
+              <div class="btn-group-box">
+                <div>关注</div>
+                <div>私信</div>
               </div>
             </div>
-          </div>
-
-        </li>
-        <li>
-          <div class="works-list-left"></div>
-          <div class="works-list-right">
-            <p>《建筑设计防火规范》GB50016-2019(2018版)</p>
-            <div class="works-list-con">
-              <div class="works-name">
-                <img src="" alt="">
-                <span>杨小幂</span>
-              </div>
-
-              <div class="works-list-con-box">
-                <i class="icon iconfont icon-chakan"></i>
-                <span>888</span>
-                <i class="icon iconfont icon-favorite"></i>
-                <span>6666</span>
-              </div>
-            </div>
-          </div>
-
-        </li>
+          </li>
+        </template>
       </ul>
     </div>
     <Page :total="RspPaginationData.records" :current="RspPaginationData.page" show-sizer @on-change="onChange"/>
@@ -172,12 +113,15 @@
         default:function () {
           return {}
         }
+      },
+      showLayout: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
       return {
         sortAction: 0,
-        show:true,
         currentWorks:null
       }
     },
@@ -196,6 +140,10 @@
       },
       showWorks (inx) {
         this.currentWorks = inx;
+      },
+      // 查看项目
+      viewItem (val) {
+        this.$emit('viewItem', val);
       },
       hideWorks () {
         this.currentWorks = null;
@@ -274,6 +222,7 @@
         .img-box{
           height: 200px;
           position: relative;
+          cursor: pointer;
           >img{
             display: inline-block;
             width: 100%;
@@ -455,7 +404,9 @@
           width: 120px;
           height: 160px;
           margin-right: 20px;
-          box-shadow: 0 2px 20px 0 rgba(0,0,0,0.15);;
+          box-shadow: 0 2px 20px 0 rgba(0,0,0,0.15);
+          background-size: 100% 100%;
+          background-repeat: no-repeat;
           >img{
             display: inline-block;
             width: 100%;

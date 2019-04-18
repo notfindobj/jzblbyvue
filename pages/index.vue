@@ -3,8 +3,8 @@
         <div class="banner-box">
             <div v-swiper:mySwiper="swiperOption" class="swiper-box">
                 <div class="swiper-wrapper">
-                <div class="swiper-slide" v-for="(banner, index) in banners" :key="index">
-                    <img :src="banner" alt="">
+                <div class="swiper-slide" v-for="(banner, index) in SlideList" :key="index">
+                    <img :src="`http://www.jzbl.com${banner.CoverImgUrl}`" alt="" style="width: 100%;height: 100%;">
                 </div>
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
@@ -12,35 +12,10 @@
             <LevelMenu class="banner-nav" :oneMeun="oneMeun"></LevelMenu>
         </div>
         <div class="main-box">
-            <!-- 建筑游学 -->
-            <div>
-                <div class="main-conment">
-                    <div class="main-conment-top">
-                        <ul class="main-conment-sub">
-                            <li>建筑游学</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
-                        </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
-                    </div>
-                </div>
-                <Row>
-                    <i-col span="12"> <Big-Cards/> </i-col>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
-                </Row>
-            </div>
             <!-- 示范区景观 -->
             <div>
                 <div class="main-conment">
-                    <div class="main-conment-top">
+                    <div class="main-conment-top"> 
                         <ul class="main-conment-sub">
                             <li>示范区景观</li>
                             <li>新亚洲/</li>
@@ -226,6 +201,31 @@
                     </Col>
                 </Row>
             </div>
+            <!-- 建筑游学 -->
+            <div>
+                <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>建筑游学</li>
+                            <li>新亚洲/</li>
+                            <li>（新）古典/</li>
+                            <li>现代/</li>
+                            <li>英式/</li>
+                            <li>地中海</li>
+                        </ul>
+                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <Row>
+                    <i-col span="12"> <Big-Cards/> </i-col>
+                    <i-col span="12">
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                        <Small-Cards/>
+                    </i-col>
+                </Row>
+            </div>
             <!-- 优秀设计师 -->
             <div>
                 <div class="main-conment">
@@ -290,13 +290,13 @@ export default {
 data () {
     return {
         banners: [
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-                'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
-            ],
+            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+            'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
+        ],
         swiperOption: {
             loop: true,
             autoplay:true,
@@ -340,6 +340,7 @@ async asyncData ({app, store}) {
     return {
         oneMeun: menuData.RetMenuData || [],
         homeData: homeData,
+        SlideList: homeData.SlideList,
         sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
         lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
         xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
@@ -358,6 +359,9 @@ methods: {}
 }
 </script>
 <style lang="less">
+    .swiper-pagination-bullet-active {
+        background: #FF3C00;
+    }
     .ivu-col-span-12 {
         text-align: center;
     }

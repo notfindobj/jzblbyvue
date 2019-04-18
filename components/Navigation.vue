@@ -20,7 +20,7 @@
                             <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                         </div>
                     </li>
-                    <li class="content">在线地图</li>
+                    <li class="content" @click="onlineMap">在线地图</li>
                     <li>
                         <Dropdown placement="bottom-start">
                             <a href="javascript:void(0)" class="app-down">
@@ -43,17 +43,16 @@
                         <img :src="loginIng" alt="">
                     </div>
                     <div class="main-content-left-search">
-                        <Input v-model="value11" style="width:450px;" size="large">
-                        <Select slot="prepend" v-model="value11" style="width:100px">
-                            <Option value="item.value" ></Option>
+                        <Input v-model="seatchData" style="width:450px;" size="large">
+                        <Select slot="prepend" v-model="searchTitle" style="width:100px">
+                            <Option v-for="(items, indexs) in menuData" :value="`${items.ItemSubAttributeCode}|${items.ItemAttributesId},${items.ItemAttributesFullName}`" :key="indexs">{{items.ItemAttributesFullName}}</Option>
                         </Select>
-                            <Button type="primary" slot="append" class="btn-bg" size="large">搜索</Button>
-                            <!-- <a href="javascript:void(0)" >搜索</a> -->
+                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">搜索</Button>
                         </Input>
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" size="large" search enter-button="百度" placeholder="" />
+                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder="" @on-search ="onSearch"/>
                 </div>
             </div>
             <ul class="main-nav-tab">
@@ -75,13 +74,17 @@
 </template>
 <script>
 import signPage from '../components/home/signPage'
+import {getMenu} from '../service/clientAPI'
 import { mapState} from 'vuex'
 import axios from 'axios'
 export default {
     data() {
         return {
-            value11: '',
-            loginIng: require('../assets/images/top_logo.png')
+            seatchData: '',
+            searchTitle: '',
+            baiduData: '',
+            loginIng: require('../assets/images/top_logo.png'),
+            menuData: []
         }
     },
     computed: {
@@ -92,13 +95,18 @@ export default {
      components: {
         signPage
     },
+    async created () {
+        let menuDatas = await getMenu();
+        this.menuData = menuDatas.RetMenuData || [];
+        console.log(this.menuData)
+    },
     methods: {
         SignIn () {
             this.$store.dispatch('SETUP',  true)
         },
         async signOut () {
             let config = {
-                url: 'http://140.143.240.64:8889/api/logout',
+                url: 'http://127.0.0.1:8889/api/logout',
                 withCredentials: true,
                 method: 'post',
                 headers: {
@@ -110,6 +118,32 @@ export default {
                 this.$store.dispatch('LOGININ', null);
                 this.$Message.success(res.data.Msg);
             })
+        },
+        searchBaseData () {
+            let _this = this;
+            if (!this.searchTitle) {
+                return false;
+            }
+            let baseDateId ={
+                ClassTypeId: _this.searchTitle.split(',')[0],
+                ClassTypeArrList: [{ArrId: '',ArrEnCode: ''}],
+                SortType: 0,
+                KeyWords: this.seatchData,
+                Order: true,
+                Page: 0,
+                Rows: 8,
+                title: _this.searchTitle.split(',')[1],
+            }
+            this.$router.push({name: "dataBase", query: {dataBase: JSON.stringify(baseDateId)}})
+        },
+        // 在线地图
+        onlineMap () {
+            window.open('http://www.baidu.com')
+        },
+        // 百度搜索
+        onSearch () {
+            if (!this.baiduData) return false
+            window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${this.baiduData}`)
         },
         backHome () {
             this.$router.push({path: "/"})
@@ -153,6 +187,10 @@ export default {
                 }
                 > li.content {
                     padding: 0 30px;
+                    cursor: pointer;
+                    &:hover{
+                        color: #FF3C00;
+                    }
                 }
                 .app-down {
                     color: #999999;

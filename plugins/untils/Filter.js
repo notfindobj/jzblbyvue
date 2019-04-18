@@ -1,17 +1,11 @@
-const verification = {
-    notEmpty: (rule, value, callback) => {
-      if (!value) {
-        return callback(new Error('选项不能为空！！'))
-      } else {
-        callback()
-      }
-    }
-  }
-  const verify = { ...verification }
-  export default verify
-  
-  var Reg = {
-    regPhone: /^1[34578][0-9]\d{8}$/,
-    regBack: /\d{15}|\d{19}/
-  }
-  
+import Vue from 'vue'
+import moment from 'moment'
+//  时间转换格式
+Vue.filter('datefmt', function (input, fmtstring) {
+  return moment(input).format(fmtstring)
+})
+//获取整数部分
+Vue.filter('NumFormat', function (value) {
+  if (!value) return '0';
+  return Number(value).toFixed(0);
+})

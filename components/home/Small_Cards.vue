@@ -1,5 +1,5 @@
 <template>
-    <div class="cards">
+    <div class="cards" @click="vivewDet(smallCardsDate)">
         <div class="cards-top">
             <img :src="smallCardsDate.ItemTitleImg" alt="" width="283px" height="194px">
             <div class="cards-eye">
@@ -7,7 +7,7 @@
                     <i class="iconfont icon-shangchuan"></i>
                     5245
                 </div>
-                <div class="cards-eye-name">
+                <div class="cards-eye-name" @click.stop="vivewCol(smallCardsDate)">
                     <i class="iconfont icon-shangchuan"></i>
                     <span>{{smallCardsDate.CreateUserName}}</span>
                 </div>
@@ -26,6 +26,13 @@ export default {
             default: function () {
                 return {}
             }
+        },
+        ClassType: {
+            type: Object,
+            // required: true,
+            default: function () {
+                return {}
+            }
         }
     },
     data() {
@@ -33,6 +40,25 @@ export default {
             nam: 2.222
         }
     },
+    methods: {
+        vivewDet (item) {
+            console.log(item)
+            // let baseDateId ={
+            //     id: item.id,
+            //     ClassTypeId: this.ClassType.ClassTypeId,
+            //     ClassTypeArrList: [{ArrId: '', ArrEnCode: ''}],
+            //     SortType: 0,
+            //     KeyWords: "",
+            //     Order: true,
+            //     Page: 0,
+            //     Rows: 8,
+            //     title: this.ClassType.ItemAttributesFullName,
+            // }
+        },
+        vivewCol () {
+            console.log('收藏')
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -49,6 +75,7 @@ export default {
         }
         &-top:hover .cards-eye-name{
             display: block;
+            z-index: 12;
         }
         &-foot {
             padding: 0 6px;

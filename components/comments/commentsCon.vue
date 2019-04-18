@@ -1,20 +1,41 @@
 <template>
   <div class="comments-box">
+    <!-- 发表评论 -->
     <div class="comments-status-box">
       <div v-if="commentsInfo.isStatusShow" class="comments-box-status">
         <div class="comments-box-status-left">
           <span>发布状态</span>
-          <span>发布日期：{{commentsInfo.statusInfo.date}}</span>
+          <span>发布日期：{{publish.CreateDate | datefmt('YYYY-MM-DD')}}</span>
         </div>
         <div class="comments-box-status-right">
-          <i class="icon iconfont icon-chakan"></i>{{commentsInfo.statusInfo.lookNum}}
+          <i class="icon iconfont icon-chakan"></i>{{publish.Views}}
         </div>
       </div>
       <ul class="comments-status-info">
-        <li><i class="icon iconfont icon-dianzan1"></i>{{commentsInfo.giveLikeNum}}</li>
-        <li><i class="icon iconfont icon-share"></i>{{commentsInfo.downNum}}</li>
-        <li><i class="icon iconfont icon-favorite"></i>{{commentsInfo.collectionNum}}</li>
-        <li><i class="icon iconfont icon-pinglun"></i>{{commentsInfo.commentsNum}}</li>
+        <li>
+          <span @click="thumbsUp(publish)">
+            <i class="icon iconfont icon-dianzan1"></i>
+            <span>{{publish.likes}}</span>
+          </span>
+        </li>
+        <li>
+          <span @click="Forward(publish)">
+             <i class="icon iconfont icon-share"></i>
+            <span>{{commentsInfo.downNum}}</span>
+          </span>
+        </li>
+        <li>
+          <span @click="Collection(publish)">
+            <i class="icon iconfont icon-favorite"></i>
+            <span>{{publish.collections}}</span>
+          </span>
+        </li>
+        <li>
+          <span>
+            <i class="icon iconfont icon-pinglun"></i>
+            <span>{{publish.commentss}}</span>
+          </span>
+        </li>
       </ul>
       <div class="comments-input">
         <div class="comments-input-box">
@@ -29,6 +50,7 @@
         </div>
       </div>
     </div>
+    <!-- 评论信息 -->
     <ul class="comments-list-box">
       <li v-for="(item,index) in commentsListInfo" :key="index">
         <div class="commentser-img">
@@ -49,7 +71,6 @@
             </ul>
           </div>
           <div class="reviewers-list-box">
-
           </div>
         </div>
       </li>
@@ -60,6 +81,15 @@
 <script>
   export default {
     name: 'commentsCon',
+    props: {
+      publish: {
+        type: Object,
+        required: true,
+        default: function () {
+          return {}
+        }
+      }
+    },
     data() {
       return {
         commentsInfo:{
@@ -97,6 +127,18 @@
     created() {
     },
     methods: {
+      // 点赞
+      thumbsUp (item) {
+        this.$emit('thumbsUp', item)
+      },
+      // 转发
+      Forward (item) {
+        this.$emit('Forward', item)
+      },
+      // 收藏
+      Collection (item) {
+        this.$emit('Collection', item)
+      },
       goTodetails (inx) {
         alert(inx)
       }
@@ -185,9 +227,15 @@
               top:7px;
             }
           }
-          >i{
-            font-size: 16px;
+          >span {
+            cursor: pointer;
             margin-right: 5px;
+            > span {
+              font-size: 12px;
+            }
+            &:hover{
+              color: #FF3C00;
+            }
           }
         }
       }
