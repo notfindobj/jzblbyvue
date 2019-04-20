@@ -1,7 +1,7 @@
 <template>
   <div class="data-details-box">
     <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
-    {{itemsDetail}}
+    <!-- {{itemsDetail}} -->
     <div class="data-details-con-box">
       <div class="data-details-location"></div>
       <div class="data-details-con">
@@ -13,6 +13,7 @@
           <commentsCon 
           :publish="detaDetails"
           @thumbsUp="thumbsUp"
+          @Collection="Collection"
           />
         </div>
       </div>
@@ -23,7 +24,8 @@
   import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
-  import {setthumbsUp} from '../../service/clientAPI'
+  import {setthumbsUp, setCollection} from '../../service/clientAPI'
+  import {mapGetters} from 'vuex';
   export default {
     head () {
       return {
@@ -39,6 +41,9 @@
       dataDetailsRight,
       commentsCon
     },
+    computed:{
+      ...mapGetters(['isLogin'])
+    },
     async asyncData({app, store, route}) {
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
@@ -52,12 +57,26 @@
     },
     methods: {
       async thumbsUp (item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          LikeType: 1,
-          IsDelete: 0
+        if (this.isLogin) {
+          let queryData = {
+            ItemId: item.ItemId,
+            LikeType: 1,
+            IsDelete: 0
+          }
+          let thumbsUpMsg = await setthumbsUp(queryData)
         }
-        let thumbsUpMsg = await setthumbsUp(queryData)
+      },
+      // 收藏
+      async Collection (item) {
+        if (this.isLogin) {
+
+        }
+        // let queryData = {
+        //   ItemId: item.ItemId,
+        //   TalkType: 4,
+        //   IsDelete: true
+        // }
+        // let collectionMsg = await setCollection(queryData)
       }
     }
   }

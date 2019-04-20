@@ -6,7 +6,7 @@ import config from './config'
 // if (process.server) {
   config.baseURL = `http://www.api.jzbl.com/api/`
 // }
-const service = axios.create(config)
+const service = axios.create(config);
 // POST 传参序列化
 service.interceptors.request.use(
   config => {

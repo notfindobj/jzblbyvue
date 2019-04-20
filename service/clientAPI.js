@@ -24,4 +24,8 @@ export const getBaseData =async (params)=>  {
 // 点赞
 export const setthumbsUp = async (params)=>  {
     return await request.post('CollectionOrLike/Like', params)
-  }
+}
+// 点赞
+export const setCollection = async (params)=>  {
+    return await request.post('CollectionOrLike/Collection', params)
+}
