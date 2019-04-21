@@ -74,9 +74,6 @@
 
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
-    .page {
-        padding-bottom: 250px;
-    }
     .content {
         position: relative;
         width: 100%;
@@ -99,78 +96,5 @@
         textarea::placeholder {
             color: #999;
         }
-        .toolbar {
-            overflow: hidden;
-            padding-top: 10px;
-            .toolbar-left {
-                float: left;
-                .hidden-text {
-                    font-size: 14px;
-                    color: #406599;
-                }
-            }
-            .toolbar-right {
-                float: right;
-                .publish-btn {
-                    width: 82px;
-                    height: 30px;
-                    margin-left: 8px;
-                }
-            }
-        }
-        .upload-box {
-            position: absolute;
-            bottom: -236px;
-            left: 38px;
-            width: 420px;
-            height: 246px;
-            padding: 15px;
-            background-color: #fff;
-            box-shadow: 0 2px 10px 0 rgba(0,0,0,0.15);
-            border-radius: 4px;
-            z-index: 2;
-            h3 {
-                font-weight: normal;
-                font-size: 14px;
-                color: #000;
-            }
-            .sub-title {
-                font-size: 14px;
-                color: #999;
-                margin-top: 4px;
-            }
-
-            .upload-main {
-                overflow: hidden;
-            }
-            .img-item {
-                float: left;
-                width: 70px;
-                height: 70px;
-                margin: 10px 10px 0 0;
-                border-radius: 2px;
-                background-color: #ccc;
-            }
-            .img-item:nth-child(5) {
-                margin-right: 0;
-            }
-
-            .upload {
-                float: left;
-                margin-top: 10px;
-            }
-        }
-        .upload-box-top {
-            position: absolute;
-            bottom: -29px;
-            left: 46px;
-            width: 0;
-            height: 0;
-            border: 20px solid #fff;
-            box-shadow: 0 2px 10px 0 rgba(0,0,0,0.15);
-            transform: rotate(45deg);
-            z-index: 1;
-        }
-
     }
 </style>

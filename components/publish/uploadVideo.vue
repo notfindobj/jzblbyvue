@@ -6,10 +6,13 @@
                 @change="fileSelected($event)"
                 name="avatar"
                 ref="avatarInput"
-                accept="image/gif,image/jpeg,image/jpg,image/png"
+                accept="video/mp4"
             >
         </a>
-        <i class="icon iconfont">&#xe613;</i>
+        <span>
+            <i class="icon iconfont">&#xe613;</i>
+            添加视频
+        </span>
     </div>
 </template>
 
@@ -52,7 +55,7 @@
 <style lang="less" scoped>
     .upload {
         position: relative;
-        width: 70px;
+        width: 132px;
         height: 70px;
         border-radius: 4px;
         border: 1px dashed #ddd;
@@ -60,11 +63,12 @@
         font-size: 16px;
         cursor: pointer;
         transition: all .2s linear;
-        i {
+        span {
             position: absolute;
             left: 26px;
             top: 22px;
             z-index: 1;
+            color: #999;
         }
         a {
             position: absolute;
@@ -77,7 +81,7 @@
     }
 
     input[type="file"] {
-        width: 70px;
+        width: 132px;
         height: 70px;
         opacity: 0;
         filter: alpha(opacity=0);
