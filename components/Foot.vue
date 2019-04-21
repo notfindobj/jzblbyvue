@@ -58,10 +58,10 @@ export default {
     },
 }
 </script>
-<style lang="less" scope>
+<style lang="less" scoped>
     .foot {
         background: #E8E8E8;
-        margin-top: 20px;
+        padding-top: 20px;
         &-top {
             padding: 40px 0 33px;
             width: 1200px;
