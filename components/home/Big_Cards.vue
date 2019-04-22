@@ -1,10 +1,7 @@
 <template>
     <div class="cards">
-        <div class="cards-top">
-            <div class="cards-top-bgimg" :style="`background-image: url(${bigCardsDate.ItemTitleImg})`">
-
-            </div>
-            <!-- <img :src="" alt="" > -->
+        <div class="cards-top" @click="viewItem(bigCardsDate)">
+            <div class="cards-top-bgimg" :style="`background-image: url(${bigCardsDate.ItemTitleImg})`"></div>
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
@@ -38,6 +35,11 @@ export default {
             nam: 2.222
         }
     },
+    methods: {
+        viewItem (item) {
+            this.$emit("viewItem", item)
+        }
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -55,7 +57,7 @@ export default {
                 width: 594px;
                 height: 356px;
                 background-repeat: no-repeat;
-                background-size: 100% 100%;
+                background-size: cover;
             }
         }
         &-top:hover .cards-eye-name{

@@ -2,6 +2,15 @@ import axios from 'axios'
 import { Message } from 'iview'
 import qs from 'qs'
 import config from './config'
+import createStore from '../store'
+const $store = createStore();
+
+if (process.server) {
+  console.log('>>>>>>>>>>>>>', 2)
+}
+if (process.client) {
+  // console.log($store.state)
+}
 // 判断是路由跳转还是 axios 请求
 // if (process.server) {
   config.baseURL = `http://www.api.jzbl.com/api/`
@@ -10,6 +19,7 @@ const service = axios.create(config);
 // POST 传参序列化
 service.interceptors.request.use(
   config => {
+    config.headers.Authorization = "Bearer ECCA04352B7C92D436C699708A14B7FBB94A7D49A5701CD6874E330649F77BA20D747BB4EDC1C187"
     if (config.method === 'post') config.data = qs.stringify(config.data)
     return config
   },

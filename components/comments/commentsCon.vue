@@ -1,5 +1,5 @@
 <template>
-  <div class="comments-box">
+  <div class="comments-box" :style="`width:${width}`">
     <!-- 发表评论 -->
     <div class="comments-status-box">
       <div v-if="commentsInfo.isStatusShow" class="comments-box-status">
@@ -88,6 +88,10 @@
         default: function () {
           return {}
         }
+      },
+      width: {
+        type: String,
+        default: '100%'
       }
     },
     data() {

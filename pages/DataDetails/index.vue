@@ -1,16 +1,19 @@
 <template>
   <div class="data-details-box">
     <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
-    <!-- {{itemsDetail}} -->
+    <!-- {{detaDetails}} -->
     <div class="data-details-con-box">
       <div class="data-details-location"></div>
       <div class="data-details-con">
-        <data-details-left />
+        <data-details-left 
+        :detaDetails="detaDetails"
+        />
         <div>
           <data-details-right 
           :detaDetails="detaDetails"
           />
           <commentsCon 
+          :width="'340px'"
           :publish="detaDetails"
           @thumbsUp="thumbsUp"
           @Collection="Collection"
@@ -18,12 +21,14 @@
         </div>
       </div>
     </div>
+    <viewPicture/>
   </div>
 </template>
 <script>
   import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
+  import viewPicture from '../../components/comments/viewPicture.vue'
   import {setthumbsUp, setCollection} from '../../service/clientAPI'
   import {mapGetters} from 'vuex';
   export default {
@@ -39,7 +44,8 @@
     components: {
       dataDetailsLeft,
       dataDetailsRight,
-      commentsCon
+      commentsCon,
+      viewPicture
     },
     computed:{
       ...mapGetters(['isLogin'])
@@ -56,6 +62,7 @@
     created() {
     },
     methods: {
+      // 点赞
       async thumbsUp (item) {
         if (this.isLogin) {
           let queryData = {

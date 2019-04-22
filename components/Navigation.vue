@@ -98,7 +98,6 @@ export default {
     async created () {
         let menuDatas = await getMenu();
         this.menuData = menuDatas.RetMenuData || [];
-        console.log(this.menuData)
     },
     methods: {
         SignIn () {

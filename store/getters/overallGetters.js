@@ -8,5 +8,8 @@ export const overallGetters = {
         } else {
           return true
         }
+    },
+    getToken(state) {
+        return state.auth
     }
 }

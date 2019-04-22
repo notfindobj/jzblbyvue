@@ -30,7 +30,7 @@
                 <Row>
                    <template v-for=" (items, index) in sfqList" v-if="index < 8">
                          <i-col span="6" :key="index">
-                              <Small-Cards :smallCardsDate= "items"/>
+                              <Small-Cards @viewItem="viewItem" :smallCardsDate= "items"/>
                          </i-col>
                     </template>
                 </Row>
@@ -355,7 +355,25 @@ async asyncData ({app, store}) {
 },
 beforeCreate () {},
 created () {},
-methods: {}
+methods: {
+    viewItem (item) {
+        debugger
+        let baseDateId ={
+            // ClassTypeId: `${pre.ItemSubAttributeCode}|${pre.ItemAttributesId}`,
+            // ClassTypeArrList: [
+            //     {
+            //         ArrId: '',
+            //         ArrEnCode:''
+            //     }
+            // ],
+            // SortType: 0,
+            // KeyWords: "",
+            // Order: true,
+            // Page: 0,
+            // Rows: 8
+        }
+    }
+}
 }
 </script>
 <style lang="less">
