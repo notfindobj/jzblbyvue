@@ -3,16 +3,20 @@
     <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
     <!-- {{detaDetails}} -->
     <div class="data-details-con-box">
-      <div class="data-details-location"></div>
+      <div class="data-details-location">
+        <Breadcrumb separator=">" style="margin-bottom: 20px">
+          <BreadcrumbItem :style="index == (currentNameList.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'" v-for="(item,index) in currentNameList" :key="index">{{item}}</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
       <div class="data-details-con">
-        <data-details-left 
+        <data-details-left
         :detaDetails="detaDetails"
         />
         <div>
-          <data-details-right 
+          <data-details-right
           :detaDetails="detaDetails"
           />
-          <commentsCon 
+          <commentsCon
           :width="'340px'"
           :publish="detaDetails"
           @thumbsUp="thumbsUp"
@@ -38,6 +42,17 @@
         meta: [
           { name: 'viewport', content: 'width=device-width, initial-scale=1' },
           { hid: 'about', name: 'about', content: "资料库详情" }
+        ],
+      }
+    },
+    data () {
+      return {
+        currentNameList:[
+          '资源库',
+          '示范区',
+          '别墅',
+          '现代',
+          '重庆北大资源燕南大道改造计划'
         ],
       }
     },

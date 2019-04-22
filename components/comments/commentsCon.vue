@@ -43,7 +43,7 @@
           <div class="comments-img">
             <div class="comments-img-left">
               <i class="icon iconfont icon-smile"></i>
-              <i class="icon iconfont icon-tupian"></i>
+              <i class="icon iconfont icon-tupian" @click="upload()"></i>
             </div>
             <div class="comments-img-right">发表评论</div>
           </div>
@@ -71,6 +71,28 @@
             </ul>
           </div>
           <div class="reviewers-list-box">
+            <div class="reviewers-list-all">
+              <ol>
+                <li v-for="(items,indexs) in item.reviewersList" :key="indexs">
+                  <p>
+                    <span class="reply-name">{{items.NickName}}</span>
+                    <span class="reply-date">{{items.CreateDate}}</span>
+                  </p>
+                  <p v-if="!item.reviewersList.IsReply">{{items.Message}}</p>
+                  <p v-else="">回复：<span class="reply-someining">{{items.NickName}}</span><span>{{items.Message}}</span></p>
+                  <div class="commentser-btns">
+                    <ul>
+                      <li>
+                        删除
+                      </li>
+                      <li>
+                        回复
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+              </ol>
+            </div>
           </div>
         </div>
       </li>
@@ -115,9 +137,64 @@
             reviewersInfo:'在这个项目中，很重要的一点是要做一个能立即吸引公众注意的室内，让他们经过并开车去一个新的地方。作为基础，有一个相当小和简单的空间。我们希望保留这种简单性',
             reviewersList:[
               {
-                reviewersListName:'梅赛德斯·斯儿',
-                reviewersListDate:'31分钟前',
-                reviewersListcon:'二叔我看了这句话呗甩发哦了！'
+                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
+                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
+                "IsReply": false,
+                "ReplyId": "",
+                "Message": "脑壳痛",
+                "LikeCount": 0,
+                "CreateDate": "2019/3/21 20:53:12",
+                "ReplyUserId": "",
+                "IsCoutReply": false,
+                "ReplyList": [],
+                "NickName": "真厉害啊",
+                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
+                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
+              },
+              {
+                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
+                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
+                "IsReply": false,
+                "ReplyId": "",
+                "Message": "脑壳痛",
+                "LikeCount": 0,
+                "CreateDate": "2019/3/21 20:53:12",
+                "ReplyUserId": "",
+                "IsCoutReply": false,
+                "ReplyList": [],
+                "NickName": "真厉害啊",
+                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
+                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
+              },
+              {
+                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
+                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
+                "IsReply": true,
+                "ReplyId": "",
+                "Message": "脑壳痛",
+                "LikeCount": 0,
+                "CreateDate": "2019/3/21 20:53:12",
+                "ReplyUserId": "",
+                "IsCoutReply": false,
+                "ReplyList": [],
+                "NickName": "真厉害啊",
+                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
+                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
+              },
+              {
+                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
+                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
+                "IsReply": false,
+                "ReplyId": "",
+                "Message": "脑壳痛",
+                "LikeCount": 0,
+                "CreateDate": "2019/3/21 20:53:12",
+                "ReplyUserId": "",
+                "IsCoutReply": false,
+                "ReplyList": [],
+                "NickName": "真厉害啊",
+                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
+                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
               }
             ]
           }
@@ -145,6 +222,9 @@
       },
       goTodetails (inx) {
         alert(inx)
+      },
+      upload () {
+        alert(1)
       }
     }
   }
@@ -391,6 +471,87 @@
       width: 100%;
       background: #F6F6F8;
       border-radius: 4px;
+      .reviewers-list-all{
+        width: 274px;
+        padding: 20px 10px;
+        >ol{
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          >li{
+            width: 100%;
+            border-bottom: 1px solid #D9D9D9;
+            >p{
+              &:nth-child(1){
+                margin-bottom: 4px;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+                .reply-name{
+                  font-size: 12px;
+                  color: #3E85FF;
+                }
+                .reply-date{
+                  font-size: 12px;
+                  color: #999999;
+                }
+              }
+              &:nth-child(2){
+                margin-bottom: 10px;
+                font-size: 12px;
+                color: #333333;
+                .reply-someining{
+                  color: #3E85FF;
+                }
+              }
+            }
+            .commentser-btns{
+              height: 14px;
+              margin-bottom: 11px;
+              >ul{
+                width: 60px;
+                height: 14px;
+                float: right;
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                >li{
+                  flex: 1;
+                  font-size: 10px;
+                  color: #333333;
+                  display: flex;
+                  flex-direction: row;
+                  align-items: center;
+                  justify-content: center;
+                  cursor: pointer;
+                  &:nth-child(1){
+                    position: relative;
+                    &:before{
+                      width: 1px;
+                      height: 10px;
+                      content: '';
+                      background: #D8D8D8;
+                      border-radius: 1px;
+                      position: absolute;
+                      right: 0;
+                      top:3px;
+                    }
+                  }
+                  >i{
+                    font-size: 14px;
+                    margin-right: 5px;
+                  }
+                }
+              }
+            }
+          }
+        }
+
+      }
     }
   }
 </style>

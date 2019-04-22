@@ -20,9 +20,7 @@
         <div @click="immediatelyDown()">立即下载</div>
         <div @click="customthis()">同款定制</div>
       </div>
-      <div class="box"></div>
     </div>
-
   </div>
 </template>
 
@@ -88,7 +86,6 @@
         this.worksDatainfo.dataInfo.isUp = !this.worksDatainfo.dataInfo.isUp
       },
       immediatelyDown () {
-        alert('立即下载！')
       },
       customthis () {
         alert('同款定制！')
