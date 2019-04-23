@@ -95,5 +95,12 @@
         textarea::placeholder {
             color: #999;
         }
+        .upload-box {
+            width: 375px;
+            height: 160px;
+            .upload-tip {
+                width: 204px;
+            }
+        }
     }
 </style>

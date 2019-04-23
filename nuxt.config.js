@@ -1,5 +1,5 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');//css样式从js文件中分离出来,需要通过命令行安装 extract-text-webpack-plugin依赖包
-const webpack=require('webpack');
+const webpack = require('webpack');
 module.exports = {
   /*
   ** Headers of the page
@@ -13,7 +13,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-     
+
     ]
   },
   // 插件依赖
@@ -25,12 +25,16 @@ module.exports = {
   css: [
     '~assets/font-face/iconfont.css',
     'swiper/dist/css/swiper.css',
-    {src:'@/assets/commom.less',lang: 'less'}
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css',
+    { src: '@/assets/commom.less', lang: 'less' }
   ],
   // 插件
   plugins: [
     { src: '~plugins/my-theme/index', ssr: true },
     { src: "~plugins/vue-swiper.js", ssr: false },
+    { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
   env: {
@@ -40,20 +44,20 @@ module.exports = {
   },
   // 解决跨域
   axios: {
-    debug: process.env._ENV == "production" ? false : true,
+    debug: process.env._ENV !== "production",
     //设置不同环境的请求地址
-    baseURL: process.env._ENV == "production" ? "http://www.api.jzbl.com/api/" : "http://www.jzbl.com/api/",
+    baseURL: process.env._ENV === "production" ? "http://www.api.jzbl.com/api/" : "http://www.jzbl.com/api/",
     withCredentials: true,
   },
-  proxy:  [
-      [
-        '/api', 
-        { 
-          target: 'http://www.api.jzbl.com/api/', // api主机
-          withCredentials: true,
-          changeOrigin: true,
-          pathRewrite: { '^/api' : '/' }
-        }
+  proxy: [
+    [
+      '/api',
+      {
+        target: 'http://www.api.jzbl.com/api/', // api主机
+        withCredentials: true,
+        changeOrigin: true,
+        pathRewrite: { '^/api': '/' }
+      }
     ]
   ],
   /*
@@ -66,21 +70,21 @@ module.exports = {
   build: {
     // extractCSS: { allChunks: true },
     optimization: {
-        splitChunks: {
-            cacheGroups: {
-                commons: {
-                    name: "commons",
-                    chunks: "initial",
-                    minChunks: 2
-                }
-            }
+      splitChunks: {
+        cacheGroups: {
+          commons: {
+            name: "commons",
+            chunks: "initial",
+            minChunks: 2
+          }
         }
+      }
     },
-    vendor:['iview', 'axios'],
+    vendor: ['iview', 'axios'],
     /*
     ** Run ESLint on save
     */
-    extend (config, { isDev, isClient }) {
+    extend(config, { isDev, isClient }) {
       if (isDev && isClient) {
         config.module.rules.push({
           enforce: 'pre',
@@ -92,17 +96,17 @@ module.exports = {
       }
       vendor:['iview']   //防止iview被打包多次
     },
-    loaders:[
+    loaders: [
       {
-        test:/\.less$/,
+        test: /\.less$/,
         loader: ExtractTextPlugin.extract("style", 'css!less')
       },
       {
-        test:/\.(png|jpe?g|gif|svg)$/,
-        loader:"url-loader",
-        query:{
-          limit:10000,
-          name:'img/[name].[hash].[ext]'
+        test: /\.(png|jpe?g|gif|svg)$/,
+        loader: "url-loader",
+        query: {
+          limit: 10000,
+          name: 'img/[name].[hash].[ext]'
         }
       },
       {

@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import Upload from '~/components/publish/upload'
+  import Upload from '~/components/publish/upload'
   export default {
     data() {
       return {
