@@ -15,6 +15,7 @@
         <div>
           <data-details-right
           :detaDetails="detaDetails"
+          @dataDetailsMaskShow="dataDetailsMaskShow"
           />
           <commentsCon
           :width="'340px'"
@@ -26,6 +27,8 @@
       </div>
     </div>
     <viewPicture/>
+    <data-details-custom v-show="isShowDataDetailsCustom"></data-details-custom>
+    <date-details-down v-show="isShowDateDetailsDown"></date-details-down>
   </div>
 </template>
 <script>
@@ -35,6 +38,8 @@
   import viewPicture from '../../components/comments/viewPicture.vue'
   import {setthumbsUp, setCollection} from '../../service/clientAPI'
   import {mapGetters} from 'vuex';
+  import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
+  import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
   export default {
     head () {
       return {
@@ -54,13 +59,18 @@
           '现代',
           '重庆北大资源燕南大道改造计划'
         ],
+        isShowDataDetailsCustom:false,
+        isShowDateDetailsDown:false
+
       }
     },
     components: {
       dataDetailsLeft,
       dataDetailsRight,
       commentsCon,
-      viewPicture
+      viewPicture,
+      dateDetailsDown,
+      dataDetailsCustom
     },
     computed:{
       ...mapGetters(['isLogin'])
@@ -99,6 +109,13 @@
         //   IsDelete: true
         // }
         // let collectionMsg = await setCollection(queryData)
+      },
+      dataDetailsMaskShow (obj) {
+        if(obj.type == 'Down') {
+          this.isShowDateDetailsDown = true;
+        }else{
+          this.isShowDataDetailsCustom = true;
+        }
       }
     }
   }

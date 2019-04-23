@@ -1,0 +1,438 @@
+<template>
+  <div class="mask">
+    <div class="mask-cons">
+      <div class="need-custom">
+        <div class="need-custom-title">
+          <span>我要同款定制</span>
+          <span>您选择后我们将尽快联系您！</span>
+        </div>
+        <div class="need-type">
+          <span>类型：</span>
+          <ul>
+            <li  v-for="(item,index) in needType" :key="index"  @click="choseNeedType(index)"  :class="currentNeedIndex == index ? 'li-active' : ''">{{item.typeName}}</li>
+          </ul>
+        </div>
+        <div class="need-con">
+          <span>定制说明</span>
+        </div>
+        <p class="need-coc-box">作者描述：发布者在发布过程中填写的内容，展示给用户查看，作为报价的参考</p>
+        <p class="need-price">预算金额：20000元/套</p>
+      </div>
+      <div class="submit-custom">
+        <div class="submit-custom-title">
+          <span>提交同款定制</span>
+          <span>您选择后我们将尽快联系您！</span>
+        </div>
+        <p class="submit-type">类型：<span>平面填色</span></p>
+        <div class="submit-describe">
+          <span><i>*</i>描述</span>
+          <textarea></textarea>
+        </div>
+        <div class="submit-budget">
+          <span><i>*</i>预算金额</span>
+          <div class="submit-budget-con">
+            <input type="text">
+            <i>*</i>
+            <input type="text">
+            <span>总计12000元</span>
+          </div>
+        </div>
+        <div class="submit-phone">
+          <span><i>*</i>手机号码</span>
+          <div class="submit-phone-con">
+            <input type="text">
+            <div>发送验证码</div>
+          </div>
+        </div>
+        <div class="submit-validation">
+          <span><i></i>验证码</span>
+          <div class="submit-validation-con">
+            <input type="text">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+  export default {
+    name: 'detaDetailsCustom',
+    props: {
+    },
+    data() {
+      return {
+        currentNeedIndex:-1,
+        needType:[
+          {
+            typeCode:'',
+            typeName:'平面填色'
+          },
+          {
+            typeCode:'',
+            typeName:'CAD'
+          },
+          {
+            typeCode:'',
+            typeName:'平面填色'
+          }
+        ]
+      }
+    },
+    components: {
+    },
+    asyncData() {
+    },
+    created() {
+    },
+    methods: {
+      choseNeedType (inx) {
+        this.currentNeedIndex = inx
+      }
+    }
+  }
+</script>
+<style lang="less" scoped>
+  .mask{
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,.4);
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    z-index: 999;
+    .mask-cons{
+      width: 1100px;
+      height: 435px;
+      padding: 25px 30px 30px 30px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content:center;
+      background: #FFFFFF;
+      border-radius: 4px;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%,-50%);
+      .need-custom{
+        flex: 1;
+        height: 100%;
+        padding-right: 60px;
+        position: relative;
+        &:before{
+          width: 1px;
+          height: 367px;
+          content: '';
+          background: #D8D8D8;
+          border-radius: 1px;
+          position: absolute;
+          right: 0;
+          top:0px;
+        }
+        .need-custom-title{
+          height: 40px;
+          padding-top: 5px;
+          line-height: 35px;
+          margin-bottom: 34px;
+          border-bottom: 1px solid #D9D9D9;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: flex-start;
+          >span{
+            &:nth-child(1){
+              font-size: 22px;
+              color: #333333;
+              margin-right: 10px;
+            }
+            &:nth-child(2){
+              font-size: 12px;
+              color: #999999;
+              line-height: 30px;
+            }
+          }
+        }
+        .need-type{
+          height: 26px;
+          line-height: 26px;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          margin-bottom: 34px;
+          >span{
+            font-size: 14px;
+            color: #333333;
+          }
+          >ul{
+            flex: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            >li{
+              font-size: 14px;
+              padding:0px 8px;
+              color: #666666;
+              position: relative;
+              &:before{
+                width: 1px;
+                height: 15px;
+                content: '';
+                background: #D8D8D8;
+                border-radius: 1px;
+                position: absolute;
+                right: 0;
+                top:6px;
+              }
+              &:last-child{
+                &:before{
+                  width: 0px;
+                  height: 15px;
+                  content: '';
+                  background: #D8D8D8;
+                  border-radius: 1px;
+                  position: absolute;
+                  right: 0;
+                  top:6px;
+                }
+              }
+            }
+            .li-active{
+              color: #FF3C00;
+              &:after{
+                width: 30px;
+                height: 1px;
+                content: '';
+                background: #FF3C00;
+                border-radius: 1px;
+                position: absolute;
+                left: 50%;
+                top:26px;
+                transform: translateX(-50%);
+              }
+            }
+          }
+        }
+        .need-con{
+          height: 20px;
+          padding-bottom: 7px;
+          border-bottom: 1px solid #D9D9D9;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: flex-start;
+          margin-bottom: 8px;
+          >span{
+            font-size: 14px;
+            color: #333333;
+            margin-right: 10px;
+          }
+        }
+        .need-coc-box{
+          font-size: 12px;
+          color: #999999;
+          margin-bottom: 34px;
+        }
+        .need-price{
+          line-height: 20px;
+          font-size: 14px;
+          color: #333333;
+          margin-bottom: 16px;
+        }
+      }
+      .submit-custom{
+        flex: 1;
+        height: 100%;
+        padding-left: 60px;
+        .submit-custom-title{
+          height: 40px;
+          padding-top: 5px;
+          line-height: 35px;
+          margin-bottom: 34px;
+          border-bottom: 1px solid #D9D9D9;
+          display: flex;
+          flex-direction: row;
+          align-items: flex-end;
+          justify-content: flex-start;
+          >span{
+            &:nth-child(1){
+              font-size: 22px;
+              color: #333333;
+              margin-right: 10px;
+            }
+            &:nth-child(2){
+              font-size: 12px;
+              color: #999999;
+              line-height: 30px;
+            }
+          }
+        }
+        .submit-type{
+          font-size: 14px;
+          color: #333333;
+          margin-bottom: 34px;
+          >span{
+            font-size: 14px;
+            color: #FF3C00;
+            margin-left: 10px;
+          }
+        }
+        .submit-describe{
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          margin-bottom: 10px;
+          >span{
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            font-size: 14px;
+            color: #333333;
+            >i{
+              font-size: 14px;
+              color: #FF3C00;
+              margin-right: 2px;
+            }
+          }
+          >textarea{
+            flex: 1;
+            height: 72px;
+            resize: none;
+            border: 1px solid #D9D9D9;
+            border-radius: 4px;
+            margin-left: 10px;
+          }
+        }
+        .submit-budget{
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          >span{
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            font-size: 14px;
+            color: #333333;
+            >i{
+              font-size: 14px;
+              color: #FF3C00;
+              margin-right: 4px;
+            }
+          }
+          .submit-budget-con{
+            flex: 1;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+            >i{
+              font-size: 14px;
+              color: #FF3C00;
+              margin-right: 4px;
+            }
+            >input{
+              width: 109px;
+              height: 25px;
+              margin-right: 10px;
+              border: 1px solid #D9D9D9;
+              border-radius: 4px;
+            }
+            >span{
+              font-size: 14px;
+              color: #FF3C00;
+              margin-left: 6px;
+            }
+          }
+        }
+        .submit-phone{
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          >span{
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            font-size: 14px;
+            color: #333333;
+            >i{
+              font-size: 14px;
+              color: #FF3C00;
+              margin-right: 4px;
+            }
+          }
+          .submit-phone-con{
+            flex: 1;
+            margin-left: 10px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+            >input{
+              width: 109px;
+              height: 25px;
+              margin-right: 20px;
+              border: 1px solid #D9D9D9;
+              border-radius: 4px;
+            }
+            >div{
+              width: 82px;
+              height: 25px;
+              text-align: center;
+              line-height: 25px;
+              background: #FF3C00;
+              border-radius: 4px;
+              font-size: 12px;
+              color: #FFFFFF;
+            }
+          }
+        }
+        .submit-validation{
+          display: flex;
+          flex-direction: row;
+          align-items: flex-start;
+          justify-content: center;
+          >span{
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: center;
+            font-size: 14px;
+            color: #333333;
+            >i{
+              font-size: 14px;
+              color: #FF3C00;
+              margin-right: 4px;
+            }
+          }
+          .submit-validation-con{
+            flex: 1;
+            margin-left: 28px;
+            display: flex;
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: flex-start;
+            margin-bottom: 10px;
+            >input{
+              width: 109px;
+              height: 25px;
+              margin-right: 20px;
+              border: 1px solid #D9D9D9;
+              border-radius: 4px;
+            }
+          }
+        }
+      }
+    }
+  }
+</style>
