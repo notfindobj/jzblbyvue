@@ -421,6 +421,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            flex-wrap: wrap;
             >li{
               width: 140px;
               height: 56px;
