@@ -1,16 +1,23 @@
 <template>
   <div class="data-details-box">
     <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
-    <!-- {{itemsDetail}} -->
+    <!-- {{detaDetails}} -->
     <div class="data-details-con-box">
-      <div class="data-details-location"></div>
+      <div class="data-details-location">
+        <Breadcrumb separator=">" style="margin-bottom: 20px">
+          <BreadcrumbItem :style="index == (currentNameList.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'" v-for="(item,index) in currentNameList" :key="index">{{item}}</BreadcrumbItem>
+        </Breadcrumb>
+      </div>
       <div class="data-details-con">
-        <data-details-left />
+        <data-details-left
+        :detaDetails="detaDetails"
+        />
         <div>
-          <data-details-right 
+          <data-details-right
           :detaDetails="detaDetails"
           />
-          <commentsCon 
+          <commentsCon
+          :width="'340px'"
           :publish="detaDetails"
           @thumbsUp="thumbsUp"
           @Collection="Collection"
@@ -18,12 +25,14 @@
         </div>
       </div>
     </div>
+    <viewPicture/>
   </div>
 </template>
 <script>
   import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
+  import viewPicture from '../../components/comments/viewPicture.vue'
   import {setthumbsUp, setCollection} from '../../service/clientAPI'
   import {mapGetters} from 'vuex';
   export default {
@@ -36,10 +45,22 @@
         ],
       }
     },
+    data () {
+      return {
+        currentNameList:[
+          '资源库',
+          '示范区',
+          '别墅',
+          '现代',
+          '重庆北大资源燕南大道改造计划'
+        ],
+      }
+    },
     components: {
       dataDetailsLeft,
       dataDetailsRight,
-      commentsCon
+      commentsCon,
+      viewPicture
     },
     computed:{
       ...mapGetters(['isLogin'])
@@ -56,6 +77,7 @@
     created() {
     },
     methods: {
+      // 点赞
       async thumbsUp (item) {
         if (this.isLogin) {
           let queryData = {

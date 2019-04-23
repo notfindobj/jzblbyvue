@@ -66,7 +66,6 @@
     },
     created () {
       let queryData = JSON.parse(this.$route.query.dataBase);
-      console.log(queryData)
       this.currentName = queryData.title;
       this.currentInex = queryData.ClassTypeId.split('|')[1];
     },
@@ -74,7 +73,6 @@
     methods: {
       choseSome (index,item) {
         this.currentInex = item.ItemAttributesId;
-        console.log(this.asd)
         this.currentName = item.ItemAttributesFullName;
         this.$emit('choseSome', item)
       },

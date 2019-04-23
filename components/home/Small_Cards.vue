@@ -1,7 +1,9 @@
 <template>
-    <div class="cards" @click="vivewDet(smallCardsDate)">
+    <div class="cards" @click="viewItem(smallCardsDate)">
         <div class="cards-top">
-            <img :src="smallCardsDate.ItemTitleImg" alt="" width="283px" height="194px">
+            <div class="cards-top-bgimg">
+                <img :src="smallCardsDate.ItemTitleImg" alt="" width=100% height=100% >
+            </div>
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
@@ -41,19 +43,8 @@ export default {
         }
     },
     methods: {
-        vivewDet (item) {
-            console.log(item)
-            // let baseDateId ={
-            //     id: item.id,
-            //     ClassTypeId: this.ClassType.ClassTypeId,
-            //     ClassTypeArrList: [{ArrId: '', ArrEnCode: ''}],
-            //     SortType: 0,
-            //     KeyWords: "",
-            //     Order: true,
-            //     Page: 0,
-            //     Rows: 8,
-            //     title: this.ClassType.ItemAttributesFullName,
-            // }
+        viewItem (item) {
+            this.$emit("viewItem", item)
         },
         vivewCol () {
             console.log('收藏')
@@ -72,6 +63,17 @@ export default {
             height: 194px;
             display: inline-block;
             cursor: pointer;
+            &-bgimg {
+                width: 283px;
+                height: 194px;
+                // background-repeat: no-repeat;
+                // background-size: cover;
+                // object-fit: fill;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
         }
         &-top:hover .cards-eye-name{
             display: block;

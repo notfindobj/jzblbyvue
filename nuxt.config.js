@@ -34,6 +34,7 @@ module.exports = {
   plugins: [
     { src: '~plugins/my-theme/index', ssr: true },
     { src: "~plugins/vue-swiper.js", ssr: false },
+    { src: "~plugins/v-viewer.js", ssr: true }, // 看图插件
     { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],

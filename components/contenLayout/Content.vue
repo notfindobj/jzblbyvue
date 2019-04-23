@@ -128,7 +128,6 @@
     updated () {
       let queryData = JSON.parse(this.$route.query.dataBase)
       this.sortAction = parseInt(queryData.SortType);
-      console.log(this.sortAction)
     },
     mounted() {},
     methods: {

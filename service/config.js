@@ -1,6 +1,5 @@
 import http from 'http'
 import https from 'https'
-
 export default {
   // 自定义的请求头
   headers: {
@@ -8,7 +7,7 @@ export default {
       // 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
       'Content-Type': "application/x-www-form-urlencoded; charset=UTF-8"
     },
-    'X-Requested-With': 'XMLHttpRequest'
+    'X-Requested-With': 'XMLHttpRequest',
   },
   // 超时设置
   timeout: 150000,
