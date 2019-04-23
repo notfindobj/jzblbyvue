@@ -24,7 +24,7 @@
                             账户绑定
                         </span>
                     </li>
-                    <li @click="personal()">
+                    <li :class="PersonalCenter === 'receivingAddress' ? 'action' : ''" @click="personal('receivingAddress')">
                         <span>
                             <i class="icon iconfont icon-shouhuodizhi"></i>
                             收货地址
@@ -33,7 +33,7 @@
                 </ul>
             </div>
             <div class="personal-right">
-                <div is="accountBinding"></div>
+                <div :is="PersonalCenter"></div>
             </div>
         </div>
 </template>
@@ -41,12 +41,14 @@
 import myMessage from './myMessage'
 import accountSecurity from './accountSecurity'
 import accountBinding from './accountBinding'
+import receivingAddress from './receivingAddress'
 export default {
     name: 'PersonalCenter',
     components: {
         myMessage,
         accountSecurity,
-        accountBinding
+        accountBinding,
+        receivingAddress
     },
     data () {
         return {
@@ -54,8 +56,8 @@ export default {
         }
     },
     methods: {
-        personal () {
-
+        personal (val) {
+            this.PersonalCenter = val;
         }
     }
 }

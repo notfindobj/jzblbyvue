@@ -108,7 +108,7 @@ export default {
         async signOut () {
             let config = {
                 url: 'http://127.0.0.1:8889/api/logout',
-                // url: 'http://127.0.0.1:8889/api/logout',
+                // url: 'http://140.143.240.64:8889/api/logout',
                 withCredentials: true,
                 method: 'post',
                 headers: {
