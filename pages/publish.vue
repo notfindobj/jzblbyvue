@@ -19,13 +19,11 @@
 <style lang="less" scoped>
     .page {
         background-color: #F5F6F5;
-
         .container {
             width: 1200px;
             margin: 0 auto;
             padding-top: 30px;
         }
-
         .publish-tabs {
             width: 100%;
             height: 58px;

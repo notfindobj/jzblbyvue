@@ -1,7 +1,10 @@
 <template>
     <div class="cards">
         <div class="cards-top" @click="viewItem(bigCardsDate)">
-            <div class="cards-top-bgimg" :style="`background-image: url(${bigCardsDate.ItemTitleImg})`"></div>
+            <div class="cards-top-bgimg">
+                <img :src="bigCardsDate.ItemTitleImg" alt="" width=100% height=100% >
+            </div>
+            <!-- <div class="cards-top-bgimg" :style="`background-image: url(${bigCardsDate.ItemTitleImg})`"></div> -->
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
@@ -56,8 +59,10 @@ export default {
             &-bgimg {
                 width: 594px;
                 height: 356px;
-                background-repeat: no-repeat;
-                background-size: cover;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
             }
         }
         &-top:hover .cards-eye-name{

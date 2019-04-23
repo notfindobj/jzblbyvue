@@ -68,6 +68,7 @@
                 <li>建筑书店</li>
                 <li>我的部落</li>
             </ul>
+            <div class="main-nav-publish" @click="publish">发布</div>
         </div>
         <signPage></signPage>
     </div>
@@ -75,7 +76,7 @@
 <script>
 import signPage from '../components/home/signPage'
 import {getMenu} from '../service/clientAPI'
-import { mapState} from 'vuex'
+import {mapState, mapGetters} from 'vuex'
 import axios from 'axios'
 export default {
     data() {
@@ -90,7 +91,8 @@ export default {
     computed: {
         ...mapState({
             auth: state => state.overas.auth
-        })
+        }),
+        ...mapGetters(['isLogin'])
     },
      components: {
         signPage
@@ -106,6 +108,7 @@ export default {
         async signOut () {
             let config = {
                 url: 'http://127.0.0.1:8889/api/logout',
+                // url: 'http://127.0.0.1:8889/api/logout',
                 withCredentials: true,
                 method: 'post',
                 headers: {
@@ -143,6 +146,11 @@ export default {
         onSearch () {
             if (!this.baiduData) return false
             window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${this.baiduData}`)
+        },
+        publish () {
+            if (this.isLogin) {
+                this.$router.push({name: "publish-imageText"})
+            }
         },
         backHome () {
             this.$router.push({path: "/"})
@@ -200,6 +208,7 @@ export default {
     .main-nav {
         background: #F2F4F2;
         border-bottom: 1px solid #FF3C00;
+        position: relative;
         &-tab {
             font-size: 16px;
             color: #FF3C00;
@@ -210,6 +219,18 @@ export default {
                 padding: 8px 30px;
                 cursor: pointer;
             }
+        }
+        &-publish {
+            padding: 8px 30px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            right: 68px;
+            bottom: 0px;
+            color: #ffffff;
+            background: #FF3C00;
+            border-top-left-radius: 3px;
+            border-top-right-radius: 3px;
         }
     }
     .main-content {

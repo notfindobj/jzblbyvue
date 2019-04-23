@@ -29,7 +29,9 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
-
+body {
+    background-color: #F2F4F2;
+}
 *, *:before, *:after {
   box-sizing: border-box;
   margin: 0;
