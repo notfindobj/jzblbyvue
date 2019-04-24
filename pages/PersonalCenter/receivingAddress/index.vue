@@ -10,7 +10,7 @@
             </div>
             <div class="message-items-operation">
                 <i class="icon iconfont icon-add"></i> 
-                <span class="message-items-operation-pointer">新增收货地址</span>
+                <span class="message-items-operation-pointer" @click="isShow= true">新增收货地址</span>
             </div>
         </div>
         <div class="message-adders">
@@ -66,11 +66,21 @@
                 </div>
             </div>
         </div>
+        <setAddress :isShow="isShow"/>
     </div>
 </template>
 <script>
+import setAddress from './components/setAddress'
 export default {
-    
+    name: 'receivingAddress',
+    data () {
+        return {
+            isShow: false
+        }
+    },
+    components: {
+        setAddress
+    },
 }
 </script>
 <style lang="less" scoped>

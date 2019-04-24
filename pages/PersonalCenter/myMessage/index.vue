@@ -1,22 +1,24 @@
 <template>
     <div class="message">
+        <!-- 头像 -->
         <div class="message-items">
            <div class="message-items-left">
                <span class="message-items-left-label left-label">头像</span>
            </div>
            <div class="message-items-right">
                <div class="message-items-right-header"></div>
-               <div v-if="modifying" class="modifying-head">修改头像</div>
+               <div v-if="!modifying" class="modifying-head">修改头像</div>
            </div>
            <div class="message-items-operation operation-label" @click="modifying = !modifying">{{modifying ?"编辑" : "收起"}}</div>
-       </div>
-       <div class="message-items message-items-text">
-           <div class="message-items-left">
-               <span class="message-items-left-label">昵称</span>
-           </div>
-           <div class="message-items-right">
-              <span v-if="!nickname">尼古拉斯·赵四</span>
-              <div v-if="nickname" class="message-items-right-edit">
+        </div>
+        <!-- 昵称 -->
+        <div class="message-items message-items-text">
+            <div class="message-items-left">
+                <span class="message-items-left-label">昵称</span>
+            </div>
+            <div class="message-items-right">
+                <span v-if="nickname">尼古拉斯·赵四</span>
+                <div v-if="!nickname" class="message-items-right-edit">
                     <div>
                         <Input type="text" size="small" style="width: 160px;" />
                         <span class="message-items-right-edit-lable">用户您好，建筑部落允许用户一年修改一次昵称，请谨慎提交</span>
@@ -25,10 +27,11 @@
                         <div class="modifying-head">保存</div>
                         <div class="modifying-cancel">取消</div>
                     </div>
-              </div>
-           </div>
-           <div class="message-items-operation" @click="nickname = !nickname">{{nickname ?"编辑" : "收起"}}</div>
-       </div>
+                </div>
+            </div>
+            <div class="message-items-operation" @click="nickname = !nickname">{{nickname ?"编辑" : "收起"}}</div>
+        </div>
+        <!-- 个人资料 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">个人资料</span>
@@ -36,54 +39,54 @@
             <div class="message-items-right">
                 <span v-if="means">未完善完全</span>
                 <div v-if="!means" class="message-items-right-edit">
-                   <div class="means">
-                       <div class="means-left">
-                            <span class="means-left-label">真实姓名：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
-                       </div>
-                       <div class="means-right">
-                            <span class="means-left-label">所在地：</span>
-                            <Select size="small" style="width:160px">
-                                <Option value="New York" >New York</Option>
-                            </Select>
-                            <Select size="small" style="width:160px">
-                                <Option value="New York" >New York</Option>
-                            </Select>
-                       </div>
-                   </div>
-                   <div class="means">
-                       <div class="means-left">
+                    <div class="means">
+                        <div class="means-left">
+                                <span class="means-left-label">真实姓名：</span>
+                                <Input type="text" style="width: 160px;" size="small" />
+                        </div>
+                        <div class="means-right">
+                                <span class="means-left-label">所在地：</span>
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div class="means-left">
                             <span class="means-left-label">性别：</span>
                             <Input type="text" style="width: 160px;" size="small" />
-                       </div>
-                       <div class="means-right">
+                        </div>
+                        <div class="means-right">
                             <span class="means-left-label">感情状况：</span>
                             <Select size="small" style="width:160px">
                                 <Option value="New York" >New York</Option>
                             </Select>
-                       </div>
-                   </div>
-                   <div class="means">
-                       <div>
-                            <span class="means-left-label">生日：</span>
-                            <Select size="small" style="width:160px">
-                                <Option value="New York" >New York</Option>
-                            </Select>
-                            <Select size="small" style="width:160px">
-                                <Option value="New York" >New York</Option>
-                            </Select>
-                            <Select size="small" style="width:160px">
-                                <Option value="New York" >New York</Option>
-                            </Select>
-                       </div>
-                   </div>
-                   <div class="means">
-                       <div class="means-textarea">
-                            <span class="means-left-label">个人简介：</span>
-                            <Input  type="textarea" :rows="4" placeholder="Enter something..." />
-                       </div>
-                   </div>
-                   <div class="message-items-right-save">
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div>
+                                <span class="means-left-label">生日：</span>
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div class="means-textarea">
+                                <span class="means-left-label">个人简介：</span>
+                                <Input  type="textarea" :rows="4" placeholder="Enter something..." />
+                        </div>
+                    </div>
+                    <div class="message-items-right-save">
                         <div class="modifying-head">保存</div>
                         <div class="modifying-cancel">取消</div>
                     </div>
@@ -91,6 +94,7 @@
             </div>
             <div class="message-items-operation" @click="means = !means">{{means ?"编辑" : "收起"}}</div>
         </div>
+        <!-- 教育信息 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">教育信息</span>
@@ -101,6 +105,7 @@
             </div>
             <div class="message-items-operation">编辑</div>
         </div>
+        <!-- 个人擅长 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">个人擅长</span>
@@ -111,6 +116,7 @@
             </div>
             <div class="message-items-operation">编辑</div>
         </div>
+        <!-- 职业信息 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">职业信息</span>
@@ -127,9 +133,9 @@
 export default {
     data () {
         return {
-            modifying: false,
-            nickname: false,
-            means: false
+            modifying: true,
+            nickname: true,
+            means: true
         }
     }
 }
