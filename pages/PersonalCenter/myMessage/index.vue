@@ -100,10 +100,55 @@
                 <span class="message-items-left-label">教育信息</span>
             </div>
             <div class="message-items-right">
-                <span class="message-items-right-fill">马上填写</span>
-                <span>你的教育信息，让他人更好的了解你，与更多的同学在建筑部落相遇！</span>
+                <div v-if="educational">
+                     <span class="message-items-right-fill">马上填写</span>
+                    <span>你的教育信息，让他人更好的了解你，与更多的同学在建筑部落相遇！</span>
+                </div>
+                <div v-if="!educational" class="message-items-right-edit">
+                    <div class="means">
+                        <div class="means-left">
+                            <span class="means-left-label">学校类型：</span>
+                            <Select size="small" style="width:160px">
+                                <Option value="New York" >New York</Option>
+                            </Select>
+                        </div>
+                        <div class="means-right content-right">
+                            <div class="means-right-option">
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div>
+                            <span class="means-left-label">学校名称：</span>
+                            <Select size="small" style="width:340px">
+                                <Option value="New York" >New York</Option>
+                            </Select>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div class="means-left">
+                            <span class="means-left-label">入学时间：</span>
+                            <DatePicker type="date" placeholder="Select date" style="width: 160px"></DatePicker>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div class="means-left">
+                            <span class="means-left-label">院系：</span>
+                            <Select size="small" style="width:160px">
+                                <Option value="New York" >New York</Option>
+                            </Select>
+                        </div>
+                    </div>
+                     <div class="message-items-right-save">
+                        <div class="modifying-head">保存</div>
+                        <div class="modifying-cancel">取消</div>
+                    </div>
+                </div>
             </div>
-            <div class="message-items-operation">编辑</div>
+            <div class="message-items-operation" @click="educational = !educational">{{educational ?"编辑" : "收起"}}</div>
         </div>
         <!-- 个人擅长 -->
         <div class="message-items message-items-text">
@@ -122,10 +167,49 @@
                 <span class="message-items-left-label">职业信息</span>
             </div>
             <div class="message-items-right">
-                <span class="message-items-right-fill">马上填写</span>
-                <span>你的职业信息，让他人更好的了解你，与更多的同事在建筑部落相遇！</span>
+                <div v-if="career">
+                    <span class="message-items-right-fill">马上填写</span>
+                    <span>你的职业信息，让他人更好的了解你，与更多的同事在建筑部落相遇！</span>
+                </div>
+                <div v-if="!career" class="message-items-right-edit">
+                    <div class="means">
+                        <div>
+                            <span class="means-left-label">单位名称：</span>
+                            <Input type="text" style="width: 340px;" size="small" />
+                        </div>
+                        <div class="means-right content-right">
+                            <div class="means-right-option">
+                                <Select size="small" style="width:160px">
+                                    <Option value="New York" >New York</Option>
+                                </Select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div>
+                            <span class="means-left-label">部门/职业：</span>
+                            <Input type="text" style="width: 340px;" size="small" />
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div>
+                            <span class="means-left-label">工作时间：</span>
+                            <DatePicker type="date" placeholder="Select date" style="width: 340px"></DatePicker>
+                        </div>
+                    </div>
+                    <div class="means">
+                        <div>
+                            <span class="means-left-label">所在地：</span>
+                            <Cascader :data="data" style="width: 340px"></Cascader>
+                        </div>
+                    </div>
+                     <div class="message-items-right-save">
+                        <div class="modifying-head">保存</div>
+                        <div class="modifying-cancel">取消</div>
+                    </div>
+                </div>
             </div>
-            <div class="message-items-operation">编辑</div>
+            <div class="message-items-operation" @click="career = !career">{{career ?"编辑" : "收起"}}</div>
         </div>
     </div>
 </template>
@@ -135,7 +219,57 @@ export default {
         return {
             modifying: true,
             nickname: true,
-            means: true
+            means: true,
+            educational: true,
+            career: true,
+            data: [{
+                    value: 'beijing',
+                    label: '北京',
+                    children: [
+                        {
+                            value: 'gugong',
+                            label: '故宫'
+                        },
+                        {
+                            value: 'tiantan',
+                            label: '天坛'
+                        },
+                        {
+                            value: 'wangfujing',
+                            label: '王府井'
+                        }
+                    ]
+                }, 
+                {
+                    value: 'jiangsu',
+                    label: '江苏',
+                    children: [
+                        {
+                            value: 'nanjing',
+                            label: '南京',
+                            children: [
+                                {
+                                    value: 'fuzimiao',
+                                    label: '夫子庙',
+                                }
+                            ]
+                        },
+                        {
+                            value: 'suzhou',
+                            label: '苏州',
+                            children: [
+                            {
+                                value: 'zhuozhengyuan',
+                                label: '拙政园',
+                            },
+                            {
+                                value: 'shizilin',
+                                label: '狮子林',
+                            }
+                        ]
+                    }
+                ],
+            }]
         }
     }
 }
@@ -199,12 +333,16 @@ export default {
         &-left {
             width: 320px;
             &-label {
-                width: 80px;
+                width: 85px;
                 display: inline-block;
             }
         }
         &-right {
             flex: 1;
+            &-option {
+                text-align: left;
+                display: inline-block;
+            }
         }
         &-textarea {
             width: 98%;
@@ -238,5 +376,12 @@ export default {
         border-radius: 3px;
         cursor: pointer;
         margin-top: 10px;
+    }
+    .content-right {
+        text-align: right;
+        padding-right: 20px;
+    }
+    .ivu-cascader {
+        display: inline-block;
     }
 </style>

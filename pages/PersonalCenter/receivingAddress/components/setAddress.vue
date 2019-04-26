@@ -67,7 +67,8 @@ export default {
                             label: '王府井'
                         }
                     ]
-                }, {
+                }, 
+                {
                     value: 'jiangsu',
                     label: '江苏',
                     children: [
@@ -85,18 +86,18 @@ export default {
                             value: 'suzhou',
                             label: '苏州',
                             children: [
-                                {
-                                    value: 'zhuozhengyuan',
-                                    label: '拙政园',
-                                },
-                                {
-                                    value: 'shizilin',
-                                    label: '狮子林',
-                                }
-                            ]
-                        }
-                    ],
-                }]
+                            {
+                                value: 'zhuozhengyuan',
+                                label: '拙政园',
+                            },
+                            {
+                                value: 'shizilin',
+                                label: '狮子林',
+                            }
+                        ]
+                    }
+                ],
+            }]
         }
     }
 }
@@ -116,7 +117,7 @@ export default {
             left: 55%;
             transform: translate(-50% ,-50%);
             width: 812px;
-            height: 530px;
+            height: 533px;
             background: #ffffff;
             font-size: 14px;
             &-header {
