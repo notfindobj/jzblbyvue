@@ -12,7 +12,7 @@
                         <span>上海 [切换城市]</span>
                     </li>
                 </ul>
-                 <ul class="home-bar-content-right">
+                <ul class="home-bar-content-right">
                     <li>
                         <span v-if="!auth" @click="SignIn">登录</span>
                         <div v-else>
@@ -44,23 +44,29 @@
                     </div>
                     <div class="main-content-left-search">
                         <Input v-model="seatchData" style="width:450px;" size="large">
-                        <Select slot="prepend" v-model="searchTitle" style="width:100px">
-                            <Option v-for="(items, indexs) in menuData" :value="`${items.ItemSubAttributeCode}|${items.ItemAttributesId},${items.ItemAttributesFullName}`" :key="indexs">{{items.ItemAttributesFullName}}</Option>
-                        </Select>
-                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">搜索</Button>
+                            <Select slot="prepend" v-model="searchTitle" style="width:100px">
+                                <Option v-for="(items, indexs) in menuData"
+                                        :value="`${items.ItemSubAttributeCode}|${items.ItemAttributesId},${items.ItemAttributesFullName}`"
+                                        :key="indexs">{{items.ItemAttributesFullName}}
+                                </Option>
+                            </Select>
+                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">
+                                搜索
+                            </Button>
                         </Input>
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder="" @on-search ="onSearch"/>
+                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder=""
+                           @on-search="onSearch"/>
                 </div>
             </div>
             <ul class="main-nav-tab">
                 <li class="resource">
                     <span @click="backHome">资源库 <i class="iconfont icon-jiantou"></i></span>
                 </li>
-                <li>关注</li>
-                <li>推荐</li>
+                <li @click="goAttention">关注</li>
+                <li @click="goRecommend">推荐</li>
                 <li>视频</li>
                 <li>问答</li>
                 <li>建筑圈</li>
@@ -74,89 +80,96 @@
     </div>
 </template>
 <script>
-import signPage from '../components/home/signPage'
-import {getMenu} from '../service/clientAPI'
-import {mapState, mapGetters} from 'vuex'
-import axios from 'axios'
-export default {
+  import signPage from '../components/home/signPage'
+  import { getMenu } from '../service/clientAPI'
+  import { mapState, mapGetters } from 'vuex'
+  import axios from 'axios'
+
+  export default {
     data() {
-        return {
-            seatchData: '',
-            searchTitle: '',
-            baiduData: '',
-            loginIng: require('../assets/images/top_logo.png'),
-            menuData: []
-        }
+      return {
+        seatchData: '',
+        searchTitle: '',
+        baiduData: '',
+        loginIng: require('../assets/images/top_logo.png'),
+        menuData: []
+      }
     },
     computed: {
-        ...mapState({
-            auth: state => state.overas.auth
-        }),
-        ...mapGetters(['isLogin'])
+      ...mapState({
+        auth: state => state.overas.auth
+      }),
+      ...mapGetters(['isLogin'])
     },
-     components: {
-        signPage
+    components: {
+      signPage
     },
-    async created () {
-        let menuDatas = await getMenu();
-        this.menuData = menuDatas.RetMenuData || [];
+    async created() {
+      let menuDatas = await getMenu();
+      this.menuData = menuDatas.RetMenuData || [];
     },
     methods: {
-        SignIn () {
-            this.$store.dispatch('SETUP',  true)
-        },
-        async signOut () {
-            let config = {
-                url: 'http://127.0.0.1:8889/api/logout',
-                // url: 'http://127.0.0.1:8889/api/logout',
-                withCredentials: true,
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-            }
-            axios(config)
-            .then(res => {
-                this.$store.dispatch('LOGININ', null);
-                this.$Message.success(res.data.Msg);
-            })
-        },
-        searchBaseData () {
-            let _this = this;
-            if (!this.searchTitle) {
-                return false;
-            }
-            let baseDateId ={
-                ClassTypeId: _this.searchTitle.split(',')[0],
-                ClassTypeArrList: [{ArrId: '',ArrEnCode: ''}],
-                SortType: 0,
-                KeyWords: this.seatchData,
-                Order: true,
-                Page: 0,
-                Rows: 8,
-                title: _this.searchTitle.split(',')[1],
-            }
-            this.$router.push({name: "dataBase", query: {dataBase: JSON.stringify(baseDateId)}})
-        },
-        // 在线地图
-        onlineMap () {
-            window.open('http://www.baidu.com')
-        },
-        // 百度搜索
-        onSearch () {
-            if (!this.baiduData) return false
-            window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${this.baiduData}`)
-        },
-        publish () {
-            if (this.isLogin) {
-                this.$router.push({name: "publish-imageText"})
-            }
-        },
-        backHome () {
-            this.$router.push({path: "/"})
+      SignIn() {
+        this.$store.dispatch('SETUP', true)
+      },
+      async signOut() {
+        let config = {
+          url: 'http://127.0.0.1:8889/api/logout',
+          // url: 'http://140.143.240.64:8889/api/logout',
+          withCredentials: true,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
         }
+        axios(config)
+          .then(res => {
+            this.$store.dispatch('LOGININ', null);
+            this.$Message.success(res.data.Msg);
+          })
+      },
+      searchBaseData() {
+        let _this = this;
+        if (!this.searchTitle) {
+          return false;
+        }
+        let baseDateId = {
+          ClassTypeId: _this.searchTitle.split(',')[0],
+          ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
+          SortType: 0,
+          KeyWords: this.seatchData,
+          Order: true,
+          Page: 0,
+          Rows: 8,
+          title: _this.searchTitle.split(',')[1],
+        }
+        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })
+      },
+      // 在线地图
+      onlineMap() {
+        window.open('http://www.baidu.com')
+      },
+      // 百度搜索
+      onSearch() {
+        if (!this.baiduData) return false
+        window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${ this.baiduData }`)
+      },
+      publish() {
+        if (this.isLogin) {
+          this.$router.push({ name: "publish-imageText" })
+        }
+      },
+      backHome() {
+        this.$router.push({ path: "/" })
+      },
+      goAttention() {
+        this.$router.push({ path: "/attention" })
+      },
+      goRecommend() {
+        this.$router.push({ path: "/recommend" })
+      }
     }
-}
+  }
 </script>
 <style lang="less" scoped>
     .btn-bg {
@@ -165,13 +178,16 @@ export default {
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
+
     .ad {
         height: 60px;
         background: #bbbbbb;
     }
+
     .home-bar {
         height: 40px;
         background: #E8E8E8;;
+
         &-content {
             width: 1200px;
             margin: 0 auto;
@@ -180,46 +196,56 @@ export default {
             color: #999999;
             font-size: 14px;
             line-height: 40px;
+
             &-left {
                 width: 50%;
                 display: flex;
                 text-align: left;
             }
+
             &-right {
                 width: 50%;
                 display: flex;
                 justify-content: flex-end;
+
                 &-out {
                     cursor: pointer;
                 }
+
                 > li.content {
                     padding: 0 30px;
                     cursor: pointer;
-                    &:hover{
+
+                    &:hover {
                         color: #FF3C00;
                     }
                 }
+
                 .app-down {
                     color: #999999;
                 }
             }
         }
     }
+
     .main-nav {
         background: #F2F4F2;
         border-bottom: 1px solid #FF3C00;
         position: relative;
+
         &-tab {
             font-size: 16px;
             color: #FF3C00;
             display: flex;
             width: 1200px;
             margin: 0 auto;
+
             > li {
                 padding: 8px 30px;
                 cursor: pointer;
             }
         }
+
         &-publish {
             padding: 8px 30px;
             cursor: pointer;
@@ -233,22 +259,27 @@ export default {
             border-top-right-radius: 3px;
         }
     }
+
     .main-content {
         width: 1200px;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
         padding: 30px 0;
+
         &-left {
             display: flex;
+
             &-search {
                 margin-left: 90px;
             }
         }
+
         &-logo {
             width: 137px;
         }
     }
+
     .resource {
         font-size: 20px;
         background-color: #FF3C00;
@@ -256,6 +287,7 @@ export default {
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
     }
+
     .selection {
         background-color: #FF3C00;
         color: #ffffff;

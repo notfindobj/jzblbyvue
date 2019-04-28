@@ -222,6 +222,7 @@
           height: 200px;
           position: relative;
           cursor: pointer;
+          overflow: hidden;
           >img{
             display: inline-block;
             width: 100%;
