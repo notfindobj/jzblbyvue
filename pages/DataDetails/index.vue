@@ -27,8 +27,8 @@
       </div>
     </div>
     <viewPicture/>
-    <data-details-custom v-show="isShowDataDetailsCustom"></data-details-custom>
-    <date-details-down v-show="isShowDateDetailsDown"></date-details-down>
+    <data-details-custom @dataDetailsMaskClose="dataDetailsMaskClose" v-show="isShowDataDetailsCustom"></data-details-custom>
+    <date-details-down @dataDetailsMaskClose="dataDetailsMaskClose" v-show="isShowDateDetailsDown"></date-details-down>
   </div>
 </template>
 <script>
@@ -115,6 +115,13 @@
           this.isShowDateDetailsDown = true;
         }else{
           this.isShowDataDetailsCustom = true;
+        }
+      },
+      dataDetailsMaskClose (obj) {
+        if(obj.type == 'Down') {
+          this.isShowDateDetailsDown = false;
+        }else{
+          this.isShowDataDetailsCustom = false;
         }
       }
     }
