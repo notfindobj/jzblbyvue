@@ -7,13 +7,13 @@
             </Card>
         </Scroll>
         </div>
-        <Page 
-        show-elevator
-        show-total
-        @on-change="onChange"
-        @on-page-size-change="onPageSizeChange"
-        :total="pageConfig.total"
-        :current="pageConfig.current"
+        <Page
+            show-elevator
+            show-total
+            @on-change="onChange"
+            @on-page-size-change="onPageSizeChange"
+            :total="pageConfig.total"
+            :current="pageConfig.current"
         />
     </div>
 </template>
