@@ -67,9 +67,9 @@
                 </li>
                 <li @click="goAttention">关注</li>
                 <li @click="goRecommend">推荐</li>
-                <li>视频</li>
-                <li>问答</li>
-                <li>建筑圈</li>
+                <li @click="goVideo">视频</li>
+                <li @click="goQuestion">问答</li>
+                <li @click="goBuilding">建筑圈</li>
                 <li>建筑游学</li>
                 <li>建筑书店</li>
                 <li>我的部落</li>
@@ -167,7 +167,19 @@
       },
       goRecommend() {
         this.$router.push({ path: "/recommend" })
-      }
+      },
+
+      goVideo() {
+        this.$router.push({ path: "/videos" })
+      },
+
+      goQuestion() {
+        this.$router.push({ path: "/QuestionsAndAnswers" })
+      },
+
+      goBuilding() {
+        this.$router.push({ path: "/BuildingCircle" })
+      },
     }
   }
 </script>
