@@ -83,7 +83,7 @@
                     </MenuItem>
                 </Menu>
                 <div class="content-list">
-                    <div class="content-item">
+                    <div class="content-item" @click="goDetail">
                         <div class="item-left-box">
                             <span class="num">1</span>
                             <span>回答</span>
@@ -213,6 +213,14 @@
           }
         }
       }
+    },
+    methods: {
+      goDetail() {
+        this.$router.push({
+          name: 'QuestionsAndAnswers-id',
+          params: { id: 1 }
+        })
+      }
     }
   }
 </script>
@@ -267,9 +275,11 @@
                 width: 520px;
                 height: 249px;
                 background-color: #ccc;
+
                 .swiper-wrapper {
                     width: 520px;
                     height: 249px;
+
                     .swiper-slide {
                         position: relative;
                         text-align: center;

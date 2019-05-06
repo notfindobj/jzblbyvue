@@ -95,7 +95,7 @@
                     border-bottom: 2px solid #ff3c00;
                 }
 
-                .nuxt-link-exact-active {
+                .nuxt-link-active {
                     color: #FF3C00;
                     border-bottom: 2px solid #ff3c00;
                 }
