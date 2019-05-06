@@ -73,6 +73,7 @@ export default {
             axios(config)
             .then(res => {
                 this.$store.dispatch('LOGININ', res.data.Data);
+                localStorage.setItem('LOGININ', JSON.stringify(res.data.Data))
                 this.$store.dispatch('SETUP',  false)
                 this.$Message.success(res.data.Msg);
             })

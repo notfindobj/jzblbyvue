@@ -17,7 +17,6 @@ export const overallActions ={
         commit("setqueryBase", params)
     },
     nuxtServerInit({ commit, state }, { req }) {
-        console.log('>>>>>>>>>>>>>>', 1)
         let auth = null
         if (req.headers.cookie) {
             const parsed = cookieparser.parse(req.headers.cookie);
