@@ -46,7 +46,7 @@
                 </div>
             </div>
 
-            <div class="public-block">
+            <div class="public-block comment-active">
                 <div class="block-head">
                     <div class="block-head-left">
                         <div class="avatar"></div>
@@ -96,42 +96,46 @@
                     </div>
                 </div>
             </div>
-            <div class="comment">
-                <div class="comment-head">
-                    <div class="comment-avatar"></div>
-                    <div class="comment-input-wrap">
-                        <Input />
-                        <div class="comment-tool">
-                            <div>
-                                <i class="icon iconfont icon-face">&#xe64e;</i>
-                                <i class="icon iconfont icon-photo">&#xe61a;</i>
-                                <i class="icon iconfont icon-tags">&#xe610;</i>
+            <div style="position: relative;">
+                <div class="comment-shape"></div>
+                <div class="comment">
+                    <div class="comment-head">
+                        <div class="comment-avatar"></div>
+                        <div class="comment-input-wrap">
+                            <Input />
+                            <div class="comment-tool">
+                                <div>
+                                    <i class="icon iconfont icon-face">&#xe64e;</i>
+                                    <i class="icon iconfont icon-photo">&#xe61a;</i>
+                                    <i class="icon iconfont icon-tags">&#xe610;</i>
+                                </div>
+                                <Button type="primary">评论</Button>
                             </div>
-                            <Button type="primary">评论</Button>
                         </div>
                     </div>
-                </div>
-                <div class="comment-list">
-                    <div class="comment-item" v-for="i in 2" :key="i">
-                        <div class="item-avatar"></div>
-                        <div class="commit-item-info">
-                            <div class="item-info-row1">
-                                <span class="user-name">东北好建</span>
-                                <span class="publish-time">24分钟前</span>
-                            </div>
-                            <p class="comment-content">许可乐乒乒乓乓乒乒乓乓乒乒乓乓。零零落落零零落落零零落落零零落落了,零零落落零零落落零零落落零零落落零零落落零零落落零零落落了零零落落零零落落’啦啦啦啦啦啦乒乒乓乓</p>
-                            <p class="opera-row">
-                                <span>回复</span>
-                                <span class="line-col">|</span>
-                                <span>
+                    <div class="comment-list">
+                        <div class="comment-item" v-for="i in 2" :key="i">
+                            <div class="item-avatar"></div>
+                            <div class="commit-item-info">
+                                <div class="item-info-row1">
+                                    <span class="user-name">东北好建</span>
+                                    <span class="publish-time">24分钟前</span>
+                                </div>
+                                <p class="comment-content">许可乐乒乒乓乓乒乒乓乓乒乒乓乓。零零落落零零落落零零落落零零落落了,零零落落零零落落零零落落零零落落零零落落零零落落零零落落了零零落落零零落落’啦啦啦啦啦啦乒乒乓乓</p>
+                                <p class="opera-row">
+                                    <span>回复</span>
+                                    <span class="line-col">|</span>
+                                    <span>
                                     <i class="icon iconfont">&#xe67e;</i>
                                     赞
                                 </span>
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="public-block">
                 <div class="block-head">
