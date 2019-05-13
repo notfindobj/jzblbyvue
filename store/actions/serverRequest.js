@@ -16,5 +16,9 @@ export const serverRequest ={
     // 获取资源库详情
     async getBaseDataDetails ({ commit, state }, params) {
         return await request.post('ItemDetails/Details', params)
+    },
+    // 获取建筑圈说说
+    async getTalk ({ commit, state }, params) {
+        return await request.post('Talk/GetTalk', params)
     }
 }

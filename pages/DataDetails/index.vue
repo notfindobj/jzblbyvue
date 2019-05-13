@@ -1,7 +1,7 @@
 <template>
   <div class="data-details-box">
     <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
-    <!-- {{detaDetails}} -->
+    {{detaDetails}}
     <div class="data-details-con-box">
       <div class="data-details-location">
         <Breadcrumb separator=">" style="margin-bottom: 20px">
@@ -10,7 +10,7 @@
       </div>
       <div class="data-details-con">
         <data-details-left
-        :detaDetails="detaDetails"
+          :detaDetails="detaDetails"
         />
         <div>
           <data-details-right
@@ -89,11 +89,12 @@
     methods: {
       // 点赞
       async thumbsUp (item) {
+        console.log(item)
         if (this.isLogin) {
           let queryData = {
             ItemId: item.ItemId,
             LikeType: 1,
-            IsDelete: 0
+            IsDelete: item.islikes
           }
           let thumbsUpMsg = await setthumbsUp(queryData)
         }

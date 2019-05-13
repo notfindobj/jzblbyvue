@@ -219,23 +219,22 @@
                 width: 50%;
                 display: flex;
                 justify-content: flex-end;
-
                 &-out {
-                    cursor: pointer;
+                  cursor: pointer;
                 }
-
                 > li.content {
                     padding: 0 30px;
                     cursor: pointer;
-
                     &:hover {
                         color: #FF3C00;
                     }
                 }
-
                 .app-down {
                     color: #999999;
                 }
+            }
+            &:last-child {
+              cursor: pointer;
             }
         }
     }

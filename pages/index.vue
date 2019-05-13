@@ -79,10 +79,17 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col  span="12" >
-                        <template v-for="(items, lp) in lpList"  >
-                            <Small-Cards v-if="lp < 4" @viewItem="viewItem"  :smallCardsDate= "items" :key="lp"/>
-                        </template>
+                    <i-col span="12" >
+                        <div class="left-items">
+                            <template v-for="(items, lp) in lpList"  >
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem"  :smallCardsDate= "items" :key="lp"/>
+                            </template>
+                        </div>
+                        <div class="left-items">
+                            <template v-for="(items, lp) in lpList"  >
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem"  :smallCardsDate= "items" :key="lp"/>
+                            </template>
+                        </div>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
                         <Big-Cards @viewItem="viewItem"  :bigCardsDate= "items"/>
@@ -133,10 +140,17 @@
                     </div>
                 </div>
                 <Row>
-                    <i-col  span="12" >
-                        <template v-for="(items, lp) in ztList"  >
-                            <Small-Cards v-if="lp < 4" :smallCardsDate= "items" @viewItem="viewItem"  :key="lp"/>
-                        </template>
+                    <i-col span="12" >
+                        <div class="left-items">
+                            <template v-for="(items, lp) in ztList"  >
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem"  :smallCardsDate= "items" :key="lp"/>
+                            </template>
+                        </div>
+                        <div class="left-items">
+                            <template v-for="(items, lp) in ztList"  >
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem"  :smallCardsDate= "items" :key="lp"/>
+                            </template>
+                        </div>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
                         <Big-Cards @viewItem="viewItem"  :bigCardsDate= "items"/>
@@ -279,9 +293,6 @@
                 </div>
             </div>
         </div>
-        <ul>
-            <li id="dad"><nuxt-link to="/DataDetails">资源库</nuxt-link></li>
-        </ul>
     </div>
 </template>
 <script>
@@ -373,6 +384,10 @@ methods: {
 }
 </script>
 <style lang="less">
+    .left-items {
+        display: flex;
+        justify-content: space-around;
+    }
     .swiper-pagination-bullet-active {
         background: #FF3C00;
     }
@@ -531,6 +546,7 @@ methods: {
             width: 191px;
             height: 70px;
             display: inline-block;
+            border: 1px solid transparent;
             > img {
                 vertical-align: middle;
             }

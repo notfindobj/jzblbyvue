@@ -23,6 +23,7 @@
   import Conten from '../../components/contenLayout/Content.vue'
   import {getBaseData} from '../../service/clientAPI'
   export default {
+    middleware: 'authenticated',
     head () {
         return {
             title: `资源库-示范区`,

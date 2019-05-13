@@ -1,5 +1,6 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" height="800">
+        <!-- {{getTalks}} -->
         <div class="container">
             <div class="public-block">
                 <div class="block-head">
@@ -45,7 +46,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="public-block">
                 <div class="block-head">
                     <div class="block-head-left">
@@ -96,7 +96,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="public-block">
                 <div class="block-head">
                     <div class="block-head-left">
@@ -149,7 +148,6 @@
                     </div>
                 </div>
             </div>
-
             <div class="public-block">
                 <div class="block-head">
                     <div class="block-head-left">
@@ -203,14 +201,24 @@
 </template>
 
 <script>
-  export default {
+export default {
     layout: 'main',
-    methods: {
-      handleReachBottom() {
-        console.log(1222)
-      }
+    async asyncData({app, store, route}) {
+    let queryData = {
+        TalkType: "",
+        Page: 0
     }
-  }
+    let getTalks = await store.dispatch('getTalk', queryData);
+    return {
+        getTalks: getTalks
+    }
+    },
+    methods: {
+        handleReachBottom() {
+            console.log(1222)
+        }
+    }
+}
 </script>
 
 <style lang="less" scoped>

@@ -22,9 +22,9 @@
                 </div>
                 <div class="user">
                     <div class="avatar"></div>
-                    <span class="user-name">梅赛德斯·赵四</span>
+                    <span class="user-name">{{auth.NickName}}</span>
                 </div>
-                <div class="online-map">在线地图</div>
+                <div class="online-map" @click="onlineMap">在线地图</div>
                 <Dropdown class="right-select">
                     <a href="javascript:void(0)">
                         APP下载
@@ -42,13 +42,24 @@
         </div>
     </div>
 </template>
-
 <script>
+  import { mapState, mapGetters } from 'vuex'
   export default {
     data() {
       return {
         loginImg: require('../assets/images/top_logo.png'),
       }
+    },
+    computed: {
+        ...mapState({
+        auth: state => state.overas.auth
+      }),
+    },
+    methods: {
+    // 在线地图
+      onlineMap() {
+        window.open('http://www.baidu.com')
+      },
     }
   }
 </script>
@@ -109,6 +120,7 @@
                 display: flex;
                 align-items: center;
                 margin-left: 40px;
+                cursor: pointer;
                 .avatar {
                     width: 28px;
                     height: 28px;
@@ -122,6 +134,7 @@
                 }
             }
             .online-map {
+                cursor: pointer;
                 font-size: 14px;
                 color: #999;
                 margin: 0 30px;

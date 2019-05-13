@@ -2,7 +2,7 @@
     <div class="page" @click="isShowUpload = false">
         <div class="content">
             <label>
-                <textarea placeholder="有什么新鲜事想告诉大家？"></textarea>
+                <textarea  placeholder="有什么新鲜事想告诉大家？"></textarea>
             </label>
             <div class="toolbar">
                 <div class="toolbar-left">
@@ -50,20 +50,22 @@
 
 <script>
   import Upload from '~/components/publish/upload'
+  import {releaseStatement} from '../../../service/clientAPI'
   export default {
     data() {
       return {
         isLongText: false,  // 是否发布长文本
         isShowUpload: false,    // 是否显示上传图片
         publishMode: '公开',
-        imgList: [1,2,3,4,5,6]
+        imgList: [1,2,3,4,5,6],
+        imageText: {
+            text: ''
+        }
       }
     },
-
     components: {
       'v-upload': Upload
     },
-
     methods: {
       selectIsPublic(name) {
         this.publishMode = name;

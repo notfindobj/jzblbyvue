@@ -99,6 +99,9 @@
           placeholder: '填写项目内容'
         }
       }
+    },
+    methods: {
+        
     }
   }
 </script>

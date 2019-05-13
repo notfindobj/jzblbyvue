@@ -51,6 +51,7 @@ export default {
         margin-top: 5px;
         display: inline-block;
         border-radius: 3px;
+        height: 475px;
         &-top {
             position: relative;
             height: 356px;

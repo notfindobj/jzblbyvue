@@ -13,7 +13,7 @@
       </div>
       <ul class="comments-status-info">
         <li>
-          <span @click="thumbsUp(publish)">
+          <span :class="publish.islikes? 'operationColor': ''" @click="thumbsUp(publish)">
             <i class="icon iconfont icon-dianzan1"></i>
             <span>{{publish.likes}}</span>
           </span>
@@ -553,5 +553,8 @@
 
       }
     }
+  }
+  .operationColor {
+    color: #FF3C00;
   }
 </style>

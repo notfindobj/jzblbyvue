@@ -68,7 +68,9 @@ export default {
     console.log('get request url', url)
     let tooken = '';
     if (process.server) {
-      tooken = $store.state.overas.auth.token
+      if ($store.state.overas.auth) {
+        tooken = $store.state.overas.auth.token
+      }
     }
     if (process.client) {
       tooken = JSON.parse(localStorage.getItem('LOGININ')).token
