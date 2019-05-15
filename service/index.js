@@ -9,6 +9,7 @@ const $store = createStore();
   config.baseURL = `http://www.api.jzbl.com/api/`
 // }
 const service = axios.create(config);
+service.defaults.withCredentials = true;
 // POST 传参序列化
 service.interceptors.request.use(
   config => {
