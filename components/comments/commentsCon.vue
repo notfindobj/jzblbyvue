@@ -19,13 +19,13 @@
           </span>
         </li>
         <li>
-          <span @click="Forward(publish)">
+          <span  @click="Forward(publish)">
              <i class="icon iconfont icon-share"></i>
             <span>{{commentsInfo.downNum}}</span>
           </span>
         </li>
         <li>
-          <span @click="Collection(publish)">
+          <span :class="publish.iscollections? 'operationColor': ''" @click="Collection(publish)">
             <i class="icon iconfont icon-favorite"></i>
             <span>{{publish.collections}}</span>
           </span>

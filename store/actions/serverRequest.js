@@ -20,5 +20,9 @@ export const serverRequest ={
     // 获取建筑圈说说
     async getTalk ({ commit, state }, params) {
         return await request.post('Talk/GetTalk', params)
+    },
+    // 获取建筑圈详情评论
+    async getGetComments ({ commit, state }, params) {
+        return await request.post('Comments/GetComments', params)
     }
 }

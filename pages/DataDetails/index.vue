@@ -1,7 +1,6 @@
 <template>
   <div class="data-details-box">
     <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
-    {{detaDetails}}
     <div class="data-details-con-box">
       <div class="data-details-location">
         <Breadcrumb separator=">" style="margin-bottom: 20px">
@@ -14,14 +13,16 @@
         />
         <div>
           <data-details-right
-          :detaDetails="detaDetails"
-          @dataDetailsMaskShow="dataDetailsMaskShow"
+            :detaDetails="detaDetails"
+            :attribute="ItemAttributesEntities"
+            @dataDetailsMaskShow="dataDetailsMaskShow"
+            @setFollow="setFollow"
           />
           <commentsCon
-          :width="'340px'"
-          :publish="detaDetails"
-          @thumbsUp="thumbsUp"
-          @Collection="Collection"
+            :width="'340px'"
+            :publish="detaDetails"
+            @thumbsUp="thumbsUp"
+            @Collection="Collection"
           />
         </div>
       </div>
@@ -36,11 +37,12 @@
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
-  import {setthumbsUp, setCollection} from '../../service/clientAPI'
-  import {mapGetters} from 'vuex';
+  import {setthumbsUp, setCollection, setFollow} from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
+  import {mapGetters } from 'vuex'
   export default {
+    middleware: 'authenticated',
     head () {
       return {
         title: `资料库详情`,
@@ -60,8 +62,8 @@
           '重庆北大资源燕南大道改造计划'
         ],
         isShowDataDetailsCustom:false,
-        isShowDateDetailsDown:false
-
+        isShowDateDetailsDown:false, 
+        ItemAttributesEntities: {}
       }
     },
     components: {
@@ -73,15 +75,24 @@
       dataDetailsCustom
     },
     computed:{
-      ...mapGetters(['isLogin'])
+      ...mapGetters(['isLogin']),
     },
     async asyncData({app, store, route}) {
+      Promise.all([])
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
       let getBaseDataDetail = await store.dispatch('getBaseDataDetails', queryData);
+      // 根据项目详情请求评论信息
+      let Comment = {
+          Id: getBaseDataDetail.ItemEntity.ItemId
+      }
+      let getGetCommentsData = await store.dispatch('getGetComments', Comment);
       return {
         detaDetails: getBaseDataDetail.ItemEntity,
-        itemsDetail: getBaseDataDetail
+        itemsDetail: getBaseDataDetail,
+        ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
+        getGetCommentsData:getGetCommentsData,
+        id:getBaseDataDetail.ItemEntity.ItemId
       }
     },
     created() {
@@ -89,27 +100,41 @@
     methods: {
       // 点赞
       async thumbsUp (item) {
-        console.log(item)
-        if (this.isLogin) {
-          let queryData = {
-            ItemId: item.ItemId,
-            LikeType: 1,
-            IsDelete: item.islikes
-          }
-          let thumbsUpMsg = await setthumbsUp(queryData)
+        let queryData = {
+          ItemId: item.ItemId,
+          LikeType: 1,
+          IsDelete: item.islikes
         }
+        let thumbsUpMsg = await setthumbsUp(queryData);
+        if (item.islikes) {
+          this.$set(item, 'likes', item.likes-1)
+        } else {
+          this.$set(item, 'likes', item.likes+1)
+        }
+        this.$set(item, 'islikes', !item.islikes)
       },
       // 收藏
       async Collection (item) {
-        if (this.isLogin) {
-
+        let queryData = {
+          ItemId: item.ItemId,
+          TalkType: 4,
+          IsDelete: item.iscollections
         }
-        // let queryData = {
-        //   ItemId: item.ItemId,
-        //   TalkType: 4,
-        //   IsDelete: true
-        // }
-        // let collectionMsg = await setCollection(queryData)
+        let collectionMsg = await setCollection(queryData)
+         if (item.iscollections) {
+          this.$set(item, 'collections', item.collections-1)
+        } else {
+          this.$set(item, 'collections', item.collections+1)
+        }
+          this.$set(item, 'iscollections', !item.iscollections)
+      },
+      async setFollow (item) {
+        let queryData = {
+          UserId: item.UserId,
+          IsDelete: item.iscollections
+        }
+        let collectionMsg = await setCollection(queryData)
+        this.$set(item, 'IsFollow', !item.iscollections)
       },
       dataDetailsMaskShow (obj) {
         if(obj.type == 'Down') {

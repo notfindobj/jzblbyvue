@@ -110,6 +110,7 @@
           }
         }
         .icon-position{
+          cursor: pointer;
           display: block;
           width: 16px;
           height: 16px;
@@ -161,6 +162,7 @@
             flex-direction: row;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
             >img{
               display: inline-block;
               width: 40px;
@@ -184,6 +186,7 @@
         align-items: flex-end;
         justify-content: flex-end;
         >div{
+          cursor: pointer;
           &:nth-child(1){
             width: 78px;
             height: 32px;

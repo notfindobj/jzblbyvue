@@ -199,12 +199,12 @@
             </div>
         </div>
     </Scroll>
-
 </template>
 
 <script>
   export default {
     layout: 'main',
+    middleware: 'authenticated',
     methods: {
       handleReachBottom() {
         console.log(1222)

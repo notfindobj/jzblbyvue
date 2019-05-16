@@ -2,30 +2,29 @@
   <div class="data-details-right">
     <div class="data-details-right-con">
       <div class="works-info">
-        <img :src="worksDatainfo.imgUrl" alt="">
+        <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png" alt="">
         <p class="works-name">{{detaDetails.ItemName}}</p>
-        <div class="focus-btn">+ 关注</div>
+        <div class="focus-btn" @click="setFollow(detaDetails)">{{detaDetails.IsFollow? '+ 关注' : '取关'}}</div>
       </div>
       <div class="data-info">
         <p class="data-name">项目信息</p>
-        <ul :class="!worksDatainfo.dataInfo.isUp ? 'data-introduce' : 'data-introduce data-introduce-active '">
-          <li v-for="(item,index) in worksDatainfo.dataInfo.dataInfo_list" :key="index">
-            <span>{{item.column_name}}</span>
-            <span>{{item.column_info}}</span>
+        <ul :class="!isShowIcon ? 'data-introduce' : 'data-introduce data-introduce-active '">
+          <li v-for="(item,index) in attribute" :key="index">
+            <span>{{item.ItemAttributesFullName}}</span>
+            <span>{{item.ItemSubAttributeFullName}}</span>
           </li>
         </ul>
-        <i :class="worksDatainfo.dataInfo.isUp ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" @click="unAnddown()"></i>
+        <i v-if="attribute.length > 4" :class="isShowIcon ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" @click="unAnddown()"></i>
       </div>
-      <div class="btn-group">
-        <div @click="immediatelyDown()">立即下载</div>
-        <div @click="customthis()">同款定制</div>
+      <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
+        <div v-if="detaDetails.IsDownload" @click="immediatelyDown()">立即下载</div>
+        <div v-if="detaDetails.IsCustomized" @click="customthis()">同款定制</div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import commentsCon from '../../components/comments/commentsCon.vue'
   export default {
     name: 'detaDetailsRight',
     props: {
@@ -36,61 +35,36 @@
           return {}
         }
       },
+      attribute: {
+        type: Array,
+        required: true,
+        default: function () {
+          return []
+        }
+      }
     },
     data() {
       return {
-        worksDatainfo:{
-          imgUrl:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-          worksName:'梅赛德斯·赵四',
-          dataInfo:{
-            isUp:false,
-            dataInfo_list:[
-              {
-                column_name:'项目名称：',
-                column_info:'杭州萧山国际机场',
-              },
-              {
-                column_name:'风   格：',
-                column_info:'现代',
-              },
-              {
-                column_name:'开发商：',
-                column_info:'阳光城',
-              },
-              {
-                column_name:'所在地：',
-                column_info:'浙江',
-              },
-              {
-                column_name:'关键词：',
-                column_info:'效果图（含SU模型）',
-              },
-              {
-                column_name:'关键词：',
-                column_info:'效果图（含SU模型）',
-              }
-            ]
-          }
-        },
+        isShowIcon: false,
       }
     },
-    components: {
-      commentsCon
-    },
-    asyncData() {
-    },
     created() {
+      this.isShowIcon = this.attribute.length > 4 ?  false : true
     },
     methods: {
       unAnddown () {
-        this.worksDatainfo.dataInfo.isUp = !this.worksDatainfo.dataInfo.isUp
+        this.isShowIcon = !this.isShowIcon
       },
       immediatelyDown () {
-        this.$emit('dataDetailsMaskShow',{type:'Down'})
+        this.$emit('dataDetailsMaskShow', {type:'Down'})
       },
       customthis () {
-        this.$emit('dataDetailsMaskShow',{type:'Custom'})
+        this.$emit('dataDetailsMaskShow', {type:'Custom'})
       },
+      setFollow (item) {
+        this.$emit('setFollow', item)
+      },
+      
     }
   }
 </script>
@@ -123,6 +97,7 @@
           margin-bottom: 11px;
         }
         .focus-btn{
+          cursor: pointer;
           width: 84px;
           height: 26px;
           margin: 0 auto;
