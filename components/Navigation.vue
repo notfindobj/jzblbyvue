@@ -70,7 +70,7 @@
                 <li @click="goVideo">视频</li>
                 <li @click="goQuestion">问答</li>
                 <li @click="goBuilding">建筑圈</li>
-                <li>建筑游学</li>
+                <li @click="goHeAndI">建筑游学</li>
                 <li>建筑书店</li>
                 <li>我的部落</li>
             </ul>
@@ -180,6 +180,9 @@
       goBuilding() {
         this.$router.push({ path: "/BuildingCircle" })
       },
+      goHeAndI() {
+        this.$router.push({ path: "/HeAndITribal" })
+      }
     }
   }
 </script>
