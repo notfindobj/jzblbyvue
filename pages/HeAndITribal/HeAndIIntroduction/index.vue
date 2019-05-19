@@ -32,7 +32,7 @@
     </div>
     <div class="he-and-i-introduction-bottom">
       <h5 class="he-and-i-introduction-bottom-title">
-        <span class="最近访客">资料简介</span>
+        <span  class="title-name">最近访客</span>
       </h5>
       <ul class="he-and-i-introduction-bottom-list">
         <li v-for="(item,index) in recent_visitors_list" :key="index">
