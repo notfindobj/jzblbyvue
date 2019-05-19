@@ -1,8 +1,8 @@
 <template>
-    <div class="page" @click="isShowUpload = false">
+    <div class="page" @click="hiddenModal">
         <div class="content">
             <label>
-                <textarea  placeholder="有什么新鲜事想告诉大家？"></textarea>
+                <textarea v-model="content" placeholder="有什么新鲜事想告诉大家？"></textarea>
             </label>
             <div class="toolbar">
                 <div class="toolbar-left">
@@ -10,7 +10,7 @@
                         <i class="icon iconfont">&#xe631;</i>
                         <span class="text">添加图片</span>
                     </span>
-                    <span class="tools add-face">
+                    <span class="tools add-face" @click.stop="isShowEmotion = !isShowEmotion">
                         <i class="icon iconfont">&#xe64e;</i>
                         <span class="text">添加表情</span>
                     </span>
@@ -43,20 +43,30 @@
                     <v-upload class="upload" />
                 </div>
             </div>
+            <emotion
+                class="emotion"
+                @emotion="handleEmotion"
+                :height="200"
+                v-show="isShowEmotion"
+            ></emotion>
             <div class="upload-box-top" v-show="isShowUpload"></div>
+            <div class="emotion-box-top" v-show="isShowEmotion"></div>
         </div>
     </div>
 </template>
 
 <script>
   import Upload from '~/components/publish/upload'
+  import Emotion from '@/components/Emotion/index'
   import {releaseStatement} from '../../../service/clientAPI'
   export default {
     data() {
       return {
         isLongText: false,  // 是否发布长文本
         isShowUpload: false,    // 是否显示上传图片
+        isShowEmotion: false,   // 是否显示表情选择框
         publishMode: '公开',
+        content: '',
         imgList: [1,2,3,4,5,6],
         imageText: {
             text: ''
@@ -64,9 +74,22 @@
       }
     },
     components: {
-      'v-upload': Upload
+      'v-upload': Upload,
+      Emotion
     },
     methods: {
+
+      // 隐藏弹出框
+      hiddenModal() {
+        this.isShowUpload = false;
+        this.isShowEmotion = false;
+      },
+
+      // 选择表情
+      handleEmotion (item) {
+        this.content += `[${item.content}]`
+      },
+
       selectIsPublic(name) {
         this.publishMode = name;
       }
@@ -97,6 +120,15 @@
         }
         textarea::placeholder {
             color: #999;
+        }
+        .upload-box {
+            bottom: -235px;
+        }
+        .emotion {
+            position: absolute;
+            bottom: -190px;
+            left: 120px;
+            z-index: 3;
         }
     }
 </style>
