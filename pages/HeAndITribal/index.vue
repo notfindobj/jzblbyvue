@@ -1,21 +1,20 @@
 <template>
   <div class="he-and-i-tribal">
     <div class="he-and-i-tribal-content">
-      <head></head>
+      <heads></heads>
+      <he-and-i-content></he-and-i-content>
     </div>
   </div>
 </template>
 
 <script>
-  import HeAndIIntroduction from './HeAndIIntroduction'
   import HeAndIContent from './HeAndIContent'
-  import Head from './head'
+  import Heads from './head'
   export default {
     name: 'PersonalCenter',
     components: {
-      HeAndIIntroduction,
       HeAndIContent,
-      Head
+      Heads
     },
     data () {
       return {
@@ -29,11 +28,11 @@
   .he-and-i-tribal{
     width: 100%;
     height: 100%;
-    background: url("../../assets/images/heandibg.jpeg") no-repeat left top;
+    background: url("../../assets/images/heandibg.png") no-repeat left top;
     background-size: cover;
     .he-and-i-tribal-content{
       width: 1200px;
-      height: 800px;
+      height: auto;
       margin: 0 auto;
       background: transparent;
     }
