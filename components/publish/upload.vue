@@ -14,6 +14,8 @@
 </template>
 
 <script>
+  import { uploadFile } from '../../service/clientAPI'
+
   export default {
     methods: {
       fileSelected(e) {
@@ -27,22 +29,27 @@
             fileData = file
           }
           let data = new FormData();
-          data.append('files', fileData);
-          this.$axios({
-            url: '/customer/file/upload',
-            method: 'post',
-            headers: {
-              "Content-Type": "multipart/form-data"
-            },
-            data: data
-          }).then(res => {
-            this.$emit('uploadSuccess', res.data[0].url);
-          }).catch(() => {
-            this.$Notice.error({
-              title: '上传出错',
-              desc: ''
-            });
-          });
+          data.append('file', fileData);
+          uploadFile(data, 1).then(res => {
+            console.log(res)
+          }).catch(err => {
+            console.log(err, 'uploadErr')
+          })
+          // this.$axios({
+          //   url: '/customer/file/upload',
+          //   method: 'post',
+          //   headers: {
+          //     "Content-Type": "multipart/form-data"
+          //   },
+          //   data: data
+          // }).then(res => {
+          //   this.$emit('uploadSuccess', res.data[0].url);
+          // }).catch(() => {
+          //   this.$Notice.error({
+          //     title: '上传出错',
+          //     desc: ''
+          //   });
+          // });
         }
       }
     }
@@ -60,12 +67,14 @@
         font-size: 16px;
         cursor: pointer;
         transition: all .2s linear;
+
         i {
             position: absolute;
             left: 26px;
             top: 22px;
             z-index: 1;
         }
+
         a {
             position: absolute;
             z-index: 2;

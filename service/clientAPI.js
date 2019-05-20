@@ -6,7 +6,7 @@ export const getMenu = async (params)=>  {
 export const getMobileCode =async (params)=>  {
     return await request.post('Account/GetMobileCode', params)
 }
-// 注册 
+// 注册
 export const registerUser =async (params)=>  {
     return await request.post('Account/RegisterUser', params)
 }
@@ -37,4 +37,17 @@ export const setFollow = async (params)=>  {
 // 发布说说 说说指的是（图文，视频，问答）
 export const releaseStatement = async (params)=>  {
     return await request.post('Publish/ReleaseTalk', params)
+}
+
+// 数据上传
+export const uploadFile = async (params, uploadType) => {
+    return await request.post(`Upload/DataUpload?uploadType=${uploadType}`, params)
+}
+
+// 获取问答标签
+export const getQALabel = async () => {
+    return await request.post(`Publish/GetQALabel`, {
+        BelongTypes: '',
+        page: 0
+    })
 }

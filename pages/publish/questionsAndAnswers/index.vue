@@ -83,13 +83,14 @@
                 <Checkbox class="checkbox" size="large"></Checkbox>
                 我已仔细阅读并同意<span>《建筑部落用户协议》</span>
             </p>
-            <Button type="primary">完成上传</Button>
+            <Button type="primary" @click="handleSubmit(formValidate)">完成上传</Button>
         </div>
     </div>
 </template>
 
 <script>
   import Upload from '~/components/publish/upload'
+  import { getQALabel } from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -153,7 +154,12 @@
       inputTag() {
         this.$refs.input.focus();
       }
-    }
+    },
+
+    // async asyncData({store}) {
+    //   const data = await getQALabel();
+    //   console.log(data);
+    // }
   }
 </script>
 

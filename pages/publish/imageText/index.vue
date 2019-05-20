@@ -32,7 +32,7 @@
                             <DropdownItem name="私密">私密</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
-                    <Button class="publish-btn" type="primary">发布</Button>
+                    <Button class="publish-btn" type="primary" @click="clickPublish">发布</Button>
                 </div>
             </div>
             <div class="upload-box" v-show="isShowUpload">
@@ -78,6 +78,24 @@
       Emotion
     },
     methods: {
+
+      // 发布
+      clickPublish() {
+        if (!this.content) {
+          this.$Message.warning('发布内容不能为空');
+          return false;
+        }
+        releaseStatement({
+          talkType: 1,
+          talkTitle: '',
+          talkContent: this.content,
+          listImg: this.imgList
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err, '发布图文')
+        })
+      },
 
       // 隐藏弹出框
       hiddenModal() {

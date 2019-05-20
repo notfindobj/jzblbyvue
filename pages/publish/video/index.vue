@@ -30,7 +30,7 @@
                             <DropdownItem name="私密">私密</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
-                    <Button class="publish-btn" type="primary">发布</Button>
+                    <Button class="publish-btn" type="primary" @click="clickSubmit">发布</Button>
                 </div>
             </div>
             <div class="upload-box" v-show="isShowUpload">
@@ -63,7 +63,8 @@
         isShowUpload: false,    // 是否显示上传视频
         isShowEmotion: false,   // 是否显示表情选择框
         publishMode: '公开',
-        content: ''
+        content: '',
+        videoList: []
       }
     },
 
@@ -83,6 +84,24 @@
       // 选择表情
       handleEmotion (item) {
         this.content += `[${item.content}]`
+      },
+
+      // 发布视频
+      clickSubmit() {
+        if (!this.content) {
+          this.$Message.warning('发布内容不能为空');
+          return false;
+        }
+        releaseStatement({
+          talkType: 2,
+          talkTitle: '',
+          talkContent: this.content,
+          listImg: this.videoList
+        }).then(res => {
+          console.log(res)
+        }).catch(err => {
+          console.log(err, '发布图文')
+        })
       },
 
       selectIsPublic(name) {
