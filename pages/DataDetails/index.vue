@@ -42,6 +42,7 @@
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
   import {mapGetters } from 'vuex'
   export default {
+    name: 'datadetail',
     middleware: 'authenticated',
     head () {
       return {

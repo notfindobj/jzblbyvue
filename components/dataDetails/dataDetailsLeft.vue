@@ -4,7 +4,31 @@
      <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
           <div id="view"></div>
-          <div class="view-box-right"></div>
+          <div class="view-box-right">
+            <div class="details-box">
+              <div class="details-box-img">
+                <div class="details-box-img-img"></div>
+                <div class="details-box-img-right">
+                  <p>梅赛德斯·赵四</p>
+                  <p>发布日期：2018-11-15</p>
+                </div>
+              </div>
+              <ul>
+                <li class="details-box-list">
+                  <span class="details-box-list-title">项目信息</span>
+                  <span class="details-box-list-content">3层</span>
+                </li>
+                <li class="details-box-list">
+                  <span class="details-box-list-title">楼层</span>
+                  <span class="details-box-list-content">3层</span>
+                </li>
+                <li class="details-box-list">
+                  <span class="details-box-list-title">楼层</span>
+                  <span class="details-box-list-content">3层</span>
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
   </div>
@@ -22,7 +46,7 @@
         default: function () {
           return {}
         }
-      }
+      },
     },
     data() {
       return {
@@ -138,7 +162,7 @@
   }
   .view-box-right {
     width: 300px;
-    background: #ffffff;
+    background: #F5F6F5;
   }
   #view {
     width: 900px;
@@ -148,5 +172,56 @@
   }
   .viewer-fixed {
     position: absolute;
+  }
+  .details-box {
+    width: 270px;
+    background: #ffffff;
+    padding: 0 15px;
+    font-size: 12px;
+    margin: 20px auto;
+    border-radius: 5px;
+    ul {
+      padding-bottom: 10px;
+    }
+    &-img {
+      display: flex;
+      padding: 10px 0;
+      &-img {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #dddddd;
+      }
+      &-right {
+        margin-left: 10px;
+        height: 40px;
+      }
+    }
+    &-list {
+      height: 20px;
+      &-title {
+        width: 60px;
+        display: inline-block;
+        text-align:justify;
+        height: 20px;
+      }
+      &-title:after {
+        content: '';
+        width: 100%;
+        display: inline-block;
+      }
+      &-content {
+        width: 170px;
+        padding-left: 10px;
+        display: inline-block;
+        height: 20px;
+      }
+      &-content:after {
+        content: '';
+        width: 100%;
+        display: inline-block;
+      }
+    }
   }
 </style>

@@ -102,7 +102,7 @@
 
 <script>
   export default {
-    name: 'commentsCon',
+    name: 'commentsCon',   
     props: {
       publish: {
         type: Object,

@@ -52,10 +52,14 @@ export default {
     console.log('post request url', url)
     let tooken = '';
     if (process.server) {
-      tooken = $store.state.overas.auth.token
+      if ($store.state.overas.auth) {
+        tooken = $store.state.overas.auth.token
+      }
     }
     if (process.client) {
-      tooken = JSON.parse(localStorage.getItem('LOGININ')).token
+      if (JSON.parse(localStorage.getItem('LOGININ'))) {
+        tooken = JSON.parse(localStorage.getItem('LOGININ')).token
+      }
     }
     return service({
       headers: {
@@ -75,7 +79,9 @@ export default {
       }
     }
     if (process.client) {
-      tooken = JSON.parse(localStorage.getItem('LOGININ')).token
+      if (JSON.parse(localStorage.getItem('LOGININ'))) {
+        tooken = JSON.parse(localStorage.getItem('LOGININ')).token
+      }
     }
     return service({
       headers: {

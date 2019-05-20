@@ -125,6 +125,7 @@
         axios(config)
           .then(res => {
             this.$store.dispatch('LOGININ', null);
+            localStorage.removeItem('LOGININ')
             this.$Message.success(res.data.Msg);
           })
       },

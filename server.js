@@ -9,7 +9,7 @@ const qs = require('qs')
 // app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
-
+axios.defaults.withCredentials = true;
 // 通过手机号码登录 POST /api/
 app.post('/front/mobileLogin', function (req, res) {
   let config = {

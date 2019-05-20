@@ -53,6 +53,7 @@
       queryData.title
       let showLayout = queryData.title === '建筑规范' ? false: true;
       delete queryData.title;
+    //  let [menuData, getBaseData] = Promise.all([store.dispatch('getMenu'), store.dispatch('getBaseData', queryData)])
       let menuData = await store.dispatch('getMenu');
       let getBaseData = await store.dispatch('getBaseData', queryData);
       return{
