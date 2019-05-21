@@ -32,26 +32,12 @@
           }
           let data = new FormData();
           data.append('files', fileData);
+          this.$emit('uploadBegin');
           uploadFile(data, 7).then(res => {
-            console.log(res)
+            this.$emit('uploadSuccess', res);
           }).catch(err => {
             console.log(err, 'uploadErr')
           })
-          // this.$axios({
-          //   url: '/customer/file/upload',
-          //   method: 'post',
-          //   headers: {
-          //     "Content-Type": "multipart/form-data"
-          //   },
-          //   data: data
-          // }).then(res => {
-          //   this.$emit('uploadSuccess', res.data[0].url);
-          // }).catch(() => {
-          //   this.$Notice.error({
-          //     title: '上传出错',
-          //     desc: ''
-          //   });
-          // });
         }
       }
     }
@@ -91,5 +77,6 @@
         height: 70px;
         opacity: 0;
         filter: alpha(opacity=0);
+        cursor: pointer;
     }
 </style>

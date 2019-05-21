@@ -37,9 +37,17 @@
                 <h3>上传视频</h3>
                 <p class="sub-title">发布后，视频将出现在我的部落</p>
                 <div class="upload-main">
-                    <v-upload class="upload"/>
+                    <v-upload
+                        class="upload"
+                        @uploadBegin="uploadBegin"
+                        @uploadSuccess="uploadSuccess"
+                    />
                     <p class="upload-tip">仅支持MP4视频格式，大小不超过50M，请勿上传反动色情等违法视频。</p>
                 </div>
+                <Spin fix v-if="spinShow">
+                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+                    <div>上传中</div>
+                </Spin>
             </div>
             <emotion
                 class="emotion"
@@ -56,6 +64,7 @@
 <script>
   import Upload from '~/components/publish/uploadVideo'
   import Emotion from '@/components/Emotion/index'
+  import {releaseStatement} from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -64,7 +73,8 @@
         isShowEmotion: false,   // 是否显示表情选择框
         publishMode: '公开',
         content: '',
-        videoList: []
+        videoList: [],
+        spinShow: false
       }
     },
 
@@ -92,20 +102,39 @@
           this.$Message.warning('发布内容不能为空');
           return false;
         }
+        if (this.videoList.length === 0) {
+          this.$Message.warning('您还没有上传视频');
+          return false;
+        }
         releaseStatement({
           talkType: 2,
-          talkTitle: '',
-          talkContent: this.content,
+          talkTitle: this.content,
+          talkContent: '',
           listImg: this.videoList
         }).then(res => {
-          console.log(res)
+          this.$Message.success('发布成功！');
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 1800)
         }).catch(err => {
           console.log(err, '发布图文')
         })
       },
 
+      // 选择是否公开
       selectIsPublic(name) {
         this.publishMode = name;
+      },
+
+      // 开始上传
+      uploadBegin() {
+        this.spinShow = true;
+      },
+
+      // 视频上传成功
+      uploadSuccess(video) {
+        this.spinShow = false;
+        this.videoList = video;
       }
     }
   }
@@ -142,6 +171,9 @@
             height: 160px;
             .upload-tip {
                 width: 204px;
+            }
+            .demo-spin-icon-load{
+                animation: ani-demo-spin 1s linear infinite;
             }
         }
 

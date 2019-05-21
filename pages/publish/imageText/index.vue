@@ -39,8 +39,20 @@
                 <h3>本地上传</h3>
                 <p class="sub-title">共0张，还能上传9张</p>
                 <div class="upload-main">
-                    <div class="img-item" v-for="item in imgList" :key="item"></div>
-                    <v-upload class="upload" :uploadType="2" />
+                    <div
+                        class="img-item"
+                        v-for="(item, index) in imgList"
+                        :key="index"
+                        @click.stop="delImg(index)"
+                    >
+                        <img :src="item.smallImgUrl" alt="">
+                    </div>
+                    <v-upload
+                        v-show="imgList.length <= 9"
+                        class="upload"
+                        :uploadType="2"
+                        @uploadSuccess="uploadSuccess"
+                    />
                 </div>
             </div>
             <emotion
@@ -67,7 +79,7 @@
         isShowEmotion: false,   // 是否显示表情选择框
         publishMode: '公开',
         content: '',
-        imgList: [1,2,3,4,5,6],
+        imgList: [],
         imageText: {
             text: ''
         }
@@ -91,7 +103,10 @@
           talkContent: this.content,
           listImg: this.imgList
         }).then(res => {
-          console.log(res)
+          this.$Message.success('发布成功！');
+          // setTimeout(() => {
+          //   window.location.reload();
+          // }, 1800)
         }).catch(err => {
           console.log(err, '发布图文')
         })
@@ -108,8 +123,21 @@
         this.content += `[${item.content}]`
       },
 
+      // 选择是否公开
       selectIsPublic(name) {
         this.publishMode = name;
+      },
+
+      // 图片上传成功
+      uploadSuccess(fileList) {
+        for(let i of fileList) {
+          this.imgList.push(i);
+        }
+      },
+
+      // 点击删除图片
+      delImg(index) {
+        this.$delete(this.imgList, index);
       }
     }
   }

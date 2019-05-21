@@ -47,8 +47,20 @@
                         <h3>本地上传</h3>
                         <p class="sub-title">共0张，还能上传9张</p>
                         <div class="upload-main">
-                            <div class="img-item" v-for="item in imgList" :key="item"></div>
-                            <v-upload class="upload"/>
+                            <div
+                                class="img-item"
+                                v-for="(item, index) in imgList"
+                                :key="index"
+                                @click.stop="delImg(index)"
+                            >
+                                <img :src="item.smallImgUrl" alt="">
+                            </div>
+                            <v-upload
+                                v-show="imgList.length <= 9"
+                                class="upload"
+                                :uploadType="3"
+                                @uploadSuccess="uploadSuccess"
+                            />
                         </div>
                     </div>
                     <div class="upload-box-top" v-show="isShowUpload"></div>
@@ -59,7 +71,12 @@
                         <span class="input-label">标签</span>
                     </p>
                     <div class="tags-area" @click="inputTag">
-                        <span class="tag-item" v-for="item in 3" :key="item" @click.stop="">
+                        <span
+                            class="tag-item"
+                            v-for="item in 3"
+                            :key="item"
+                            @click.stop=""
+                        >
                             示范区
                             <i class="icon iconfont">&#xe6f1;</i>
                         </span>
@@ -83,7 +100,7 @@
                 <Checkbox class="checkbox" size="large"></Checkbox>
                 我已仔细阅读并同意<span>《建筑部落用户协议》</span>
             </p>
-            <Button type="primary" @click="handleSubmit(formValidate)">完成上传</Button>
+            <Button type="primary" @click="handleSubmit('formValidate')">完成上传</Button>
         </div>
     </div>
 </template>
@@ -116,7 +133,7 @@
         },
         titleIsError: false,  // 是否显示标题校验错误信息
         isShowUpload: false,    // 是否显示上传图片
-        imgList: [1, 2, 3, 4, 5, 6],
+        imgList: [],
         editorOption: {
           modules: {
             toolbar: [
@@ -153,19 +170,49 @@
 
       inputTag() {
         this.$refs.input.focus();
+      },
+
+      // 点击提交
+      handleSubmit(name) {
+        this.$refs[name].validate(() => {
+          if (!this.formValidate.title) {
+            this.$Message.warning('标题不能为空');
+            return false;
+          }
+
+        })
+      },
+
+      // 图片上传成功
+      uploadSuccess(fileList) {
+        for (let i of fileList) {
+          this.imgList.push(i);
+        }
+      },
+
+      // 点击删除图片
+      delImg(index) {
+        this.$delete(this.imgList, index);
       }
     },
 
-    // async asyncData({store}) {
-    //   const data = await getQALabel();
-    //   console.log(data);
-    // }
+    mounted() {
+      console.log(this.labelList)
+    },
+
+    async asyncData({store}) {
+      const data = await getQALabel();
+      return {
+        labelList: data
+      }
+    }
   }
 </script>
 
 
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
+
     .editor-wrap {
         width: 900px;
     }
@@ -268,14 +315,17 @@
         margin-top: 10px;
         padding-left: 60px;
         overflow: hidden;
+
         .recommend-title {
             margin-right: 25px;
         }
+
         span {
             float: left;
             margin: 0 12px 10px 0;
             line-height: 25px;
         }
+
         .tag-item {
             i {
                 line-height: 13px;

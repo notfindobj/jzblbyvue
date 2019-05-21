@@ -6,6 +6,7 @@
                 @change="fileSelected($event)"
                 name="avatar"
                 ref="avatarInput"
+                multiple="multiple"
                 accept="image/gif,image/jpeg,image/jpg,image/png"
             >
         </a>
@@ -23,38 +24,17 @@
 
     methods: {
       fileSelected(e) {
-        let file = e.target.files[0];
+        let file = e.target.files;
         if (file) {
-          let files = this.$refs.avatarInput.files;
-          let fileData = {};
-          if (files instanceof Array) {
-            fileData = files[0]
-          } else {
-            fileData = file
-          }
           let data = new FormData();
-          data.append('file', fileData);
+          for (let item of file) {
+            data.append('files', item)
+          }
           uploadFile(data, this.uploadType).then(res => {
-            console.log(res)
+            this.$emit('uploadSuccess', res);
           }).catch(err => {
             console.log(err, 'uploadErr')
           })
-
-          // this.$axios({
-          //   url: '/customer/file/upload',
-          //   method: 'post',
-          //   headers: {
-          //     "Content-Type": "multipart/form-data"
-          //   },
-          //   data: data
-          // }).then(res => {
-          //   this.$emit('uploadSuccess', res.data[0].url);
-          // }).catch(() => {
-          //   this.$Notice.error({
-          //     title: '上传出错',
-          //     desc: ''
-          //   });
-          // });
         }
       }
     }
@@ -95,5 +75,6 @@
         height: 70px;
         opacity: 0;
         filter: alpha(opacity=0);
+        cursor: pointer;
     }
 </style>
