@@ -13,7 +13,11 @@ service.defaults.withCredentials = true;
 // POST 传参序列化
 service.interceptors.request.use(
   config => {
-    if (config.method === 'post') config.data = qs.stringify(config.data)
+    if (config.file && config.method === 'post') {
+      config.data = config.data
+    } else if (config.method === 'post') {
+      config.data = qs.stringify(config.data)
+    }
     return config
   },
   error => {
@@ -85,9 +89,9 @@ export default {
       }
     }
     return service({
+      file: 'file',
       headers: {
-        Authorization : "Bearer "+ tooken,
-        "Content-Type": "multipart/form-data"
+        Authorization : "Bearer "+ tooken
       },
       method: 'post',
       url,
