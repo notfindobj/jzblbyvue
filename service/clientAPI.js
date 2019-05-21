@@ -41,7 +41,7 @@ export const releaseStatement = async (params)=>  {
 
 // 数据上传
 export const uploadFile = async (params, uploadType) => {
-    return await request.post(`Upload/DataUpload?uploadType=${uploadType}`, params)
+    return await request.postFile(`Upload/DataUpload?uploadType=${uploadType}`, params)
 }
 
 // 获取问答标签

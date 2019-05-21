@@ -40,7 +40,7 @@
                 <p class="sub-title">共0张，还能上传9张</p>
                 <div class="upload-main">
                     <div class="img-item" v-for="item in imgList" :key="item"></div>
-                    <v-upload class="upload" />
+                    <v-upload class="upload" :uploadType="2" />
                 </div>
             </div>
             <emotion

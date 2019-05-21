@@ -17,6 +17,10 @@
   import { uploadFile } from '../../service/clientAPI'
 
   export default {
+    props: {
+      uploadType: Number
+    },
+
     methods: {
       fileSelected(e) {
         let file = e.target.files[0];
@@ -30,11 +34,12 @@
           }
           let data = new FormData();
           data.append('file', fileData);
-          uploadFile(data, 1).then(res => {
+          uploadFile(data, this.uploadType).then(res => {
             console.log(res)
           }).catch(err => {
             console.log(err, 'uploadErr')
           })
+
           // this.$axios({
           //   url: '/customer/file/upload',
           //   method: 'post',
