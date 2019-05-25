@@ -57,7 +57,7 @@
 </script>
 <style scoped>
     .emotion-box {
-        width: 420px;
+        /* width: 420px; */
         box-sizing: border-box;
         padding: 15px;
         background-color: #fff;

@@ -24,5 +24,9 @@ export const serverRequest ={
     // 获取建筑圈详情评论
     async getGetComments ({ commit, state }, params) {
         return await request.post('Comments/GetComments', params)
+    },
+    // 获取推荐内容
+    async getRecommendContent ({ commit, state }, params) {
+        return await request.get('Talk/GetRecommendContent', params)
     }
 }

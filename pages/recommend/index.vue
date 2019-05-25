@@ -1,5 +1,6 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" height="800">
+        {{recommendContent}}
         <div class="container">
             <div class="public-block">
                 <div class="block-head">
@@ -299,6 +300,18 @@
 <script>
   export default {
     layout: 'main',
+    async asyncData({app, store, route}) {
+        let recommendContent = await store.dispatch('getRecommendContent');
+        console.log('recommendContent', recommendContent)
+        return {
+            recommendContent: recommendContent
+        }
+    },
+    data () {
+        return {
+            // recommendContent: {}
+        }
+    },
     methods: {
       handleReachBottom() {
         console.log(1222)

@@ -33,7 +33,10 @@ export const setCollection = async (params)=>  {
 export const setFollow = async (params)=>  {
     return await request.post('CollectionOrLike/Follow', params)
 }
-
+// 评论
+export const setComments = async (params)=>  {
+    return await request.post('Comments/PublishComments', params)
+}
 // 发布说说 说说指的是（图文，视频，问答）
 export const releaseStatement = async (params)=>  {
     return await request.post('Publish/ReleaseTalk', params)

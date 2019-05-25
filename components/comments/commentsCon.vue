@@ -31,24 +31,16 @@
           </span>
         </li>
         <li>
-          <span>
+          <span @click="isComment = !isComment">
             <i class="icon iconfont icon-pinglun"></i>
             <span>{{publish.commentss}}</span>
           </span>
         </li>
       </ul>
-      <div class="comments-input">
-        <div class="comments-input-box">
-          <textarea name="" id="" cols="30" rows="10" placeholder="来说两句吧···"></textarea>
-          <div class="comments-img">
-            <div class="comments-img-left">
-              <i class="icon iconfont icon-smile"></i>
-              <i class="icon iconfont icon-tupian" @click="upload()"></i>
-            </div>
-            <div class="comments-img-right">发表评论</div>
-          </div>
-        </div>
-      </div>
+      <comment 
+      v-show="isComment"
+      @commentValue="commentValue"
+      />
     </div>
     <!-- 评论信息 -->
     <ul class="comments-list-box">
@@ -101,6 +93,7 @@
 </template>
 
 <script>
+  import comment from '../comment'
   export default {
     name: 'commentsCon',   
     props: {
@@ -118,6 +111,7 @@
     },
     data() {
       return {
+        isComment: false,
         commentsInfo:{
           isStatusShow:true,
           statusInfo:{
@@ -202,6 +196,7 @@
       }
     },
     components: {
+      comment
     },
     asyncData() {
     },
@@ -219,6 +214,10 @@
       // 收藏
       Collection (item) {
         this.$emit('Collection', item)
+      },
+      // 评论
+      commentValue (val) {
+        this.$emit('commentValue', this.publish, val)
       },
       goTodetails (inx) {
         alert(inx)

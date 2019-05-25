@@ -4,11 +4,16 @@
     <div class="data-details-con-box">
       <div class="data-details-location">
         <Breadcrumb separator=">" style="margin-bottom: 20px">
-          <BreadcrumbItem :style="index == (currentNameList.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'" v-for="(item,index) in currentNameList" :key="index">{{item}}</BreadcrumbItem>
+          <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
+          <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities" 
+          :key="index" 
+          :style="index == (ItemAttributesEntities.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'"
+          >{{items.ItemAttributesFullName}}</BreadcrumbItem>
         </Breadcrumb>
       </div>
       <div class="data-details-con">
         <data-details-left
+          id="container"
           :detaDetails="detaDetails"
         />
         <div>
@@ -23,6 +28,7 @@
             :publish="detaDetails"
             @thumbsUp="thumbsUp"
             @Collection="Collection"
+            @commentValue="commentValue"
           />
         </div>
       </div>
@@ -37,7 +43,7 @@
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
-  import {setthumbsUp, setCollection, setFollow} from '../../service/clientAPI'
+  import {setthumbsUp, setCollection, setFollow, setComments} from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
   import {mapGetters } from 'vuex'
@@ -47,6 +53,11 @@
     head () {
       return {
         title: `资料库详情`,
+        script: [
+          { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
+          { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
+          {type: 'text/javascript',innerHtml: ` console.log(1\>0) ;$("img[data-original]").lazyload()` }
+        ],
         meta: [
           { name: 'viewport', content: 'width=device-width, initial-scale=1' },
           { hid: 'about', name: 'about', content: "资料库详情" }
@@ -79,7 +90,6 @@
       ...mapGetters(['isLogin']),
     },
     async asyncData({app, store, route}) {
-      Promise.all([])
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
       let getBaseDataDetail = await store.dispatch('getBaseDataDetails', queryData);
@@ -90,7 +100,7 @@
       let getGetCommentsData = await store.dispatch('getGetComments', Comment);
       return {
         detaDetails: getBaseDataDetail.ItemEntity,
-        itemsDetail: getBaseDataDetail,
+        ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
         getGetCommentsData:getGetCommentsData,
         id:getBaseDataDetail.ItemEntity.ItemId
@@ -98,7 +108,21 @@
     },
     created() {
     },
+    mounted () {
+      let _this =this
+      $(document).ready(function(){
+        _this.initLazy()
+      })
+    },
     methods: {
+      initLazy () {
+        $("img[data-original]").lazyload()
+        // .lazyload({
+        //   effect : "fadeIn",
+        //   container: $("#container"),
+        //   threshold : -200
+        // })
+      },
       // 点赞
       async thumbsUp (item) {
         let queryData = {
@@ -128,6 +152,18 @@
           this.$set(item, 'collections', item.collections+1)
         }
           this.$set(item, 'iscollections', !item.iscollections)
+      },
+      //评论
+      async commentValue (row, val) {
+        let queryData = {
+          ItemId: row.ItemId,
+          IsReply: false,
+          Message: val,
+          ScopeType: 1
+        }
+        let commentMsg = await setComments(queryData)
+        console.log(commentMsg);
+        // 
       },
       async setFollow (item) {
         let queryData = {

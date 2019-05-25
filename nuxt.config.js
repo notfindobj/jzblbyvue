@@ -34,7 +34,7 @@ module.exports = {
   plugins: [
     { src: '~plugins/my-theme/index', ssr: true },
     { src: "~plugins/vue-swiper.js", ssr: false },
-    // { src: "~plugins/v-viewer.js", ssr: true }, // 看图插件
+    // { src: "~plugins/jquery.lazyload.min.js", ssr: false },
     { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
@@ -136,11 +136,11 @@ module.exports = {
         }
       }
     },
-    plugins: [
-      new webpack.ProvidePlugin({
-        '$': 'jquery'
-      })
-    ]
+    // plugins: [
+    //   new webpack.ProvidePlugin({
+    //     '$': 'jquery'
+    //   })
+    // ]
   }
 }
 

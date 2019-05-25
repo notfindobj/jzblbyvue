@@ -51,6 +51,7 @@
     data() {
       return {
         isShowViewBox: false,
+        Viewer: {}
       }
     },
     components: {
@@ -76,13 +77,29 @@
     mounted () {
       const ViewerDom = document.getElementById('detaDetails');
       let _this = this;
-      new Viewer(ViewerDom, {
+      _this.Viewer =  new Viewer(ViewerDom, {
             inline: false,
             title: false,
             backdrop: false,
+            loading: false,
             container: document.getElementById('view'),
-            show: function () {
+            show: function (e) {
               _this.isShowViewBox = true;
+            },
+            build: function () {
+              console.log('build')
+            },
+            built: function () {
+              console.log('built')
+            },
+            view: function () {
+              console.log('view')
+              console.log(document.querySelector('.viewer-canvas img'))
+            },
+            shown: function () {
+              console.log('shown')
+              _this.Viewer.update();
+              console.log(document.querySelector('.viewer-canvas img'))
             },
             hidden () {
               _this.viewShowBox()
@@ -223,5 +240,8 @@
         display: inline-block;
       }
     }
+  }
+  #detaDetails img {
+    width: 100%;
   }
 </style>
