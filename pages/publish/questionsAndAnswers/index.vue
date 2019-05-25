@@ -200,7 +200,7 @@
       console.log(this.labelList)
     },
 
-    async asyncData({store}) {
+    async asyncData() {
       const data = await getQALabel();
       return {
         labelList: data

@@ -54,3 +54,13 @@ export const getQALabel = async () => {
         page: 0
     })
 }
+
+// 获取所有项目类型
+export const getProjectType = async () => {
+  return await request.post(`Menu/GetDataByTypeId`)
+}
+
+// 根据类型获取定制服务
+export const getCustomizeService = async id => {
+  return await request.post(`Menu/GetCustomizeService?TypeId=${id}`)
+}
