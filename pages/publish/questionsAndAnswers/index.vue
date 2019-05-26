@@ -73,31 +73,37 @@
                     <div class="tags-area" @click="inputTag">
                         <span
                             class="tag-item"
-                            v-for="item in 3"
-                            :key="item"
+                            v-for="(item, index) in selectLabelList"
+                            :key="item.LabelId"
                             @click.stop=""
                         >
-                            示范区
-                            <i class="icon iconfont">&#xe6f1;</i>
+                            {{ item.LabelName }}
+                            <i class="icon iconfont" @click="deleteLabel(index)">&#xe6f1;</i>
                         </span>
-                        <input type="text" ref="input" placeholder="点击空白处输入标签">
+                        <input
+                            type="text"
+                            ref="input"
+                            v-model="labelInput"
+                            @keypress.enter="addLabel"
+                            placeholder="点击空白处输入标签"
+                        >
                     </div>
                 </div>
                 <div class="recommend-tags">
                     <span class="recommend-title">推荐标签: </span>
-                    <span class="tag-item" v-for="item in 10" :key="item">
-                        <i class="icon iconfont">&#xe61c;</i>
-                        示范区去
+                    <span class="tag-item" v-for="(item, index) in labelList" :key="item.LabelId">
+                        <i class="icon iconfont" @click="pushSelect(index)">&#xe61c;</i>
+                        {{ item.LabelName }}
                     </span>
                 </div>
-                <p class="btn-change">
+                <p class="btn-change" @click="switchLabel">
                     换一换
                 </p>
             </Form>
         </div>
         <div class="submit-box">
             <p>
-                <Checkbox class="checkbox" size="large"></Checkbox>
+                <Checkbox v-model="checked" class="checkbox" size="large"></Checkbox>
                 我已仔细阅读并同意<span>《建筑部落用户协议》</span>
             </p>
             <Button type="primary" @click="handleSubmit('formValidate')">完成上传</Button>
@@ -107,7 +113,7 @@
 
 <script>
   import Upload from '~/components/publish/upload'
-  import { getQALabel } from '../../../service/clientAPI'
+  import { getQALabel, addLabel, releaseStatement } from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -154,7 +160,12 @@
             ]
           },
           placeholder: '详细描述你遇到的问题，可获得更好的回答！'
-        }
+        },
+        pageNum: 1, // 获取标签的当前页
+        labelInput: '', // 输入的标签
+        selectLabelList: [],    // 选中的标签列表
+        labelList: [],  // 获取的标签列表
+        checked: false,
       }
     },
 
@@ -172,15 +183,88 @@
         this.$refs.input.focus();
       },
 
+      // 切换标签
+      switchLabel() {
+        if (this.pageNum < this.labelInfo.total) {
+          this.pageNum++;
+          this.getLabel();
+        } else {
+          this.pageNum = 0;
+          this.getLabel();
+        }
+      },
+
       // 点击提交
       handleSubmit(name) {
         this.$refs[name].validate(() => {
-          if (!this.formValidate.title) {
+          if (!this.formValidate.title.trim()) {
             this.$Message.warning('标题不能为空');
             return false;
           }
 
+          if (!this.checked) {
+            this.$Message.warning('请阅读并同意建筑部落协议');
+            return false;
+          }
         })
+        if (this.formValidate.title.trim() && this.checked) {
+          let webLabel = [];
+          for (let i of this.selectLabelList) {
+            const obj = {
+              LabelId: i.LabelId,
+              SortCode: i.SortCode
+            };
+            webLabel.push(obj);
+          }
+          releaseStatement({
+            talkType: 3,
+            talkTitle: this.formValidate.title,
+            talkContent: this.formValidate.content,
+            webLabel,
+            listImg: this.imgList
+          }).then(res => {
+            this.$Message.success('发布成功！');
+            // setTimeout(() => {
+            //   window.location.reload();
+            // }, 1800)
+          }).catch(err => {
+            console.log(err, '发布问答')
+          })
+        }
+      },
+
+      // 获取标签
+      async getLabel() {
+        const data = await getQALabel({
+          BelongTypes: '',
+          page: this.pageNum
+        });
+        this.labelList = data.labelData;
+        this.labelInfo = data.paginationData;
+      },
+
+      // 添加标签
+      async addLabel() {
+        if (!this.labelInput.trim()) {
+          this.$Message.warning('输入内容为空，不能添加');
+          return;
+        }
+        const data = await addLabel({
+          LabelName: this.labelInput,
+          BelongTypes: ''
+        });
+        this.selectLabelList.push(data);
+        this.labelInput = '';
+      },
+
+      // 从获取的列表添加到选中的列表
+      pushSelect(index) {
+        this.selectLabelList.push(this.labelList[index]);
+      },
+
+      // 删除标签
+      deleteLabel(index) {
+        this.selectLabelList.splice(index, 1);
       },
 
       // 图片上传成功
@@ -196,14 +280,14 @@
       }
     },
 
-    mounted() {
-      console.log(this.labelList)
-    },
-
     async asyncData() {
-      const data = await getQALabel();
+      const data = await getQALabel({
+        BelongTypes: '',
+        page: 1
+      });
       return {
-        labelList: data
+        labelList: data.labelData,
+        labelInfo: data.paginationData
       }
     }
   }

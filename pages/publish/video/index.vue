@@ -110,7 +110,7 @@
           talkType: 2,
           talkTitle: this.content,
           talkContent: '',
-          listImg: this.videoList
+          listImg: [this.videoList]
         }).then(res => {
           this.$Message.success('发布成功！');
           // setTimeout(() => {
@@ -134,6 +134,7 @@
       // 视频上传成功
       uploadSuccess(video) {
         this.spinShow = false;
+        console.log(video)
         this.videoList = video;
       }
     }

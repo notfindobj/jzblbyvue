@@ -48,16 +48,18 @@ export const uploadFile = async (params, uploadType) => {
 }
 
 // 获取问答标签
-export const getQALabel = async () => {
-    return await request.post(`Publish/GetQALabel`, {
-        BelongTypes: '',
-        page: 0
-    })
+export const getQALabel = async data => {
+    return await request.post(`Publish/GetQALabel`, data)
+}
+
+// 添加问答标签
+export const addLabel = async data => {
+  return await request.post(`Publish/AddLabel`, data)
 }
 
 // 获取所有项目类型
-export const getProjectType = async () => {
-  return await request.post(`Menu/GetDataByTypeId`)
+export const getProjectType = async parentId => {
+  return await request.post(`Menu/GetDataByTypeId?parentId=${parentId}`)
 }
 
 // 根据类型获取定制服务

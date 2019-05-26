@@ -44,7 +44,6 @@
                             size="large"
                             v-if="typeId === item.id"
                             type="primary"
-                            @click="clickType(item.id)"
                         >{{ item.ItemValue }}
                         </Button>
                         <Button
@@ -70,7 +69,8 @@
                         <div class="quill-editor"
                              :content="formValidate.content"
                              @change="onEditorChange($event)"
-                             v-quill:myQuillEditor="editorOption">
+                             v-quill:myQuillEditor="editorOption"
+                        >
                         </div>
                     </div>
                 </FormItem>
@@ -241,6 +241,9 @@
       // 选择类型
       clickType(id) {
         this.typeId = id;
+        getProjectType(id).then(res => {
+
+        })
         getCustomizeService(id).then(res => {
           this.serviceList = res;
         })
@@ -248,7 +251,7 @@
     },
 
     async asyncData() {
-      const data = await getProjectType();
+      const data = await getProjectType('');
       return {
         typeList: data
       }
