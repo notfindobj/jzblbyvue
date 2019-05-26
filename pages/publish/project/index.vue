@@ -37,22 +37,45 @@
                 </FormItem>
                 <FormItem label="类型选择" class="type-select">
                     <i
-                        v-for="item in typeList"
-                        :key="item.id"
+                        v-for="item in menu.RetMenuData"
+                        :key="item.ItemAttributesId"
                     >
                         <Button
                             size="large"
-                            v-if="typeId === item.id"
+                            v-if="typeId === item.ItemAttributesId"
                             type="primary"
-                        >{{ item.ItemValue }}
+                        >{{ item.ItemAttributesFullName }}
                         </Button>
                         <Button
                             size="large"
                             v-else
-                            @click="clickType(item.id)"
-                        >{{ item.ItemValue }}
+                            @click="clickType(item.ItemAttributesId)"
+                        >{{ item.ItemAttributesFullName }}
                         </Button>
                     </i>
+
+                    <div class="attr-box" v-show="attrList">
+                        <div
+                            class="attr-select-item"
+                            v-for="(item, index) in queryAttrList"
+                            :key="item.id"
+                        >
+                            <span>{{ item.ItemValue }}</span>
+                            <Select
+                                v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
+                                v-model="item.ItemSubAttributeId"
+                                style="width:220px"
+                                size="large"
+                            >
+                                <Option
+                                    v-for="subItem in attrList[index].ChildNode"
+                                    :value="subItem.ItemAttributesId"
+                                    :key="subItem.ItemAttributesId"
+                                >{{ subItem.ItemAttributesFullName }}
+                                </Option>
+                            </Select>
+                        </div>
+                    </div>
 
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
@@ -143,7 +166,6 @@
     data() {
       return {
         typeId: '',
-        typeList: [],
         serviceModal: false,
         serviceId: '',
         formValidate: {
@@ -199,9 +221,24 @@
             ]
           },
           placeholder: '填写项目内容'
+        },
+        queryAttrList: [], // 通过类型id查询出的属性列表
+      }
+    },
+
+    computed: {
+
+      // 查询所有菜单数据，根据id找出的属性列表
+      attrList() {
+        for (let i of this.menu.RetMenuData) {
+          if (this.typeId === i.ItemAttributesId) {
+            console.log(i)
+            return i.ChildNode;
+          }
         }
       }
     },
+
     methods: {
 
       // 选择定制服务
@@ -242,8 +279,8 @@
       clickType(id) {
         this.typeId = id;
         getProjectType(id).then(res => {
-
-        })
+          this.queryAttrList = res;
+        });
         getCustomizeService(id).then(res => {
           this.serviceList = res;
         })
@@ -251,10 +288,10 @@
     },
 
     async asyncData() {
-      const data = await Promise.all([getProjectType(''), getMenu()])
+      const data = await Promise.all([getMenu(), getProjectType('')]);
       return {
-        typeList: data[0],
-        menu: data[1]
+        menu: data[0],
+        typeList: data[1]
       }
     }
   }
@@ -387,6 +424,32 @@
 
     .service-active {
         color: #ff3c00;
+    }
+
+    .attr-box {
+        width: 770px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        align-content: flex-start;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #FEF9F7;
+
+        .attr-select-item {
+            width: 50%;
+            padding: 15px;
+
+            span {
+                display: inline-block;
+                width: 100px;
+                text-align: center;
+                font-size: 16px;
+                color: #333;
+                vertical-align: middle;
+            }
+        }
     }
 
 </style>
