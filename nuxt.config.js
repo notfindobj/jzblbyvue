@@ -12,9 +12,12 @@ module.exports = {
       { hid: 'description', name: 'description', content: '建筑部落' }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-
-    ]
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+    ],
+    script: [
+      { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
+      { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' }
+    ],
   },
   // 插件依赖
   modules: [
@@ -138,7 +141,7 @@ module.exports = {
     },
     // plugins: [
     //   new webpack.ProvidePlugin({
-    //     '$': 'jquery'
+    //     '$': 'jQuery'
     //   })
     // ]
   }

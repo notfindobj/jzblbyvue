@@ -1,62 +1,66 @@
 <template>
-  <div class="data-details-box">
-    <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
-    <div class="data-details-con-box">
-      <div class="data-details-location">
-        <Breadcrumb separator=">" style="margin-bottom: 20px">
-          <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
-          <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities" 
-          :key="index" 
-          :style="index == (ItemAttributesEntities.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'"
-          >{{items.ItemAttributesFullName}}</BreadcrumbItem>
-        </Breadcrumb>
-      </div>
-      <div class="data-details-con">
-        <data-details-left
-          id="container"
-          :detaDetails="detaDetails"
-        />
-        <div>
-          <data-details-right
-            :detaDetails="detaDetails"
-            :attribute="ItemAttributesEntities"
-            @dataDetailsMaskShow="dataDetailsMaskShow"
-            @setFollow="setFollow"
-          />
-          <commentsCon
-            :width="'340px'"
-            :publish="detaDetails"
-            @thumbsUp="thumbsUp"
-            @Collection="Collection"
-            @commentValue="commentValue"
-          />
+    <div class="data-details-box">
+        <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
+        <div class="data-details-con-box">
+            <div class="data-details-location">
+                <Breadcrumb separator=">" style="margin-bottom: 20px">
+                    <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
+                    <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities"
+                                    :key="index"
+                                    :style="index == (ItemAttributesEntities.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'"
+                    >{{items.ItemAttributesFullName}}
+                    </BreadcrumbItem>
+                </Breadcrumb>
+            </div>
+            <div class="data-details-con">
+                <data-details-left
+                    id="container"
+                    :detaDetails="detaDetails"
+                />
+                <div>
+                    <data-details-right
+                        :detaDetails="detaDetails"
+                        :attribute="ItemAttributesEntities"
+                        @dataDetailsMaskShow="dataDetailsMaskShow"
+                        @setFollow="setFollow"
+                    />
+                    <commentsCon
+                        :width="'340px'"
+                        :publish="detaDetails"
+                        @thumbsUp="thumbsUp"
+                        @Collection="Collection"
+                        @commentValue="commentValue"
+                    />
+                </div>
+            </div>
         </div>
-      </div>
+        <viewPicture/>
+        <data-details-custom @dataDetailsMaskClose="dataDetailsMaskClose"
+                             v-show="isShowDataDetailsCustom"></data-details-custom>
+        <date-details-down @dataDetailsMaskClose="dataDetailsMaskClose"
+                           v-show="isShowDateDetailsDown"></date-details-down>
     </div>
-    <viewPicture/>
-    <data-details-custom @dataDetailsMaskClose="dataDetailsMaskClose" v-show="isShowDataDetailsCustom"></data-details-custom>
-    <date-details-down @dataDetailsMaskClose="dataDetailsMaskClose" v-show="isShowDateDetailsDown"></date-details-down>
-  </div>
 </template>
 <script>
   import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
-  import {setthumbsUp, setCollection, setFollow, setComments} from '../../service/clientAPI'
+  import { setthumbsUp, setCollection, setFollow, setComments } from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
-  import {mapGetters } from 'vuex'
+  import { mapGetters } from 'vuex'
+
   export default {
     name: 'datadetail',
     middleware: 'authenticated',
-    head () {
+    head() {
       return {
         title: `资料库详情`,
         script: [
-          { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
-          { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
-          {type: 'text/javascript',innerHtml: ` console.log(1\>0) ;$("img[data-original]").lazyload()` }
+          // { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
+          // { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
+          // { type: 'text/javascript', innerHtml: ` console.log(1\>0) ;$("img[data-original]").lazyload()` }
         ],
         meta: [
           { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -64,17 +68,17 @@
         ],
       }
     },
-    data () {
+    data() {
       return {
-        currentNameList:[
+        currentNameList: [
           '资源库',
           '示范区',
           '别墅',
           '现代',
           '重庆北大资源燕南大道改造计划'
         ],
-        isShowDataDetailsCustom:false,
-        isShowDateDetailsDown:false, 
+        isShowDataDetailsCustom: false,
+        isShowDateDetailsDown: false,
         ItemAttributesEntities: {}
       }
     },
@@ -86,36 +90,36 @@
       dateDetailsDown,
       dataDetailsCustom
     },
-    computed:{
+    computed: {
       ...mapGetters(['isLogin']),
     },
-    async asyncData({app, store, route}) {
+    async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
       let getBaseDataDetail = await store.dispatch('getBaseDataDetails', queryData);
       // 根据项目详情请求评论信息
       let Comment = {
-          Id: getBaseDataDetail.ItemEntity.ItemId
+        Id: getBaseDataDetail.ItemEntity.ItemId
       }
       let getGetCommentsData = await store.dispatch('getGetComments', Comment);
       return {
         detaDetails: getBaseDataDetail.ItemEntity,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
-        getGetCommentsData:getGetCommentsData,
-        id:getBaseDataDetail.ItemEntity.ItemId
+        getGetCommentsData: getGetCommentsData,
+        id: getBaseDataDetail.ItemEntity.ItemId
       }
     },
     created() {
     },
-    mounted () {
-      let _this =this
-      $(document).ready(function(){
+    mounted() {
+      let _this = this
+      $(document).ready(function () {
         _this.initLazy()
       })
     },
     methods: {
-      initLazy () {
+      initLazy() {
         $("img[data-original]").lazyload()
         // .lazyload({
         //   effect : "fadeIn",
@@ -124,7 +128,7 @@
         // })
       },
       // 点赞
-      async thumbsUp (item) {
+      async thumbsUp(item) {
         let queryData = {
           ItemId: item.ItemId,
           LikeType: 1,
@@ -132,29 +136,29 @@
         }
         let thumbsUpMsg = await setthumbsUp(queryData);
         if (item.islikes) {
-          this.$set(item, 'likes', item.likes-1)
+          this.$set(item, 'likes', item.likes - 1)
         } else {
-          this.$set(item, 'likes', item.likes+1)
+          this.$set(item, 'likes', item.likes + 1)
         }
         this.$set(item, 'islikes', !item.islikes)
       },
       // 收藏
-      async Collection (item) {
+      async Collection(item) {
         let queryData = {
           ItemId: item.ItemId,
           TalkType: 4,
           IsDelete: item.iscollections
         }
         let collectionMsg = await setCollection(queryData)
-         if (item.iscollections) {
-          this.$set(item, 'collections', item.collections-1)
+        if (item.iscollections) {
+          this.$set(item, 'collections', item.collections - 1)
         } else {
-          this.$set(item, 'collections', item.collections+1)
+          this.$set(item, 'collections', item.collections + 1)
         }
-          this.$set(item, 'iscollections', !item.iscollections)
+        this.$set(item, 'iscollections', !item.iscollections)
       },
       //评论
-      async commentValue (row, val) {
+      async commentValue(row, val) {
         let queryData = {
           ItemId: row.ItemId,
           IsReply: false,
@@ -163,9 +167,9 @@
         }
         let commentMsg = await setComments(queryData)
         console.log(commentMsg);
-        // 
+        //
       },
-      async setFollow (item) {
+      async setFollow(item) {
         let queryData = {
           UserId: item.UserId,
           IsDelete: item.iscollections
@@ -173,49 +177,53 @@
         let collectionMsg = await setCollection(queryData)
         this.$set(item, 'IsFollow', !item.iscollections)
       },
-      dataDetailsMaskShow (obj) {
-        if(obj.type == 'Down') {
+      dataDetailsMaskShow(obj) {
+        if (obj.type == 'Down') {
           this.isShowDateDetailsDown = true;
-        }else{
+        } else {
           this.isShowDataDetailsCustom = true;
         }
       },
-      dataDetailsMaskClose (obj) {
-        if(obj.type == 'Down') {
+      dataDetailsMaskClose(obj) {
+        if (obj.type == 'Down') {
           this.isShowDateDetailsDown = false;
-        }else{
+        } else {
           this.isShowDataDetailsCustom = false;
         }
       }
     }
   }
 </script>
-<style  lang="less" scoped>
-  .data-details-box{
-    width: 100%;
-    height: auto;
-    background: rgba(242,244,242,1);
-    .data-details-con-box{
-      width: 1200px;
-      height: auto;
-      margin: 0 auto;
-      .data-details-location{
-        height: 46px;
-        width: 100%;
-        padding-top: 9px;
-      }
-      .data-details-con{
+<style lang="less" scoped>
+    .data-details-box {
         width: 100%;
         height: auto;
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content:center;
-        .data-details-location{
+        background: rgba(242, 244, 242, 1);
 
+        .data-details-con-box {
+            width: 1200px;
+            height: auto;
+            margin: 0 auto;
+
+            .data-details-location {
+                height: 46px;
+                width: 100%;
+                padding-top: 9px;
+            }
+
+            .data-details-con {
+                width: 100%;
+                height: auto;
+                display: flex;
+                flex-direction: row;
+                align-items: flex-start;
+                justify-content: center;
+
+                .data-details-location {
+
+                }
+            }
         }
-      }
-    }
 
-  }
+    }
 </style>

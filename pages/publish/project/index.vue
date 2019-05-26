@@ -5,7 +5,7 @@
                 ref="formValidate"
                 :model="formValidate"
                 :rules="ruleValidate"
-                class="form-box"
+                class="form-box publish-project-form"
                 :label-width="110"
             >
                 <FormItem label="项目图片" prop="img">
@@ -137,7 +137,7 @@
 </template>
 
 <script>
-  import { uploadFile, getProjectType, getCustomizeService } from '../../../service/clientAPI'
+  import { uploadFile, getProjectType, getCustomizeService, getMenu } from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -251,9 +251,10 @@
     },
 
     async asyncData() {
-      const data = await getProjectType('');
+      const data = await Promise.all([getProjectType(''), getMenu()])
       return {
-        typeList: data
+        typeList: data[0],
+        menu: data[1]
       }
     }
   }
