@@ -44,21 +44,21 @@
     </div>
     <!-- 评论信息 -->
     <ul class="comments-list-box">
-      <li v-for="(item,index) in commentsListInfo" :key="index">
+      <li v-for="(item,index) in comments" :key="index">
         <div class="commentser-img">
-          <img :src="item.reviewersImg" alt="">
+          <img :src="item.HeadIcon" alt="">
         </div>
         <div class="commentser-con">
-          <p class="commentser-name">{{item.reviewersName}}</p>
-          <p class="commentser-date">{{item.reviewersDate}}</p>
-          <p class="commentser-info">{{item.reviewersInfo}}</p>
+          <p class="commentser-name">{{item.NickName}}</p>
+          <p class="commentser-date">{{item.CreateDate}}</p>
+          <p class="commentser-info">{{item.Message}}</p>
           <div class="commentser-btn">
             <ul>
               <li>
-                <i class="icon iconfont icon-dianzan1"></i>点赞
+                <i class="icon iconfont icon-dianzan1"></i>点赞{{item.LikeCount}}
               </li>
               <li>
-                <i class="icon iconfont icon-pinglun"></i>评论
+                <i class="icon iconfont icon-pinglun"></i>评论 {{item.ReplyList.length}}
               </li>
             </ul>
           </div>
@@ -74,12 +74,8 @@
                   <p v-else="">回复：<span class="reply-someining">{{items.NickName}}</span><span>{{items.Message}}</span></p>
                   <div class="commentser-btns">
                     <ul>
-                      <li>
-                        删除
-                      </li>
-                      <li>
-                        回复
-                      </li>
+                      <li>删除</li>
+                      <li>回复</li>
                     </ul>
                   </div>
                 </li>
@@ -102,6 +98,12 @@
         required: true,
         default: function () {
           return {}
+        }
+      },
+      comments: {
+        type: Array,
+        default: function () {
+          return []
         }
       },
       width: {
@@ -388,8 +390,7 @@
       }
     }
     .comments-list-box{
-      height: 1040px;
-      overflow-y: auto;
+      // overflow-y: auto;
       background: #ffffff;
       >li{
         padding: 20px 10px;
@@ -549,7 +550,6 @@
             }
           }
         }
-
       }
     }
   }

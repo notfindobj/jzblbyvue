@@ -27,6 +27,7 @@
                     <commentsCon
                         :width="'340px'"
                         :publish="detaDetails"
+                        :comments= "getGetCommentsData"
                         @thumbsUp="thumbsUp"
                         @Collection="Collection"
                         @commentValue="commentValue"
@@ -57,11 +58,6 @@
     head() {
       return {
         title: `资料库详情`,
-        script: [
-          // { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
-          // { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
-          // { type: 'text/javascript', innerHtml: ` console.log(1\>0) ;$("img[data-original]").lazyload()` }
-        ],
         meta: [
           { name: 'viewport', content: 'width=device-width, initial-scale=1' },
           { hid: 'about', name: 'about', content: "资料库详情" }
@@ -70,13 +66,6 @@
     },
     data() {
       return {
-        currentNameList: [
-          '资源库',
-          '示范区',
-          '别墅',
-          '现代',
-          '重庆北大资源燕南大道改造计划'
-        ],
         isShowDataDetailsCustom: false,
         isShowDateDetailsDown: false,
         ItemAttributesEntities: {}
@@ -99,7 +88,8 @@
       let getBaseDataDetail = await store.dispatch('getBaseDataDetails', queryData);
       // 根据项目详情请求评论信息
       let Comment = {
-        Id: getBaseDataDetail.ItemEntity.ItemId
+        itemId: getBaseDataDetail.ItemEntity.ItemId,
+        ScopeType: 0
       }
       let getGetCommentsData = await store.dispatch('getGetComments', Comment);
       return {
@@ -121,11 +111,6 @@
     methods: {
       initLazy() {
         $("img[data-original]").lazyload()
-        // .lazyload({
-        //   effect : "fadeIn",
-        //   container: $("#container"),
-        //   threshold : -200
-        // })
       },
       // 点赞
       async thumbsUp(item) {
@@ -163,11 +148,12 @@
           ItemId: row.ItemId,
           IsReply: false,
           Message: val,
-          ScopeType: 1
+          ScopeType: 0
         }
         let commentMsg = await setComments(queryData)
-        console.log(commentMsg);
-        //
+        if (!commentMsg) {
+          this.$set(row, 'commentss', row.commentss + 1)
+        }
       },
       async setFollow(item) {
         let queryData = {
@@ -210,7 +196,6 @@
                 width: 100%;
                 padding-top: 9px;
             }
-
             .data-details-con {
                 width: 100%;
                 height: auto;
@@ -218,12 +203,9 @@
                 flex-direction: row;
                 align-items: flex-start;
                 justify-content: center;
-
                 .data-details-location {
-
                 }
             }
         }
-
     }
 </style>

@@ -241,7 +241,11 @@
       }
     }
   }
-  #detaDetails img {
-    width: 100%;
+  #detaDetails {
+    padding-right: 10px;
+    img {
+      width: 100%;
+    }
   }
+   
 </style>
