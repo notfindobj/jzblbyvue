@@ -71,7 +71,7 @@
                 <li @click="goQuestion">问答</li>
                 <li @click="goBuilding">建筑圈</li>
                 <li @click="goHeAndI">建筑游学</li>
-                <li>建筑书店</li>
+                <li @click="goAboutUs">建筑书店</li>
                 <li>我的部落</li>
             </ul>
             <div class="main-nav-publish" @click="publish">发布</div>
@@ -183,6 +183,9 @@
       },
       goHeAndI() {
         this.$router.push({ path: "/HeAndITribal" })
+      },
+      goAboutUs() {
+        this.$router.push({ path: "/aboutUS" })
       }
     }
   }

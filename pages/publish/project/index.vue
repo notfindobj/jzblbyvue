@@ -37,22 +37,117 @@
                 </FormItem>
                 <FormItem label="类型选择" class="type-select">
                     <i
-                        v-for="item in typeList"
-                        :key="item.id"
+                        v-for="item in menu.RetMenuData"
+                        :key="item.ItemAttributesId"
                     >
                         <Button
                             size="large"
-                            v-if="typeId === item.id"
+                            v-if="typeId === item.ItemAttributesId"
                             type="primary"
-                        >{{ item.ItemValue }}
+                        >{{ item.ItemAttributesFullName }}
                         </Button>
                         <Button
                             size="large"
                             v-else
-                            @click="clickType(item.id)"
-                        >{{ item.ItemValue }}
+                            @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName)"
+                        >{{ item.ItemAttributesFullName }}
                         </Button>
                     </i>
+
+                    <div class="attr-box" v-show="attrList">
+                        <div
+                            class="attr-select-item"
+                            v-for="(item, index) in queryAttrList"
+                            v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
+                            :key="item.id"
+                        >
+                            <span
+                                v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
+                            >
+                                {{ item.ItemValue }}
+                            </span>
+                            <Select
+                                v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
+                                v-model="item.ItemSubAttributeId"
+                                style="width:220px"
+                                size="large"
+                            >
+                                <Option
+                                    v-for="subItem in attrList[index].ChildNode"
+                                    :value="subItem.ItemAttributesId"
+                                    :key="subItem.ItemAttributesId"
+                                >
+                                    {{ subItem.ItemAttributesFullName }}
+                                </Option>
+                            </Select>
+                        </div>
+                        <div
+                            class="attr-select-item attr-upload-item"
+                            v-for="item in queryAttrList"
+                            v-if="item.EnCode === '[wjsc]' || item.EnCode === '[pdfwjsc]'"
+                            :key="item.id"
+                        >
+                            <span
+                                v-if="item.EnCode === '[wjsc]'"
+                                style="vertical-align: top;"
+                            >
+                                文件上传
+                            </span>
+                            <span
+                                v-if="item.EnCode === '[pdfwjsc]'"
+                                style="vertical-align: top;"
+                            >
+                                PDF上传
+                            </span>
+                            <Upload
+                                ref="uploadFile"
+                                v-if="item.EnCode === '[wjsc]'"
+                                :action="baseUrl + 'Upload/DataUpload?uploadType=1'"
+                                :headers="{
+                                    Authorization: token
+                                }"
+                                :before-upload="clearUpload"
+                                :on-success="uploadSuccess"
+                                :on-remove="removeFile"
+                                style="display: inline-block;"
+                            >
+                                <Button icon="ios-cloud-upload-outline" size="large">上传文件</Button>
+                            </Upload>
+                            <Upload
+                                ref="uploadFile"
+                                v-if="item.EnCode === '[pdfwjsc]'"
+                                :action="baseUrl + 'Upload/DataUpload?uploadType=4'"
+                                :headers="{
+                                    Authorization: token
+                                }"
+                                accept=".pdf"
+                                :before-upload="clearUpload"
+                                :on-success="uploadSuccess"
+                                :on-remove="removeFile"
+                                style="display: inline-block;"
+                            >
+                                <Button icon="ios-cloud-upload-outline" size="large">上传PDF文件</Button>
+                            </Upload>
+                        </div>
+                        <div
+                            class="attr-select-item attr-upload-item"
+                            v-for="(item, index) in queryAttrList"
+                            v-if="item.EnCode === '[wjsc]'"
+                            :key="index"
+                        >
+                             <span style="vertical-align: top;">
+                                收取费用
+                            </span>
+                            <Input
+                                v-model="price"
+                                size="large"
+                                :disabled="!typeFile"
+                                placeholder="请上传文件后输入价格"
+                                style="width: 300px;"
+                            />
+                            <span style="width: 20px;">元</span>
+                        </div>
+                    </div>
 
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
@@ -78,10 +173,10 @@
         </div>
         <div class="submit-box">
             <p>
-                <Checkbox class="checkbox" size="large"></Checkbox>
+                <Checkbox class="checkbox" size="large" v-model="isAgree"></Checkbox>
                 我已仔细阅读并同意<span>《建筑部落用户协议》</span>
             </p>
-            <Button type="primary">完成上传</Button>
+            <Button type="primary" @click="clickSubmit">完成上传</Button>
         </div>
         <Spin fix v-if="spinShow">
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
@@ -137,14 +232,18 @@
 </template>
 
 <script>
-  import { uploadFile, getProjectType, getCustomizeService, getMenu } from '../../../service/clientAPI'
+  import { uploadFile, getProjectType, getCustomizeService, getMenu, publishProject } from '../../../service/clientAPI'
 
   export default {
     data() {
       return {
+        baseUrl: process.env.baseUrl,
+        token: '',
+        typeFile: null,  // 选择类型需要上传文件时的，文件信息
+        price: '',  // 上传文件时所填的价格
         typeId: '',
-        typeList: [],
-        serviceModal: false,
+        typeName: '',
+        serviceModal: false,    // 是否显示定制信息的输入框
         serviceId: '',
         formValidate: {
           name: '',
@@ -155,10 +254,7 @@
         ruleValidate: {
           name: [
             { required: true, message: '项目名称不能为空', trigger: 'blur' }
-          ],
-          img: [
-            { required: true, message: '图片不能为空', trigger: 'blur' }
-          ],
+          ]
         },
         serviceValidate: {
           serviceId: '',
@@ -199,9 +295,28 @@
             ]
           },
           placeholder: '填写项目内容'
+        },
+        queryAttrList: [], // 通过类型id查询出的属性列表
+        isAgree: false, // 是否同意
+      }
+    },
+
+    computed: {
+
+      // 查询所有菜单数据，根据id找出的属性列表
+      attrList() {
+        for (let i of this.menu.RetMenuData) {
+          if (this.typeId === i.ItemAttributesId) {
+            return i.ChildNode;
+          }
         }
       }
     },
+
+    mounted() {
+      this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
+    },
+
     methods: {
 
       // 选择定制服务
@@ -229,7 +344,7 @@
             data.append('files', item)
           }
           this.spinShow = true;
-          uploadFile(data, this.uploadType).then(res => {
+          uploadFile(data, 0).then(res => {
             this.spinShow = false;
             this.$set(this.formValidate, 'img', res.smallImgUrl);
           }).catch(err => {
@@ -239,22 +354,102 @@
       },
 
       // 选择类型
-      clickType(id) {
-        this.typeId = id;
+      clickType(id, name) {
+        this.typeFile = null; // 清空已上传内容
         getProjectType(id).then(res => {
-
-        })
+          this.queryAttrList = res;
+          this.typeId = id;
+          this.typeName = name;
+        });
         getCustomizeService(id).then(res => {
           this.serviceList = res;
         })
       },
+
+      // 上传文件组件成功回调
+      uploadSuccess(res) {
+        this.typeFile = res.Data[0]
+      },
+
+      // 上传之前清空上传列表
+      clearUpload() {
+        if (this.$refs.uploadFile[0].fileList.length > 0) {
+          this.$refs.uploadFile[0].clearFiles();
+        }
+      },
+
+      // 删除上传的文件
+      removeFile() {
+        this.typeFile = null;
+      },
+
+      // 点击完成上传
+      clickSubmit() {
+        this.$refs['formValidate'].validate(valid => {
+          if (!valid) {
+            this.$Message.warning('请填写项目名称');
+            return false;
+          }
+          if (!this.formValidate.img) {
+            this.$Message.warning('请上传项目图片');
+            return false;
+          }
+          this.sendPost();
+        })
+      },
+
+      // 发送请求
+      sendPost() {
+        let attributesList = [];
+        for (let i in this.queryAttrList) {
+          const attrItem = {
+            AttributesId: '',
+            ItemId: '',
+            TypeId: this.typeId,
+            ItemAttributesId: this.queryAttrList[i].id,
+            ItemSubAttributeId: this.queryAttrList[i].ItemSubAttributeId,
+            sort: i
+          };
+
+          attributesList.push(attrItem);
+        }
+
+        let postData = {
+          ItemId: '',
+          ItemName: this.formValidate.name,
+          Price: 0,
+          Description: this.formValidate.description,
+          ItemContent: this.formValidate.content,
+          ItemTitleImg: this.formValidate.img,
+          ItemFilePath: this.typeFile ? this.typeFile.smallImgUrl : '',
+          ItemFileName: this.typeFile ? this.typeFile.fileName : '',
+          ItemAnotherName: this.typeName + this.formValidate.name,
+          TypeModel: {
+            TypeId: '',
+            ItemId: '',
+            ItemTypeId: this.typeId
+          },
+          AttributesList: attributesList,
+          CustomizeList: [
+            {
+              customizedId: '',
+              customizedTypeId: this.serviceValidate.serviceId,
+              customizedMoney: this.serviceValidate.money,
+              customizeMobile: this.serviceValidate.mobile,
+              customizeDescription: this.serviceValidate.desc,
+              ItemId: ''
+            }
+          ]
+
+        }
+      }
     },
 
     async asyncData() {
-      const data = await Promise.all([getProjectType(''), getMenu()])
+      const data = await Promise.all([getMenu(), getProjectType('')]);
       return {
-        typeList: data[0],
-        menu: data[1]
+        menu: data[0],
+        typeList: data[1]
       }
     }
   }
@@ -388,5 +583,36 @@
     .service-active {
         color: #ff3c00;
     }
+
+    .attr-box {
+        width: 770px;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        align-content: flex-start;
+        flex-wrap: wrap;
+        margin-top: 20px;
+        padding: 20px;
+        background-color: #FEF9F7;
+
+        .attr-select-item {
+            width: 50%;
+            padding: 15px;
+
+            span {
+                display: inline-block;
+                width: 100px;
+                text-align: center;
+                font-size: 16px;
+                color: #333;
+                vertical-align: middle;
+            }
+        }
+
+        .attr-upload-item {
+            width: 100%;
+        }
+    }
+
 
 </style>

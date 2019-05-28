@@ -11,6 +11,7 @@
   import HeAndIContent from './HeAndIContent'
   import Heads from './head'
   export default {
+    layout:'main',
     name: 'PersonalCenter',
     components: {
       HeAndIContent,
