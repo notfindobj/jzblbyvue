@@ -2,7 +2,7 @@
   <div class="about-us-box">
     <about-us-top></about-us-top>
     <div class="about-us-content-box">
-      <about-us-nav></about-us-nav>
+      <about-us-nav @changeCon="changeCon"></about-us-nav>
       <div :is="currentComponents"></div>
     </div>
   </div>
@@ -12,20 +12,34 @@
   import AboutUsTop from './aboutUsTop'
   import AboutUsNav from './aboutUsNav'
   import Disclaimer from './disclaimer'
+  import aboutUs from './aboutUs'
+  import contactUs from './contactUs'
+  import toPublish from './toPublish'
+  import unableToLogIn from './unableToLogIn'
+  import feedback from './feedback'
   export default {
     layout:'main',
     name: 'AboutUs',
     components: {
       AboutUsTop,
       AboutUsNav,
-      Disclaimer
+      Disclaimer,
+      aboutUs,
+      contactUs,
+      toPublish,
+      unableToLogIn,
+      feedback
     },
     data () {
       return {
-        currentComponents:'Disclaimer'
+        currentComponents:'aboutUs'
       }
     },
     methods: {
+      changeCon (data) {
+        console.log(data)
+        this.currentComponents = data.type;
+      }
     }
   }
 </script>
