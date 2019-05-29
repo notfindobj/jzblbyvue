@@ -503,7 +503,7 @@
           Description: this.formValidate.description,
           ItemContent: this.formValidate.content,
           ItemTitleImg: this.formValidate.img,
-          ItemFilePath: this.typeFile ? this.typeFile.smallImgUrl : '',
+          ItemFilePath: this.typeFile ? this.typeFile.packageOrPdfUrl : '',
           ItemFileName: this.typeFile ? this.typeFile.fileName : '',
           ItemAnotherName: this.typeName + this.formValidate.name,
           TypeModel: {

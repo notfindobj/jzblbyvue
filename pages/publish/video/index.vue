@@ -33,13 +33,13 @@
                     <Button class="publish-btn" type="primary" @click="clickSubmit">发布</Button>
                 </div>
             </div>
-            <div class="upload-box" v-show="isShowUpload">
+            <div class="upload-box" v-show="isShowUpload" @click.stop="">
                 <h3>上传视频</h3>
                 <p class="sub-title">发布后，视频将出现在我的部落</p>
                 <div class="upload-main">
                     <v-upload
                         class="upload"
-                        @uploadBegin="uploadBegin"
+                        @clearVideo="clearVideo"
                         @uploadSuccess="uploadSuccess"
                     />
                     <p class="upload-tip">仅支持MP4视频格式，大小不超过50M，请勿上传反动色情等违法视频。</p>
@@ -73,7 +73,7 @@
         isShowEmotion: false,   // 是否显示表情选择框
         publishMode: '公开',
         content: '',
-        videoList: [],
+        videoInfo: null,
         spinShow: false
       }
     },
@@ -114,7 +114,7 @@
           this.$Message.warning('发布内容不能为空');
           return false;
         }
-        if (this.videoList.length === 0) {
+        if (!this.videoInfo) {
           this.$Message.warning('您还没有上传视频');
           return false;
         }
@@ -122,7 +122,7 @@
           talkType: 2,
           talkTitle: this.content,
           talkContent: '',
-          listImg: [this.videoList]
+          listImg: [this.videoInfo]
         }).then(res => {
           this.$Message.success('发布成功！');
           // setTimeout(() => {
@@ -138,16 +138,14 @@
         this.publishMode = name;
       },
 
-      // 开始上传
-      uploadBegin() {
-        this.spinShow = true;
+      // 删除视频
+      clearVideo() {
+        this.videoInfo = null;
       },
 
       // 视频上传成功
-      uploadSuccess(video) {
-        this.spinShow = false;
-        console.log(video)
-        this.videoList = video;
+      uploadSuccess(videoInfo) {
+        this.videoInfo = videoInfo;
       }
     }
   }
@@ -155,6 +153,9 @@
 
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
+    .page {
+        padding-bottom: 200px;
+    }
     .content {
         position: relative;
         width: 100%;
@@ -181,7 +182,8 @@
         }
         .upload-box {
             width: 375px;
-            height: 160px;
+            height: 210px;
+            bottom: -200px;
             .upload-tip {
                 width: 204px;
             }

@@ -48,7 +48,7 @@
                         <img :src="item.smallImgUrl" alt="">
                     </div>
                     <v-upload
-                        v-show="imgList.length <= 9"
+                        v-show="imgList.length < 9"
                         class="upload"
                         :uploadType="2"
                         @uploadSuccess="uploadSuccess"
