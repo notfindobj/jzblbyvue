@@ -1,12 +1,12 @@
 <template>
   <div class="content-box">
-    我是免责声明
+    我是意见反馈
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Disclaimer',
+    name: 'feedback',
     components: {
     },
     data () {

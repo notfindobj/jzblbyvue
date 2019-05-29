@@ -1,7 +1,7 @@
 <template>
   <div class="nav-box">
     <ul class="nav-list">
-      <li v-for="(item,index) in navList" :key="index">{{item.name}}</li>
+      <li :class="currentIndex == index ? 'li-active' : ''" v-for="(item,index) in navList" :key="index" @click="choseItem(item,index)">{{item.name}}</li>
     </ul>
   </div>
 </template>
@@ -38,10 +38,15 @@
             type:'feedback',
             name:'意见反馈',
           },
-        ]
+        ],
+        currentIndex:0
       }
     },
     methods: {
+      choseItem (item,inx) {
+        this.currentIndex = inx
+        this.$emit('changeCon', item)
+      }
     }
   }
 </script>
@@ -53,7 +58,45 @@
     background: #ffffff;
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.15);
     .nav-list{
-
+      padding: 15px 0;
+      >li{
+        width: 200px;
+        height: 24px;
+        line-height: 24px;
+        box-sizing: border-box;
+        margin-bottom: 25px;
+        font-size: 14px;
+        color: #333333;
+        text-indent: 40px;
+        cursor: pointer;
+        position: relative;
+        &:last-child{
+          margin-bottom: 0;
+        }
+        &:after{
+          width: 2px;
+          height: 24px;
+          content: '';
+          background: #FF3C00;
+          border-radius: 1px;
+          position: absolute;
+          left: 0;
+          top:0px;
+          display: none;
+        }
+        &:hover{
+          color: #FF3C00;
+          &:after{
+            display: block;
+          }
+        }
+      }
+      .li-active{
+        color: #FF3C00;
+        &:after{
+          display: block;
+        }
+      }
     }
   }
 </style>

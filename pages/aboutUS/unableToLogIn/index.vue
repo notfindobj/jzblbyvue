@@ -1,12 +1,12 @@
 <template>
   <div class="content-box">
-    我是免责声明
+    我是无法登录
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Disclaimer',
+    name: 'unableToLogIn',
     components: {
     },
     data () {
