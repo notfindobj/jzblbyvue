@@ -117,7 +117,6 @@
 
   export default {
     data() {
-
       const validateTitle = (rule, value, callback) => {
         if (value.trim() === '') {
           this.titleIsError = true;
@@ -155,8 +154,7 @@
               [{ 'font': [] }],
               [{ 'color': [] }, { 'background': [] }],
               [{ 'align': [] }],
-              ['clean'],
-              ['image']
+              ['clean']
             ]
           },
           placeholder: '详细描述你遇到的问题，可获得更好的回答！'

@@ -102,10 +102,12 @@
                             <Upload
                                 ref="uploadFile"
                                 v-if="item.EnCode === '[wjsc]'"
-                                :action="baseUrl + 'Upload/DataUpload?uploadType=1'"
+                                :action="baseUrl + 'Upload/DataUpload?uploadType=6'"
                                 :headers="{
                                     Authorization: token
                                 }"
+                                :format="['zip', 'rar']"
+                                :on-format-error="handleFormatError"
                                 :before-upload="clearUpload"
                                 :on-success="uploadSuccess"
                                 :on-remove="removeFile"
@@ -159,7 +161,7 @@
                 <FormItem label="项目描述" class="description">
                     <textarea v-model="formValidate.description" placeholder="请填写项目描述"></textarea>
                 </FormItem>
-                <FormItem label="项目内容">
+                <FormItem label="项目内容" v-show="typeName !== '文本' && typeName !== '建筑规范'">
                     <div class="editor-wrap">
                         <div class="quill-editor"
                              :content="formValidate.content"
@@ -168,7 +170,15 @@
                         >
                         </div>
                     </div>
+
                 </FormItem>
+                <input
+                    type="file"
+                    style="display: none;"
+                    id="getFile"
+                    @change="selectContentImg($event)"
+                    accept="image/gif,image/jpeg,image/jpg,image/png"
+                >
             </Form>
         </div>
         <div class="submit-box">
@@ -263,7 +273,10 @@
           desc: ''
         },
         ruleServiceValidate: {
-          type: [
+          serviceId: [
+            { required: true, message: ' ', trigger: 'blur' }
+          ],
+          mobile: [
             { required: true, message: ' ', trigger: 'blur' }
           ],
           money: [
@@ -277,22 +290,29 @@
         serviceList: [],
         editorOption: {
           modules: {
-            toolbar: [
-              ['bold', 'italic', 'underline', 'strike'],
-              ['blockquote', 'code-block'],
-              [{ 'header': 1 }, { 'header': 2 }],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-              [{ 'script': 'sub' }, { 'script': 'super' }],
-              [{ 'indent': '-1' }, { 'indent': '+1' }],
-              [{ 'direction': 'rtl' }],
-              [{ 'size': ['small', false, 'large', 'huge'] }],
-              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-              [{ 'font': [] }],
-              [{ 'color': [] }, { 'background': [] }],
-              [{ 'align': [] }],
-              ['clean'],
-              ['image']
-            ]
+            toolbar: {
+              container: [
+                ['bold', 'italic', 'underline', 'strike'],
+                ['blockquote', 'code-block'],
+                [{ 'header': 1 }, { 'header': 2 }],
+                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                [{ 'script': 'sub' }, { 'script': 'super' }],
+                [{ 'indent': '-1' }, { 'indent': '+1' }],
+                [{ 'direction': 'rtl' }],
+                [{ 'size': ['small', false, 'large', 'huge'] }],
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                [{ 'font': [] }],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                ['clean'],
+                ['image']
+              ],
+              handlers: {
+                'image': function () {
+                  document.getElementById('getFile').click();
+                }
+              }
+            }
           },
           placeholder: '填写项目内容'
         },
@@ -319,6 +339,19 @@
 
     methods: {
 
+      // 选择文件格式错误回调
+      handleFormatError(file) {
+        this.$Notice.warning({
+          title: '文件格式错误',
+          desc: file.name + '格式错误，请选择zip或者rar文件'
+        });
+      },
+
+      // 输入内容
+      onEditorChange(e) {
+        this.formValidate.content = e.html;
+      },
+
       // 选择定制服务
       selectSerice(id) {
         this.$set(this.serviceValidate, 'serviceId', id);
@@ -338,7 +371,7 @@
       // 选择图片
       fileSelected(e) {
         let file = e.target.files;
-        if (file) {
+        if (file.length > 0) {
           let data = new FormData();
           for (let item of file) {
             data.append('files', item)
@@ -347,8 +380,20 @@
           uploadFile(data, 0).then(res => {
             this.spinShow = false;
             this.$set(this.formValidate, 'img', res.smallImgUrl);
-          }).catch(err => {
-            console.log(err, 'uploadErr')
+          })
+        }
+      },
+
+      // 富文本上传图片
+      selectContentImg(e) {
+        let file = e.target.files;
+        if (file.length > 0) {
+          let data = new FormData();
+          for (let item of file) {
+            data.append('files', item)
+          }
+          uploadFile(data, 1).then(res => {
+            this.formValidate.content += `<img src="${ res[0].smallImgUrl }" alt="内容图片">`;
           })
         }
       },
@@ -368,7 +413,7 @@
 
       // 上传文件组件成功回调
       uploadSuccess(res) {
-        this.typeFile = res.Data[0]
+        this.typeFile = res.Data
       },
 
       // 上传之前清空上传列表
@@ -394,30 +439,67 @@
             this.$Message.warning('请上传项目图片');
             return false;
           }
-          this.sendPost();
+          if (!this.typeId || !this.typeName) {
+            this.$Message.warning('请选择类型');
+            return false;
+          }
+
+          let attributesList = [];
+          for (let i in this.queryAttrList) {
+            if (this.queryAttrList[i].EnCode === '[wjsc]' || this.queryAttrList[i].EnCode === '[pdfwjsc]') {
+              continue;
+            }
+            if (this.queryAttrList[i].ItemSubAttributeId) {
+              const attrItem = {
+                AttributesId: '',
+                ItemId: '',
+                TypeId: this.typeId,
+                ItemAttributesId: this.queryAttrList[i].id,
+                ItemSubAttributeId: this.queryAttrList[i].ItemSubAttributeId,
+                sort: i
+              };
+              attributesList.push(attrItem);
+            } else {
+              this.$Message.warning('属性选择不完整');
+              return false;
+            }
+          }
+          if (this.typeName === '示范区' || this.typeName === 'SU模型' || this.typeName === '平面') {
+            if (!this.typeFile) {
+              this.$Message.warning('请上传文件');
+              return false;
+            }
+          }
+          this.$refs['serviceValidate'].validate(valid1 => {
+            if (!valid1) {
+              this.$Message.warning('请将定制服务相关数据，填写完整');
+              return false;
+            }
+            if (this.typeName === '文本' || this.typeName === '建筑规范') {
+              this.$set(this.formValidate, content, this.typeName)
+            } else {
+              if (!this.formValidate.content) {
+                this.$Message.warning('项目内容不能为空');
+                return false;
+              }
+            }
+
+            if (!this.isAgree) {
+              this.$Message.warning('请阅读并同意《建筑部落用户协议》');
+              return false;
+            }
+            this.sendPost(attributesList);
+          })
         })
       },
 
       // 发送请求
-      sendPost() {
-        let attributesList = [];
-        for (let i in this.queryAttrList) {
-          const attrItem = {
-            AttributesId: '',
-            ItemId: '',
-            TypeId: this.typeId,
-            ItemAttributesId: this.queryAttrList[i].id,
-            ItemSubAttributeId: this.queryAttrList[i].ItemSubAttributeId,
-            sort: i
-          };
-
-          attributesList.push(attrItem);
-        }
+      sendPost(attributesList) {
 
         let postData = {
           ItemId: '',
           ItemName: this.formValidate.name,
-          Price: 0,
+          Price: this.price,
           Description: this.formValidate.description,
           ItemContent: this.formValidate.content,
           ItemTitleImg: this.formValidate.img,
@@ -440,8 +522,12 @@
               ItemId: ''
             }
           ]
-
         }
+
+        console.log(postData)
+        publishProject(postData).then(res => {
+          console.log(res, 123)
+        })
       }
     },
 

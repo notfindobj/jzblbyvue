@@ -70,5 +70,5 @@ export const getCustomizeService = async id => {
 
 // 发布项目
 export const publishProject = async params => {
-  return await request.post(`Menu/Publish/ReleaseItem`, params)
+  return await request.post(`Publish/ReleaseItem`, params)
 }

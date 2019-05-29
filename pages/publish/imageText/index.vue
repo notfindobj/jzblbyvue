@@ -6,11 +6,11 @@
             </label>
             <div class="toolbar">
                 <div class="toolbar-left">
-                    <span class="tools add-img" @click.stop="isShowUpload = !isShowUpload">
+                    <span class="tools add-img" @click.stop="clickUpload">
                         <i class="icon iconfont">&#xe631;</i>
                         <span class="text">添加图片</span>
                     </span>
-                    <span class="tools add-face" @click.stop="isShowEmotion = !isShowEmotion">
+                    <span class="tools add-face" @click.stop="clickEmotion">
                         <i class="icon iconfont">&#xe64e;</i>
                         <span class="text">添加表情</span>
                     </span>
@@ -90,6 +90,18 @@
       Emotion
     },
     methods: {
+
+      // 点击上传图片
+      clickUpload() {
+        this.isShowUpload = !this.isShowUpload;
+        this.isShowEmotion = false;
+      },
+
+      // 点击添加表情
+      clickEmotion() {
+        this.isShowEmotion = !this.isShowEmotion;
+        this.isShowUpload = false;
+      },
 
       // 发布
       clickPublish() {
