@@ -1,51 +1,63 @@
 <template>
-    <div class="upload" @click.stop="">
-        <a href="javascript:">
-            <input
-                type="file"
-                @change="fileSelected($event)"
-                name="avatar"
-                ref="avatarInput"
-                accept="video/mp4"
-            >
-        </a>
-        <span>
+    <Upload
+        ref="uploadFile"
+        @click.stop=""
+        :action="baseUrl + 'Upload/DataUpload?uploadType=7'"
+        :headers="{
+            Authorization: token
+        }"
+        accept="video/mp4"
+        :before-upload="beforeUpload"
+        :on-success="uploadSuccess"
+        :on-remove="removeFile"
+    >
+        <div class="upload1">
+            <span>
             <i class="icon iconfont">&#xe613;</i>
             添加视频
         </span>
-    </div>
+        </div>
+    </Upload>
 </template>
 
 <script>
-  import { uploadFile } from '../../service/clientAPI'
+
   export default {
-    methods: {
-      fileSelected(e) {
-        let file = e.target.files[0];
-        if (file) {
-          let files = this.$refs.avatarInput.files;
-          let fileData = {};
-          if (files instanceof Array) {
-            fileData = files[0]
-          } else {
-            fileData = file
-          }
-          let data = new FormData();
-          data.append('files', fileData);
-          this.$emit('uploadBegin');
-          uploadFile(data, 7).then(res => {
-            this.$emit('uploadSuccess', res);
-          }).catch(err => {
-            console.log(err, 'uploadErr')
-          })
-        }
+    data() {
+      return {
+        baseUrl: process.env.baseUrl,
+        token: ''
       }
-    }
+    },
+
+    methods: {
+      // 上传前
+      beforeUpload() {
+        if (this.$refs['uploadFile'].fileList.length > 0) {
+          this.$refs['uploadFile'].clearFiles();
+        }
+          this.$emit('clearVideo');
+      },
+
+      // 删除文件
+      removeFile() {
+        this.$emit('clearVideo');
+      },
+
+      // 上传成功
+      uploadSuccess(res) {
+        this.$emit('uploadSuccess', res.Data)
+      }
+    },
+
+    mounted() {
+      this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
+    },
   }
 </script>
 
 <style lang="less" scoped>
-    .upload {
+    .upload1 {
         position: relative;
         width: 132px;
         height: 70px;
@@ -55,6 +67,7 @@
         font-size: 16px;
         cursor: pointer;
         transition: all .2s linear;
+
         span {
             position: absolute;
             left: 26px;
@@ -62,13 +75,14 @@
             z-index: 1;
             color: #999;
         }
+
         a {
             position: absolute;
             z-index: 2;
         }
     }
 
-    .upload:hover {
+    .upload1:hover {
         border-color: #ff3c00;
     }
 

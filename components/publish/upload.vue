@@ -25,7 +25,7 @@
     methods: {
       fileSelected(e) {
         let file = e.target.files;
-        if (file) {
+        if (file.length > 0) {
           let data = new FormData();
           for (let item of file) {
             data.append('files', item)
