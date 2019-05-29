@@ -7,7 +7,7 @@
                     <i class="iconfont icon-chahao" @click="cleanImg(index)"></i>
                 </div>
             </div>
-            <Input v-model="commentValue" type="textarea" :rows="4" :placeholder="placeholder" />
+            <Input v-model="commentValue" type="textarea" :rows="emotionRows" :placeholder="placeholder" />
             <div class="comment">
                 <div class="comment-smile">
                     <i class="iconfont icon-smile" @click="showEmotion"></i>
@@ -16,7 +16,7 @@
                 </div>
                 <div>
                     <span class="comment-btn" @click="comment">
-                        发表评论
+                        {{btnText}}
                     </span>
                 </div>
             </div>
@@ -37,21 +37,28 @@ export default {
             type: String,
             default: '来说两句吧...',
         },
+        emotionRows: {
+            type: Number,
+            default: 4,
+        },
         width: {
             type: Number,
             default: 80,
+        },
+        btnText: {
+            type: String,
+            default: '发表评论',
         }
     },
     data() {
         return {
-            uPImgList: [
-                // {
-                //     url: 'http://pic32.nipic.com/20130823/13339320_183302468194_2.jpg'
-                // }
-            ],
+            uPImgList: [],
             commentValue: '',
             isEmotion: false
         }
+    },
+    created () {
+        console.log(this.placeholder)
     },
     components: {
       Emotion
@@ -93,8 +100,7 @@ export default {
 </script>
 <style lang="less" scoped>
     .comment-box {
-        padding: 10px 10px;
-        
+        // padding: 10px 10px;
     }
     .comment {
         display: flex;

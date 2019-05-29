@@ -37,59 +37,23 @@
           </span>
         </li>
       </ul>
-      <comment 
-      v-show="isComment"
-      @commentValue="commentValue"
-      />
+      <div class="comment-box">
+        <comment 
+        v-show="isComment"
+        @commentValue="commentValue"
+        />
+      </div>
     </div>
-    <!-- 评论信息 -->
-    <ul class="comments-list-box">
-      <li v-for="(item,index) in comments" :key="index">
-        <div class="commentser-img">
-          <img :src="item.HeadIcon" alt="">
-        </div>
-        <div class="commentser-con">
-          <p class="commentser-name">{{item.NickName}}</p>
-          <p class="commentser-date">{{item.CreateDate}}</p>
-          <p class="commentser-info">{{item.Message}}</p>
-          <div class="commentser-btn">
-            <ul>
-              <li>
-                <i class="icon iconfont icon-dianzan1"></i>点赞{{item.LikeCount}}
-              </li>
-              <li>
-                <i class="icon iconfont icon-pinglun"></i>评论 {{item.ReplyList.length}}
-              </li>
-            </ul>
-          </div>
-          <div class="reviewers-list-box">
-            <div class="reviewers-list-all">
-              <ol>
-                <li v-for="(items,indexs) in item.reviewersList" :key="indexs">
-                  <p>
-                    <span class="reply-name">{{items.NickName}}</span>
-                    <span class="reply-date">{{items.CreateDate}}</span>
-                  </p>
-                  <p v-if="!item.reviewersList.IsReply">{{items.Message}}</p>
-                  <p v-else="">回复：<span class="reply-someining">{{items.NickName}}</span><span>{{items.Message}}</span></p>
-                  <div class="commentser-btns">
-                    <ul>
-                      <li>删除</li>
-                      <li>回复</li>
-                    </ul>
-                  </div>
-                </li>
-              </ol>
-            </div>
-          </div>
-        </div>
-      </li>
-    </ul>
+     <!-- 评论信息 -->
+     <discuss
+      :discussData="comments"
+     />
   </div>
 </template>
 
 <script>
   import comment from '../comment'
+  import discuss from './discuss'
   export default {
     name: 'commentsCon',   
     props: {
@@ -198,7 +162,8 @@
       }
     },
     components: {
-      comment
+      comment,
+      discuss
     },
     asyncData() {
     },
@@ -221,6 +186,25 @@
       commentValue (val) {
         this.$emit('commentValue', this.publish, val)
       },
+      emotion (res) {
+        let word = res.replace(/\[|\]/gi,'')
+        const list= [
+            {content:'微笑', title: 'zhongguozan_org'}
+        ]
+        let wordShow = true
+        let wordContent = ''
+        let wordContentHtml = ''
+        list.forEach(ele => {
+          if (wordShow) {
+            if (ele.content === word) {
+              wordContent = ele.title
+              wordContentHtml = `<img src="https://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/2018new_${wordContent}.png">`
+              wordShow = false
+            }
+          }
+        })
+        return wordContentHtml
+      },
       goTodetails (inx) {
         alert(inx)
       },
@@ -231,6 +215,9 @@
   }
 </script>
 <style lang="less" scoped>
+  .comment-box {
+    padding: 10px 10px;
+  }
   .comments-box{
     width: 100%;
     height: 100%;
