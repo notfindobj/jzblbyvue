@@ -476,14 +476,13 @@
               return false;
             }
             if (this.typeName === '文本' || this.typeName === '建筑规范') {
-              this.$set(this.formValidate, content, this.typeName)
+              this.$set(this.formValidate, 'content', this.typeName)
             } else {
               if (!this.formValidate.content) {
                 this.$Message.warning('项目内容不能为空');
                 return false;
               }
             }
-
             if (!this.isAgree) {
               this.$Message.warning('请阅读并同意《建筑部落用户协议》');
               return false;
