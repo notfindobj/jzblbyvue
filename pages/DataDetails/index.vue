@@ -31,6 +31,7 @@
                         @thumbsUp="thumbsUp"
                         @Collection="Collection"
                         @commentValue="commentValue"
+                        @discussValue="discussValue"
                     />
                 </div>
             </div>
@@ -154,6 +155,19 @@
         if (!commentMsg) {
           this.$set(row, 'commentss', row.commentss + 1)
         }
+      },
+      // 评论回复
+      async discussValue (row, val) {
+        console.log(row)
+        let queryData = {
+          ItemId: row.ItemId,
+          IsReply: true,
+          ReplyId: row.ReplyId,
+          ReplyUserId: row.ReplyUserId,
+          Message: val,
+          ScopeType: 0
+        }
+        let commentMsg = await setComments(queryData)
       },
       async setFollow(item) {
         let queryData = {

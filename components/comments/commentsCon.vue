@@ -2,7 +2,7 @@
   <div class="comments-box" :style="`width:${width}`">
     <!-- 发表评论 -->
     <div class="comments-status-box">
-      <div v-if="commentsInfo.isStatusShow" class="comments-box-status">
+      <div class="comments-box-status">
         <div class="comments-box-status-left">
           <span>发布状态</span>
           <span>发布日期：{{publish.CreateDate | datefmt('YYYY-MM-DD')}}</span>
@@ -19,6 +19,7 @@
           </span>
         </li>
         <li>
+          <!-- 转发 -->
           <span  @click="Forward(publish)">
              <i class="icon iconfont icon-share"></i>
             <span>{{commentsInfo.downNum}}</span>
@@ -40,6 +41,7 @@
       <div class="comment-box">
         <comment 
         v-show="isComment"
+        v-model="commentV"
         @commentValue="commentValue"
         />
       </div>
@@ -47,6 +49,7 @@
      <!-- 评论信息 -->
      <discuss
       :discussData="comments"
+      @commentValue="discussValue"
      />
   </div>
 </template>
@@ -79,95 +82,14 @@
       return {
         isComment: false,
         commentsInfo:{
-          isStatusShow:true,
-          statusInfo:{
-            date:'2018-11-15',
-            lookNum:388
-          },
-          giveLikeNum:388,
           downNum:2.8,
-          collectionNum:555,
-          commentsNum:20
         },
-        commentsListInfo:[
-          {
-            reviewersImg:'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-            reviewersName:'梅赛德斯·赵四',
-            reviewersDate:'31分钟前',
-            reviewersInfo:'在这个项目中，很重要的一点是要做一个能立即吸引公众注意的室内，让他们经过并开车去一个新的地方。作为基础，有一个相当小和简单的空间。我们希望保留这种简单性',
-            reviewersList:[
-              {
-                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
-                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
-                "IsReply": false,
-                "ReplyId": "",
-                "Message": "脑壳痛",
-                "LikeCount": 0,
-                "CreateDate": "2019/3/21 20:53:12",
-                "ReplyUserId": "",
-                "IsCoutReply": false,
-                "ReplyList": [],
-                "NickName": "真厉害啊",
-                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
-                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
-              },
-              {
-                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
-                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
-                "IsReply": false,
-                "ReplyId": "",
-                "Message": "脑壳痛",
-                "LikeCount": 0,
-                "CreateDate": "2019/3/21 20:53:12",
-                "ReplyUserId": "",
-                "IsCoutReply": false,
-                "ReplyList": [],
-                "NickName": "真厉害啊",
-                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
-                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
-              },
-              {
-                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
-                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
-                "IsReply": true,
-                "ReplyId": "",
-                "Message": "脑壳痛",
-                "LikeCount": 0,
-                "CreateDate": "2019/3/21 20:53:12",
-                "ReplyUserId": "",
-                "IsCoutReply": false,
-                "ReplyList": [],
-                "NickName": "真厉害啊",
-                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
-                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
-              },
-              {
-                "CommentsId": "6e6b0f5f-1678-465b-8950-650aea1dde19",
-                "ItemId": "1ada7076-003a-495e-92e2-c24dc7243ba3",
-                "IsReply": false,
-                "ReplyId": "",
-                "Message": "脑壳痛",
-                "LikeCount": 0,
-                "CreateDate": "2019/3/21 20:53:12",
-                "ReplyUserId": "",
-                "IsCoutReply": false,
-                "ReplyList": [],
-                "NickName": "真厉害啊",
-                "HeadIcon": "http://www.jzbl.com/ItemImages/UserInfoImg/c6c67b71-9e54-404c-8811-8036f642d4ad/1539051073.png",
-                "UserId": "c6c67b71-9e54-404c-8811-8036f642d4ad"
-              }
-            ]
-          }
-        ]
+        commentV: ''
       }
     },
     components: {
       comment,
       discuss
-    },
-    asyncData() {
-    },
-    created() {
     },
     methods: {
       // 点赞
@@ -183,8 +105,11 @@
         this.$emit('Collection', item)
       },
       // 评论
-      commentValue (val) {
-        this.$emit('commentValue', this.publish, val)
+      commentValue () {
+        this.$emit('commentValue', this.publish, this.commentV)
+      },
+      discussValue (row, val) {
+        this.$emit('discussValue', row, val)
       },
       emotion (res) {
         let word = res.replace(/\[|\]/gi,'')

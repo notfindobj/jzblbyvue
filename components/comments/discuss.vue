@@ -10,7 +10,7 @@
                     <p class="discuss-title-content-time">{{items.CreateDate}}</p>
                 </div>
             </div>
-            <div class="discuss-content" v-html="items.Message.replace(/[\[\u4E00-\u9FA5\]]{1,4}/gi, emotion)"></div>
+            <div class="discuss-content" v-html="items.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
             <div class="discuss-footer">
                 <span class="discuss-footer-dianzan">
                     <i class="icon iconfont icon-dianzan1"></i>
@@ -25,7 +25,9 @@
                 <comment
                     :emotionRows='1'
                     :btnText="'评论'"
+                    v-model="muchReplyVlaue"
                     :placeholder="`回复${items.NickName}`"
+                    @commentValue="commentValue(items)"
                 />
             </div>
             <template v-if="items.ReplyList.length > 0">
@@ -39,7 +41,7 @@
                         <span class="discuss-reply-title-name">{{sub.NickName}}：</span>
                         <span>{{sub.CreateDate}}</span>
                     </div>
-                    <div class="discuss-reply-content" v-html="sub.Message.replace(/[\[\u4E00-\u9FA5\]]{1,4}/gi, emotion)"></div>
+                    <div class="discuss-reply-content" v-html="sub.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
                     <div class="discuss-reply-footer">
                         <span class="discuss-footer-dianzan">
                             <i class="icon iconfont icon-dianzan1"></i>
@@ -54,7 +56,9 @@
                         <comment
                             :emotionRows='1'
                             :btnText="'评论'"
+                            v-model="muchReplyVlaue"
                             :placeholder="`回复${sub.NickName}`"
+                            @commentValue="commentValue(sub)"
                         />
                     </div>
                 </div>
@@ -78,7 +82,8 @@ export default {
         return {
             isDiscuss: [],
             subDiscuss:[],
-            muchReply: []
+            muchReply: [],
+            muchReplyVlaue: ''
         }
     },
     methods: {
@@ -110,6 +115,9 @@ export default {
             })
             return wordContentHtml
         },
+        commentValue (val) {
+            this.$emit('commentValue', val, this.muchReplyVlaue)
+        }
     },
     components: {
         comment

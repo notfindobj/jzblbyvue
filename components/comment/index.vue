@@ -7,7 +7,15 @@
                     <i class="iconfont icon-chahao" @click="cleanImg(index)"></i>
                 </div>
             </div>
-            <Input v-model="commentValue" type="textarea" :rows="emotionRows" :placeholder="placeholder" />
+            <!-- <Input v-model="commentValue" type="textarea" :rows="emotionRows" :placeholder="placeholder" /> -->
+            <!-- @input.native="$emit('input', e.target.value)" 
+            :value="value"  -->
+            <Input 
+                type="textarea" 
+                v-model="commentValue"
+                @on-change="onChange"
+                :rows="emotionRows" 
+                :placeholder="placeholder" />
             <div class="comment">
                 <div class="comment-smile">
                     <i class="iconfont icon-smile" @click="showEmotion"></i>
@@ -33,6 +41,10 @@ import Emotion from '../Emotion'
  import { uploadFile } from '../../service/clientAPI'
 export default {
     props: {
+        // value : {
+        //     type: String,
+        //     default: '',
+        // },
         placeholder: {
             type: String,
             default: '来说两句吧...',
@@ -57,13 +69,13 @@ export default {
             isEmotion: false
         }
     },
-    created () {
-        console.log(this.placeholder)
-    },
     components: {
       Emotion
     },
     methods:{
+        onChange (e) {
+            this.$emit('input', this.commentValue)
+        },
         cleanImg (i) {
             this.uPImgList.splice(i, 1);
         },
@@ -71,7 +83,7 @@ export default {
             this.isEmotion = !this.isEmotion
         },
         comment () {
-            this.$emit('commentValue', this.commentValue);
+            this.$emit('commentValue');
         },
         showImg () {
             this.$refs.files.click()
@@ -93,6 +105,7 @@ export default {
         handleEmotion (item) {
             // 选择表情
             this.commentValue += `[${item.content}]`
+            this.$emit('input', this.commentValue)
         }
     }
     
