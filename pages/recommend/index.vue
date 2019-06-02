@@ -301,7 +301,10 @@
   export default {
     layout: 'main',
     async asyncData({app, store, route}) {
-        let recommendContent = await store.dispatch('getRecommendContent');
+        let recommendContent = await store.dispatch('getRecommendContent', {
+          Page: 1,
+          Rows: 10
+        });
         console.log('recommendContent', recommendContent)
         return {
             recommendContent: recommendContent

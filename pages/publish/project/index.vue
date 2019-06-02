@@ -464,7 +464,8 @@
               return false;
             }
           }
-          if (this.typeName === '示范区' || this.typeName === 'SU模型' || this.typeName === '平面') {
+
+          if (['示范区', 'SU模型', '平面', '文本', '建筑规范'].includes(this.typeName)) {
             if (!this.typeFile) {
               this.$Message.warning('请上传文件');
               return false;
@@ -494,6 +495,16 @@
 
       // 发送请求
       sendPost(attributesList) {
+        let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];
+        if (this.typeFile && this.typeName !== '文本' && this.typeName !== '建筑规范') {
+          ItemFilePath = this.typeFile.packageOrPdfUrl;
+          ItemFileName = this.typeFile.fileName;
+        } else if (this.typeName === '文本' || this.typeName === '建筑规范') {
+          PdfModel = {
+            ItemFileName: this.typeFile.fileName,
+            ItemFilePath: this.typeFile.packageOrPdfUrl
+          }
+        }
 
         let postData = {
           ItemId: '',
@@ -502,8 +513,8 @@
           Description: this.formValidate.description,
           ItemContent: this.formValidate.content,
           ItemTitleImg: this.formValidate.img,
-          ItemFilePath: this.typeFile ? this.typeFile.packageOrPdfUrl : '',
-          ItemFileName: this.typeFile ? this.typeFile.fileName : '',
+          ItemFilePath,
+          ItemFileName,
           ItemAnotherName: this.typeName + this.formValidate.name,
           TypeModel: {
             TypeId: '',
@@ -520,7 +531,8 @@
               customizeDescription: this.serviceValidate.desc,
               ItemId: ''
             }
-          ]
+          ],
+          PdfModel
         }
 
         console.log(postData)

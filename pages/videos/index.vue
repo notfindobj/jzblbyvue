@@ -3,15 +3,17 @@
         <div class="container">
             <div
                 class="public-block"
-                v-for="i in 5"
-                :key="i"
+                v-for="item in videoList"
+                :key="item.TalkId"
             >
                 <div class="block-head">
                     <div class="block-head-left">
-                        <div class="avatar"></div>
+                        <div class="avatar">
+                            <img :src="item.HeadIcon" alt="">
+                        </div>
                         <div class="info">
-                            <p class="name">杨小幂</p>
-                            <p class="time">3分钟前</p>
+                            <p class="name">{{ item.NickName }}</p>
+                            <p class="time">{{ item.CreateDate }}</p>
                         </div>
                     </div>
                     <div class="block-head-right">
@@ -27,15 +29,16 @@
                     </div>
                 </div>
                 <div class="content">
-                    <p>
-                        新一季的《最强大脑》，依然汇聚了清华北大海外高校的各路牛人，高智商与高智商的碰撞，让我看得十分过瘾。在这巅峰的碰撞中，我意外捕捉到了比超越脑力还震撼的一幕。初始100强里，不是20几岁的高材生，就是10几岁的神童们，非常意外地，居然还有一个40岁的“大叔”来参赛。要知道，这场顶级脑力的比拼对中年人可一点不友好。</p>
-                    <div class="video-wrap">
-                        <div class="video">
-                            <video controls>
-                                <source src="https://www.runoob.com/try/demo_source/movie.mp4" type="video/mp4">
-                                <source src="https://www.runoob.com/try/demo_source/movie.ogg" type="video/ogg">
-                                您的浏览器不支持Video标签。
-                            </video>
+                    <p>{{ item.TalkContent }}</p>
+                    <div class="video-wrap" v-if="item.ImgList.length > 0">
+                        <div class="photo-wrap">
+                            <div class="video">
+                                <video controls :poster="item.VideoTitleImg">
+                                    <source :src="fileBaseUrl + item.ImgList[0].FilePath" type="video/mp4">
+                                    <source :src="fileBaseUrl + item.ImgList[0].FilePath" type="video/ogg">
+                                    您的浏览器不支持Video标签。
+                                </video>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -66,9 +69,52 @@
 <script>
   export default {
     layout: 'main',
+    data() {
+      return {
+        fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
+        pageNum: 1,
+        videoList: [],
+        nextList: []    // 下一页数据
+      }
+    },
+
     methods: {
+      // 获取数据
+      async getList() {
+        const data = await this.$store.dispatch('getTalk', {
+          TalkType: 2,
+          Page: this.pageNum
+        });
+
+        this.nextList = data;
+
+      },
+
+      // 触底事件
       handleReachBottom() {
-        console.log(1222)
+        this.pageNum++;
+        this.getList();
+        setTimeout(() => {
+          this.videoList = this.videoList.concat(this.nextList);
+          this.nextList = [];
+        }, 1000)
+
+      }
+    },
+
+    mounted() {
+      this.pageNum++;
+      this.getList();
+    },
+
+    async asyncData({store}) {
+      const data = await store.dispatch('getTalk', {
+        TalkType: 2,
+        Page: 0
+      })
+
+      return {
+        videoList: data
       }
     }
   }

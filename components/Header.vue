@@ -73,6 +73,7 @@
     .header {
         height: 60px;
         background-color: #fff;
+        border-bottom: 1px solid #F2F4F2;
         .container {
             width: 1200px;
             height: 100%;
