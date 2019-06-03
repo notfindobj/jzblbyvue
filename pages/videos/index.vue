@@ -30,12 +30,12 @@
                 </div>
                 <div class="content">
                     <p>{{ item.TalkContent }}</p>
-                    <div class="video-wrap" v-if="item.ImgList.length > 0">
+                    <div class="video-wrap" v-if="item.Imgs.length > 0">
                         <div class="photo-wrap">
                             <div class="video">
-                                <video controls :poster="item.VideoTitleImg">
-                                    <source :src="fileBaseUrl + item.ImgList[0].FilePath" type="video/mp4">
-                                    <source :src="fileBaseUrl + item.ImgList[0].FilePath" type="video/ogg">
+                                <video controls :poster="item.Imgs[0].smallImgUrl">
+                                    <source :src="fileBaseUrl + item.Imgs[0].videoUrl" type="video/mp4">
+                                    <source :src="fileBaseUrl + item.Imgs[0].videoUrl" type="video/ogg">
                                     您的浏览器不支持Video标签。
                                 </video>
                             </div>
@@ -74,7 +74,8 @@
         fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
         pageNum: 1,
         videoList: [],
-        nextList: []    // 下一页数据
+        nextList: [],    // 下一页数据
+        total: 0,   // 总页数
       }
     },
 
@@ -86,7 +87,8 @@
           Page: this.pageNum
         });
 
-        this.nextList = data;
+        this.nextList = data.retModels;
+        this.total = data.paginationData.total
 
       },
 
@@ -103,6 +105,7 @@
     },
 
     mounted() {
+      console.log(this.videoList)
       this.pageNum++;
       this.getList();
     },
@@ -114,7 +117,8 @@
       })
 
       return {
-        videoList: data
+        videoList: data.retModels,
+        total: data.paginationData.total
       }
     }
   }

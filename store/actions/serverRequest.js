@@ -30,8 +30,26 @@ export const serverRequest = {
     return await request.get('Talk/GetRecommendContent', params)
   },
   // 获取关注数据
-  async getAttentionList({commit, state}, params) {
+  async getAttentionList({ commit, state }, params) {
     return await request.post(`Talk/GetFollowigMoving`, params)
-  }
+  },
 
+  // 获取问答页面左侧搜索标签
+  async getQASearchTag() {
+    return await request.get(`Talk/GetQALabel`)
+  },
+
+  // 获取问答页面推荐数据和轮播图
+  async getQARecomment() {
+    return await request.get(`Talk/GetRecommendQA`)
+  },
+
+  // 获取问答列表
+  async getQAData({ commit }, params) {
+    return await request.post(`Talk/GetAQDataBy`, params)
+  },
+  // 获取问答详情
+  async getQADetail({ commit }, params) {
+    return await request.post(`Talk/GetQADetails`, params)
+  },
 }

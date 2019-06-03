@@ -1,8 +1,8 @@
 <template>
     <div class="container">
         <div class="main-left">
-            <h3 class="detail-title">3D溜溜的云库好用吗？</h3>
-            <p class="detail-text">大家感觉用着怎么养啊 ，都来评论下，给点参考吧。</p>
+            <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
+            <p class="detail-text">{{ detailInfo.TalkContent }}</p>
             <div class="img-row">
                 <div class="img"></div>
                 <div class="img"></div>
@@ -99,6 +99,16 @@
           },
           placeholder: '写回答...'
         }
+      }
+    },
+
+    async asyncData({store, params}) {
+      const data = await store.dispatch('getQADetail', {
+        sId: params.id
+      });
+
+      return {
+        detailInfo: data
       }
     }
   }

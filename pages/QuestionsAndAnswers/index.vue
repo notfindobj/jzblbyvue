@@ -1,38 +1,30 @@
 <template>
     <div class="container">
         <div class="main-left">
-            <Input search enter-button placeholder="请输入要搜索内容"/>
-            <div class="select-block">
-                <p class="select-title">示范区</p>
+            <Input
+                search
+                enter-button
+                v-model="keyword"
+                @on-search="searchQA"
+                placeholder="请输入要搜索内容"
+            />
+            <div
+                class="select-block"
+                v-for="item in labelList"
+                :key="item.ModuleId"
+            >
+                <p class="select-title">{{ item.FullName }}</p>
                 <div class="select-list">
-                    <Button shape="circle" size="small">属性1</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性1</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                </div>
-            </div>
-            <div class="select-block">
-                <p class="select-title">示范区</p>
-                <div class="select-list">
-                    <Button shape="circle" size="small">属性1</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性1</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                </div>
-            </div>
-            <div class="select-block">
-                <p class="select-title">示范区</p>
-                <div class="select-list">
-                    <Button shape="circle" size="small">属性1</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性1</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
-                    <Button shape="circle" size="small">属性模型</Button>
+                    <Button
+                        shape="circle"
+                        size="small"
+                        v-for="subItem in item.Labels"
+                        :key="subItem.ModuleId"
+                        :class="{selected: labelId === subItem.ModuleId}"
+                        @click="clickLabel(subItem.ModuleId)"
+                    >
+                        {{ subItem.FullName }}
+                    </Button>
                 </div>
             </div>
         </div>
@@ -41,9 +33,13 @@
                 <div class='swiper-box'>
                     <div v-swiper:mySwiper="swiperOption">
                         <div class="swiper-wrapper">
-                            <div class="swiper-slide">1</div>
-                            <div class="swiper-slide">2</div>
-                            <div class="swiper-slide">3</div>
+                            <div
+                                class="swiper-slide"
+                                v-for="item in slideList"
+                                :key="item.Id"
+                            >
+                                    <img :src="fileBaseUrl + item.CoverImgUrl" alt="">
+                            </div>
                         </div>
                         <div class="swiper-pagination"></div>
                     </div>
@@ -54,13 +50,12 @@
                         <span>有趣话题等您参与</span>
                     </p>
                     <ul>
-                        <li>su插件是个好东西，求插件库</li>
-                        <li>使用什么坎坎坷坷坎坎坷坷看看看合适？</li>
-                        <li>使用什么坎坎坷坷坎坎坷坷看看看合适？</li>
-                        <li>使用什么坎坎坷坷坎坎坷坷看看看合适？</li>
-                        <li>使用什么坎坎坷坷坎坎坷坷看看看合适？</li>
-                        <li>使用什么坎坎坷坷坎坎坷坷看看看合适？</li>
-                        <li>使用什么坎坎坷坷坎坎坷坷看看看合适？</li>
+                        <li
+                            v-for="item in recommentList"
+                            :key="item.QAId"
+                        >
+                            <nuxt-link :to="{name: 'QuestionsAndAnswers-id', params: {id: item.QAId}}">{{ item.QATitle }}</nuxt-link>
+                        </li>
                     </ul>
                     <nuxt-link class="bottom-link" to="/">更多话题等您参与>></nuxt-link>
                 </div>
@@ -69,20 +64,28 @@
                 <Menu
                     mode="horizontal"
                     theme="light"
-                    active-name="1"
+                    :active-name="menuIndex"
                     class="tabs"
+                    @on-select="selectMenu"
                 >
-                    <MenuItem name="1">
+                    <MenuItem name="0">
                         最近回答
                     </MenuItem>
-                    <MenuItem name="2">
+                    <MenuItem name="1">
                         本周最热
+                    </MenuItem>
+                    <MenuItem name="2">
+                        本月最热
                     </MenuItem>
                     <MenuItem name="3">
                         等待回答
                     </MenuItem>
+                    <MenuItem name="4" v-show="isSearch">
+                        搜索
+                    </MenuItem>
                 </Menu>
                 <div class="content-list">
+                    <Spin size="large" fix v-if="spinShow"></Spin>
                     <div class="content-item" @click="goDetail">
                         <div class="item-left-box">
                             <span class="num">1</span>
@@ -185,7 +188,7 @@
                     </div>
                 </div>
                 <div class="page-box">
-                    <Page :total="100" show-elevator/>
+                    <Page :total="records" :page-size="pageSize" />
                 </div>
             </div>
         </div>
@@ -197,6 +200,7 @@
     layout: 'main',
     data() {
       return {
+        fileBaseUrl: 'http://www.jzbl.com',   // 文件的域名
         htzhIcon: require('~/assets/images/htzq.png'),
         swiperOption: {
           slidesPerView: 1,
@@ -211,15 +215,83 @@
             el: '.swiper-pagination',
             clickable: true
           }
-        }
+        },
+        QAList: [],     // 问答列表
+        menuIndex: '0', // 当前菜单的name值
+        pageNum: 1,     // 分页当前页
+        keyword: '',    // 搜索关键字
+        labelId: '',    // 选择标签的id
+        spinShow: false,    // 是否显示加载中
+        isSearch: false,    // 是否显示搜索内容
+        records: 0,       // 总条数
+        pageSize: 5,    // 每页条数
       }
     },
     methods: {
+
       goDetail() {
         this.$router.push({
           name: 'QuestionsAndAnswers-id',
           params: { id: 1 }
         })
+      },
+
+      // 搜索
+      searchQA() {
+        this.pageNum = 1;
+        this.menuIndex = '4';
+        this.isSearch = true;
+        this.getQAData();
+      },
+
+      // 点击标签
+      clickLabel(id) {
+        this.labelId = id !== this.labelId ? id : '';
+      },
+
+      // 获取问答数据
+      async getQAData() {
+        this.spinShow = true;
+        const data = await this.$store.dispatch('getQAData', {
+          KeyWord: this.keyword,
+          LabelID: this.labelId,
+          TalkType: this.menuIndex,
+          Page: this.pageNum,
+          Rows: 5
+        });
+
+        this.QAList = data.QADatas;
+        this.records = data.paginationData.records;
+        this.spinShow = false;
+      },
+
+      // 切换菜单
+      selectMenu(name) {
+        this.menuIndex = name;
+        this.pageNum = 1;
+        this.getQAData();
+      }
+    },
+
+    mounted() {
+      console.log(this.recommentList)
+    },
+
+    async asyncData({store}) {
+      const queryParams = {
+        KeyWord: '',
+        LabelID: '',
+        TalkType: '',
+        Page: 1,
+        Rows: 5
+      };
+
+      // const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment'), store.dispatch('getQAData', queryParams)])
+      const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment')])
+      return {
+        labelList: data[0].TypeLabels,
+        recommentList: data[1].RecommendQA,
+        slideList: data[1].SlideList
       }
     }
   }
@@ -254,6 +326,10 @@
                 margin-right: 10px;
                 margin-top: 10px;
                 padding: 2px 14px;
+            }
+            .selected {
+                color: #ff6333;
+                border-color: #ff6333;
             }
         }
 
@@ -299,6 +375,10 @@
                         -ms-flex-align: center;
                         -webkit-align-items: center;
                         align-items: center;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                 }
             }
@@ -322,7 +402,14 @@
                     li {
                         font-size: 12px;
                         color: #666;
-                        margin-top: 10px;
+                        margin-top: 13px;
+                        width: 100%;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        a:hover {
+                            color: #FF3C00;
+                        }
                     }
                 }
 
@@ -357,6 +444,10 @@
 
             .tabs {
                 margin-bottom: 25px;
+            }
+
+            .content-list {
+                position: relative;
             }
 
             .content-item {
