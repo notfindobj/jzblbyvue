@@ -103,9 +103,7 @@
     },
 
     async asyncData({store, params}) {
-      const data = await store.dispatch('getQADetail', {
-        sId: params.id
-      });
+      const data = await store.dispatch('getQADetail', params.id);
 
       return {
         detailInfo: data

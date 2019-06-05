@@ -86,109 +86,47 @@
                 </Menu>
                 <div class="content-list">
                     <Spin size="large" fix v-if="spinShow"></Spin>
-                    <div class="content-item" @click="goDetail">
+                    <div
+                        class="content-item"
+                        v-for="item in QADatas"
+                        :key="item.QAId"
+                        @click="goDetail(item.QAId)"
+                    >
                         <div class="item-left-box">
-                            <span class="num">1</span>
+                            <span class="num">{{ item.ReplyCount }}</span>
                             <span>回答</span>
                         </div>
                         <div class="item-info">
-                            <h3 class="item-question">3Dmax灯光自动消失怎么回事？</h3>
+                            <h3 class="item-question">{{ item.QATitle }}</h3>
                             <div class="question-info">
-                                <div class="avatar"></div>
-                                <span class="author">杨秘密</span>
-                                <span class="tags">平面布局</span>
-                                <span class="tags">SU模型</span>
+                                <div class="avatar">
+                                    <img :src="item.UserWebEntity.HeadIcon" alt="">
+                                </div>
+                                <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                                <span
+                                    class="tags"
+                                    v-for="labelItem in item.Labels"
+                                    :key="labelItem.ModuleId"
+                                >
+                                    {{ labelItem.FullName }}
+                                </span>
                             </div>
-                            <p class="item-answer">回答：民男男女女男男女女男男女女仅仅是生生世世</p>
+                            <p class="item-answer">回答：{{ item.LatestAnswer }}</p>
                         </div>
                         <div class="item-right">
-                            <span>21分钟前</span>
-                            <div class="img"></div>
-                        </div>
-                    </div>
-                    <div class="content-item">
-                        <div class="item-left-box">
-                            <span class="num">1</span>
-                            <span>回答</span>
-                        </div>
-                        <div class="item-info">
-                            <h3 class="item-question">3Dmax灯光自动消失怎么回事？</h3>
-                            <div class="question-info">
-                                <div class="avatar"></div>
-                                <span class="author">杨秘密</span>
-                                <span class="tags">平面布局</span>
-                                <span class="tags">SU模型</span>
+                            <span>{{ item.LatestAnswerDate }}</span>
+                            <div class="img">
+                                <img :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
                             </div>
-                            <p class="item-answer">回答：民男男女女男男女女男男女女仅仅是生生世世</p>
-                        </div>
-                        <div class="item-right">
-                            <span>21分钟前</span>
-                            <div class="img"></div>
-                        </div>
-                    </div>
-                    <div class="content-item">
-                        <div class="item-left-box no-answer">
-                            <span class="num">0</span>
-                            <span>回答</span>
-                        </div>
-                        <div class="item-info">
-                            <h3 class="item-question">3Dmax灯光自动消失怎么回事？</h3>
-                            <div class="question-info">
-                                <div class="avatar"></div>
-                                <span class="author">杨秘密</span>
-                                <span class="tags">平面布局</span>
-                                <span class="tags">SU模型</span>
-                            </div>
-                            <p class="item-answer">回答：民男男女女男男女女男男女女仅仅是生生世世</p>
-                        </div>
-                        <div class="item-right">
-                            <span>21分钟前</span>
-                            <div class="img"></div>
-                        </div>
-                    </div>
-                    <div class="content-item">
-                        <div class="item-left-box">
-                            <span class="num">1</span>
-                            <span>回答</span>
-                        </div>
-                        <div class="item-info">
-                            <h3 class="item-question">3Dmax灯光自动消失怎么回事？</h3>
-                            <div class="question-info">
-                                <div class="avatar"></div>
-                                <span class="author">杨秘密</span>
-                                <span class="tags">平面布局</span>
-                                <span class="tags">SU模型</span>
-                            </div>
-                            <p class="item-answer">回答：民男男女女男男女女男男女女仅仅是生生世世</p>
-                        </div>
-                        <div class="item-right">
-                            <span>21分钟前</span>
-                            <div class="img"></div>
-                        </div>
-                    </div>
-                    <div class="content-item">
-                        <div class="item-left-box">
-                            <span class="num">1</span>
-                            <span>回答</span>
-                        </div>
-                        <div class="item-info">
-                            <h3 class="item-question">3Dmax灯光自动消失怎么回事？</h3>
-                            <div class="question-info">
-                                <div class="avatar"></div>
-                                <span class="author">杨秘密</span>
-                                <span class="tags">平面布局</span>
-                                <span class="tags">SU模型</span>
-                            </div>
-                            <p class="item-answer">回答：民男男女女男男女女男男女女仅仅是生生世世</p>
-                        </div>
-                        <div class="item-right">
-                            <span>21分钟前</span>
-                            <div class="img"></div>
                         </div>
                     </div>
                 </div>
-                <div class="page-box">
-                    <Page :total="records" :page-size="pageSize" />
+                <div class="page-box" v-if="records > 5">
+                    <Page
+                        :total="records"
+                        :page-size="pageSize"
+                        @on-change="handlePageChange"
+                    />
                 </div>
             </div>
         </div>
@@ -229,11 +167,17 @@
     },
     methods: {
 
-      goDetail() {
+      goDetail(id) {
         this.$router.push({
           name: 'QuestionsAndAnswers-id',
-          params: { id: 1 }
+          params: { id }
         })
+      },
+
+      // 分页切换
+      handlePageChange(num) {
+        this.pageNum = num;
+        this.getQAData();
       },
 
       // 搜索
@@ -273,10 +217,6 @@
       }
     },
 
-    mounted() {
-      console.log(this.recommentList)
-    },
-
     async asyncData({store}) {
       const queryParams = {
         KeyWord: '',
@@ -286,12 +226,14 @@
         Rows: 5
       };
 
-      // const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment'), store.dispatch('getQAData', queryParams)])
-      const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment')])
+      const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment'), store.dispatch('getQAData', queryParams)])
+      // const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment')])
       return {
         labelList: data[0].TypeLabels,
         recommentList: data[1].RecommendQA,
-        slideList: data[1].SlideList
+        slideList: data[1].SlideList,
+        QADatas: data[2].QADatas,
+        records: data[2].paginationData.records
       }
     }
   }
@@ -506,6 +448,11 @@
                             height: 24px;
                             border-radius: 50%;
                             background-color: #ccc;
+                            overflow: hidden;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                            }
                         }
 
                         .author {
@@ -544,6 +491,10 @@
                         height: 100px;
                         background-color: #ccc;
                         margin-left: 10px;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                 }
             }

@@ -27,7 +27,7 @@ export const serverRequest = {
   },
   // 获取推荐内容
   async getRecommendContent({ commit, state }, params) {
-    return await request.get('Talk/GetRecommendContent', params)
+    return await request.post('Talk/GetRecommendContent', params)
   },
   // 获取关注数据
   async getAttentionList({ commit, state }, params) {
@@ -46,10 +46,10 @@ export const serverRequest = {
 
   // 获取问答列表
   async getQAData({ commit }, params) {
-    return await request.post(`Talk/GetAQDataBy`, params)
+    return await request.post(`Talk/GetQADataBy`, params)
   },
   // 获取问答详情
-  async getQADetail({ commit }, params) {
-    return await request.post(`Talk/GetQADetails`, params)
+  async getQADetail({ commit }, id) {
+    return await request.post(`Talk/GetQADetails?sId=${id}`)
   },
 }
