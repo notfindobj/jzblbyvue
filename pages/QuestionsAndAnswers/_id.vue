@@ -4,9 +4,13 @@
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
             <p class="detail-text">{{ detailInfo.TalkContent }}</p>
             <div class="img-row">
-                <div class="img"></div>
-                <div class="img"></div>
-                <div class="img"></div>
+                <div
+                    class="img"
+                    v-for="item in detailInfo.Imgs"
+                    :key="item.smallImgUrl"
+                >
+                    <img :src="fileBaseUrl + item.smallImgUrl" alt="">
+                </div>
             </div>
             <div class="editor-wrap">
                 <div class="quill-editor"
@@ -32,17 +36,22 @@
                 </div>
             </div>
             <div class="answer-list">
-                <div class="answer-item" v-for="i in 3" :key="i">
+                <div
+                    class="answer-item"
+                    v-for="(item, index) in commentList"
+                    :key="item.CommentsId"
+                    v-if="index < 3"
+                >
                     <div class="item-top">
                         <div class="top-left">
-                            <div class="avatar"></div>
-                            <span class="user-name">东北好建</span>
+                            <div class="avatar">
+                                <img :src="item.HeadIcon" alt="">
+                            </div>
+                            <span class="user-name">{{ item.NickName }}</span>
                         </div>
-                        <span class="top-right">24分钟前</span>
+                        <span class="top-right">{{ item.CreateDate }}</span>
                     </div>
-                    <div class="item-middle">
-                        许可乐乒乒乓乓乒乒乓乓乒乒乓乓。零零落落零零落落零零落落零零落落了,零零落落零零落落零零落落零零落落零零落落零零落落零零落落了零零落落零零落落零零落落。
-                    </div>
+                    <div class="item-middle" v-html="item.Message"></div>
                     <div class="item-bottom">
                         <i class="icon iconfont">&#xe664;</i>
                         <span>回复</span>
@@ -52,10 +61,13 @@
         </div>
         <div class="main-right">
             <div class="right-top">
-                <div class="author-avatar"></div>
-                <span class="author-name">梅赛德斯·赵四</span>
+                <div class="author-avatar">
+                    <img :src="detailInfo.HeadIcon" alt="">
+                </div>
+                <span class="author-name">{{ detailInfo.NickName }}</span>
                 <Button type="primary" class="attention-btn">
-                    <Icon class="icon-add" type="ios-add" size="24" />关注
+                    <Icon class="icon-add" type="ios-add" size="24"/>
+                    关注
                 </Button>
                 <Button type="primary" class="big-btn" size="large" ghost>
                     <i class="icon iconfont">&#xe60a;</i>
@@ -78,7 +90,9 @@
     layout: 'main',
     data() {
       return {
+        fileBaseUrl: 'http://www.jzbl.com',   // 文件的域名
         content: '',
+        commentList: [],    // 评论列表
         editorOption: {
           modules: {
             toolbar: [
@@ -102,7 +116,17 @@
       }
     },
 
-    async asyncData({store, params}) {
+    created() {
+      this.$store.dispatch('getGetComments', {
+        ItemId: this.$route.params.id,
+        ItemImgSrc: '',
+        ScopeType: 3
+      }).then(res => {
+        this.commentList = res;
+      })
+    },
+
+    async asyncData({ store, params }) {
       const data = await store.dispatch('getQADetail', params.id);
 
       return {
@@ -150,6 +174,11 @@
                     width: 220px;
                     height: 150px;
                     background-color: #ccc;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
             }
 
@@ -172,20 +201,28 @@
                 .answer-item {
                     padding: 20px 0 15px;
                     border-top: 1px solid #d8d8d8;
+
                     .item-top {
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+
                         .top-left {
                             display: flex;
                             align-items: center;
                         }
+
                         .avatar {
                             width: 24px;
                             height: 24px;
                             background-color: #ccc;
                             margin-right: 4px;
+                            img {
+                                width: 100%;
+                                height: 100%;
+                            }
                         }
+
                         .user-name {
                             font-size: 14px;
                             color: #F16402;
@@ -208,6 +245,7 @@
                         display: flex;
                         justify-content: flex-end;
                         align-items: center;
+
                         span {
                             margin-left: 4px;
                             font-size: 12px;
@@ -234,21 +272,30 @@
                 justify-content: flex-start;
                 align-items: center;
                 background-color: #fff;
+
                 .author-avatar {
                     width: 74px;
                     height: 74px;
                     margin-top: 20px;
                     border-radius: 50%;
                     background-color: #ccc;
+                    overflow: hidden;
+                    img  {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
+
                 .author-name {
                     font-size: 14px;
                     color: #333;
                     line-height: 32px;
                 }
+
                 .attention-btn {
                     padding: 0 18px;
                     font-size: 14px;
+
                     .icon-add {
                         margin-right: -3px;
                         margin-top: -2px;

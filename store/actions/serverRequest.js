@@ -52,4 +52,11 @@ export const serverRequest = {
   async getQADetail({ commit }, id) {
     return await request.post(`Talk/GetQADetails?sId=${id}`)
   },
+
+  // 获取部落基本信息
+  async getTribeInfo({commit}, userId) {
+    return await request.post(`MyTribe/GetUserInfo`, {
+      UserId: userId
+    })
+  }
 }

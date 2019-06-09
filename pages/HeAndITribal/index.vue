@@ -1,8 +1,8 @@
 <template>
   <div class="he-and-i-tribal">
     <div class="he-and-i-tribal-content">
-      <heads></heads>
-      <he-and-i-content></he-and-i-content>
+      <heads :userInfo="tribeInfo"></heads>
+      <he-and-i-content :userInfo="tribeInfo"></he-and-i-content>
     </div>
   </div>
 </template>
@@ -22,6 +22,12 @@
       }
     },
     methods: {
+    },
+    async asyncData({ store, params }) {
+      const data = await store.dispatch('getTribeInfo', store.state.overas.auth.UserId);
+      return {
+        tribeInfo: data
+      }
     }
   }
 </script>
