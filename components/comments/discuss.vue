@@ -12,9 +12,9 @@
             </div>
             <div class="discuss-content" v-html="items.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
             <div class="discuss-footer">
-                <span class="discuss-footer-dianzan">
+                <span class="discuss-footer-dianzan" @click="somePraise(items)">
                     <i class="icon iconfont icon-dianzan1"></i>
-                    点赞
+                    点赞{{items.LikeCount}}
                 </span>
                 <span class="discuss-footer-pinglun" @click="setDiscuss(index)">
                     <i class="icon iconfont icon-pinglun"></i>
@@ -43,9 +43,9 @@
                     </div>
                     <div class="discuss-reply-content" v-html="sub.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
                     <div class="discuss-reply-footer">
-                        <span class="discuss-footer-dianzan">
+                        <span class="discuss-footer-dianzan" @click="somePraise(sub)">
                             <i class="icon iconfont icon-dianzan1"></i>
-                            点赞
+                            点赞{{sub.LikeCount}}
                         </span>
                         <span class="discuss-footer-pinglun" @click="setSubDiscuss(sunIndex + sub.CommentsId)">
                             <i class="icon iconfont icon-pinglun"></i>
@@ -115,8 +115,13 @@ export default {
             })
             return wordContentHtml
         },
+        // 评论
         commentValue (val) {
             this.$emit('commentValue', val, this.muchReplyVlaue)
+        },
+        // 点赞
+        somePraise (sub) {
+            this.$emit('somePraise', sub);
         }
     },
     components: {

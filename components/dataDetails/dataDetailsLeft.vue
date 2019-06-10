@@ -9,22 +9,14 @@
               <div class="details-box-img">
                 <div class="details-box-img-img"></div>
                 <div class="details-box-img-right">
-                  <p>梅赛德斯·赵四</p>
-                  <p>发布日期：2018-11-15</p>
+                  <p>{{detaDetails.ItemName}}</p>
+                  <p>发布日期：{{detaDetails.CreateDate}}</p>
                 </div>
               </div>
               <ul>
-                <li class="details-box-list">
-                  <span class="details-box-list-title">项目信息</span>
-                  <span class="details-box-list-content">3层</span>
-                </li>
-                <li class="details-box-list">
-                  <span class="details-box-list-title">楼层</span>
-                  <span class="details-box-list-content">3层</span>
-                </li>
-                <li class="details-box-list">
-                  <span class="details-box-list-title">楼层</span>
-                  <span class="details-box-list-content">3层</span>
+                <li class="details-box-list" v-for="(items, index) in attribute" :key="index">
+                  <span class="details-box-list-title">{{items.ItemAttributesFullName}}</span>
+                  <span class="details-box-list-content">{{items.ItemSubAttributeFullName}}</span>
                 </li>
               </ul>
             </div>
@@ -47,6 +39,13 @@
           return {}
         }
       },
+      attribute: {
+        type: Array,
+        required: true,
+        default: function () {
+          return []
+        }
+      }
     },
     data() {
       return {

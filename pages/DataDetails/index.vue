@@ -1,6 +1,5 @@
 <template>
     <div class="data-details-box">
-        <!-- <div  v-html="detaDetails.ItemContentBefore"></div> -->
         <div class="data-details-con-box">
             <div class="data-details-location">
                 <Breadcrumb separator=">" style="margin-bottom: 20px">
@@ -16,6 +15,7 @@
                 <data-details-left
                     id="container"
                     :detaDetails="detaDetails"
+                    :attribute="ItemAttributesEntities"
                 />
                 <div>
                     <data-details-right
@@ -32,15 +32,18 @@
                         @Collection="Collection"
                         @commentValue="commentValue"
                         @discussValue="discussValue"
+                        @somePraise="somePraise"
                     />
                 </div>
             </div>
         </div>
         <viewPicture/>
-        <data-details-custom @dataDetailsMaskClose="dataDetailsMaskClose"
-                             v-show="isShowDataDetailsCustom"></data-details-custom>
-        <date-details-down @dataDetailsMaskClose="dataDetailsMaskClose"
-                           v-show="isShowDateDetailsDown"></date-details-down>
+        <data-details-custom 
+        @dataDetailsMaskClose="dataDetailsMaskClose"
+        v-show="isShowDataDetailsCustom"/>
+        <date-details-down 
+        @dataDetailsMaskClose="dataDetailsMaskClose"
+        v-show="isShowDateDetailsDown"/>
     </div>
 </template>
 <script>
@@ -96,7 +99,6 @@
       return {
         detaDetails: getBaseDataDetail.ItemEntity,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
-        ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
         getGetCommentsData: getGetCommentsData,
         id: getBaseDataDetail.ItemEntity.ItemId
       }
@@ -113,7 +115,7 @@
       initLazy() {
         $("img[data-original]").lazyload()
       },
-      // 点赞
+      // 项目点赞
       async thumbsUp(item) {
         let queryData = {
           ItemId: item.ItemId,
@@ -127,6 +129,16 @@
           this.$set(item, 'likes', item.likes + 1)
         }
         this.$set(item, 'islikes', !item.islikes)
+      },
+      async somePraise (item) {
+        let queryData = {
+          ItemId: item.ItemId,
+          CommentsId: item.CommentsId,
+          LikeType: 0,
+          IsDelete: !item.IsCoutReply
+        }
+        let msg = await setthumbsUp(queryData);
+        console.log(item)
       },
       // 收藏
       async Collection(item) {
@@ -158,16 +170,18 @@
       },
       // 评论回复
       async discussValue (row, val) {
-        console.log(row)
         let queryData = {
-          ItemId: row.ItemId,
-          IsReply: true,
-          ReplyId: row.ReplyId,
-          ReplyUserId: row.ReplyUserId,
+          ItemId: row.ItemId, // 项目ID
+          IsReply: true, // 回复
+          ReplyId: row.CommentsId, // 被回复说说的Id  是取CommentsId 还是ReplyId
+          ReplyUserId: row.UserId,// 被回复说说发布的ID ReplyUserId
           Message: val,
-          ScopeType: 0
+          ScopeType: 0 // 项目评论
         }
         let commentMsg = await setComments(queryData)
+        if (commentMsg) {
+          this.$Message.success('回复成功！')
+        }
       },
       async setFollow(item) {
         let queryData = {

@@ -50,6 +50,7 @@
      <discuss
       :discussData="comments"
       @commentValue="discussValue"
+      @somePraise="somePraise"
      />
   </div>
 </template>
@@ -92,7 +93,7 @@
       discuss
     },
     methods: {
-      // 点赞
+      // 项目点赞
       thumbsUp (item) {
         this.$emit('thumbsUp', item)
       },
@@ -110,6 +111,10 @@
       },
       discussValue (row, val) {
         this.$emit('discussValue', row, val)
+      },
+      // 评论点赞
+      somePraise (item) {
+        this.$emit('somePraise', item)
       },
       emotion (res) {
         let word = res.replace(/\[|\]/gi,'')
