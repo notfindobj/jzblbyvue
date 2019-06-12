@@ -69,7 +69,7 @@
 
 <script>
   import Upload from '~/components/publish/upload'
-  import Emotion from '@/components/Emotion/index'
+  import Emotion from '~/components/Emotion/index'
   import {releaseStatement} from '../../../service/clientAPI'
   export default {
     data() {

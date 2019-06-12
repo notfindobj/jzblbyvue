@@ -62,13 +62,20 @@
                 </div>
             </div>
         </div>
+        <video-modal />
     </Scroll>
 
 </template>
 
 <script>
+  import VideoModal from '~/components/video/videoModal'
+
   export default {
     layout: 'main',
+    components: {
+      'video-modal': VideoModal
+    },
+
     data() {
       return {
         fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
@@ -110,7 +117,7 @@
       this.getList();
     },
 
-    async asyncData({store}) {
+    async asyncData({ store }) {
       const data = await store.dispatch('getTalk', {
         TalkType: 2,
         Page: 0
