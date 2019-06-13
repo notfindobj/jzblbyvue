@@ -1,6 +1,6 @@
 <template>
   <div class="content-box">
-    我是意见反馈
+    <h4 class="about-title">意见反馈</h4>
   </div>
 </template>
 
@@ -20,9 +20,16 @@
 <style lang="less" scoped>
   .content-box{
     flex: 1;
-    height: 600px;
+    height: auto;
+    padding: 20px;
+    margin-bottom: 30px;
     background: #ffffff;
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.15);
-    margin-bottom: 30px;
+    .about-title{
+      font-size: 18px;
+      color: #333333;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #EEEEEE;
+    }
   }
 </style>

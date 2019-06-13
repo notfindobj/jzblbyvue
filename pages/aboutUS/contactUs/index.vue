@@ -45,7 +45,7 @@
   .content-box{
     flex: 1;
     height: auto;
-    padding: 15px;
+    padding: 20px;
     margin-bottom: 30px;
     background: #ffffff;
     box-shadow: 0 0 4px 0 rgba(0,0,0,0.15);
