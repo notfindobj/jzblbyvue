@@ -1,25 +1,31 @@
 <template>
     <div>
         <Modal
-            v-model="modal6"
+            v-model="isShowModal"
+            v-if="isShowModal"
             :closable="false"
             :footer-hide="true"
+            :mask-closable="false"
             width="1280"
             class="video-modal"
         >
             <div class="modal-content">
-                <div class="close-box">
+                <div class="close-box" @click="handleClose">
                     <Icon type="ios-close-circle-outline" size="36" color="#fff"/>
                 </div>
                 <div class="video-wrap">
-                    <video ref="video"
-                           poster="http://www.pic.jzbl.com/buildingcircle/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/2019-05-29/v/s/1648e317_afa9a2db1559138648.jpg">
+                    <video
+                        ref="video"
+                        :poster="videoInfo.Imgs[0].smallImgUrl"
+                    >
                         <source
-                            src="http://www.pic.jzbl.com/buildingcircle/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/2019-05-29/v/afa9a2db1559138648.mp4"
-                            type="video/mp4">
+                            :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl"
+                            type="video/mp4"
+                        >
                         <source
-                            src="http://www.pic.jzbl.com/buildingcircle/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/2019-05-29/v/afa9a2db1559138648.mp4"
-                            type="video/ogg">
+                            :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl"
+                            type="video/ogg"
+                        >
                         您的浏览器不支持Video标签。
                     </video>
                     <div class="controls-box">
@@ -31,11 +37,11 @@
                         <span class="time">{{ currentTime }}/{{ duration }}</span>
                         <div class="icon-box">
                             <i class="icon iconfont star">&#xe696;</i>
-                            <span>15</span>
+                            <span>{{ videoInfo.itemOperateData.CollectionCount }}</span>
                         </div>
                         <div class="icon-box">
                             <i class="icon iconfont zan">&#xe67e;</i>
-                            <span>15</span>
+                            <span>{{ videoInfo.itemOperateData.LikeCount }}</span>
                         </div>
                         <Icon class="contract" type="md-contract" size="20" color="#fff"/>
                     </div>
@@ -43,44 +49,64 @@
                 <div class="info-wrap">
                     <div class="video-content">
                         <div class="content-head">
-                            <div class="avatar"></div>
+                            <div class="avatar">
+                                <img :src="videoInfo.HeadIcon" alt="">
+                            </div>
                             <div class="head-center">
-                                <span class="nick-name">梅赛德斯·赵四</span>
-                                <span class="time-str">发布日期：2018-11-15</span>
+                                <span class="nick-name">{{ videoInfo.NickName }}</span>
+                                <span class="time-str">发布日期：{{ videoInfo.CreateDate }}</span>
                             </div>
                             <div class="head-right">
                                 <i class="icon iconfont">&#xe61b;</i>
-                                <span>200</span>
+                                <span>{{ videoInfo.itemOperateData.ReadCount }}</span>
                             </div>
                         </div>
-                        <p class="content-text">项目介绍：零零落落零零落落零零落落零零落落零零落落零零落落啦啦啦啦啦啦啦，噢噢噢噢噢噢噢噢噢噢噢噢噢噢噢噢噢噢，密密麻麻密密麻麻吗</p>
-                        <span class="btn-open">展开详情 <Icon type="ios-arrow-down"/></span>
+                        <p class="content-text" v-show="videoInfo.TalkContent.length > 60 && !isShowAll">项目介绍：{{
+                            videoInfo.TalkContent.substr(0,60) }}</p>
+                        <p class="content-text" v-show="videoInfo.TalkContent.length > 60 && isShowAll">项目介绍：{{
+                            videoInfo.TalkContent }}</p>
+                        <span
+                            class="btn-open"
+                            v-show="videoInfo.TalkContent.length > 60 && !isShowAll"
+                            @click="isShowAll = true"
+                        >
+                            展开详情
+                            <Icon type="ios-arrow-down"/>
+                        </span>
+                        <span
+                            class="btn-open"
+                            v-show="videoInfo.TalkContent.length > 60 && isShowAll"
+                            @click="isShowAll = false"
+                        >
+                            展开详情
+                            <Icon type="ios-arrow-down"/>
+                        </span>
                     </div>
                     <div class="operator-box">
                         <div class="operator-bar">
                             <p>
                                 <i class="icon iconfont icon1">&#xe643;</i>
-                                <span>100</span>
+                                <span>{{ videoInfo.itemOperateData.LikeCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
                                 <i class="icon iconfont icon2">&#xe609;</i>
-                                <span>200</span>
+                                <span>{{ videoInfo.itemOperateData.ShareCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
                                 <i class="icon iconfont icon3">&#xe696;</i>
-                                <span>200</span>
+                                <span>{{ videoInfo.itemOperateData.CollectionCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
                                 <i class="icon iconfont icon4">&#xe664;</i>
-                                <span>300</span>
+                                <span>{{ videoInfo.itemOperateData.CommentCount }}</span>
                             </p>
                         </div>
                         <div class="comment-box">
                             <div class="textarea-wrap">
-                                <textarea placeholder="来说两句吧···" ></textarea>
+                                <textarea placeholder="来说两句吧···"></textarea>
                                 <span class="tip">
                                     还可以输入<span>500</span>字
                                 </span>
@@ -91,13 +117,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="comment-list">
-                        <div class="comment-item">
-                            <div class="commenter-avatar"></div>
+                    <div class="comment-list" v-if="commentList.length > 0">
+                        <Spin size="large" fix v-if="isLoadingComment"></Spin>
+                        <div
+                            class="comment-item"
+                            v-for="item in commentList"
+                            :key="item.CommentsId"
+                        >
+                            <div class="commenter-avatar">
+                                <img :src="item.HeadIcon" alt="">
+                            </div>
                             <div class="comment-info">
-                                <p class="comment-nickname">梅赛德斯·赵四</p>
-                                <p class="comment-time">31分钟前</p>
-                                <p class="comment-con">在这个项目中，很重要的一点是要做一个能立即吸引公众注意的室内，让他们经过并开车去一个新的地方。作为基础，有一个相当小和简单的空间。我们希望保留这种简单性</p>
+                                <p class="comment-nickname">{{ item.NickName }}</p>
+                                <p class="comment-time">{{ item.CreateDate }}</p>
+                                <p class="comment-con">
+                                    {{ item.Message }}
+                                </p>
                                 <div class="comment-operation">
                                     <p>
                                         <i class="icon iconfont icon1">&#xe643;</i>
@@ -123,39 +158,62 @@
 
 <script>
   export default {
+    props: {
+      isShowModal: {
+        type: Boolean,
+        default: false
+      },
+      videoInfo: {
+        type: Object,
+        default: function () {
+          return {}
+        }
+      }
+    },
     data() {
       return {
-        modal6: true,
+        fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
         isEnd: false,   // 是否结束状态
         isPause: true,  // 是否暂停状态
         progressWidth: 0,   // 播放进度百分比
         currentTime: '0:00',    // 视频当前播放时长
         duration: '',   // 视频总时长
+        isLoadingComment: true, // 是否正在加载评论
+        commentList: [],    // 评论列表
       }
     },
-    mounted() {
-      setTimeout(() => {
-        this.duration = this.formatTime(this.$refs.video.duration);
-      }, 100);
 
-      this.$refs.video.addEventListener('play', () => {
-        this.isPause = false;
-      });
+    watch: {
+      videoInfo(val, oldVal) {
+        // 获取视频总时长
+        setTimeout(() => {
+          this.duration = this.formatTime(this.$refs.video.duration);
 
-      this.$refs.video.addEventListener('pause', () => {
-        this.isPause = true;
-      });
+          // 监听开始事件
+          this.$refs.video.addEventListener('play', () => {
+            this.isPause = false;
+          });
 
-      this.$refs.video.addEventListener('timeupdate', () => {
-        console.log(this.$refs.video.currentTime, this.$refs.video.duration);
-        this.progressWidth = (this.$refs.video.currentTime / this.$refs.video.duration) * 100 + '%';
-        this.currentTime = this.formatTime(this.$refs.video.currentTime);
-      });
+          // 监听暂停事件
+          this.$refs.video.addEventListener('pause', () => {
+            this.isPause = true;
+          });
 
+          // 监听视频播放事件
+          this.$refs.video.addEventListener('timeupdate', () => {
+            this.progressWidth = (this.$refs.video.currentTime / this.$refs.video.duration) * 100 + '%';
+            this.currentTime = this.formatTime(this.$refs.video.currentTime);
+          });
+
+          // 获取评论
+          this.isLoadingComment = true;
+          this.getComment(val.ItemId);
+        }, 200);
+      }
     },
 
-
     methods: {
+
       // 格式化时间 params: timeStr 视频的秒数，有小数
       formatTime(timeStr) {
         let [hours, mins, seconds] = ['', '', ''];
@@ -176,6 +234,12 @@
         }
       },
 
+      // 关闭窗口
+      handleClose() {
+        this.pauseVideo();
+        this.$emit('closeModal');
+      },
+
       // 点击开始
       playVideo() {
         this.$refs.video.play();
@@ -184,6 +248,17 @@
       // 暂停播放
       pauseVideo() {
         this.$refs.video.pause();
+      },
+
+      // 获取评论
+      getComment(id) {
+        this.$store.dispatch('getGetComments', {
+          ItemId: id,
+          ScopeType: 2
+        }).then(res => {
+          this.isLoadingComment = false;
+          this.commentList = res;
+        })
       }
     }
   }
@@ -282,6 +357,7 @@
             padding: 20px 20px 0;
             background-color: #F5F6F5;
             overflow-y: scroll;
+
             .video-content {
                 width: 100%;
                 border-radius: 4px;
@@ -302,6 +378,12 @@
                         height: 40px;
                         background-color: #ccc;
                         border-radius: 50%;
+                        overflow: hidden;
+
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
 
                     .head-center {
@@ -389,18 +471,22 @@
                     padding: 10px;
                     background-color: #F6F6F8;
                     border-radius: 4px;
+
                     .textarea-wrap {
                         position: relative;
+
                         .tip {
                             position: absolute;
                             right: 7px;
                             bottom: 10px;
                             font-size: 12px;
                             color: #666;
+
                             span {
                                 color: #ff3c00;
                             }
                         }
+
                         textarea {
                             width: 100%;
                             height: 82px;
@@ -408,7 +494,7 @@
                             border: 1px solid #ff3c00;
                             outline: none;
                             border-radius: 4px;
-                            resize:none;
+                            resize: none;
                             color: #333;
                         }
                     }
@@ -417,16 +503,19 @@
                         display: flex;
                         justify-content: space-between;
                         align-items: center;
+
                         .select-icon {
                             font-size: 15px;
                             color: #ff3c00;
                         }
+
                         button {
                             height: 21px;
                             line-height: 19px;
                         }
                     }
                 }
+
                 .comment-box:after {
                     position: absolute;
                     content: '';
@@ -438,56 +527,75 @@
                     border-bottom-color: #F6F6F8;
                 }
             }
+
             .comment-list {
+                position: relative;
                 width: 100%;
                 min-height: 280px;
                 background-color: #fff;
                 border-radius: 4px;
                 padding: 10px;
                 margin-top: 10px;
+
                 .comment-item {
                     display: flex;
                     justify-content: flex-start;
                     align-items: flex-start;
                 }
+
                 .commenter-avatar {
                     width: 30px;
                     height: 30px;
                     background-color: #ccc;
                     border-radius: 50%;
                     margin-right: 10px;
+                    overflow: hidden;
+
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
+
                 .comment-info {
                     width: 88%;
+
                     .comment-nickname {
                         font-size: 12px;
                         color: #333;
                     }
+
                     .comment-time {
                         font-size: 12px;
                         color: #999;
                     }
+
                     .comment-con {
                         margin-top: 5px;
                         font-size: 12px;
                         color: #000;
                     }
+
                     .comment-operation {
                         display: flex;
                         justify-content: flex-end;
                         align-items: center;
+
                         p {
                             display: flex;
                             align-items: center;
+
                             span {
                                 margin-left: 2px;
                             }
+
                             .icon1 {
                                 position: relative;
                                 bottom: 2px;
                             }
                         }
                     }
+
                     .show-more-box {
                         width: 100%;
                         height: 37px;
@@ -497,10 +605,12 @@
                         border-radius: 4px;
                         line-height: 37px;
                         color: #333;
+
                         span {
                             color: #3E85FF;
                             cursor: pointer;
                         }
+
                         i {
                             color: #3E85FF;
                             font-size: 13px;

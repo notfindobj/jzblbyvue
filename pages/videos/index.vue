@@ -5,6 +5,7 @@
                 class="public-block"
                 v-for="item in videoList"
                 :key="item.TalkId"
+                @click="clickVideo(item)"
             >
                 <div class="block-head">
                     <div class="block-head-left">
@@ -62,7 +63,7 @@
                 </div>
             </div>
         </div>
-        <video-modal />
+        <video-modal :isShowModal="isShowModal" :videoInfo="videoInfo" @closeModal="closeVideoModal"/>
     </Scroll>
 
 </template>
@@ -83,6 +84,8 @@
         videoList: [],
         nextList: [],    // 下一页数据
         total: 0,   // 总页数
+        isShowModal: false, // 是否显示弹框
+        videoInfo: {},  // 弹框视频的信息
       }
     },
 
@@ -97,6 +100,17 @@
         this.nextList = data.retModels;
         this.total = data.paginationData.total
 
+      },
+
+      // 点击视频
+      clickVideo(video) {
+        this.videoInfo = video;
+        this.isShowModal = true;
+      },
+
+      // 关闭视频弹框
+      closeVideoModal() {
+        this.isShowModal = false;
       },
 
       // 触底事件
