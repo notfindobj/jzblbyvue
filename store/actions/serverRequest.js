@@ -58,5 +58,9 @@ export const serverRequest = {
     return await request.post(`MyTribe/GetUserInfo`, {
       UserId: userId
     })
+  },
+  // 获取关注信息
+  async getFollowigMoving({commit}, params) {
+    return await request.get(`Talk/GetFollowigMoving`, params)
   }
 }

@@ -15,6 +15,7 @@
                 <data-details-left
                     id="container"
                     :detaDetails="detaDetails"
+                    :discussData="getGetCommentsData"
                     :attribute="ItemAttributesEntities"
                 />
                 <div>

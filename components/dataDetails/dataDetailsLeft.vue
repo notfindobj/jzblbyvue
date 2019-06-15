@@ -20,6 +20,10 @@
                 </li>
               </ul>
             </div>
+            <!-- :discussData="comments" -->
+            <discuss
+              
+            />
           </div>
         </div>
       </div>
@@ -29,6 +33,7 @@
 <script>
   import Viewer from 'viewerjs';
   import 'viewerjs/dist/viewer.css';
+  import discuss from '../comments/discuss'
   export default {
     name: 'detaDetailsLeft',
     props:{
@@ -54,6 +59,7 @@
       }
     },
     components: {
+      discuss
     },
     asyncData() {
     },
@@ -93,7 +99,7 @@
             },
             view: function () {
               console.log('view')
-              console.log(document.querySelector('.viewer-canvas img'))
+              console.log(document.querySelector('.viewer-canvas img').src)
             },
             shown: function () {
               console.log('shown')

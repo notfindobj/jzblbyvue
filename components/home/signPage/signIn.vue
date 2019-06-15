@@ -34,8 +34,8 @@ export default {
     data () {
         return {
             userItem: {
-                mobile: '17601211250',
-                password: '123123'
+                mobile: '18321284508',
+                password: '123456'
             },
             ruleInline: {
                 mobile: [
