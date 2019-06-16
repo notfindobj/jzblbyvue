@@ -3,9 +3,9 @@
         <div class="container">
             <div
                 class="public-block"
-                v-for="item in videoList"
+                v-for="(item, index) in videoList"
                 :key="item.TalkId"
-                @click="clickVideo(item)"
+                @click="clickVideo(item, index)"
             >
                 <div class="block-head">
                     <div class="block-head-left">
@@ -33,7 +33,7 @@
                     <p>{{ item.TalkContent }}</p>
                     <div class="video-wrap" v-if="item.Imgs.length > 0">
                         <div class="photo-wrap">
-                            <div class="video">
+                            <div class="video" @click.stop="">
                                 <video controls :poster="item.Imgs[0].smallImgUrl">
                                     <source :src="fileBaseUrl + item.Imgs[0].videoUrl" type="video/mp4">
                                     <source :src="fileBaseUrl + item.Imgs[0].videoUrl" type="video/ogg">
@@ -63,7 +63,13 @@
                 </div>
             </div>
         </div>
-        <video-modal :isShowModal="isShowModal" :videoInfo="videoInfo" @closeModal="closeVideoModal"/>
+        <video-modal
+            :isShowModal="isShowModal"
+            :videoInfo="videoInfo"
+            @closeModal="closeVideoModal"
+            @likeSuccess="likeSuccess"
+            @collectionSuccess="collectionSuccess"
+        />
     </Scroll>
 
 </template>
@@ -86,6 +92,7 @@
         total: 0,   // 总页数
         isShowModal: false, // 是否显示弹框
         videoInfo: {},  // 弹框视频的信息
+        watchIndex: '', // 当前视频的index
       }
     },
 
@@ -103,14 +110,27 @@
       },
 
       // 点击视频
-      clickVideo(video) {
+      clickVideo(video, index) {
         this.videoInfo = video;
+        this.watchIndex = index;
         this.isShowModal = true;
       },
 
       // 关闭视频弹框
       closeVideoModal() {
         this.isShowModal = false;
+      },
+
+      // 弹出框点赞成功
+      likeSuccess(flag) {
+        this.videoList[this.watchIndex].itemOperateData.isLike = flag;
+        this.videoInfo.itemOperateData.isLike = flag;
+      },
+
+      // 弹出框收藏成功
+      collectionSuccess(flag) {
+        this.videoList[this.watchIndex].itemOperateData.IsCollection = flag;
+        this.videoInfo.itemOperateData.IsCollection = flag;
       },
 
       // 触底事件
@@ -126,7 +146,6 @@
     },
 
     mounted() {
-      console.log(this.videoList)
       this.pageNum++;
       this.getList();
     },

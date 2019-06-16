@@ -2,7 +2,6 @@
     <div>
         <Modal
             v-model="isShowModal"
-            v-if="isShowModal"
             :closable="false"
             :footer-hide="true"
             :mask-closable="false"
@@ -13,7 +12,7 @@
                 <div class="close-box" @click="handleClose">
                     <Icon type="ios-close-circle-outline" size="36" color="#fff"/>
                 </div>
-                <div class="video-wrap">
+                <div class="video-wrap" v-if="isShowModal">
                     <video
                         ref="video"
                         :poster="videoInfo.Imgs[0].smallImgUrl"
@@ -46,7 +45,7 @@
                         <Icon class="contract" type="md-contract" size="20" color="#fff"/>
                     </div>
                 </div>
-                <div class="info-wrap">
+                <div class="info-wrap" v-if="isShowModal">
                     <div class="video-content">
                         <div class="content-head">
                             <div class="avatar">
@@ -85,36 +84,61 @@
                     <div class="operator-box">
                         <div class="operator-bar">
                             <p>
-                                <i class="icon iconfont icon1">&#xe643;</i>
+                                <i
+                                    class="icon iconfont icon1"
+                                    v-show="!videoInfo.itemOperateData.isLike"
+                                    @click="clickLike(true)"
+                                >&#xe643;</i>
+                                <i
+                                    class="icon iconfont icon1-active"
+                                    v-show="videoInfo.itemOperateData.isLike"
+                                    @click="clickLike(false)"
+                                >&#xe621;</i>
                                 <span>{{ videoInfo.itemOperateData.LikeCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
-                                <i class="icon iconfont icon2">&#xe609;</i>
+                                <i class="icon iconfont icon2" v-show="!videoInfo.itemOperateData.IsShare">&#xe609;</i>
+                                <i class="icon iconfont icon2-active" v-show="videoInfo.itemOperateData.IsShare">&#xe609;</i>
                                 <span>{{ videoInfo.itemOperateData.ShareCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
-                                <i class="icon iconfont icon3">&#xe696;</i>
+                                <i class="icon iconfont icon3"
+                                   v-show="!videoInfo.itemOperateData.IsCollection"
+                                   @click="clickCollection(true)"
+                                >&#xe696;</i>
+                                <i class="icon iconfont icon3 icon3-active"
+                                   v-show="videoInfo.itemOperateData.IsCollection"
+                                   @click="clickCollection(false)"
+                                >&#xe69d;</i>
                                 <span>{{ videoInfo.itemOperateData.CollectionCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
-                                <i class="icon iconfont icon4">&#xe664;</i>
+                                <i class="icon iconfont icon4"
+                                   v-show="!videoInfo.itemOperateData.IsComment">&#xe664;</i>
+                                <i class="icon iconfont icon4-active" v-show="videoInfo.itemOperateData.IsComment">&#xe664;</i>
                                 <span>{{ videoInfo.itemOperateData.CommentCount }}</span>
                             </p>
                         </div>
-                        <div class="comment-box">
+                        <div class="comment-box" @click="isShowEmotion = false">
                             <div class="textarea-wrap">
-                                <textarea placeholder="来说两句吧···"></textarea>
+                                <textarea placeholder="来说两句吧···" v-model="commentContent"></textarea>
                                 <span class="tip">
-                                    还可以输入<span>500</span>字
+                                    还可以输入<span>{{ 500 - commentContent.length }}</span>字
                                 </span>
                             </div>
                             <div class="comment-bottom">
-                                <i class="icon iconfont select-icon">&#xe64e;</i>
-                                <Button type="primary" size="small">发表评论</Button>
+                                <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>
+                                <Button type="primary" size="small" @click="handleSubmit">发表评论</Button>
                             </div>
+                            <emotion
+                                class="emotion"
+                                @emotion="handleEmotion"
+                                :height="200"
+                                v-show="isShowEmotion"
+                            ></emotion>
                         </div>
                     </div>
                     <div class="comment-list" v-if="commentList.length > 0">
@@ -157,6 +181,9 @@
 </template>
 
 <script>
+  import Emotion from '~/components/Emotion/index'
+  import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
+
   export default {
     props: {
       isShowModal: {
@@ -180,7 +207,13 @@
         duration: '',   // 视频总时长
         isLoadingComment: true, // 是否正在加载评论
         commentList: [],    // 评论列表
+        commentContent: '', // 评论的内容
+        isShowEmotion: false,   // 是否显示表情选择
       }
+    },
+
+    components: {
+      Emotion
     },
 
     watch: {
@@ -188,7 +221,6 @@
         // 获取视频总时长
         setTimeout(() => {
           this.duration = this.formatTime(this.$refs.video.duration);
-
           // 监听开始事件
           this.$refs.video.addEventListener('play', () => {
             this.isPause = false;
@@ -258,6 +290,59 @@
         }).then(res => {
           this.isLoadingComment = false;
           this.commentList = res;
+        })
+      },
+
+      // 选择表情
+      handleEmotion(item) {
+        this.commentContent += `[${ item.content }]`
+      },
+
+      // 发表评论
+      handleSubmit() {
+        if (this.commentContent.length === 0) {
+          this.$Message.warning('请填写评论内容！');
+          return false;
+        }
+        setComments({
+          ItemId: this.videoInfo.ItemId,
+          ReplyId: '',
+          ReplyUserId: '',
+          IsReply: false,
+          Message: this.commentContent,
+          ItemImgSrc: '',
+          ScopeType: 0
+        }).then(res => {
+          this.$Message.success('评论成功');
+          this.commentContent = '';
+          this.getComment(this.videoInfo.ItemId);
+        })
+      },
+
+      // 点赞 flag 点赞/取消点赞
+      clickLike(flag) {
+        setthumbsUp({
+          ItemId: this.videoInfo.ItemId,
+          LikeType: 1,
+          CommentsId: '',
+          IsDelete: flag ? 0 : 1
+        }).then(res => {
+          console.log(res, '点赞')
+          this.$emit('likeSuccess', flag)
+        })
+      },
+
+      // 收藏
+      clickCollection(flag) {
+        setCollection({
+          ItemId: this.videoInfo.ItemId,
+          ItemName: this.videoInfo.TalkTitle,
+          ItemTitleImg: '',
+          IsDelete: flag ? 0 : 1,
+          TalkType: 2
+        }).then(res => {
+          console.log(res, 收藏);
+          this.$emit('collectionSuccess', flag)
         })
       }
     }
@@ -448,19 +533,41 @@
                         width: 45px;
                         color: #333;
 
+                        i {
+                            cursor: pointer;
+                        }
+
                         .icon1 {
                             position: relative;
                             font-size: 17px;
                             bottom: 2px;
                         }
 
+                        .icon1-active {
+                            font-size: 15px;
+                            color: #ff3c00;
+                        }
+
                         .icon2 {
                             font-size: 14px;
+                        }
+
+                        .icon2-active {
+                            font-size: 14px;
+                            color: #ff3c00;
                         }
 
                         .icon3 {
                             position: relative;
                             bottom: 1px;
+                        }
+
+                        .icon3-active {
+                            color: #ff3c00;
+                        }
+
+                        .icon4-active {
+                            color: #ff3c00;
                         }
                     }
                 }
@@ -507,6 +614,7 @@
                         .select-icon {
                             font-size: 15px;
                             color: #ff3c00;
+                            cursor: pointer;
                         }
 
                         button {

@@ -30,7 +30,7 @@ export const setthumbsUp = async (params) => {
 export const setCollection = async (params) => {
   return await request.post('CollectionOrLike/Collection', params)
 }
-// 收藏
+// 关注
 export const setFollow = async (params) => {
   return await request.post('CollectionOrLike/Follow', params)
 }
