@@ -31,24 +31,24 @@
                 <div class="content">
                     <p>{{ item.TalkContent }}</p>
                 </div>
-                <div class="photo-wrap" v-if="item.imgs.length > 0">
+                <div class="photo-wrap" v-if="item.Imgs && item.Imgs.length > 0">
                     <div
                         class="img"
-                        v-for="(img, index) in item.imgs"
+                        v-for="(img, index) in item.Imgs"
                         :key="index"
                         v-if="img.smallImgUrl"
                     >
-                        <img :src="img.smallImgUrl" alt="">
+                        <img :src="baseUrl + img.smallImgUrl" alt="">
                     </div>
                     <div
                         class="video"
-                        v-for="(video, index) in item.imgs"
+                        v-for="(video, index) in item.Imgs"
                         :key="index"
-                        v-if="video.videoUrl"
+                        v-if="baseUrl + video.videoUrl"
                     >
                         <video controls>
-                            <source :src="video.videoUrl" type="video/mp4">
-                            <source :src="video.videoUrl" type="video/ogg">
+                            <source :src="baseUrl + video.videoUrl" type="video/mp4">
+                            <source :src="baseUrl + video.videoUrl" type="video/ogg">
                             您的浏览器不支持Video标签。
                         </video>
                     </div>
@@ -235,6 +235,7 @@
     middleware: 'authenticated',
     data() {
       return {
+        baseUrl: process.env.baseUrl,
         pageNum: 1,
         attentionList: [],
         totle: 0,   // 总页数
