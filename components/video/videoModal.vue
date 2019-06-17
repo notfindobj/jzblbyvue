@@ -86,12 +86,12 @@
                             <p>
                                 <i
                                     class="icon iconfont icon1"
-                                    v-show="!videoInfo.itemOperateData.isLike"
+                                    v-show="!videoInfo.itemOperateData.IsLike"
                                     @click="clickLike(true)"
                                 >&#xe643;</i>
                                 <i
                                     class="icon iconfont icon1-active"
-                                    v-show="videoInfo.itemOperateData.isLike"
+                                    v-show="videoInfo.itemOperateData.IsLike"
                                     @click="clickLike(false)"
                                 >&#xe621;</i>
                                 <span>{{ videoInfo.itemOperateData.LikeCount }}</span>
@@ -311,7 +311,7 @@
           IsReply: false,
           Message: this.commentContent,
           ItemImgSrc: '',
-          ScopeType: 0
+          ScopeType: 2
         }).then(res => {
           this.$Message.success('评论成功');
           this.commentContent = '';
@@ -321,29 +321,12 @@
 
       // 点赞 flag 点赞/取消点赞
       clickLike(flag) {
-        setthumbsUp({
-          ItemId: this.videoInfo.ItemId,
-          LikeType: 1,
-          CommentsId: '',
-          IsDelete: flag ? 0 : 1
-        }).then(res => {
-          console.log(res, '点赞')
-          this.$emit('likeSuccess', flag)
-        })
+        this.$emit('likeSuccess', flag)
       },
 
       // 收藏
       clickCollection(flag) {
-        setCollection({
-          ItemId: this.videoInfo.ItemId,
-          ItemName: this.videoInfo.TalkTitle,
-          ItemTitleImg: '',
-          IsDelete: flag ? 0 : 1,
-          TalkType: 2
-        }).then(res => {
-          console.log(res, 收藏);
-          this.$emit('collectionSuccess', flag)
-        })
+        this.$emit('collectionSuccess', flag)
       }
     }
   }
