@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click.stop="">
         <div class="emotion-box" :style="{height: height + 'px' }">
             <div class="emotion-box-line" v-for="(line, i) in list" :key="i">
                 <emotion
@@ -72,7 +72,7 @@
     }
 
     .emotion-item {
-        flex: 1;
+        /*flex: 1;*/
         cursor: pointer;
     }
 </style>

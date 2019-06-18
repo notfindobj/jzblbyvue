@@ -182,7 +182,7 @@
 
 <script>
   import Emotion from '~/components/Emotion/index'
-  import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
+  import { setComments } from '../../service/clientAPI'
 
   export default {
     props: {
