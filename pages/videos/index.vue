@@ -31,7 +31,7 @@
                 </div>
                 <div class="content">
                     <p>{{ item.TalkContent }}</p>
-                    <div class="video-wrap" v-if="item.Imgs.length > 0">
+                    <div class="video-wrap" v-if="item.Imgs && item.Imgs.length > 0">
                         <div class="photo-wrap">
                             <div class="video">
                                 <video controls :poster="item.Imgs[0].smallImgUrl">
