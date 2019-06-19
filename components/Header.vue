@@ -52,9 +52,9 @@
       }
     },
     computed: {
-      ...mapState({
-        auth: state => state.overas.auth
-      }),
+        ...mapState({
+            auth: state => state.overas.auth
+        }),
     },
     methods: {
       // 在线地图

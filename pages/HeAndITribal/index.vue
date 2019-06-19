@@ -2,13 +2,14 @@
   <div class="he-and-i-tribal">
     <div class="he-and-i-tribal-content">
       <heads :userInfo="tribeInfo"></heads>
-      <he-and-i-content :userInfo="tribeInfo"></he-and-i-content>
+      <HeAndIContent :userInfo="tribeInfo"></HeAndIContent>
     </div>
   </div>
 </template>
 
 <script>
   import HeAndIContent from './HeAndIContent'
+  import { mapState } from 'vuex'
   import Heads from './head'
   export default {
     layout:'main',
@@ -20,6 +21,11 @@
     data () {
       return {
       }
+    },
+    computed: {
+        ...mapState({
+            UserId: state => state.overas.auth.UserId
+        }),
     },
     methods: {
     },

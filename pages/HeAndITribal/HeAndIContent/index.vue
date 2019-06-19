@@ -15,10 +15,10 @@
                 <div :is="PersonalCenter" :isShowHead="isShowHead" :headList="headList" :headName="headName"></div>
             </div>
             <div class="he-and-i-con-box-content-right">
-                <he-and-i-introduction
+                <HeAndIIntroduction
                     :userInfo="userInfo"
                     @changeComponents="changeComponents"
-                ></he-and-i-introduction>
+                ></HeAndIIntroduction>
             </div>
         </div>
     </div>
@@ -57,6 +57,7 @@
     },
     methods: {
       choseOne(item, inx) {
+        debugger
         this.currentIndex = inx;
         this.PersonalCenter = item.components;
         this.isShowHead = item.headComponents;
