@@ -90,6 +90,7 @@
 
             .logo-img {
                 width: 100px;
+                cursor: pointer;
             }
 
             .address {

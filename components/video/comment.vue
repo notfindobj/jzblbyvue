@@ -26,26 +26,13 @@
             </div>
             <div class="comment-list">
                 <Spin size="large" fix v-if="isShowLoading"></Spin>
-                <div class="comment-item" v-for="(item, index) in commentList" :key="item.CommentsId" v-if="index < showCount">
-                    <div class="item-avatar">
-                        <img :src="item.HeadIcon" alt="">
-                    </div>
-                    <div class="commit-item-info">
-                        <div class="item-info-row1">
-                            <span class="user-name">{{ item.NickName }}</span>
-                            <span class="publish-time">{{ item.CreateDate }}</span>
-                        </div>
-                        <p class="comment-content">{{ item.Message }}</p>
-                        <p class="opera-row">
-                            <span>回复</span>
-                            <span class="line-col">|</span>
-                            <span>
-                                <i class="icon iconfont">&#xe67e;</i>
-                                赞
-                            </span>
-                        </p>
-                    </div>
-                </div>
+                <comment-item
+                    v-for="(item, index) in commentList"
+                    :key="item.CommentsId"
+                    :commentInfo="item"
+                    @submitReplay="submitReplay"
+                    v-if="index < showCount"
+                ></comment-item>
             </div>
             <p class="show-more" v-show="commentList.length > 3 && !isLast" @click="showMore">
                 查看更多>>
@@ -56,6 +43,8 @@
 
 <script>
   import Emotion from '~/components/Emotion/index'
+  import CommentItem from '~/components/video/commentItem'
+
   export default {
     props: {
       isShow: {
@@ -83,12 +72,13 @@
         commentCon: '',
         isShowEmotion: false,
         showCount: 3,   // 显示几条评论
-        isLast: false
+        isLast: false,
       }
     },
 
     components: {
-      Emotion
+      Emotion,
+      'comment-item': CommentItem
     },
 
     methods: {
@@ -113,6 +103,11 @@
         if (this.showCount >= this.commentList.length) {
           this.isLast = true;
         }
+      },
+
+      // 回复成功
+      submitReplay(params) {
+        this.$emit('submitReplay', params)
       }
     }
   }
@@ -144,99 +139,6 @@
             .comment-input-wrap {
                 width: 1101px;
                 position: relative;
-                .emotion {
-                    width: 420px;
-                    position: absolute;
-                    bottom: -195px;
-                    left: 0;
-                    z-index: 3;
-                }
-                .comment-tool {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: flex-start;
-                    padding: 10px 0;
-
-                    i {
-                        margin-right: 4px;
-                    }
-
-                    .icon-face {
-                        color: #ff3c00;
-                    }
-
-                    .icon-photo {
-                        color: #00B358;
-                    }
-
-                    .icon-tags {
-                        color: #559BDC;
-                    }
-
-                    button {
-                        width: 62px;
-                        height: 26px;
-                        line-height: 1;
-                    }
-                }
-            }
-        }
-
-        .comment-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 30px 40px;
-            border-top: 1px solid #eee;
-
-            .item-avatar {
-                width: 30px;
-                height: 30px;
-                background-color: #ccc;
-
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-
-            .commit-item-info {
-                width: 1020px;
-
-                .item-info-row1 {
-                    display: flex;
-                    justify-content: space-between;
-                    align-items: center;
-                    margin-bottom: 5px;
-
-                    .user-name {
-                        font-size: 14px;
-                        color: #ff3c00;
-                    }
-
-                    .publish-time {
-                        font-size: 12px;
-                        color: #999;
-                    }
-                }
-
-                .comment-content {
-                    font-size: 14px;
-                    color: #333;
-                    line-height: 24px;
-                }
-
-                .opera-row {
-                    font-size: 12px;
-                    text-align: right;
-
-                    i {
-                        font-size: 12px;
-                    }
-
-                    .line-col {
-                        margin: 0 4px;
-                    }
-                }
             }
         }
     }
@@ -258,5 +160,43 @@
         color: #ff3c00;
         cursor: pointer;
         text-align: center;
+    }
+
+    i {
+        margin-right: 4px;
+    }
+
+    .icon-face {
+        color: #ff3c00;
+    }
+
+    .icon-photo {
+        color: #00B358;
+    }
+
+    .icon-tags {
+        color: #559BDC;
+    }
+
+    .comment-tool {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        padding: 10px 0;
+
+
+        button {
+            width: 62px;
+            height: 26px;
+            line-height: 1;
+        }
+    }
+
+    .emotion {
+        width: 420px;
+        position: absolute;
+        bottom: -195px;
+        left: 0;
+        z-index: 3;
     }
 </style>

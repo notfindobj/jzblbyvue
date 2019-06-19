@@ -166,9 +166,9 @@
       clickLike(index, flag) {
         setthumbsUp({
           ItemId: this.videoList[index].ItemId,
-          LikeType: 1,
+          LikeType: 2,
           CommentsId: '',
-          IsDelete: flag ? 0 : 1
+          IsDelete: !flag
         }).then(() => {
           let videoInfo = JSON.parse(JSON.stringify(this.videoList[index]));
           videoInfo.itemOperateData.IsLike = flag;
@@ -188,7 +188,7 @@
           ItemId: this.videoList[index].ItemId,
           ItemName: this.videoList[index].TalkTitle,
           ItemTitleImg: '',
-          IsDelete: flag ? 0 : 1,
+          IsDelete: !flag,
           TalkType: 2
         }).then(() => {
           let videoInfo = JSON.parse(JSON.stringify(this.videoList[index]));

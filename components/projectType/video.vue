@@ -81,6 +81,7 @@
             :commentList="commentList"
             :isShowLoading="isLoadingComment"
             @submitComment="submitComment"
+            @submitReplay="submitReplay"
         ></v-comment>
     </div>
 </template>
@@ -164,6 +165,23 @@
           ReplyUserId: '',
           IsReply: false,
           Message: content,
+          ItemImgSrc: '',
+          ScopeType: 2
+        }).then(res => {
+          this.$Message.success('评论成功');
+          this.getComment();
+        })
+      },
+
+      // 回复
+      submitReplay(params) {
+        this.isLoadingComment = true;
+        setComments({
+          ItemId: this.videoInfo.ItemId,
+          ReplyId: params.commentsId,
+          ReplyUserId: params.userId,
+          IsReply: true,
+          Message: params.content,
           ItemImgSrc: '',
           ScopeType: 2
         }).then(res => {
