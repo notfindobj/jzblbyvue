@@ -25,7 +25,7 @@
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
                     />
-                    <commentsCon
+                        <commentsCon
                         :width="'340px'"
                         :publish="detaDetails"
                         :comments= "getGetCommentsData"
@@ -39,10 +39,10 @@
             </div>
         </div>
         <viewPicture/>
-        <data-details-custom 
+        <data-details-custom
         @dataDetailsMaskClose="dataDetailsMaskClose"
         v-show="isShowDataDetailsCustom"/>
-        <date-details-down 
+        <date-details-down
         @dataDetailsMaskClose="dataDetailsMaskClose"
         v-show="isShowDateDetailsDown"/>
     </div>
