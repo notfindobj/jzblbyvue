@@ -2,7 +2,7 @@
     <div style="position: relative;" v-show="isShow" @click="isShowEmotion = false">
         <div class="comment-shape"></div>
         <div class="comment">
-            <div class="comment-head">
+            <div class="comment-head" v-if="isShowInput">
                 <div class="comment-avatar">
                     <img :src="$store.state.overas.auth.HeadIcon" alt="">
                 </div>
@@ -31,6 +31,7 @@
                     :key="item.CommentsId"
                     :commentInfo="item"
                     @submitReplay="submitReplay"
+                    @submitLike="submitLike"
                     v-if="index < showCount"
                 ></comment-item>
             </div>
@@ -65,6 +66,10 @@
       isShowLoading: {
         type: Boolean,
         default: false
+      },
+      isShowInput: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
@@ -103,6 +108,11 @@
         if (this.showCount >= this.commentList.length) {
           this.isLast = true;
         }
+      },
+
+      // 点赞回复
+      submitLike(obj) {
+        this.$emit('submitLike', obj);
       },
 
       // 回复成功

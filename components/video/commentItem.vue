@@ -4,14 +4,14 @@
             <div class="item-avatar">
                 <img :src="commentInfo.HeadIcon" alt="">
             </div>
-            <div class="commit-item-info">
+            <div class="commit-item-info" :style="{width: commitWidth}">
                 <div class="item-info-row1">
                     <span class="user-name">{{ commentInfo.NickName }}</span>
                     <span class="publish-time">{{ commentInfo.CreateDate }}</span>
                 </div>
                 <p class="comment-content">{{ commentInfo.Message }}</p>
                 <p class="opera-row">
-                    <span @click="isShowInput = !isShowInput">回复</span>
+                    <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
                         <i class="icon iconfont">&#xe67e;</i>
@@ -20,13 +20,14 @@
                 </p>
             </div>
         </div>
-        <reply v-if="isShowInput" :width="974" @submitReplay="submitReplay"></reply>
+        <reply v-if="isShowInput" :width="replyInputWith" @submitReplay="submitReplay"></reply>
         <reply-item
             v-for="(item,index) in commentInfo.ReplyList"
             :key="item.CommentsId"
             v-if="index < showCount"
             :replyInfo="item"
             @submitReplay="replyToo"
+            @submitLike="submitLike"
         ></reply-item>
         <p class="show-more" v-show="commentInfo.ReplyList.length > 3 && !isLast" @click="showMore">
             查看更多>>
@@ -56,11 +57,25 @@
       return {
         isShowInput: false,
         isLast: false,
-        showCount: 3
+        showCount: 3,
+        commitWidth: '96%',
+        replyInputWith: 974
       }
     },
 
     methods: {
+      clickReply() {
+        if (this.commentInfo.IsCoutReply) {
+          if (this.$route.name === 'QuestionsAndAnswers-id') {
+            this.replyInputWith = 575;
+          }
+          this.isShowInput = !this.isShowInput;
+        } else {
+          this.$Message.warning('不能回复自己！');
+          return false;
+        }
+      },
+
       // 回复评论
       submitReplay(content) {
         const obj = {
@@ -79,11 +94,25 @@
         this.isShowInput = false;
       },
 
+      // 点赞回复信息
+      submitLike(flag, commentsId) {
+        this.$emit('submitLike', {
+          flag,
+          commentsId
+        })
+      },
+
       showMore() {
         this.showCount += 3;
         if (this.showCount >= this.commentInfo.ReplyList.length) {
           this.isLast = true;
         }
+      }
+    },
+
+    created() {
+      if (this.$route.name === 'QuestionsAndAnswers-id') {
+        this.commitWidth = '94%';
       }
     }
   }
@@ -105,7 +134,7 @@
 
             .reply-input-wrap {
                 position: relative;
-                width: 974px;
+                width: 94%;
                 padding-top: 10px;
             }
         }
@@ -127,45 +156,41 @@
             }
         }
 
-        .commit-item-info {
-            width: 1020px;
+        .item-info-row1 {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
 
-            .item-info-row1 {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 5px;
-
-                .user-name {
-                    font-size: 14px;
-                    color: #ff3c00;
-                }
-
-                .publish-time {
-                    font-size: 12px;
-                    color: #999;
-                }
-            }
-
-            .comment-content {
+            .user-name {
                 font-size: 14px;
-                color: #333;
-                line-height: 24px;
+                color: #ff3c00;
             }
 
-            .opera-row {
+            .publish-time {
                 font-size: 12px;
-                text-align: right;
-                margin-top: 5px;
-                cursor: pointer;
+                color: #999;
+            }
+        }
 
-                i {
-                    font-size: 12px;
-                }
+        .comment-content {
+            font-size: 14px;
+            color: #333;
+            line-height: 24px;
+        }
 
-                .line-col {
-                    margin: 0 4px;
-                }
+        .opera-row {
+            font-size: 12px;
+            text-align: right;
+            margin-top: 5px;
+            cursor: pointer;
+
+            i {
+                font-size: 12px;
+            }
+
+            .line-col {
+                margin: 0 4px;
             }
         }
     }

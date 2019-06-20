@@ -11,16 +11,16 @@
                     <span class="reply-time">{{ replyInfo.CreateDate }}</span>
                 </div>
                 <p class="opera-row">
-                    <span @click="isShowInput = !isShowInput">回复</span>
+                    <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
-                        <i class="icon iconfont">&#xe67e;</i>
+                        <i class="icon iconfont" @click="clickLike(true)">&#xe67e;</i>
                         赞
                     </span>
                 </p>
             </div>
         </div>
-        <reply v-if="isShowInput" :width="929" @submitReplay="submitReplay"></reply>
+        <reply v-if="isShowInput" :width="width" @submitReplay="submitReplay"></reply>
     </div>
 </template>
 
@@ -41,14 +41,24 @@
 
     data() {
       return {
-        isShowInput: false
+        isShowInput: false,
+        width: 929
       }
     },
-    mounted() {
-      console.log(this.replyInfo)
-    },
+
 
     methods: {
+      // 点击回复
+      clickReply() {
+        if (this.replyInfo.IsCoutReply) {
+          this.isShowInput = !this.isShowInput;
+        } else {
+          this.$Message.warning('不能回复自己！');
+          return false;
+        }
+      },
+
+      // 提交回复
       submitReplay(content) {
         const obj = {
           content,
@@ -59,6 +69,11 @@
         this.$emit('submitReplay', obj);
         this.isShowInput = false;
       },
+
+      // 点赞
+      clickLike(flag) {
+        this.$emit('submitLike', flag, this.replyInfo.CommentsId )
+      }
     }
   }
 </script>

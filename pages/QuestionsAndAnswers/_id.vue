@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" @click="isShowEmotion = false">
         <div class="main-left">
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
             <p class="detail-text">{{ detailInfo.TalkContent }}</p>
@@ -13,50 +13,63 @@
                 </div>
             </div>
             <div class="editor-wrap">
-                <div class="quill-editor"
-                     :content="content"
-                     @change="onEditorChange($event)"
-                     v-quill:myQuillEditor="editorOption">
-                </div>
+                <Input v-model="content" type="textarea" placeholder="写回答"/>
             </div>
-            <div class="toolbar">
-                <div class="toolbar-left">
-                    <span class="tools add-img" @click.stop="isShowUpload = !isShowUpload">
-                        <i class="icon iconfont">&#xe631;</i>
-                        <span class="text">添加图片</span>
-                    </span>
-                    <span class="tools add-face">
+            <div style="position: relative;">
+                <div class="toolbar">
+                    <div class="toolbar-left">
+                    <span class="tools add-face" @click.stop="isShowEmotion = !isShowEmotion">
                         <i class="icon iconfont">&#xe64e;</i>
                         <span class="text">添加表情</span>
                     </span>
-
+                    </div>
+                    <div class="toolbar-right">
+                        <Button class="publish-btn" type="primary" @click="submitComment">发表</Button>
+                    </div>
                 </div>
-                <div class="toolbar-right">
-                    <Button class="publish-btn" type="primary">发表</Button>
+                <div style="width: 400px;">
+                    <emotion
+                        class="emotion"
+                        @emotion="handleEmotion"
+                        :height="200"
+                        v-show="isShowEmotion"
+                    ></emotion>
                 </div>
             </div>
+
+
             <div class="answer-list">
-                <div
-                    class="answer-item"
-                    v-for="(item, index) in commentList"
-                    :key="item.CommentsId"
-                    v-if="index < 3"
-                >
-                    <div class="item-top">
-                        <div class="top-left">
-                            <div class="avatar">
-                                <img :src="item.HeadIcon" alt="">
-                            </div>
-                            <span class="user-name">{{ item.NickName }}</span>
-                        </div>
-                        <span class="top-right">{{ item.CreateDate }}</span>
-                    </div>
-                    <div class="item-middle" v-html="item.Message"></div>
-                    <div class="item-bottom">
-                        <i class="icon iconfont">&#xe664;</i>
-                        <span>回复</span>
-                    </div>
-                </div>
+                <v-comment
+                    :isShow="isShowComment"
+                    :itemId="detailInfo.ItemId"
+                    :commentList="commentList"
+                    :isShowLoading="isLoadingComment"
+                    :isShowInput="false"
+                    @submitReplay="submitReplay"
+                    @submitLike="submitLike"
+                ></v-comment>
+
+<!--                <div-->
+<!--                    class="answer-item"-->
+<!--                    v-for="(item, index) in commentList"-->
+<!--                    :key="item.CommentsId"-->
+<!--                    v-if="index < 3"-->
+<!--                >-->
+<!--                    <div class="item-top">-->
+<!--                        <div class="top-left">-->
+<!--                            <div class="avatar">-->
+<!--                                <img :src="item.HeadIcon" alt="">-->
+<!--                            </div>-->
+<!--                            <span class="user-name">{{ item.NickName }}</span>-->
+<!--                        </div>-->
+<!--                        <span class="top-right">{{ item.CreateDate }}</span>-->
+<!--                    </div>-->
+<!--                    <div class="item-middle" v-html="item.Message"></div>-->
+<!--                    <div class="item-bottom">-->
+<!--                        <i class="icon iconfont">&#xe664;</i>-->
+<!--                        <span>回复</span>-->
+<!--                    </div>-->
+<!--                </div>-->
             </div>
         </div>
         <div class="main-right">
@@ -86,6 +99,10 @@
 </template>
 
 <script>
+  import Emotion from '~/components/Emotion/index'
+  import Comment from '~/components/video/comment'
+  import { setComments } from '../../service/clientAPI'
+
   export default {
     layout: 'main',
     data() {
@@ -93,37 +110,86 @@
         fileBaseUrl: 'http://www.jzbl.com',   // 文件的域名
         content: '',
         commentList: [],    // 评论列表
-        editorOption: {
-          modules: {
-            toolbar: [
-              ['bold', 'italic', 'underline', 'strike'],
-              ['blockquote', 'code-block'],
-              [{ 'header': 1 }, { 'header': 2 }],
-              [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-              [{ 'script': 'sub' }, { 'script': 'super' }],
-              [{ 'indent': '-1' }, { 'indent': '+1' }],
-              [{ 'direction': 'rtl' }],
-              [{ 'size': ['small', false, 'large', 'huge'] }],
-              [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-              [{ 'font': [] }],
-              [{ 'color': [] }, { 'background': [] }],
-              [{ 'align': [] }],
-              ['clean']
-            ]
-          },
-          placeholder: '写回答...'
+        isShowEmotion: false,
+        isShowComment: true,
+        isLoadingComment: false,
+      }
+    },
+
+    components: {
+      Emotion,
+      'v-comment': Comment
+    },
+
+    methods: {
+      // 选择表情
+      handleEmotion(item) {
+        this.content += `[${ item.content }]`
+      },
+
+      // 评论
+      submitComment() {
+        if (!this.content) {
+          this.$Message.warning('请先输入回答内容哦~');
+          return false;
         }
+        setComments({
+          ItemId: this.detailInfo.ItemId,
+          ReplyId: '',
+          ReplyUserId: '',
+          IsReply: false,
+          Message: this.content,
+          ItemImgSrc: '',
+          ScopeType: 3
+        }).then(res => {
+          this.$Message.success('评论成功');
+          this.content = '';
+          this.getComment();
+        })
+      },
+
+      // 回复
+      submitReplay(params) {
+        this.isLoadingComment = true;
+        setComments({
+          ItemId: this.detailInfo.ItemId,
+          ReplyId: params.commentsId,
+          ReplyUserId: params.userId,
+          IsReply: true,
+          Message: params.content,
+          ItemImgSrc: '',
+          ScopeType: 3
+        }).then(res => {
+          this.$Message.success('评论成功');
+          this.getComment();
+        })
+      },
+
+      // 点赞回复
+      submitLike(obj) {
+        setthumbsUp({
+          ItemId: this.detailInfo.ItemId,
+          LikeType: 0,
+          CommentsId: obj.commentsId,
+          IsDelete: !obj.flag
+        })
+      },
+
+      // 获取评论
+      getComment() {
+        this.$store.dispatch('getGetComments', {
+          ItemId: this.$route.params.id,
+          ItemImgSrc: '',
+          ScopeType: 3
+        }).then(res => {
+          this.isLoadingComment = false;
+          this.commentList = res;
+        })
       }
     },
 
     created() {
-      this.$store.dispatch('getGetComments', {
-        ItemId: this.$route.params.id,
-        ItemImgSrc: '',
-        ScopeType: 3
-      }).then(res => {
-        this.commentList = res;
-      })
+      this.getComment();
     },
 
     async asyncData({ store, params }) {
@@ -217,6 +283,7 @@
                             height: 24px;
                             background-color: #ccc;
                             margin-right: 4px;
+
                             img {
                                 width: 100%;
                                 height: 100%;
@@ -280,7 +347,8 @@
                     border-radius: 50%;
                     background-color: #ccc;
                     overflow: hidden;
-                    img  {
+
+                    img {
                         width: 100%;
                         height: 100%;
                     }

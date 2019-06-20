@@ -82,13 +82,14 @@
             :isShowLoading="isLoadingComment"
             @submitComment="submitComment"
             @submitReplay="submitReplay"
+            @submitLike="submitLike"
         ></v-comment>
     </div>
 </template>
 
 <script>
   import Comment from '../video/comment'
-  import { setComments } from '../../service/clientAPI'
+  import { setComments, setthumbsUp } from '../../service/clientAPI'
 
   export default {
     props: {
@@ -187,6 +188,16 @@
         }).then(res => {
           this.$Message.success('评论成功');
           this.getComment();
+        })
+      },
+
+      // 点赞回复
+      submitLike(obj) {
+        setthumbsUp({
+          ItemId: this.videoInfo.ItemId,
+          LikeType: 0,
+          CommentsId: obj.commentsId,
+          IsDelete: !obj.flag
         })
       }
     }
