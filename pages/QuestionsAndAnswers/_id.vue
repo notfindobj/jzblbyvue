@@ -2,7 +2,10 @@
     <div class="container" @click="isShowEmotion = false">
         <div class="main-left">
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
-            <p class="detail-text">{{ detailInfo.TalkContent }}</p>
+            <div class="ql-container ql-snow">
+                <div class="ql-editor detail-text" v-html="detailInfo.TalkContent">
+                </div>
+            </div>
             <div class="img-row">
                 <div
                     class="img"
@@ -112,7 +115,7 @@
         commentList: [],    // 评论列表
         isShowEmotion: false,
         isShowComment: true,
-        isLoadingComment: false,
+        isLoadingComment: false
       }
     },
 
@@ -377,11 +380,22 @@
                 margin-top: 20px;
             }
 
+            .big-btn:hover {
+                color: #fff;
+                background-color: #EB4E27;
+            }
+
             .block-btn {
                 margin-top: 56px;
                 text-align: center;
             }
 
         }
+    }
+    .ql-container.ql-snow {
+        border: none;
+    }
+    .ql-editor {
+        padding: 0;
     }
 </style>

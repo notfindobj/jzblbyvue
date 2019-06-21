@@ -45,7 +45,7 @@ module.exports = {
     baseUrl: process.env.BASE_URL || 'http://www.api.jzbl.com/api/',
     withCredentials: true,
     locURL: '127.0.0.1:8889',
-    fileBaseUrl: process.env._ENV === "production" ? "http://www.api.jzbl.com" : "http://www.jzbl.com",
+    fileBaseUrl: "http://www.pic.jzbl.com/",
   },
   // 解决跨域
   axios: {

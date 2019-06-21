@@ -14,9 +14,20 @@
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
-                        <i class="icon iconfont">&#xe67e;</i>
+                        <i
+                            class="icon iconfont"
+                            v-show="!isLike"
+                            @click="clickLike(true)"
+                        >&#xe67e;</i>
+                        <i
+                            class="icon iconfont"
+                            style="color: #ff3c00;"
+                            v-show="isLike"
+                            @click="clickLike(false)"
+                        >&#xe621;</i>
                         赞
                     </span>
+
                 </p>
             </div>
         </div>
@@ -27,7 +38,6 @@
             v-if="index < showCount"
             :replyInfo="item"
             @submitReplay="replyToo"
-            @submitLike="submitLike"
         ></reply-item>
         <p class="show-more" v-show="commentInfo.ReplyList.length > 3 && !isLast" @click="showMore">
             查看更多>>
@@ -38,8 +48,7 @@
 <script>
   import Reply from '~/components/video/reply'
   import ReplyItem from '~/components/video/replyItem'
-  import { setComments } from '../../service/clientAPI'
-
+  import { setComments, setthumbsUp } from '../../service/clientAPI'
   export default {
     props: {
       commentInfo: {
@@ -59,7 +68,8 @@
         isLast: false,
         showCount: 3,
         commitWidth: '96%',
-        replyInputWith: 974
+        replyInputWith: 974,
+        isLike: this.commentInfo.islikes
       }
     },
 
@@ -72,6 +82,23 @@
           this.isShowInput = !this.isShowInput;
         } else {
           this.$Message.warning('不能回复自己！');
+          return false;
+        }
+      },
+
+      // 点赞
+      clickLike(flag) {
+        if (this.commentInfo.CommentsId) {
+          setthumbsUp({
+            ItemId: this.commentInfo.ItemId,
+            LikeType: 0,
+            CommentsId: commentInfo.CommentsId,
+            IsDelete: !flag
+          }).then(res => {
+            this.isLike = flag;
+          })
+        } else {
+          this.$Message.warning('不能给自己点赞哦！');
           return false;
         }
       },
@@ -92,14 +119,6 @@
       replyToo(obj) {
         this.$emit('submitReplay', obj);
         this.isShowInput = false;
-      },
-
-      // 点赞回复信息
-      submitLike(flag, commentsId) {
-        this.$emit('submitLike', {
-          flag,
-          commentsId
-        })
       },
 
       showMore() {
