@@ -230,11 +230,11 @@
     &-items {
       display: inline-block;
       margin-right: 10px;
-      border: .5px solid #FF3C00;
+      border: .5px solid #999999;
       border-radius: 3px;
       padding: 0 4px;
       span {
-        color: #cccccc;
+        color: #333333;
         line-height: 29px;
       }
       i{

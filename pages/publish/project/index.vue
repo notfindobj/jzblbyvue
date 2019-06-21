@@ -472,10 +472,10 @@
             }
           }
           this.$refs['serviceValidate'].validate(valid1 => {
-            if (!valid1) {
-              this.$Message.warning('请将定制服务相关数据，填写完整');
-              return false;
-            }
+            // if (!valid1) {
+            //   this.$Message.warning('请将定制服务相关数据，填写完整');
+            //   return false;
+            // }
             if (this.typeName === '文本' || this.typeName === '建筑规范') {
               this.$set(this.formValidate, 'content', this.typeName)
             } else {

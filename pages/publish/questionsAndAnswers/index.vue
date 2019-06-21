@@ -71,12 +71,7 @@
                         <span class="input-label">标签</span>
                     </p>
                     <div class="tags-area" @click="inputTag">
-                        <span
-                            class="tag-item"
-                            v-for="(item, index) in selectLabelList"
-                            :key="item.LabelId"
-                            @click.stop=""
-                        >
+                        <span class="tag-item" v-for="(item, index) in selectLabelList" :key="item.LabelId" @click.stop="">
                             {{ item.LabelName }}
                             <i class="icon iconfont" @click="deleteLabel(index)">&#xe6f1;</i>
                         </span>
@@ -85,20 +80,19 @@
                             ref="input"
                             v-model="labelInput"
                             @keypress.enter="addLabel"
+                            @blur="addLabel"
                             placeholder="点击空白处输入标签"
                         >
                     </div>
                 </div>
                 <div class="recommend-tags">
                     <span class="recommend-title">推荐标签: </span>
-                    <span class="tag-item" v-for="(item, index) in labelList" :key="item.LabelId">
-                        <i class="icon iconfont" @click="pushSelect(index)">&#xe61c;</i>
+                    <span class="tag-item" v-for="(item, index) in labelList" :key="item.LabelId" @click="pushSelect(index)">
+                        <i class="icon iconfont">&#xe61c;</i>
                         {{ item.LabelName }}
                     </span>
                 </div>
-                <p class="btn-change" @click="switchLabel">
-                    换一换
-                </p>
+                <p class="btn-change" @click="switchLabel">换一换</p>
             </Form>
         </div>
         <div class="submit-box">
@@ -195,11 +189,15 @@
       // 点击提交
       handleSubmit(name) {
         this.$refs[name].validate(() => {
+
           if (!this.formValidate.title.trim()) {
             this.$Message.warning('标题不能为空');
             return false;
           }
-
+          if (this.formValidate.title.length < 4) {
+            this.$Message.warning('标题不能少于4个字');
+            return false;
+          }
           if (!this.checked) {
             this.$Message.warning('请阅读并同意建筑部落协议');
             return false;

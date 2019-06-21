@@ -5,7 +5,9 @@
                 <Input v-model="registeredItem.mobile" size="large"  type="text" placeholder="请输入手机号码"/>
             </FormItem>
             <FormItem>
-                <Input v-model="registeredItem.authcode" search  size="large" enter-button="获取验证码" @on-search = "getMobile" placeholder="请输入验证码" />
+                <Input v-model="registeredItem.authcode" size="large" placeholder="请输入验证码">
+                    <Button :disabled="isDisabled"  :class="!isDisabled ? 'getMobile' : 'defMobile'" slot="append" size="large" type="primary" @click="getMobile">{{enterButtonText}}</Button>
+                </Input>
             </FormItem>
             <FormItem>
                 <Input v-model="registeredItem.password" size="large"  type="password" placeholder="请设置密码"/>
@@ -40,18 +42,43 @@ export default {
                 authcode: '',
                 passWordAgain: '',
                 single: false
-            }
+            },
+            enterButtonText: '获取验证码',
+            enterButtonTime: '',
+            isDisabled: false
         }
     },
     methods:{
         // 获取验证码
-       async getMobile () {
+        async getMobile () {
             let queruys = {
-            OperationType: 0,
-            SendType: 0,
-            MobileNumber: this.registeredItem.mobile
-        }
-        let mobile = await getMobileCode(queruys)
+                OperationType: 0,
+                SendType: 0,
+                MobileNumber: this.registeredItem.mobile
+            }
+            if (!this.registeredItem.mobile) {
+                this.$Message.warning('请输入手机号')
+                return false
+            };
+            let mobile = await getMobileCode(queruys)// 倒计时
+            if (mobile) {
+                this.$Message.success('信息已发送，请注意查收！');
+                // 倒计时
+                if (!this.enterButtonTime) {
+                    let enterButton = 60;
+                    this.isDisabled = true;
+                    this.enterButtonTime =  setInterval( () =>{
+                        enterButton = enterButton -1
+                        this.enterButtonText =  enterButton + 'S'
+                        if (enterButton <=0 ) {
+                            clearInterval(this.enterButtonTime)
+                            this.enterButtonTime = ''
+                            this.isDisabled = false;
+                            this.enterButtonText = '获取验证码'
+                        };
+                    }, 1000) 
+                }
+            }
       },
       async register () {
             let queruyDate = {
@@ -63,8 +90,11 @@ export default {
                 singuptype: 1,
                 logintype: 0
             }
-            let mes = await registerUser(queruyDate)
-            console.log(mes)
+            let msg = await registerUser(queruyDate)
+            if (msg) {
+                this.$Message.success('注册成功！');
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+            }
       },
       goToSignIn (val) {
           this.$store.dispatch('LOGGEDIN', val);
@@ -98,4 +128,12 @@ export default {
           }
         }
       }
+      .getMobile {
+        background: #FF3C00 !important;
+        width: 100px;
+        color: #ffffff  !important;
+    }
+    .defMobile {
+        width: 100px;
+    }
 </style>

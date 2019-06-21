@@ -95,6 +95,7 @@ export default {
         flex-direction: row;
         align-items: center;
         justify-content: space-between;
+        cursor: pointer;
         >p{
           font-size: 14px;
           color: #999999;

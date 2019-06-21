@@ -39,6 +39,9 @@ service.interceptors.response.use(
     // 客户端
     if (process.client) {
       if (res.data.Code === 200) {
+        if (!res.data.Data) {
+          res.data.Data = 1
+        }
         return res.data.Data
       } else {
         Message.warning(res.data.Msg);

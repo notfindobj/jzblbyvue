@@ -125,9 +125,9 @@
           listImg: [this.videoInfo]
         }).then(res => {
           this.$Message.success('发布成功！');
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 1800)
+          setTimeout(() => {
+            this.$router.push({ name: "videos"})
+          }, 1800)
         }).catch(err => {
           console.log(err, '发布图文')
         })

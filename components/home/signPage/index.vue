@@ -9,6 +9,7 @@
             @on-visible-change="visibleChange"
             class-name="vertical-center-modal">
             <p slot="header" class="modal-header">
+                <i v-if="isItLogged === 'retrieve'" @click="goBack" class="icon iconfont icon-jiantou1 modal-header-jiantou"></i>
                 <span>{{setTitle(isItLogged)}}</span>
             </p>
             <div :is="isItLogged" class="modal-box"></div>
@@ -50,6 +51,10 @@ export default {
         visibleChange (val) {
             this.$store.dispatch('SETUP', val);
         },
+        goBack () {
+            this.isItLogged = 'signIn'
+            this.$store.dispatch('LOGGEDIN', 'signIn');
+        },
         setTitle (val) {
             let title = ''
             switch(val) {
@@ -77,6 +82,11 @@ export default {
         height: 30px;
         color: #333333;
         text-align: center;
+        &-jiantou {
+            position: absolute;
+            left: 32px;
+            cursor: pointer;
+        }
     }
     .modal-box {
         padding: 10px 14px 24px 14px;

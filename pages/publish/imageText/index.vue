@@ -37,15 +37,11 @@
             </div>
             <div class="upload-box" v-show="isShowUpload">
                 <h3>本地上传</h3>
-                <p class="sub-title">共0张，还能上传9张</p>
+                <p class="sub-title">共{{imgList.length}}张，还能上传{{9 -imgList.length}}张</p>
                 <div class="upload-main">
-                    <div
-                        class="img-item"
-                        v-for="(item, index) in imgList"
-                        :key="index"
-                        @click.stop="delImg(index)"
-                    >
-                        <img :src="item.smallImgUrl" alt="">
+                    <div class="img-item" v-for="(item, index) in imgList" :key="index" >
+                      <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
+                      <img :src="item.smallImgUrl" alt="">
                     </div>
                     <v-upload
                         v-show="imgList.length < 9"
@@ -90,13 +86,11 @@
       Emotion
     },
     methods: {
-
       // 点击上传图片
       clickUpload() {
         this.isShowUpload = !this.isShowUpload;
         this.isShowEmotion = false;
       },
-
       // 点击添加表情
       clickEmotion() {
         this.isShowEmotion = !this.isShowEmotion;
@@ -116,9 +110,9 @@
           listImg: this.imgList
         }).then(res => {
           this.$Message.success('发布成功！');
-          // setTimeout(() => {
-          //   window.location.reload();
-          // }, 1800)
+          setTimeout(() => {
+            this.$router.push({ name: "BuildingCircle"})
+          }, 1800)
         }).catch(err => {
           console.log(err, '发布图文')
         })
@@ -188,5 +182,18 @@
             left: 120px;
             z-index: 3;
         }
+    }
+    .chahao {
+      position: absolute;
+      right: -2px;
+      top: -4px;
+      color: #ffffff;
+      &:hover{
+        color: #ff3c00;
+        -webkit-transform:rotate(180deg) ;
+        transform: rotate(180deg);
+        transform-origin: 50% 50%;
+        transition: all 0.5s ease-in-out;
+      }
     }
 </style>

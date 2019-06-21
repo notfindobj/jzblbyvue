@@ -1,6 +1,6 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" height="800">
-        {{getTalks}}
+        <!-- {{getTalks}} -->
         <div class="container">
             <div class="public-block">
                 <div class="block-head">
