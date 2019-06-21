@@ -54,10 +54,8 @@
   export default {
     props: {
       project: {
-        type: Object,
-        default: function() {
-          return {}
-        }
+        type: Number,
+        default: 1
       },
       index: {
         type: Number,

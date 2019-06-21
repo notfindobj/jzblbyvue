@@ -81,13 +81,15 @@
             :commentList="commentList"
             :isShowLoading="isLoadingComment"
             @submitComment="submitComment"
+            @submitReplay="submitReplay"
+            @submitLike="submitLike"
         ></v-comment>
     </div>
 </template>
 
 <script>
   import Comment from '../video/comment'
-  import { setComments } from '../../service/clientAPI'
+  import { setComments, setthumbsUp } from '../../service/clientAPI'
 
   export default {
     props: {
@@ -169,6 +171,33 @@
         }).then(res => {
           this.$Message.success('评论成功');
           this.getComment();
+        })
+      },
+
+      // 回复
+      submitReplay(params) {
+        this.isLoadingComment = true;
+        setComments({
+          ItemId: this.videoInfo.ItemId,
+          ReplyId: params.commentsId,
+          ReplyUserId: params.userId,
+          IsReply: true,
+          Message: params.content,
+          ItemImgSrc: '',
+          ScopeType: 2
+        }).then(res => {
+          this.$Message.success('评论成功');
+          this.getComment();
+        })
+      },
+
+      // 点赞回复
+      submitLike(obj) {
+        setthumbsUp({
+          ItemId: this.videoInfo.ItemId,
+          LikeType: 0,
+          CommentsId: obj.commentsId,
+          IsDelete: !obj.flag
         })
       }
     }

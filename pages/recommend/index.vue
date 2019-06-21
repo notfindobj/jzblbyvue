@@ -5,7 +5,7 @@
             <image-text
                 v-for="(item, index) in recommendContent"
                 :key="index"
-                :project="item"
+                :project="index"
                 :index="index"
             ></image-text>
 
