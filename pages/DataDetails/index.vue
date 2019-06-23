@@ -18,17 +18,17 @@
                     :discussData="getGetCommentsData"
                     :attribute="ItemAttributesEntities"
                 />
-                <div>
+                <div :class="{'fix-top': scrollTop > 312}" :style="rightPx">
                     <data-details-right
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
                     />
-                        <commentsCon
+                    <commentsCon
                         :width="'340px'"
                         :publish="detaDetails"
-                        :comments= "getGetCommentsData"
+                        :comments="getGetCommentsData"
                         @thumbsUp="thumbsUp"
                         @Collection="Collection"
                         @commentValue="commentValue"
@@ -40,11 +40,12 @@
         </div>
         <viewPicture/>
         <data-details-custom
-        @dataDetailsMaskClose="dataDetailsMaskClose"
-        v-show="isShowDataDetailsCustom"/>
+            @dataDetailsMaskClose="dataDetailsMaskClose"
+            v-show="isShowDataDetailsCustom"/>
         <date-details-down
-        @dataDetailsMaskClose="dataDetailsMaskClose"
-        v-show="isShowDateDetailsDown"/>
+            @dataDetailsMaskClose="dataDetailsMaskClose"
+            v-show="isShowDateDetailsDown"/>
+        <ToTop></ToTop>
     </div>
 </template>
 <script>
@@ -52,6 +53,7 @@
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
+  import ToTop from '~/components/toTop'
   import { setthumbsUp, setCollection, setFollow, setComments } from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
@@ -73,7 +75,9 @@
       return {
         isShowDataDetailsCustom: false,
         isShowDateDetailsDown: false,
-        ItemAttributesEntities: {}
+        ItemAttributesEntities: {},
+        scrollTop: '',
+        clientWidth: ''
       }
     },
     components: {
@@ -82,11 +86,24 @@
       commentsCon,
       viewPicture,
       dateDetailsDown,
-      dataDetailsCustom
+      dataDetailsCustom,
+      ToTop
     },
     computed: {
       ...mapGetters(['isLogin']),
+      rightPx() {
+        if (this.clientWidth >= 1200) {
+          return {
+            right: (this.clientWidth - 1200) / 2 + 'px'
+          };
+        } else {
+          return {
+            right: this.clientWidth - 1200 + 'px'
+          };
+        }
+      }
     },
+
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
@@ -110,7 +127,14 @@
       let _this = this
       $(document).ready(function () {
         _this.initLazy()
+      });
+      this.clientWidth = document.body.clientWidth;
+      window.addEventListener('scroll', () => {
+        this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       })
+      window.onresize = () => {
+        this.clientWidth = document.body.clientWidth;
+      }
     },
     methods: {
       initLazy() {
@@ -131,7 +155,7 @@
         }
         this.$set(item, 'islikes', !item.islikes)
       },
-      async somePraise (item) {
+      async somePraise(item) {
         let queryData = {
           ItemId: item.ItemId,
           CommentsId: item.CommentsId,
@@ -170,7 +194,7 @@
         }
       },
       // 评论回复
-      async discussValue (row, val) {
+      async discussValue(row, val) {
         let queryData = {
           ItemId: row.ItemId, // 项目ID
           IsReply: true, // 回复
@@ -225,14 +249,21 @@
                 width: 100%;
                 padding-top: 9px;
             }
+
             .data-details-con {
                 width: 100%;
                 height: auto;
                 display: flex;
                 flex-direction: row;
                 align-items: flex-start;
-                justify-content: center;
+                justify-content: space-between;
+
                 .data-details-location {
+                }
+
+                .fix-top {
+                    position: fixed;
+                    top: 0;
                 }
             }
         }

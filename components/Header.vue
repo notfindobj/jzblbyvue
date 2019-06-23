@@ -21,7 +21,9 @@
                     <i class="icon iconfont">&#xe608;</i>
                 </div>
                 <div class="user">
-                    <div class="avatar"></div>
+                    <div class="avatar">
+                        <img :src="auth.HeadIcon" alt="">
+                    </div>
                     <span class="user-name">{{auth.NickName}}</span>
                 </div>
                 <div class="online-map" @click="onlineMap">在线地图</div>
@@ -142,6 +144,11 @@
                     height: 28px;
                     background-color: #ccc;
                     border-radius: 50%;
+                    overflow: hidden;
+                    img {
+                        width: 100%;
+                        height: 100%;
+                    }
                 }
 
                 .user-name {

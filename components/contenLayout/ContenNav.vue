@@ -7,6 +7,16 @@
       </ul>
     </div>
     <div class="screening-nav">
+        <Breadcrumb separator=">">
+            <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>
+            <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}</BreadcrumbItem>
+        </Breadcrumb>
+        <div class="itemAttribute">
+            <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index">
+                <span >{{items.ClassTypeName}}:{{items.ArrName}}</span>
+                <i class="iconfont icon-chahao2" @click="delItems(items)"></i>
+            </div>
+        </div>
       <ul class="screening-nav-list">
         <li v-for="(item,index) in itemAttribute" :key="index" :class="item.ItemAttributesId ? 'li-active' : ''">
           <p>{{item.ItemAttributesFullName}}</p>
@@ -17,16 +27,16 @@
         </li>
       </ul>
     </div>
-    <Breadcrumb separator=">" style="margin-bottom: 20px">
-      <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>
-      <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}</BreadcrumbItem>
-    </Breadcrumb>
-    <div class="itemAttribute">
-      <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index">
-        <span >{{items.ClassTypeName}}:{{items.ArrName}}</span>
-        <i class="iconfont icon-chahao2" @click="delItems(items)"></i>
-      </div>
-    </div>
+<!--    <Breadcrumb separator=">" style="margin-bottom: 20px">-->
+<!--      <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>-->
+<!--      <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}</BreadcrumbItem>-->
+<!--    </Breadcrumb>-->
+<!--    <div class="itemAttribute">-->
+<!--      <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index">-->
+<!--        <span >{{items.ClassTypeName}}:{{items.ArrName}}</span>-->
+<!--        <i class="iconfont icon-chahao2" @click="delItems(items)"></i>-->
+<!--      </div>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -167,7 +177,7 @@
       border: 1px solid #303030;
       border-radius: 4px;
       box-sizing: border-box;
-      padding: 0px 20px;
+      padding: 10px 20px 0;
       .screening-nav-list{
         width: 100%;
         >li{

@@ -27,6 +27,7 @@ export const overallActions ={
                 // 找不到有效的Cookie`
             }
         }
+
         commit('setAuth', auth);
     }
 }

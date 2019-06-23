@@ -75,15 +75,20 @@
 
     methods: {
       clickReply() {
-        if (this.commentInfo.IsCoutReply) {
-          if (this.$route.name === 'QuestionsAndAnswers-id') {
-            this.replyInputWith = 575;
-          }
-          this.isShowInput = !this.isShowInput;
-        } else {
-          this.$Message.warning('不能回复自己！');
-          return false;
+
+        if (this.$route.name === 'QuestionsAndAnswers-id') {
+          this.replyInputWith = 575;
         }
+        this.isShowInput = !this.isShowInput;
+        // if (this.commentInfo.IsCoutReply) {
+        //   if (this.$route.name === 'QuestionsAndAnswers-id') {
+        //     this.replyInputWith = 575;
+        //   }
+        //   this.isShowInput = !this.isShowInput;
+        // } else {
+        //   this.$Message.warning('不能回复自己！');
+        //   return false;
+        // }
       },
 
       // 点赞
@@ -92,7 +97,7 @@
           setthumbsUp({
             ItemId: this.commentInfo.ItemId,
             LikeType: 0,
-            CommentsId: commentInfo.CommentsId,
+            CommentsId: this.commentInfo.CommentsId,
             IsDelete: !flag
           }).then(res => {
             this.isLike = flag;

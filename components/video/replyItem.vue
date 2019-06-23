@@ -58,16 +58,22 @@
       }
     },
 
+    mounted() {
+      if (this.$route.name === 'QuestionsAndAnswers-id') {
+        this.width = 529;
+      }
+    },
 
     methods: {
       // 点击回复
       clickReply() {
-        if (this.replyInfo.IsCoutReply) {
-          this.isShowInput = !this.isShowInput;
-        } else {
-          this.$Message.warning('不能回复自己！');
-          return false;
-        }
+        this.isShowInput = !this.isShowInput;
+        // if (this.replyInfo.IsCoutReply) {
+        //   this.isShowInput = !this.isShowInput;
+        // } else {
+        //   this.$Message.warning('不能回复自己！');
+        //   return false;
+        // }
       },
 
       // 提交回复
@@ -88,7 +94,7 @@
           setthumbsUp({
             ItemId: this.replyInfo.ItemId,
             LikeType: 0,
-            CommentsId: replyInfo.CommentsId,
+            CommentsId: this.replyInfo.CommentsId,
             IsDelete: !flag
           }).then(res => {
             this.isLike = flag;

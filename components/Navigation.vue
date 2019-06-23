@@ -40,7 +40,9 @@
             <div class="main-content">
                 <div class="main-content-left">
                     <div class="main-content-logo">
-                        <img :src="loginIng" alt="">
+                        <nuxt-link to="/">
+                            <img :src="loginIng" alt="">
+                        </nuxt-link>
                     </div>
                     <div class="main-content-left-search">
                         <Input v-model="seatchData" style="width:450px;" size="large">
@@ -62,8 +64,9 @@
                 </div>
             </div>
             <ul class="main-nav-tab">
-                <li class="resource">
-                    <span @click="backHome">资源库 <i class="iconfont icon-jiantou"></i></span>
+                <li class="resource" @mouseenter="isShowCate=true" @mouseleave="isShowCate=false">
+                    <span>资源库 <i class="iconfont icon-jiantou"></i></span>
+                    <LevelMenu class="banner-nav" v-show="isIndex || isShowCate"></LevelMenu>
                 </li>
                 <li @click="goAttention">关注</li>
                 <li @click="goRecommend">推荐</li>
@@ -81,6 +84,7 @@
 </template>
 <script>
   import signPage from '../components/home/signPage'
+  import LevelMenu from '~/components/home/LevelMenu'
   import { getMenu } from '../service/clientAPI'
   import { mapState, mapGetters } from 'vuex'
   import axios from 'axios'
@@ -92,7 +96,9 @@
         searchTitle: '',
         baiduData: '',
         loginIng: require('../assets/images/top_logo.png'),
-        menuData: []
+        menuData: [],
+        isIndex: true,  // 是否是首页
+        isShowCate: false,  // 是否显示分类
       }
     },
     computed: {
@@ -102,8 +108,20 @@
       ...mapGetters(['isLogin'])
     },
     components: {
-      signPage
+      signPage,
+      LevelMenu
     },
+
+    mounted() {
+      this.isIndex = this.$route.name === 'index';
+    },
+
+    watch: {
+      $route(to, from) {
+        this.isIndex = this.$route.name === 'index';
+      }
+    },
+
     async created() {
       let menuDatas = await getMenu();
       this.menuData = menuDatas.RetMenuData || [];
@@ -159,9 +177,6 @@
         if (this.isLogin) {
           this.$router.push({ name: "publish-imageText" })
         }
-      },
-      backHome() {
-        this.$router.push({ path: "/" })
       },
       goAttention() {
         this.$router.push({ path: "/attention" })
@@ -299,11 +314,17 @@
     }
 
     .resource {
+        position: relative;
         font-size: 20px;
         background-color: #FF3C00;
         color: #ffffff;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
+        .banner-nav {
+            position: absolute;
+            top: 43px;
+            left: 0;
+        }
     }
 
     .selection {
