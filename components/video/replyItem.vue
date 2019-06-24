@@ -14,7 +14,17 @@
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
-                        <i class="icon iconfont" @click="clickLike(true)">&#xe67e;</i>
+                        <i
+                            class="icon iconfont"
+                            v-show="!isLike"
+                            @click="clickLike(true)"
+                        >&#xe67e;</i>
+                        <i
+                            class="icon iconfont"
+                            style="color: #ff3c00;"
+                            v-show="isLike"
+                            @click="clickLike(false)"
+                        >&#xe621;</i>
                         赞
                     </span>
                 </p>
@@ -26,6 +36,7 @@
 
 <script>
   import Reply from '~/components/video/reply'
+  import { setComments, setthumbsUp } from '../../service/clientAPI'
   export default {
     props: {
       replyInfo: {
@@ -42,20 +53,27 @@
     data() {
       return {
         isShowInput: false,
-        width: 929
+        width: 929,
+        isLike: this.replyInfo.islikes
       }
     },
 
+    mounted() {
+      if (this.$route.name === 'QuestionsAndAnswers-id') {
+        this.width = 529;
+      }
+    },
 
     methods: {
       // 点击回复
       clickReply() {
-        if (this.replyInfo.IsCoutReply) {
-          this.isShowInput = !this.isShowInput;
-        } else {
-          this.$Message.warning('不能回复自己！');
-          return false;
-        }
+        this.isShowInput = !this.isShowInput;
+        // if (this.replyInfo.IsCoutReply) {
+        //   this.isShowInput = !this.isShowInput;
+        // } else {
+        //   this.$Message.warning('不能回复自己！');
+        //   return false;
+        // }
       },
 
       // 提交回复
@@ -72,7 +90,20 @@
 
       // 点赞
       clickLike(flag) {
-        this.$emit('submitLike', flag, this.replyInfo.CommentsId )
+        if (this.replyInfo.IsCoutReply) {
+          setthumbsUp({
+            ItemId: this.replyInfo.ItemId,
+            LikeType: 0,
+            CommentsId: this.replyInfo.CommentsId,
+            IsDelete: !flag
+          }).then(res => {
+            this.isLike = flag;
+          })
+        } else {
+          this.$Message.warning('不能给自己点赞哦！');
+          return false;
+        }
+
       }
     }
   }

@@ -38,7 +38,7 @@
                                 v-for="item in slideList"
                                 :key="item.Id"
                             >
-                                    <img :src="fileBaseUrl + item.CoverImgUrl" alt="">
+                                <img :src="fileBaseUrl + item.CoverImgUrl" alt="">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -88,16 +88,15 @@
                     <Spin size="large" fix v-if="spinShow"></Spin>
                     <div
                         class="content-item"
-                        v-for="item in QADatas"
+                        v-for="item in QAList"
                         :key="item.QAId"
-                        @click="goDetail(item.QAId)"
                     >
                         <div class="item-left-box">
                             <span class="num">{{ item.ReplyCount }}</span>
                             <span>回答</span>
                         </div>
                         <div class="item-info">
-                            <h3 class="item-question">{{ item.QATitle }}</h3>
+                            <h3 class="item-question" @click="goDetail(item.QAId)">{{ item.QATitle }}</h3>
                             <div class="question-info">
                                 <div class="avatar">
                                     <img :src="item.UserWebEntity.HeadIcon" alt="">
@@ -201,7 +200,7 @@
           LabelID: this.labelId,
           TalkType: this.menuIndex,
           Page: this.pageNum,
-          Rows: 5
+          Rows: 8
         });
 
         this.QAList = data.QADatas;
@@ -223,7 +222,7 @@
         LabelID: '',
         TalkType: '',
         Page: 1,
-        Rows: 5
+        Rows: 8
       };
 
       const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment'), store.dispatch('getQAData', queryParams)])
@@ -232,7 +231,7 @@
         labelList: data[0].TypeLabels,
         recommentList: data[1].RecommendQA,
         slideList: data[1].SlideList,
-        QADatas: data[2].QADatas,
+        QAList: data[2].QADatas,
         records: data[2].paginationData.records
       }
     }
@@ -280,7 +279,8 @@
     .main-right {
         float: right;
         width: 840px;
-        height: 1142px;
+        min-height: 600px;
+        padding-bottom: 25px;
         background-color: #fff;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);
 
@@ -437,6 +437,7 @@
                         font-size: 16px;
                         color: #333;
                         line-height: 14px;
+                        cursor: pointer;
                     }
 
                     .question-info {

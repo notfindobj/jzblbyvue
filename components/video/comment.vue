@@ -31,7 +31,6 @@
                     :key="item.CommentsId"
                     :commentInfo="item"
                     @submitReplay="submitReplay"
-                    @submitLike="submitLike"
                     v-if="index < showCount"
                 ></comment-item>
             </div>
@@ -108,11 +107,6 @@
         if (this.showCount >= this.commentList.length) {
           this.isLast = true;
         }
-      },
-
-      // 点赞回复
-      submitLike(obj) {
-        this.$emit('submitLike', obj);
       },
 
       // 回复成功

@@ -145,8 +145,9 @@
                         <Spin size="large" fix v-if="isLoadingComment"></Spin>
                         <div
                             class="comment-item"
-                            v-for="item in commentList"
+                            v-for="(item, index) in commentList"
                             :key="item.CommentsId"
+                            v-show="index < showCount"
                         >
                             <div class="commenter-avatar">
                                 <img :src="item.HeadIcon" alt="">
@@ -168,10 +169,10 @@
                                         <span>评论</span>
                                     </p>
                                 </div>
-                                <div class="show-more-box">
-                                    <span>梅赛德斯·斯儿</span>等人<span>共15条回复</span> <i class="icon iconfont">&#xe64a;</i>
-                                </div>
                             </div>
+                        </div>
+                        <div class="show-more-box" v-if="commentList.length > 3">
+                            <span>{{ commentList[0].NickName }}</span>等人<span>共{{ commentList.length }}条回复</span> <i class="icon iconfont" @click="showAllComment">&#xe64a;</i>
                         </div>
                     </div>
                 </div>
@@ -209,6 +210,7 @@
         commentList: [],    // 评论列表
         commentContent: '', // 评论的内容
         isShowEmotion: false,   // 是否显示表情选择
+        showCount: 3,   // 显示评论的数量
       }
     },
 
@@ -245,6 +247,11 @@
     },
 
     methods: {
+
+      // 展示全部评论
+      showAllComment() {
+        this.showCount = this.commentList.length + 10;  // 不一定加10 比数组长度长就可以
+      },
 
       // 格式化时间 params: timeStr 视频的秒数，有小数
       formatTime(timeStr) {
@@ -628,6 +635,28 @@
                 padding: 10px;
                 margin-top: 10px;
 
+                .show-more-box {
+                    width: 100%;
+                    height: 37px;
+                    margin-top: 10px;
+                    padding: 0 10px;
+                    background-color: #f6f6f6;
+                    border-radius: 4px;
+                    line-height: 37px;
+                    color: #333;
+
+                    span {
+                        color: #3E85FF;
+                        cursor: pointer;
+                    }
+
+                    i {
+                        color: #3E85FF;
+                        font-size: 13px;
+                        cursor: pointer;
+                    }
+                }
+
                 .comment-item {
                     display: flex;
                     justify-content: flex-start;
@@ -687,27 +716,6 @@
                         }
                     }
 
-                    .show-more-box {
-                        width: 100%;
-                        height: 37px;
-                        margin-top: 10px;
-                        padding: 0 10px;
-                        background-color: #f6f6f6;
-                        border-radius: 4px;
-                        line-height: 37px;
-                        color: #333;
-
-                        span {
-                            color: #3E85FF;
-                            cursor: pointer;
-                        }
-
-                        i {
-                            color: #3E85FF;
-                            font-size: 13px;
-                            cursor: pointer;
-                        }
-                    }
                 }
             }
         }
