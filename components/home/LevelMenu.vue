@@ -68,7 +68,7 @@ export default {
                 KeyWords: "",
                 Order: true,
                 Page: 0,
-                Rows: 8,
+                Rows: 16,
                 title: pre.ItemAttributesFullName,
             }
             this.$store.dispatch('BASEDATA', baseDateId);

@@ -108,6 +108,7 @@
         flex: 1;
         display: flex;
         flex-direction: row;
+        font-weight: bold;
         >li{
           height: 22px;
           padding-right: 13px;

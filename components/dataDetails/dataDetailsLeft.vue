@@ -21,9 +21,7 @@
               </ul>
             </div>
             <!-- :discussData="comments" -->
-            <discuss
-              
-            />
+            <discuss/>
           </div>
         </div>
       </div>
@@ -80,13 +78,20 @@
       //   })
     },
     mounted () {
-      const ViewerDom = document.getElementById('detaDetails');
-      let _this = this;
-      _this.Viewer =  new Viewer(ViewerDom, {
+      this.initView()
+    },
+    methods: {
+      initView () {
+        const ViewerDom = document.getElementById('detaDetails');
+        let _this = this;
+        _this.$nextTick(() => {
+            _this.Viewer =  new Viewer(ViewerDom, {
             inline: false,
             title: false,
+            zoomRatio: 0.4,
             backdrop: false,
             loading: false,
+            url: 'data-original',
             container: document.getElementById('view'),
             show: function (e) {
               _this.isShowViewBox = true;
@@ -109,20 +114,20 @@
             hidden () {
               _this.viewShowBox()
             }
+          })
         })
-    },
-    methods: {
-  //     getImgSrc () {
-  //       const detaDetails = this.$refs.detaDetails
-  //       //  = document.querySelectorAll('img[data-original]');
-  //       detaDetails.addEventListener('click', () =>{
-  //         let ev = ev || window.event;
-  // 　　　　 let target = ev.target || ev.srcElement;
-  //         if(target.nodeName.toLowerCase() == 'img'){
-  //           this.src= target.src
-  // 　　　　  }
-  //       })
-  //     },
+      },
+    //     getImgSrc () {
+    //       const detaDetails = this.$refs.detaDetails
+    //       //  = document.querySelectorAll('img[data-original]');
+    //       detaDetails.addEventListener('click', () =>{
+    //         let ev = ev || window.event;
+    // 　　　　 let target = ev.target || ev.srcElement;
+    //         if(target.nodeName.toLowerCase() == 'img'){
+    //           this.src= target.src
+    // 　　　　  }
+    //       })
+    //     },
       viewShowBox () {
         document.getElementsByTagName('body')[0].className = '';
         document.body.style.paddingRight = '0';

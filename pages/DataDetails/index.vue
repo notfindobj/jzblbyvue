@@ -140,6 +140,7 @@
         }
         let msg = await setthumbsUp(queryData);
         console.log(item)
+        if (msg) {}
       },
       // 收藏
       async Collection(item) {
