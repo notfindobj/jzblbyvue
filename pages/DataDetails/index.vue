@@ -103,7 +103,6 @@
         }
       }
     },
-
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
@@ -209,6 +208,7 @@
           this.$Message.success('回复成功！')
         }
       },
+      // 关注
       async setFollow(item) {
         let queryData = {
           UserId: item.UserId,

@@ -12,17 +12,20 @@
             :RspItemDatas="RspItemDatas"
             :RspPaginationData="RspPaginationData"
             :showLayout="showLayout"
+            :UserProAndFans="UserProAndFans"
             @entrySorting="entrySorting"
             @onChange="onChange"
             @viewItem="viewItem"
+            @showWorks="showWorks"
+            @worksFocus="worksFocus"
+            @jumpRoute="jumpRoute"
         />
     </div>
 </template>
 <script>
   import ContenNav from '../../components/contenLayout/ContenNav.vue'
   import Conten from '../../components/contenLayout/Content.vue'
-  import { getBaseData } from '../../service/clientAPI'
-
+  import { getBaseData , getUserProAndFans, setFollow} from '../../service/clientAPI'
   export default {
     middleware: 'authenticated',
     head() {
@@ -46,6 +49,7 @@
         RspItemDatas: [],
         RspQueryClassify: {},
         RspPaginationData: {},
+        UserProAndFans: {},
         showLayout: true
       }
     },
@@ -150,6 +154,28 @@
         let queryData = JSON.parse(this.$route.query.dataBase);
         queryData.Id = item.ItemId
         this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(queryData) } })
+      },
+      // 获取项目和粉丝量
+      async showWorks (id) {
+        let msg = await getUserProAndFans(id)
+        if (msg) {
+          this.UserProAndFans = msg
+        }
+      },
+      // 关注
+      async worksFocus (item) {
+        let queryData = {
+          UserId: item.UserId,
+          IsDelete: item.IsFollow
+        }
+        let collectionMsg = await setFollow(queryData)
+        if (collectionMsg) {
+          this.$set(item, 'IsFollow', !item.IsFollow)
+        };
+      },
+      // 路由跳转
+      jumpRoute (items) {
+        this.$router.push({ name: "HeAndITribal", query: { id: JSON.stringify(items.UserId)}})
       },
       tipClick() {
         this.$Message.info('This is a info tip');

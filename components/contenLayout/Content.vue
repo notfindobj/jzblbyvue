@@ -24,25 +24,25 @@
           <div class="works-introduce">
             <p>{{items.ItemName}}</p>
             <div>
-              <img class="headPortrait" @mouseenter="showWorks(items.ItemId)" src="../../assets/images/a.jpeg" alt="">
-              <span class="headPortrait">杨小幂</span>
+              <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+              <span class="headPortrait">{{items.NickName}}</span>
             </div>
           </div>
-          <div :class="currentWorks == items.ItemId ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks()">
-            <img src="../../assets/images/a.jpeg" alt="">
-            <p>梅赛德斯·赵四</p>
+          <div :class="currentWorks == items.ItemId ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks(items)">
+            <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt="" @click="jumpRoute(UserProAndFans)">
+            <p>{{UserProAndFans.NickName || items.NickName}}</p>
             <ul class="works-con-introduce">
               <li>
                 <p>项目</p>
-                <p>1334</p>
+                <p>{{UserProAndFans.proCount}}</p>
               </li>
               <li>
                 <p>粉丝</p>
-                <p>1.3万</p>
+                <p>{{UserProAndFans.Fans}}</p>
               </li>
             </ul>
             <div class="btn-group-box">
-              <div @click="focus()">关注</div>
+              <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
               <div @click="direct()">私信</div>
             </div>
           </div>
@@ -95,7 +95,6 @@
     <Page :total="RspPaginationData.records" :current="RspPaginationData.page" show-sizer @on-change="onChange"/>
   </div>
 </template>
-
 <script>
   export default {
     name: 'conten',
@@ -117,6 +116,12 @@
       showLayout: {
         type: Boolean,
         default: true
+      },
+      UserProAndFans:{
+        type: Object,
+        default:function () {
+          return {}
+        }
       }
     },
     data() {
@@ -137,21 +142,27 @@
       onChange (val) {
         this.$emit('onChange', val)
       },
-      showWorks (inx) {
-        this.currentWorks = inx;
+      showWorks (item) {
+        this.$emit('showWorks', item)
+        this.currentWorks = item.ItemId;
       },
       // 查看项目
       viewItem (val) {
         this.$emit('viewItem', val);
       },
-      hideWorks () {
+      hideWorks (item) {
+        console.log(item)
         this.currentWorks = null;
+      },
+      // 跳转
+      jumpRoute (item) {
+        this.$emit('jumpRoute', item);
       },
       focus(){
-        this.currentWorks = null;
+        this.$emit('worksFocus', this.UserProAndFans);
       },
       direct() {
-        this.currentWorks = null;
+        // this.currentWorks = null;
       }
     },
   }
@@ -298,6 +309,7 @@
           top:8px;
           display: none;
           >img{
+            cursor: pointer;
             display: block;
             width: 64px;
             height: 64px;
@@ -306,6 +318,7 @@
             margin: 0 auto 10px;
           }
           >p{
+            cursor: pointer;
             font-size: 14px;
             color: #333333;
             margin-bottom: 12px;
@@ -351,6 +364,7 @@
             align-items: center;
             justify-content: space-between;
             >div{
+              cursor: pointer;
               width: 60px;
               height: 21px;
               border-radius: 4px;
