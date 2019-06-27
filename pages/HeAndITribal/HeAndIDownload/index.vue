@@ -264,7 +264,13 @@
     },
     props: {
       isShowHead: Boolean,
-      headList:Array
+      headList:Array,
+//      componentsData: {
+//        type: Object,
+//        default: function () {
+//          return {}
+//        }
+//      }
     },
     mounted () {
       console.log(this.isShowHead)

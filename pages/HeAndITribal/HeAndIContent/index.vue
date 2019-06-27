@@ -57,11 +57,99 @@
     },
     methods: {
       choseOne(item, inx) {
-        debugger
+        console.log(item)
         this.currentIndex = inx;
-        this.PersonalCenter = item.components;
-        this.isShowHead = item.headComponents;
-        this.headList = item.list
+        switch (item.Id) {
+          case 0:
+            this.PersonalCenter = 'HeAndIDownload';
+            this.isShowHead = false;
+            this.headList = []
+            break;
+          case 1:
+            this.PersonalCenter = 'HeAndIDownload';
+            this.isShowHead = true;
+            this.headList = [
+              {
+                type:'',
+                name:'全部'
+              },
+              {
+                type:'',
+                name:'图片'
+              },
+              {
+                type:'',
+                name:'视频'
+              },
+              {
+                type:'',
+                name:'问答'
+              },{
+                type:'',
+                name:'示范区'
+              },
+              {
+                type:'',
+                name:'楼盘'
+              },
+            ]
+            break;
+          case 2:
+            this.PersonalCenter = 'HeAndIDownload';
+            this.isShowHead = true;
+            this.headList =[
+                  {
+                    type:'',
+                    name:'全部'
+                  },
+                  {
+                    type:'',
+                    name:'图片'
+                  },
+                  {
+                    type:'',
+                    name:'PDF'
+                  },
+                  {
+                    type:'',
+                    name:'CSD'
+                  },{
+                    type:'',
+                    name:'PSD'
+                  }
+                ]
+
+            break;
+          case 3:
+            this.PersonalCenter = 'HeAndIDownload';
+            this.isShowHead = true;
+            this.headList = [
+              {
+                type:'',
+                name:'全部'
+              },
+              {
+                type:'',
+                name:'图片'
+              },
+              {
+                type:'',
+                name:'视频'
+              },
+              {
+                type:'',
+                name:'问答'
+              },{
+                type:'',
+                name:'示范区'
+              },
+              {
+                type:'',
+                name:'楼盘'
+              },
+            ]
+            break;
+        }
       },
       changeComponents(index, count) {
         this.currentIndex = -1;
@@ -106,6 +194,18 @@
             this.headName = '项目';
             break;
         }
+      },
+    },
+    async asyncData({ store, params }) {
+      const data = await store.dispatch('getSelfOrOthertribeInfo', {
+        "Page": 0,
+        "Rows": 0,
+        "ItemTypeId": "",
+        "typeId": 0,
+        "UserId": store.state.overas.auth.UserId
+      });
+      return {
+        tribeInfo: data
       }
     }
   }
