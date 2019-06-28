@@ -3,6 +3,12 @@
     <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
      <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
+          <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
+            <span :class="!isLeft ? 'isHide' : 'isShow'" @click="moveLeftClick(1)">按钮</span>
+          </div>
+          <div class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
+            <span :class="!isRight ? 'isHide' : 'isShow'" @click="moveLeftClick(2)">按钮</span>
+          </div>
           <div id="view"></div>
           <div class="view-box-right">
             <!-- <div class="docs-buttons">
@@ -30,7 +36,6 @@
       </div>
   </div>
 </template>
-
 <script>
   import Viewer from 'viewerjs';
   import 'viewerjs/dist/viewer.css';
@@ -56,6 +61,8 @@
     data() {
       return {
         isShowViewBox: false,
+        isLeft: false,
+        isRight: false,
         Viewer: {}
       }
     },
@@ -76,7 +83,7 @@
         _this.$nextTick(() => {
             _this.Viewer =  new Viewer(ViewerDom, {
             // inline: false,
-            toolbar: false,
+            // toolbar: false,
             title: false,
             zoomRatio: 0.4,
             backdrop: false,
@@ -89,7 +96,7 @@
             },
             ready: function () {
               // _this.Viewer.update()
-              _this.initViewButton()
+              // _this.initViewButton()
               console.log('ready')
             },
             build: function () {
@@ -104,7 +111,6 @@
             },
             shown: function () {
               console.log('shown')
-              _this.Viewer.update();
               console.log(document.querySelector('.viewer-canvas img'))
             },
             hidden () {
@@ -147,6 +153,23 @@
         // let args = JSON.parse(button.getAttribute('data-arguments')) || [];
         console.log(buttons)
       },
+      moveLeftClick (val) {
+        if (val === 1) {
+          document.querySelector('.viewer-prev').click()
+        } else {
+          document.querySelector('.viewer-next').click()
+        }
+        console.log('moveLeftClick')
+        // viewer-next
+      },
+      mousemoveLeft () {
+        this.isLeft = true
+        this.isRight = true
+      },
+      mousemoveRight () {
+        this.isLeft = false
+        this.isRight = false
+      },
       viewShowBox () {
         document.getElementsByTagName('body')[0].className = '';
         document.body.style.paddingRight = '0';
@@ -156,6 +179,12 @@
   }
 </script>
 <style lang="less">
+  .isHide {
+    display: none;
+  }
+  .isShow {
+    display: inline-block;
+  }
   .data-details-left{
     width: 850px;
     overflow: hidden;
@@ -202,7 +231,7 @@
     height: 600px;
     z-index: 99;
     top: 50%;
-    left: 50%;
+    left: 49.5%;
     transform: translate(-50%, -50%);
     display: flex;
   }
@@ -276,5 +305,29 @@
       width: 100%;
     }
   }
-   
+  .view-left-move {
+    cursor: pointer;
+    position: absolute;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background: transparent;
+    z-index: 9999;
+    top: 280px;
+    left: 0;
+  }
+  .view-right-move {
+    cursor: pointer;
+    position: absolute;
+    display: inline-block;
+    width: 100px;
+    height: 100px;
+    background: transparent;
+    z-index: 9999;
+    top: 280px;
+    right: 300px;
+  }
+  .viewer-toolbar {
+    display: none;
+  }
 </style>

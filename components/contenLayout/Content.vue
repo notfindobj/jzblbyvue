@@ -28,7 +28,7 @@
               <span class="headPortrait">{{items.NickName}}</span>
             </div>
           </div>
-          <div :class="currentWorks == items.ItemId ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks(items)">
+          <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks(items)">
             <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt="" @click="jumpRoute(UserProAndFans)">
             <p>{{UserProAndFans.NickName || items.NickName}}</p>
             <ul class="works-con-introduce">
@@ -122,12 +122,15 @@
         default:function () {
           return {}
         }
+      },
+      currentWorks: {
+        type: String,
+        default: ''
       }
     },
     data() {
       return {
-        sortAction: 0,
-        currentWorks:null
+        sortAction: 0
       }
     },
     updated () {
@@ -144,15 +147,15 @@
       },
       showWorks (item) {
         this.$emit('showWorks', item)
-        this.currentWorks = item.ItemId;
+        // this.currentWorks = item.ItemId;
       },
       // 查看项目
       viewItem (val) {
         this.$emit('viewItem', val);
       },
       hideWorks (item) {
-        console.log(item)
-        this.currentWorks = null;
+        // this.currentWorks = null;
+        this.$emit('hideWorks');
       },
       // 跳转
       jumpRoute (item) {

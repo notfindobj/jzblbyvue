@@ -13,11 +13,13 @@
             :RspPaginationData="RspPaginationData"
             :showLayout="showLayout"
             :UserProAndFans="UserProAndFans"
+            :currentWorks="currentWorks"
             @entrySorting="entrySorting"
             @onChange="onChange"
             @viewItem="viewItem"
             @showWorks="showWorks"
             @worksFocus="worksFocus"
+            @hideWorks="hideWorks"
             @jumpRoute="jumpRoute"
         />
     </div>
@@ -50,7 +52,8 @@
         RspQueryClassify: {},
         RspPaginationData: {},
         UserProAndFans: {},
-        showLayout: true
+        showLayout: true,
+        currentWorks: ''
       }
     },
     async asyncData({ app, store, route }) {
@@ -156,9 +159,11 @@
         this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(queryData) } })
       },
       // 获取项目和粉丝量
-      async showWorks (id) {
-        let msg = await getUserProAndFans(id)
+      async showWorks (user) {
+        let msg = await getUserProAndFans(user.UserId)
         if (msg) {
+          this.currentWorks = user.ItemId
+          console.log('this.currentWorks', user)
           this.UserProAndFans = msg
         }
       },
@@ -172,6 +177,9 @@
         if (collectionMsg) {
           this.$set(item, 'IsFollow', !item.IsFollow)
         };
+      },
+      hideWorks () {
+        this.currentWorks = ''
       },
       // 路由跳转
       jumpRoute (items) {
