@@ -4,7 +4,7 @@
       <ul class="head-boxs" v-show="isShowHead">
         <li :class="currentIndex == index ? 'li-active' : ''" v-for="(item,index) in headList" @click="change(item,index)" :key="index"> {{item.name}}</li>
       </ul>
-      <Scroll :on-reach-bottom="handleReachBottom" height="600">
+      <Scroll :on-reach-bottom="handleReachBottom" height="630" :on-reach-top="handleReachTop">
         <div class="container">
           <div class="public-block">
             <div class="block-head">
@@ -264,7 +264,13 @@
     },
     props: {
       isShowHead: Boolean,
-      headList:Array
+      headList:Array,
+//      componentsData: {
+//        type: Object,
+//        default: function () {
+//          return {}
+//        }
+//      }
     },
     mounted () {
       console.log(this.isShowHead)
@@ -272,6 +278,9 @@
     methods: {
       handleReachBottom() {
         console.log(1222)
+      },
+      handleReachTop () {
+        console.log(1111111)
       },
       renderThisComponents (params) {
 

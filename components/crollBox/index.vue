@@ -1,64 +1,67 @@
 <template>
-    <div class="dropdown" ref="dropdown" >
-        <slot ></slot>
-        <div v-if="Loading">
-            加载中....
+    <div class="dropdown">
+        <slot></slot>
+        <div v-if="!isLast" class="loading-box">
+            <div class="loading-wrap">
+                <i class="icon iconfont loading-icon">&#xe6ac;</i>
+            </div>
         </div>
     </div>
 </template>
 <script>
-    export default {
-        name:'crollBox',
-        props: {
-            crollHeight: {
-                type: Number,
-                default: 800
-            },
-            idLoading: {
-                type: Boolean,
-                default: false
-            }
-        },
-        data () {
-            return {
-                pX: 0,
-                pY: 0,
-                Loading: true
-            }
-        },
-        computed: {
-            // Loading () {
-            //     console.log('>>>>>>>>>>>>', this.idLoading)
-            //     return this.idLoading
-            // }
-        },
-        mounted () {
-            let _this = this;
-            window.onscroll= function(){
-                //变量t是滚动条滚动时，距离顶部的距离
-                const h = document.documentElement.clientHeight
-                const t = document.documentElement.scrollTop||document.body.scrollTop;
-                const s = document.querySelector('.dropdown').clientHeight; 
-                const sh = document.documentElement.scrollHeight||document.body.scrollHeight;
-                let bt = parseInt(sh- (h + t))
-                // if( !(bt <= _this.crollHeight)){
-                //     _this.Loading = true
-                // }
-                if (_this.Loading) {
-                    if((_this.crollHeight-100) < bt < _this.crollHeight){
-                        _this.Loading = false
-                          console.log('执行加载')
-                        _this.$emit('loadMore');
-                        setTimeout(() => {
-                            _this.Loading = true;
-                            console.log('执行完成')
-                        }, 5000)
-                    }
-                }
-            }
-        },
-        methods: {
-            
+  export default {
+    name: 'crollBox',
+    props: {
+      isLast: {
+        type: Boolean,
+        default: false
+      }
+    },
+
+    mounted() {
+      window.onscroll = function () {
+        //变量t是滚动条滚动时，距离顶部的距离
+        const h = document.documentElement.clientHeight
+        const t = document.documentElement.scrollTop || document.body.scrollTop;
+        const sh = document.documentElement.scrollHeight || document.body.scrollHeight;
+        let bt = parseInt(sh - (h + t));
+        if (bt <= 650) {
+          this.$emit('willReachBottom')
+        }
+      }.bind(this)
+    },
+    methods: {}
+  }
+</script>`
+<style scoped lang="less">
+    @keyframes rotate {
+        0% {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotate(180deg);
+        }
+        100% {
+            transform: rotate(360deg);
         }
     }
-</script>`
+
+    .loading-box {
+        text-align: center;
+        padding: 10px 0 20px;
+
+        .loading-wrap {
+            width: 30px;
+            height: 30px;
+            margin: 0 auto;
+            text-align: center;
+            line-height: 30px;
+            animation: rotate 1.2s linear infinite;
+        }
+
+        .loading-icon {
+            font-size: 30px;
+        }
+    }
+
+</style>

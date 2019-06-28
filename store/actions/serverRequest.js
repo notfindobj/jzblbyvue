@@ -62,5 +62,9 @@ export const serverRequest = {
   // 获取关注信息
   async getFollowigMoving({commit}, params) {
     return await request.get(`Talk/GetFollowigMoving`, params)
-  }
+  },
+  // 获取所有个人部落或者他人部落数据
+  async getSelfOrOthertribeInfo({commit}, params) {
+    return await request.get(`MyTribe/GetMyOrOtherData`, params)
+  },
 }
