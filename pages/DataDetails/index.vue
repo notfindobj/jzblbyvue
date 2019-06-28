@@ -6,7 +6,7 @@
                     <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
                     <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities"
                                     :key="index"
-                                    :style="index == (ItemAttributesEntities.length -1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'"
+                                    :style="index === (ItemAttributesEntities.length - 1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'"
                     >{{items.ItemAttributesFullName}}
                     </BreadcrumbItem>
                 </Breadcrumb>
@@ -54,7 +54,7 @@
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
   import ToTop from '~/components/toTop'
-  import { setthumbsUp, setCollection, setFollow, setComments } from '../../service/clientAPI'
+  import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency } from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
   import { mapGetters } from 'vuex'
@@ -134,6 +134,11 @@
       window.onresize = () => {
         this.clientWidth = document.body.clientWidth;
       }
+
+      recordFrequency({
+        ItemId: this.detaDetails.ItemId,
+        DomainType: 0
+      })
     },
     methods: {
       initLazy() {
@@ -163,7 +168,8 @@
         }
         let msg = await setthumbsUp(queryData);
         console.log(item)
-        if (msg) {}
+        if (msg) {
+        }
       },
       // 收藏
       async Collection(item) {
@@ -189,6 +195,7 @@
           ScopeType: 0
         }
         let commentMsg = await setComments(queryData)
+        await window.location.reload();
         if (!commentMsg) {
           this.$set(row, 'commentss', row.commentss + 1)
         }
@@ -258,7 +265,7 @@
                 flex-direction: row;
                 align-items: flex-start;
                 justify-content: space-between;
-
+                padding-bottom: 30px;
                 .data-details-location {
                 }
 

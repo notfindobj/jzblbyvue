@@ -21,13 +21,14 @@
             @hideWorks="hideWorks"
             @jumpRoute="jumpRoute"
             @loadData="loadData"
+            @handleCollections="handleCollections"
         />
     </div>
 </template>
 <script>
   import ContenNav from '../../components/contenLayout/ContenNav.vue'
   import Conten from '../../components/contenLayout/Content.vue'
-  import { getBaseData , getUserProAndFans, setFollow} from '../../service/clientAPI'
+  import { getBaseData , getUserProAndFans, setFollow, setCollection} from '../../service/clientAPI'
   export default {
     middleware: 'authenticated',
     head() {
@@ -64,6 +65,10 @@
       }
     },
 
+    mounted() {
+      console.log(JSON.parse(this.$route.query.dataBase))
+    },
+
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       let showLayout = queryData.title !== '建筑规范';
@@ -91,6 +96,19 @@
         }
     },
     methods: {
+      // 点击收藏
+      handleCollections(flag, index) {
+        setCollection({
+          ItemId: this.RspItemDatas[index].ItemId,
+          ItemName: this.RspItemDatas[index].ItemName,
+          ItemTitleImg: this.RspItemDatas[index].ItemTitleImg,
+          IsDelete: !flag,
+          TalkType: 4
+        }).then(() => {
+          this.RspItemDatas[index].IsCollections = flag;
+          this.$Message.success('操作成功')
+        })
+      },
       // 加载数据
       loadData() {
         if (this.isFinished && this.RspPaginationData.page < this.RspPaginationData.total) {
