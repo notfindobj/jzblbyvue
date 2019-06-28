@@ -10,11 +10,11 @@
         />
         <conten
             :RspItemDatas="RspItemDatas"
-            :RspPaginationData="RspPaginationData"
             :showLayout="showLayout"
+            :isLast="isLast"
             @entrySorting="entrySorting"
-            @onChange="onChange"
             @viewItem="viewItem"
+            @loadData="loadData"
         />
     </div>
 </template>
@@ -46,9 +46,17 @@
         RspItemDatas: [],
         RspQueryClassify: {},
         RspPaginationData: {},
-        showLayout: true
+        showLayout: true,
+        isFinished: true,   // 判断请求是否完成
       }
     },
+    computed: {
+      // 判断是否是最后一页数据
+      isLast() {
+        return this.RspPaginationData.page === this.RspPaginationData.total;
+      }
+    },
+
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       let showLayout = queryData.title !== '建筑规范';
@@ -67,7 +75,32 @@
         RspPaginationData: getBaseData.RspPaginationData, //翻页数据
       }
     },
+
+    watch: {
+        '$route': function (oldVal, newVal) {
+          console.log(JSON.parse(oldVal.query.dataBase), JSON.parse(newVal.query.dataBase))
+          let queryData = JSON.parse(newVal.query.dataBase);
+          delete queryData.title;
+          this.getBaseDatas(queryData);
+        }
+    },
+
     methods: {
+
+      // 加载数据
+      loadData() {
+        if (this.isFinished && this.RspPaginationData.page < this.RspPaginationData.total) {
+          this.isFinished = false;
+          if (this.queryData.Page === 0) {
+            this.queryData.Page = 9;
+            this.queryData.Rows = 4
+          } else {
+            this.queryData.Page++;
+          }
+          this.getBaseDatas(this.queryData)
+        }
+      },
+
       //一级菜单
       getItemsBaseData(row) {
         let queryData = JSON.parse(this.$route.query.dataBase);
@@ -123,27 +156,20 @@
         this.getBaseDatas(queryData)
       },
       async getBaseDatas(queryData) {
-        let BaseData = await getBaseData(queryData)
-        this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas //菜单数据
-        this.RspItemDatas = BaseData.RspItemDatas //项目数据
-        this.RspQueryClassify = BaseData.RspQueryClassify //查询参数
-        this.RspPaginationData = BaseData.RspPaginationData //翻页数据
+        let BaseData = await getBaseData(queryData);
+        this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
+        this.RspItemDatas = queryData.Page === 0 ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
+        this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
+        this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
+        this.isFinished = true;
       },
+
       // 排序
       entrySorting(val) {
         let queryData = JSON.parse(this.$route.query.dataBase);
         queryData.SortType = val;
         this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
         delete queryData.title;
-        this.getBaseDatas(queryData)
-      },
-      // 分页数据
-      onChange(val) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
-        queryData.Page = val;
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
-        delete queryData.title;
-        this.getBaseDatas(queryData)
       },
       // 查看详情
       viewItem(item) {
@@ -159,6 +185,7 @@
 </script>
 <style lang="less" scoped>
     .conten-layout-box {
+        position: relative;
         width: 1200px;
         height: auto;
         margin: 0 auto;
