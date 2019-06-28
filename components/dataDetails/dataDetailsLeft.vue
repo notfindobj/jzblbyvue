@@ -5,6 +5,9 @@
         <div class="view-box">
           <div id="view"></div>
           <div class="view-box-right">
+            <!-- <div class="docs-buttons">
+              <button type="button" class="btn btn-primary" data-enable="inline" data-method="zoom" data-target="#zoomRatio" title="Zoom the image">Zoom</button>
+            </div> -->
             <div class="details-box">
               <div class="details-box-img">
                 <div class="details-box-img-img"></div>
@@ -21,9 +24,7 @@
               </ul>
             </div>
             <!-- :discussData="comments" -->
-            <discuss
-              
-            />
+            <discuss/>
           </div>
         </div>
       </div>
@@ -63,33 +64,33 @@
     },
     asyncData() {
     },
-    created() {
-      // const ViewerDom = document.getElementById('detaDetails');
-      // let _this = this;
-      // new Viewer(ViewerDom, {
-      //       inline: false,
-      //       title: false,
-      //       backdrop: false,
-      //       container: document.getElementById('view'),
-      //       show: function () {
-      //         _this.isShowViewBox = true;
-      //       },
-      //       hidden () {
-      //         _this.viewShowBox()
-      //       }
-      //   })
-    },
+    created() {},
     mounted () {
-      const ViewerDom = document.getElementById('detaDetails');
-      let _this = this;
-      _this.Viewer =  new Viewer(ViewerDom, {
-            inline: false,
+      this.initView()
+      // this.initViewButton()
+    },
+    methods: {
+      initView () {
+        const ViewerDom = document.getElementById('detaDetails');
+        let _this = this;
+        _this.$nextTick(() => {
+            _this.Viewer =  new Viewer(ViewerDom, {
+            // inline: false,
+            toolbar: false,
             title: false,
+            zoomRatio: 0.4,
             backdrop: false,
             loading: false,
+            url: 'data-original',
+            parent: document.getElementById('view'),
             container: document.getElementById('view'),
             show: function (e) {
               _this.isShowViewBox = true;
+            },
+            ready: function () {
+              // _this.Viewer.update()
+              _this.initViewButton()
+              console.log('ready')
             },
             build: function () {
               console.log('build')
@@ -109,20 +110,43 @@
             hidden () {
               _this.viewShowBox()
             }
+          })
         })
-    },
-    methods: {
-  //     getImgSrc () {
-  //       const detaDetails = this.$refs.detaDetails
-  //       //  = document.querySelectorAll('img[data-original]');
-  //       detaDetails.addEventListener('click', () =>{
-  //         let ev = ev || window.event;
-  // 　　　　 let target = ev.target || ev.srcElement;
-  //         if(target.nodeName.toLowerCase() == 'img'){
-  //           this.src= target.src
-  // 　　　　  }
-  //       })
-  //     },
+      },
+      initViewButton () {
+        let _this = this;
+        let buttons = document.querySelector('.docs-buttons');
+        let toggles = document.querySelector('.docs-toggles');
+        buttons.onclick = function (event) {
+          let e = event || window.event;
+          let button = e.target || e.srcElement;
+          let method = button.getAttribute('data-method');
+          let target = button.getAttribute('data-target');
+          let args = JSON.parse(button.getAttribute('data-arguments')) || [];
+          document.querySelector(target)
+          if (_this.Viewer && method) {
+            if (target) {
+              // _this.Viewer[method](document.querySelector(target).value);
+            } else {
+              _this.Viewer['zoom']();
+            }
+
+            // switch (method) {
+            //   case 'scaleX':
+            //   case 'scaleY':
+            //     args[0] = -args[0];
+            //     break;
+
+            //   case 'destroy':
+            //     _this.Viewer = null;
+            //     // toggleButtons('none');
+            //     break;
+            // }
+          }
+        };
+        // let args = JSON.parse(button.getAttribute('data-arguments')) || [];
+        console.log(buttons)
+      },
       viewShowBox () {
         document.getElementsByTagName('body')[0].className = '';
         document.body.style.paddingRight = '0';

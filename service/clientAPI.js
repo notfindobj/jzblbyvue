@@ -19,6 +19,10 @@ export const ResetPwd = async (params) => {
 export const getBaseData = async (params) => {
   return await request.post('ItemList/GetItemList', params)
 }
+// 获取项目和粉丝量
+export const getUserProAndFans = async (params) => {
+  return await request.post(`Account/GetUserProAndFans?byUserId=${params}`)
+}
 /**
  * 资源库详情
  */

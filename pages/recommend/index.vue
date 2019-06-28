@@ -70,7 +70,7 @@
 </template>
 
 <script>
-  import ImagesText from '~/components/projectType/ImageAndText'
+  import ImagesText from '../../components/projectType/imageAndText'
 
   export default {
     layout: 'main',

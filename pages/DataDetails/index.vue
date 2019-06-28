@@ -103,7 +103,6 @@
         }
       }
     },
-
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
@@ -164,6 +163,7 @@
         }
         let msg = await setthumbsUp(queryData);
         console.log(item)
+        if (msg) {}
       },
       // 收藏
       async Collection(item) {
@@ -208,6 +208,7 @@
           this.$Message.success('回复成功！')
         }
       },
+      // 关注
       async setFollow(item) {
         let queryData = {
           UserId: item.UserId,

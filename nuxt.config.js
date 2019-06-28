@@ -85,6 +85,11 @@ module.exports = {
         }
       }
     },
+    filenames: {
+      app: ({ isDev }) => isDev ? '[name].js' : '[name][chunkhash].js',
+      chunk: ({ isDev }) => isDev ? '[name].js' : '[name][chunkhash].js',
+      css: ({ isDev }) => isDev ? '[name].css' : '[name][contenthash].css'
+    },
     vendor: ['iview', 'axios'],
     /*
     ** Run ESLint on save
