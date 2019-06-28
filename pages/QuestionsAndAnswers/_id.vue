@@ -145,7 +145,7 @@
           ItemImgSrc: '',
           ScopeType: 3
         }).then(res => {
-          this.$Message.success('评论成功');
+          // this.$Message.success('评论成功');
           this.content = '';
           this.getComment();
         })

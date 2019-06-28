@@ -18,21 +18,33 @@
                                     <i class="icon iconfont icon-chakan"></i>{{items.Views}}
                                 </p>
                                 <p>
-                                    <i class="icon iconfont icon-favorite"></i>收藏
+                                    <i
+                                        class="icon iconfont icon-favorite"
+                                        v-show="!items.IsCollections"
+                                        @click.stop="clickCollections(true, index)"
+                                    ></i>
+                                    <i
+                                        class="icon iconfont"
+                                        style="color: #ff3c00; margin-right: 8px;"
+                                        v-show="items.IsCollections"
+                                        @click.stop="clickCollections(false, index)"
+                                    >&#xe69d;</i>收藏
                                 </p>
                             </div>
                         </div>
                         <div class="works-introduce">
                             <p>{{items.ItemName}}</p>
                             <div>
-                                <img class="headPortrait" @mouseenter="showWorks(items.ItemId)"
-                                     src="../../assets/images/a.jpeg" alt="">
+                                <div class="avatar-wrap">
+                                    <img class="headPortrait" @mouseenter="showWorks(items.ItemId)"
+                                         :src="items.HeadIcon" alt="">
+                                </div>
                                 <span class="headPortrait">{{ items.NickName }}</span>
                             </div>
                         </div>
                         <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"
                              @mouseleave="hideWorks()">
-                            <img src="../../assets/images/a.jpeg" alt="">
+                            <img :src="items.HeadIcon" alt="">
                             <p>{{ items.NickName }}</p>
                             <ul class="works-con-introduce">
                                 <li>
@@ -140,6 +152,11 @@
     mounted() {
     },
     methods: {
+      // 点击收藏
+      clickCollections(flag, index) {
+        this.$emit('handleCollections', flag, index);
+      },
+
       // 将要滚动到底部
       willReachBottom() {
         this.$emit('loadData')
@@ -304,13 +321,19 @@
                         justify-content: flex-start;
                         align-items: flex-start;
 
-                        img {
-                            display: inline-block;
+                        .avatar-wrap {
                             width: 20px;
                             height: 20px;
-                            border-radius: 50%;
                             margin-right: 4px;
+                            border-radius: 50%;
+                            overflow: hidden;
+
+                            img {
+                                width: 20px;
+                                height: 20px;
+                            }
                         }
+
 
                         > span {
                             font-size: 14px;

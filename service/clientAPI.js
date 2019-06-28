@@ -77,3 +77,7 @@ export const publishProject = async params => {
   return await request.post(`Publish/ReleaseItem`, params)
 }
 
+// 记录用户访问
+export const recordFrequency = async params => {
+  return await request.post(`ItemDetails/RecordFrequency`, params)
+}

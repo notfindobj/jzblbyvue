@@ -64,7 +64,7 @@
       setFollow (item) {
         this.$emit('setFollow', item)
       },
-      
+
     }
   }
 </script>
