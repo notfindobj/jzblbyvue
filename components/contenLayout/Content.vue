@@ -15,13 +15,27 @@
                         <img :src="items.ItemTitleImg" alt="">
                         <div class="works-like">
                         <p><i class="icon iconfont icon-chakan"></i>{{items.Views}}</p>
-                        <p><i class="icon iconfont icon-favorite"></i>收藏</p>
-                        </div>
+                        <p>
+                            <i class="icon iconfont icon-favorite"
+                            v-show="!items.IsCollections"
+                            @click.stop="clickCollections(true, index)"
+                        ></i>
+                        <i
+                            class="icon iconfont"
+                            style="color: #ff3c00; margin-right: 8px;"
+                            v-show="items.IsCollections"
+                            @click.stop="clickCollections(false, index)"
+                        >&#xe69d;</i>收藏
+                        </p>
+                    </div>
                     </div>
                     <div class="works-introduce">
                         <p>{{items.ItemName}}</p>
                         <div>
-                        <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                            <div class="avatar-wrap">
+                                <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                            </div>
+                        <!-- <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt=""> -->
                         <span class="headPortrait">{{items.NickName}}</span>
                         </div>
                     </div>
