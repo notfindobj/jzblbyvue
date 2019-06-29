@@ -35,7 +35,6 @@
                             <div class="avatar-wrap">
                                 <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
                             </div>
-                        <!-- <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt=""> -->
                         <span class="headPortrait">{{items.NickName}}</span>
                         </div>
                     </div>
@@ -67,13 +66,15 @@
         <ul class="works-list-change">
             <template v-for="items in RspItemDatas">
                 <li :key="items.ItemId">
-                    <div class="works-list-left"></div>
+                    <div class="works-list-left" :style="`background: url(${items.ItemTitleImg});background-size: 100% 100%;`"></div>
                     <div class="works-list-right">
                         <p>{{items.ItemName}}</p>
                         <div class="works-list-con">
                             <div class="works-name">
-                                <img src="" alt="">
-                                <span>杨小幂</span>
+                                <div class="avatar-wrap">
+                                    <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                                </div>
+                                <span>{{items.NickName}}</span>
                             </div>
                             <div class="works-list-con-box">
                                 <i class="icon iconfont icon-chakan"></i>
@@ -83,22 +84,22 @@
                             </div>
                         </div>
                     </div>
-                    <div class="works-con">
-                        <img src="../../assets/images/a.jpeg" alt="">
-                        <p>梅赛德斯·赵四</p>
+                    <div :class="currentWorks === items.ItemId ? 'works-active works-con' : ' works-con'"  @mouseleave="hideWorks(items)">
+                        <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt="" @click="jumpRoute(UserProAndFans)">
+                        <p>{{UserProAndFans.NickName || items.NickName}}</p>
                         <ul class="works-con-introduce">
                             <li>
                                 <p>项目</p>
-                                <p>1334</p>
+                                <p>{{UserProAndFans.proCount}}</p>
                             </li>
                             <li>
                                 <p>粉丝</p>
-                                <p>1.3万</p>
+                                <p>{{UserProAndFans.Fans}}</p>
                             </li>
                         </ul>
                         <div class="btn-group-box">
-                            <div>关注</div>
-                            <div>私信</div>
+                            <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
+                            <div @click="direct()">私信</div>
                         </div>
                     </div>
                 </li>
@@ -175,6 +176,9 @@
         focus() {
             this.$emit('worksFocus', this.UserProAndFans);
         },
+        clickCollections () {
+            
+        },
         // 跳转
         jumpRoute (item) {
             this.$emit('jumpRoute', item);
@@ -199,12 +203,10 @@
     .content-box {
         width: 100%;
         height: auto;
-
         .content-screening-list {
             display: flex;
             flex-direction: row;
             margin-bottom: 23px;
-
             > li {
                 line-height: 20px;
                 font-size: 14px;
@@ -212,7 +214,6 @@
                 margin-right: 36px;
                 cursor: pointer;
             }
-
             .li-active {
                 color: #ED1B24;
                 font-weight: 500;
@@ -231,16 +232,13 @@
                 }
             }
         }
-
         .works-list-box {
             width: 100%;
             height: auto;
         }
-
         .works-list {
             width: 100%;
             .clearfix();
-
             > li {
                 float: left;
                 width: 292px;
@@ -255,19 +253,16 @@
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
-
                 .img-box {
                     height: 200px;
                     position: relative;
                     cursor: pointer;
                     overflow: hidden;
-
                     > img {
                         display: inline-block;
                         width: 100%;
                         height: auto;
                     }
-
                     .works-like {
                         width: 100%;
                         height: 40px;
@@ -300,7 +295,6 @@
                         }
                     }
                 }
-
                 .works-introduce {
                     height: 66px;
                     padding: 8px 0 10px 6px;
@@ -314,34 +308,28 @@
                         color: #666666;
                         margin-bottom: 8px;
                     }
-
                     > div {
                         display: flex;
                         flex-direction: row;
                         justify-content: flex-start;
                         align-items: flex-start;
-
                         .avatar-wrap {
                             width: 20px;
                             height: 20px;
                             margin-right: 4px;
                             border-radius: 50%;
                             overflow: hidden;
-
                             img {
                                 width: 20px;
                                 height: 20px;
                             }
                         }
-
-
                         > span {
                             font-size: 14px;
                             color: #333333;
                         }
                     }
                 }
-
                 .works-con {
                     width: 163px;
                     height: 217px;
@@ -369,7 +357,6 @@
                         margin-bottom: 12px;
                         text-align: center;
                     }
-
                     .works-con-introduce {
                         height: 40px;
                         margin-bottom: 12px;
@@ -407,7 +394,6 @@
                             transform: translateX(-50%);
                         }
                     }
-
                     .btn-group-box {
                         height: 21px;
                         display: flex;
@@ -442,7 +428,6 @@
                         }
                     }
                 }
-
                 .works-active {
                     display: block;
                 }
@@ -480,6 +465,7 @@
                     box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
+                    
 
                     > img {
                         display: inline-block;
@@ -554,17 +540,18 @@
                     }
                 }
                 .works-con {
-                    width: 163px;
-                    height: 217px;
+                    width: 150px;
+                    height: 200px;
                     padding: 20px 16px;
                     background: #FFFFFF;
-                    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.10);
+                    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.1);
                     border-radius: 4px;
                     position: absolute;
-                    left: 45px;
-                    top: 7px;
+                    left: 160px;
+                    top: 0px;
                     display: none;
                     > img {
+                        cursor: pointer;
                         display: block;
                         width: 64px;
                         height: 64px;
@@ -572,17 +559,15 @@
                         background: red;
                         margin: 0 auto 10px;
                     }
-
                     > p {
                         font-size: 14px;
                         color: #333333;
-                        margin-bottom: 12px;
+                        margin-bottom: 8px;
                         text-align: center;
                     }
-
                     .works-con-introduce {
                         height: 40px;
-                        margin-bottom: 12px;
+                        // margin-bottom: 12px;
                         display: flex;
                         flex-direction: row;
                         position: relative;
@@ -619,6 +604,7 @@
                     }
 
                     .btn-group-box {
+                        cursor: pointer;
                         height: 21px;
                         display: flex;
                         flex-direction: row;
@@ -652,7 +638,21 @@
                         }
                     }
                 }
+                .works-active {
+                    display: block;
+                }
             }
+        }
+    }
+    .avatar-wrap {
+        width: 20px;
+        height: 20px;
+        margin-right: 4px;
+        border-radius: 50%;
+        overflow: hidden;
+        img {
+            width: 20px;
+            height: 20px;
         }
     }
     .ivu-page {

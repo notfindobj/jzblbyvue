@@ -134,7 +134,6 @@
       window.onresize = () => {
         this.clientWidth = document.body.clientWidth;
       }
-
       recordFrequency({
         ItemId: this.detaDetails.ItemId,
         DomainType: 0

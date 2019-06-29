@@ -30,6 +30,9 @@ export const getUserProAndFans = async (params) => {
 export const setthumbsUp = async (params) => {
     return await request.post('CollectionOrLike/Like', params)
   }
+export const getComments = async (params) => {
+  return await request.post('Comments/GetComments', params)
+}
 // 收藏
 export const setCollection = async (params) => {
   return await request.post('CollectionOrLike/Collection', params)

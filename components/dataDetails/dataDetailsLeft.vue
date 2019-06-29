@@ -4,16 +4,13 @@
      <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
           <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
-            <span :class="!isLeft ? 'isHide' : 'isShow'" @click="moveLeftClick(1)">按钮</span>
+            <img :class="!isLeft ? 'isHide' : 'isShow'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(1)" width="50px" alt="">
           </div>
           <div class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
-            <span :class="!isRight ? 'isHide' : 'isShow'" @click="moveLeftClick(2)">按钮</span>
+            <img :class="!isRight ? 'isHide moveRight' : 'isShow moveRight'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(2)" width="50px" alt="">
           </div>
           <div id="view"></div>
           <div class="view-box-right">
-            <!-- <div class="docs-buttons">
-              <button type="button" class="btn btn-primary" data-enable="inline" data-method="zoom" data-target="#zoomRatio" title="Zoom the image">Zoom</button>
-            </div> -->
             <div class="details-box">
               <div class="details-box-img">
                 <div class="details-box-img-img"></div>
@@ -29,7 +26,14 @@
                 </li>
               </ul>
             </div>
-            <!-- :discussData="comments" -->
+            <commentsCon 
+              :publish="detaDetails"
+              :comments="[]"
+              @thumbsUp="thumbsUp"
+              @Collection="Collection"
+              @commentValue="commentValue"
+            />
+            <!-- @discussValue="discussValue" -->
             <discuss/>
           </div>
         </div>
@@ -40,6 +44,9 @@
   import Viewer from 'viewerjs';
   import 'viewerjs/dist/viewer.css';
   import discuss from '../comments/discuss'
+  import commentsCon from '../comments/commentsCon'
+  import { setthumbsUp, setCollection, getComments, setComments } from '../../service/clientAPI'
+import { async } from 'q';
   export default {
     name: 'detaDetailsLeft',
     props:{
@@ -67,7 +74,8 @@
       }
     },
     components: {
-      discuss
+      discuss,
+      commentsCon
     },
     asyncData() {
     },
@@ -82,8 +90,6 @@
         let _this = this;
         _this.$nextTick(() => {
             _this.Viewer =  new Viewer(ViewerDom, {
-            // inline: false,
-            // toolbar: false,
             title: false,
             zoomRatio: 0.4,
             backdrop: false,
@@ -95,8 +101,6 @@
               _this.isShowViewBox = true;
             },
             ready: function () {
-              // _this.Viewer.update()
-              // _this.initViewButton()
               console.log('ready')
             },
             build: function () {
@@ -105,9 +109,15 @@
             built: function () {
               console.log('built')
             },
-            view: function () {
-              console.log('view')
+            view: async function () {
               console.log(document.querySelector('.viewer-canvas img').src)
+              let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
+              let queryData = {
+                ItemId: _this.detaDetails.ItemId,
+                ItemImgSrc: '',
+                ScopeType: 1
+              }
+              let msg = getComments(queryData)
             },
             shown: function () {
               console.log('shown')
@@ -119,40 +129,6 @@
           })
         })
       },
-      initViewButton () {
-        let _this = this;
-        let buttons = document.querySelector('.docs-buttons');
-        let toggles = document.querySelector('.docs-toggles');
-        buttons.onclick = function (event) {
-          let e = event || window.event;
-          let button = e.target || e.srcElement;
-          let method = button.getAttribute('data-method');
-          let target = button.getAttribute('data-target');
-          let args = JSON.parse(button.getAttribute('data-arguments')) || [];
-          document.querySelector(target)
-          if (_this.Viewer && method) {
-            if (target) {
-              // _this.Viewer[method](document.querySelector(target).value);
-            } else {
-              _this.Viewer['zoom']();
-            }
-
-            // switch (method) {
-            //   case 'scaleX':
-            //   case 'scaleY':
-            //     args[0] = -args[0];
-            //     break;
-
-            //   case 'destroy':
-            //     _this.Viewer = null;
-            //     // toggleButtons('none');
-            //     break;
-            // }
-          }
-        };
-        // let args = JSON.parse(button.getAttribute('data-arguments')) || [];
-        console.log(buttons)
-      },
       moveLeftClick (val) {
         if (val === 1) {
           document.querySelector('.viewer-prev').click()
@@ -161,6 +137,49 @@
         }
         console.log('moveLeftClick')
         // viewer-next
+      },
+      // 项目点赞
+      async thumbsUp(item) {
+        let queryData = {
+          ItemId: item.ItemId,
+          LikeType: 1,
+          IsDelete: item.islikes
+        }
+        let thumbsUpMsg = await setthumbsUp(queryData);
+        if (item.islikes) {
+          this.$set(item, 'likes', item.likes - 1)
+        } else {
+          this.$set(item, 'likes', item.likes + 1)
+        }
+        this.$set(item, 'islikes', !item.islikes)
+      },
+       // 收藏
+      async Collection(item) {
+        let queryData = {
+          ItemId: item.ItemId,
+          TalkType: 4,
+          IsDelete: item.iscollections
+        }
+        let collectionMsg = await setCollection(queryData)
+        if (item.iscollections) {
+          this.$set(item, 'collections', item.collections - 1)
+        } else {
+          this.$set(item, 'collections', item.collections + 1)
+        }
+        this.$set(item, 'iscollections', !item.iscollections)
+      },
+      //评论
+      async commentValue(row, val) {
+        let queryData = {
+          ItemId: row.ItemId,
+          IsReply: false,
+          Message: val,
+          ScopeType: 0
+        }
+        let commentMsg = await setComments(queryData)
+        if (!commentMsg) {
+          this.$set(row, 'commentss', row.commentss + 1)
+        }
       },
       mousemoveLeft () {
         this.isLeft = true
@@ -309,8 +328,8 @@
     cursor: pointer;
     position: absolute;
     display: inline-block;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 200px;
     background: transparent;
     z-index: 9999;
     top: 280px;
@@ -320,8 +339,8 @@
     cursor: pointer;
     position: absolute;
     display: inline-block;
-    width: 100px;
-    height: 100px;
+    width: 50px;
+    height: 200px;
     background: transparent;
     z-index: 9999;
     top: 280px;
@@ -329,5 +348,9 @@
   }
   .viewer-toolbar {
     display: none;
+  }
+  .moveRight {
+    transform:rotate(180deg);
+    // right: 260px;
   }
 </style>
