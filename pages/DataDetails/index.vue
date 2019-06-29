@@ -6,8 +6,12 @@
                     <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
                     <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities"
                                     :key="index"
-                                    :style="index === (ItemAttributesEntities.length - 1) ? 'font-size:12px;color: #FF3C00;font-weight: normal;' : 'font-size:12px;color: #999999;font-weight: normal;'"
-                    >{{items.ItemAttributesFullName}}
+
+
+                    ><span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
+                    </BreadcrumbItem>
+                    <BreadcrumbItem style="font-size:12px;color: #FF3C00;font-weight: normal;">
+                        {{ detaDetails.ItemName }}
                     </BreadcrumbItem>
                 </Breadcrumb>
             </div>
@@ -18,14 +22,16 @@
                     :discussData="getGetCommentsData"
                     :attribute="ItemAttributesEntities"
                 />
-                <div :class="{'fix-top': scrollTop > 312}" :style="rightPx">
+                <div>
                     <data-details-right
+                        :class="{'fix-top': scrollTop > 312}" :style="rightPx"
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
                     />
                     <commentsCon
+                        :class="{'margin-top': scrollTop > 312}"
                         :width="'340px'"
                         :publish="detaDetails"
                         :comments="getGetCommentsData"
@@ -123,6 +129,7 @@
     created() {
     },
     mounted() {
+
       let _this = this
       $(document).ready(function () {
         _this.initLazy()
@@ -134,12 +141,36 @@
       window.onresize = () => {
         this.clientWidth = document.body.clientWidth;
       }
+      // 记录用户访问
       recordFrequency({
         ItemId: this.detaDetails.ItemId,
         DomainType: 0
       })
     },
     methods: {
+
+      clickCate(index) {
+        console.log(index);
+        let attrList = [];
+        let dataBase = JSON.parse(this.$route.query.dataBase);
+        this.ItemAttributesEntities.forEach((item, attrIndex) => {
+          if (index >= attrIndex) {
+            attrList.push({
+              ArrEnCode: item.ItemSubAttributeCode,
+              ArrId: item.ItemAttributesId
+            })
+          }
+        });
+        dataBase.ClassTypeArrList = attrList;
+        delete dataBase.title;
+        this.$router.push({
+          name: 'dataBase',
+          query: {
+            dataBase: JSON.stringify(dataBase)
+          }
+        })
+      },
+
       initLazy() {
         $("img[data-original]").lazyload()
       },
@@ -255,6 +286,12 @@
                 height: 46px;
                 width: 100%;
                 padding-top: 9px;
+                .cate-span {
+                    cursor: pointer;
+                    &:hover {
+                        color: #ff3c00;
+                    }
+                }
             }
 
             .data-details-con {
@@ -265,12 +302,16 @@
                 align-items: flex-start;
                 justify-content: space-between;
                 padding-bottom: 30px;
+                .margin-top {
+                    margin-top: 360px;
+                }
                 .data-details-location {
                 }
 
                 .fix-top {
                     position: fixed;
                     top: 0;
+                    z-index: 99;
                 }
             }
         }

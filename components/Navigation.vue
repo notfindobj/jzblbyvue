@@ -113,12 +113,12 @@
     },
 
     mounted() {
-      this.isIndex = this.$route.name === 'index';
+      this.isIndex = this.$route.name === '_id.vue';
     },
 
     watch: {
       $route(to, from) {
-        this.isIndex = this.$route.name === 'index';
+        this.isIndex = this.$route.name === '_id.vue';
       }
     },
 
