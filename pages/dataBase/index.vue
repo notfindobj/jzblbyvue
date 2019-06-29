@@ -65,10 +65,6 @@
       }
     },
 
-    mounted() {
-      console.log(JSON.parse(this.$route.query.dataBase))
-    },
-
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       let showLayout = queryData.title !== '建筑规范';
@@ -137,6 +133,9 @@
       //二级菜单
       choseSomeOne(row, rows) {
         let queryData = JSON.parse(this.$route.query.dataBase);
+        if (queryData.ClassTypeArrList === '') {
+          queryData.ClassTypeArrList = [];
+        }
         let TypeArrList = queryData.ClassTypeArrList || [];
         let ClassTypeArrList = []
         TypeArrList.forEach(ele => {

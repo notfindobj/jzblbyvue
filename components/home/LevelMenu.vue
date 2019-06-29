@@ -7,7 +7,9 @@
                     :key="items.ItemAttributesId"
                     :data-id="items.ItemAttributesId"
                     :class="items.ItemAttributesId === id ?  'banner-nav-items cursorHover': 'banner-nav-items'"
-                    @mouseenter="mouseenter(items.ItemAttributesId)">
+                    @mouseenter="mouseenter(items.ItemAttributesId)"
+                    @click="goList(items)"
+                >
                     {{items.ItemAttributesFullName}}
                     <div>
                         <div class="sub-banner-nav" :class="items.ItemAttributesId === id ?  'show': 'hide'">
@@ -19,7 +21,7 @@
                                         <div style="display:inline-block;width:85%">
                                             <div v-for="it in item.ChildNode" :key="it.ItemAttributesId"
                                                  class="sub-banner-nav-items-title-content">
-                                                <span @click="clickFullName(items, item, it)">{{it.ItemAttributesFullName}}</span>
+                                                <span @click.stop="clickFullName(items, item, it)">{{it.ItemAttributesFullName}}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -53,10 +55,10 @@
     methods: {
       mouseenter: _debounce(function (id) {
         this.id = id
-      }, 200),
+      }, 100),
       mouseleave: _debounce(function (id) {
         this.id = id
-      }, 200),
+      }, 100),
       clickFullName(pre, type, ch) {
         let baseDateId = {
           ClassTypeId: `${ pre.ItemSubAttributeCode }|${ pre.ItemAttributesId }`,
@@ -72,6 +74,22 @@
           Page: 0,
           Rows: 32,
           title: pre.ItemAttributesFullName,
+        }
+        this.$store.dispatch('BASEDATA', baseDateId);
+        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })
+      },
+
+      // 点击一级分类
+      goList(cate) {
+        let baseDateId = {
+          ClassTypeId: `${ cate.ItemSubAttributeCode }|${ cate.ItemAttributesId }`,
+          ClassTypeArrList: '',
+          SortType: 0,
+          KeyWords: "",
+          Order: true,
+          Page: 0,
+          Rows: 32,
+          title: cate.ItemAttributesFullName,
         }
         this.$store.dispatch('BASEDATA', baseDateId);
         this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })
