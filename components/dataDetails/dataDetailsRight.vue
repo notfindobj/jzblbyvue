@@ -104,6 +104,7 @@
                     height: 74px;
                     border-radius: 50%;
                     margin: 0 auto 6px;
+                    cursor: pointer;
                 }
 
                 .works-name {

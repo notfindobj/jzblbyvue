@@ -201,32 +201,34 @@
 </template>
 
 <script>
-export default {
+  export default {
     layout: 'main',
-    async asyncData({app, store, route}) {
-    let queryData = {
+    async asyncData({ app, store, route }) {
+      let queryData = {
         TalkType: "",
         Page: 0
-    }
-    let getTalks = await store.dispatch('getTalk', queryData);
-    return {
+      };
+      let getTalks = await store.dispatch('getTalk', queryData);
+      return {
         getTalks: getTalks.retModels
-    }
+      }
     },
     methods: {
-        handleReachBottom() {
-            console.log(1222)
-        }
+      handleReachBottom() {
+        console.log(1222)
+      }
     }
-}
+  }
 </script>
 
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
+
     .photos-wrap {
         width: 700px;
         display: flex;
         flex-wrap: wrap;
+
         .img {
             width: 220px;
             height: 220px;

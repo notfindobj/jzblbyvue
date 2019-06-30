@@ -30,7 +30,7 @@
     methods: {
     },
     async asyncData({ store, params }) {
-      const data = await store.dispatch('getTribeInfo', store.state.overas.auth.UserId);
+      const data = await store.dispatch('getTribeInfo', params.id);
       return {
         tribeInfo: data
       }

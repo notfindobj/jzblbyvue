@@ -10,7 +10,7 @@
     <div v-if="showLayout" class="works-list_box">
         <ScrollBox @willReachBottom="willReachBottom" :isLast="isLast">
             <ul class="works-list">
-                <li @mouseleave="hideWorks()" v-for="items in RspItemDatas" :key="items.ItemId">
+                <li @mouseleave="hideWorks()" v-for="(items, index) in RspItemDatas" :key="items.ItemId">
                     <div class="img-box" @click="viewItem(items)">
                         <img :src="items.ItemTitleImg" alt="">
                         <div class="works-like">
@@ -176,8 +176,8 @@
         focus() {
             this.$emit('worksFocus', this.UserProAndFans);
         },
-        clickCollections () {
-            
+        clickCollections (flag, index) {
+            this.$emit('handleCollections', flag, index)
         },
         // 跳转
         jumpRoute (item) {
@@ -465,7 +465,7 @@
                     box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
-                    
+
 
                     > img {
                         display: inline-block;

@@ -113,12 +113,12 @@
     },
 
     mounted() {
-      this.isIndex = this.$route.name === '_id.vue';
+      this.isIndex = this.$route.name === 'index';
     },
 
     watch: {
       $route(to, from) {
-        this.isIndex = this.$route.name === '_id.vue';
+        this.isIndex = this.$route.name === 'index';
       }
     },
 
@@ -132,8 +132,7 @@
       },
       async signOut() {
         let config = {
-          url: 'http://127.0.0.1:8889/api/logout',
-          // url: 'http://140.143.240.64:8889/api/logout',
+          url: process.env.NODE_ENV === 'production' ? 'http://140.143.240.64:8889/api/logout' : 'http://127.0.0.1:8889/api/logout',
           withCredentials: true,
           method: 'post',
           headers: {
