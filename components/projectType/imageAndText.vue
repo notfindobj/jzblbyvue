@@ -2,10 +2,12 @@
     <div class="public-block">
         <div class="block-head">
             <div class="block-head-left">
-                <div class="avatar"></div>
+                <div class="avatar">
+                    <img :src="itemInfo.HeadIcon" alt="">
+                </div>
                 <div class="info">
-                    <p class="name">杨小幂</p>
-                    <p class="time">3分钟前</p>
+                    <p class="name">{{ itemInfo.NickName }}</p>
+                    <p class="time">{{ itemInfo.CreateDate }}</p>
                 </div>
             </div>
             <div class="block-head-right">
@@ -21,45 +23,162 @@
             </div>
         </div>
         <div class="content">
-            <p>新一季的《最强大脑》，依然汇聚了清华北大海外高校的各路牛人，高智商与高智商的碰撞，让我看得十分过瘾。在这巅峰的碰撞中，我意外捕捉到了比超越脑力还震撼的一幕。初始100强里，不是20几岁的高材生，就是10几岁的神童们，非常意外地，居然还有一个40岁的“大叔”来参赛。要知道，这场顶级脑力的比拼对中年人可一点不友好。</p>
-            <div class="photo-wrap" v-if="project > 0 && project < 5">
-                <div class="img" v-for="item in project" :key="item"></div>
-            </div>
-            <div class="photos-wrap" v-if="project >= 5 ">
-                <div class="img" v-for="item in project" :key="item"></div>
+            <p v-if="itemInfo.TalkType !== 3">{{ itemInfo.TalkContent }}</p>
+            <p v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></p>
+            <div class="photo-wrap">
+                <div class="img" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
+                    <img :src="fileBaseUrl + item.smallImgUrl" alt="">
+                </div>
             </div>
         </div>
-        <div class="block-foot">
+        <div class="block-foot" @click.stop="">
             <div class="foot-child">
-                <i class="icon iconfont">&#xe696;</i>
-                <span>收藏</span>
+                <i
+                    class="icon iconfont"
+                    v-show="!itemInfo.itemOperateData.IsCollection"
+                    @click="clickCollection(true)"
+                >&#xe696;</i>
+                <i class="icon iconfont"
+                   style="color: #ff3c00; font-size: 17px;"
+                   v-show="itemInfo.itemOperateData.IsCollection"
+                   @click="clickCollection(false)"
+                >&#xe69d;</i>
+                <span :class="{ active: itemInfo.itemOperateData.IsCollection }">收藏</span>
             </div>
             <div class="foot-child">
                 <i class="icon iconfont">&#xe6be;</i>
-                <span>12</span>
+                <span>{{ itemInfo.itemOperateData.ShareCount }}</span>
             </div>
-            <div class="foot-child">
+            <div class="foot-child" @click="clickComment">
                 <i class="icon iconfont">&#xe664;</i>
                 <span>评论</span>
             </div>
             <div class="foot-child">
-                <i class="icon iconfont">&#xe67e;</i>
-                <span>点赞</span>
+                <i
+                    class="icon iconfont"
+                    v-show="!itemInfo.itemOperateData.IsLike"
+                    @click="clickLike(true)"
+                >&#xe67e;</i>
+                <i
+                    class="icon iconfont"
+                    style="color: #ff3c00;"
+                    v-show="itemInfo.itemOperateData.IsLike"
+                    @click="clickLike(false)"
+                >&#xe621;</i>
+                <span :class="{ active: itemInfo.itemOperateData.IsLike }">点赞</span>
             </div>
         </div>
     </div>
 </template>
 
 <script>
+  import Comment from '../video/comment'
   export default {
     props: {
-      project: {
-        type: Number,
-        default: 1
+      itemInfo: {
+        type: Object,
+        default: function () {
+          return {}
+        }
       },
       index: {
         type: Number,
         default: 0
+      }
+    },
+    components: {
+      'v-comment': Comment
+    },
+    data() {
+      return {
+        fileBaseUrl: process.env.fileBaseUrl,
+        isShowComment: false,    // 是否显示评论
+        commentList: [], // 评论列表
+        isLoadingComment: false,    // 是否显示评论加载中的动画
+      }
+    },
+
+    methods: {
+      // 收藏
+      clickCollection(flag) {
+        this.$emit('clickCollection', this.index, flag)
+      },
+
+      // 赞
+      clickLike(flag) {
+        this.$emit('clickLike', this.index, flag)
+      },
+
+      // 点击弹出详情
+      clickVideo() {
+        this.$emit('clickVideo', this.itemInfo, this.index);
+      },
+
+      // 点击评论
+      clickComment() {
+        if (this.isShowComment) {
+          this.isShowComment = false;
+          return false;
+        }
+
+        this.isShowComment = true;
+        this.isLoadingComment = true;
+        this.getComment();
+      },
+
+      // 获取评论
+      getComment() {
+        this.$store.dispatch('getGetComments', {
+          ItemId: this.itemInfo.ItemId,
+          ScopeType: 2
+        }).then(res => {
+          this.isLoadingComment = false;
+          this.commentList = res;
+        })
+      },
+
+      // 评论
+      submitComment(content) {
+        this.isLoadingComment = true;
+        setComments({
+          ItemId: this.itemInfo.ItemId,
+          ReplyId: '',
+          ReplyUserId: '',
+          IsReply: false,
+          Message: content,
+          ItemImgSrc: '',
+          ScopeType: 2
+        }).then(res => {
+          this.$Message.success('评论成功');
+          this.getComment();
+        })
+      },
+
+      // 回复
+      submitReplay(params) {
+        this.isLoadingComment = true;
+        setComments({
+          ItemId: this.itemInfo.ItemId,
+          ReplyId: params.commentsId,
+          ReplyUserId: params.userId,
+          IsReply: true,
+          Message: params.content,
+          ItemImgSrc: '',
+          ScopeType: 2
+        }).then(res => {
+          // this.$Message.success('评论成功');
+          this.getComment();
+        })
+      },
+
+      // 点赞回复
+      submitLike(obj) {
+        setthumbsUp({
+          ItemId: this.itemInfo.ItemId,
+          LikeType: 0,
+          CommentsId: obj.commentsId,
+          IsDelete: !obj.flag
+        })
       }
     }
   }

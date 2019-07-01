@@ -10,86 +10,6 @@
                 @clickCollection="clickCollection"
                 @clickLike="clickLike"
             ></video-item>
-<!--            <div-->
-<!--                class="public-block"-->
-<!--                v-for="(item, index) in videoList"-->
-<!--                :key="item.TalkId"-->
-<!--                @click="clickVideo(item, index)"-->
-<!--            >-->
-<!--                <div class="block-head">-->
-<!--                    <div class="block-head-left">-->
-<!--                        <div class="avatar">-->
-<!--                            <img :src="item.HeadIcon" alt="">-->
-<!--                        </div>-->
-<!--                        <div class="info">-->
-<!--                            <p class="name">{{ item.NickName }}</p>-->
-<!--                            <p class="time">{{ item.CreateDate }}</p>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                    <div class="block-head-right">-->
-<!--                        <Dropdown placement="bottom-end" trigger="click">-->
-<!--                            <a href="javascript:void(0)">-->
-<!--                                <Icon type="ios-arrow-down"></Icon>-->
-<!--                            </a>-->
-<!--                            <DropdownMenu slot="list">-->
-<!--                                <DropdownItem>帮上头条</DropdownItem>-->
-<!--                                <DropdownItem>投诉</DropdownItem>-->
-<!--                            </DropdownMenu>-->
-<!--                        </Dropdown>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="content">-->
-<!--                    <p>{{ item.TalkContent }}</p>-->
-<!--                    <div class="video-wrap" v-if="item.Imgs.length > 0">-->
-<!--                        <div class="photo-wrap">-->
-<!--                            <div class="video" @click.stop="">-->
-<!--                                <video controls :poster="item.Imgs[0].smallImgUrl">-->
-<!--                                    <source :src="fileBaseUrl + item.Imgs[0].videoUrl" type="video/mp4">-->
-<!--                                    <source :src="fileBaseUrl + item.Imgs[0].videoUrl" type="video/ogg">-->
-<!--                                    您的浏览器不支持Video标签。-->
-<!--                                </video>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div class="block-foot" @click.stop="">-->
-<!--                    <div class="foot-child">-->
-<!--                        <i-->
-<!--                            class="icon iconfont"-->
-<!--                            v-show="!item.itemOperateData.IsCollection"-->
-<!--                            @click="clickCollection(index, true)"-->
-<!--                        >&#xe696;</i>-->
-<!--                        <i class="icon iconfont"-->
-<!--                           style="color: #ff3c00; font-size: 17px;"-->
-<!--                           v-show="item.itemOperateData.IsCollection"-->
-<!--                           @click="clickCollection(index, false)"-->
-<!--                        >&#xe69d;</i>-->
-<!--                        <span :class="{ active: item.itemOperateData.IsCollection }">收藏</span>-->
-<!--                    </div>-->
-<!--                    <div class="foot-child">-->
-<!--                        <i class="icon iconfont">&#xe6be;</i>-->
-<!--                        <span>{{ item.itemOperateData.ShareCount }}</span>-->
-<!--                    </div>-->
-<!--                    <div class="foot-child">-->
-<!--                        <i class="icon iconfont">&#xe664;</i>-->
-<!--                        <span>评论</span>-->
-<!--                    </div>-->
-<!--                    <div class="foot-child">-->
-<!--                        <i-->
-<!--                            class="icon iconfont"-->
-<!--                            v-show="!item.itemOperateData.IsLike"-->
-<!--                            @click="clickLike(index, true)"-->
-<!--                        >&#xe67e;</i>-->
-<!--                        <i-->
-<!--                            class="icon iconfont"-->
-<!--                            style="color: #ff3c00;"-->
-<!--                            v-show="item.itemOperateData.IsLike"-->
-<!--                            @click="clickLike(index, false)"-->
-<!--                        >&#xe621;</i>-->
-<!--                        <span :class="{ active: item.itemOperateData.IsLike }">点赞</span>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
         </div>
         <video-modal
             :isShowModal="isShowModal"
@@ -234,5 +154,8 @@
 </script>
 
 <style lang="less" scoped>
-    @import "~assets/css/ModulesStyle/index.less";
+    .container {
+        width: 1200px;
+        margin: 30px auto;
+    }
 </style>

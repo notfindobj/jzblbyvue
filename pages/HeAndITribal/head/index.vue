@@ -17,8 +17,8 @@
                     <img :src="userInfo.HeadIcon" alt=".">
                 </div>
                 <p class="my-name">{{ userInfo.NickName }}<i
-                    :class="my_introduction.sex == 0 ? 'icon iconfont' : 'icon iconfont'"></i></p>
-                <p class="my-Introduction-con">{{my_introduction.introduction}}</p>
+                    :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i></p>
+                <p class="my-Introduction-con">{{ userInfo.Description }}</p>
             </div>
 
         </div>
@@ -32,7 +32,7 @@
     props: {
       userInfo: {
         type: Object,
-        default: function() {
+        default: function () {
           return {}
         }
       }

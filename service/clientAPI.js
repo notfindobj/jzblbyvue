@@ -84,3 +84,8 @@ export const publishProject = async params => {
 export const recordFrequency = async params => {
   return await request.post(`ItemDetails/RecordFrequency`, params)
 }
+
+// 获取个人或他人部落类型菜单
+export const getTypeMeun = async params => {
+  return await request.post(`MyTribe/GetTypeMeunBy`, params)
+}
