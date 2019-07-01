@@ -60,9 +60,8 @@ export default {
                 mobile: this.userItem.mobile,
                 password: this.userItem.password
             }
-            console.log(process, 12)
             let config = {
-                url: process.env.NODE_ENV === 'production' ? 'http://140.143.240.64:8889/front/mobileLogin' : 'http://127.0.0.1:8889/front/mobileLogin',
+                url: process.env.NODE_ENV === 'production' ? 'http://192.210.170.17:8889/front/mobileLogin' : 'http://127.0.0.1:8889/front/mobileLogin',
                 withCredentials: true,
                 method: 'post',
                 headers: {

@@ -91,16 +91,18 @@ import { async } from 'q';
         _this.$nextTick(() => {
             _this.Viewer =  new Viewer(ViewerDom, {
             title: false,
+            // inline: true,
             zoomRatio: 0.4,
             backdrop: false,
             loading: false,
             url: 'data-original',
-            parent: document.getElementById('view'),
+            // parent: document.getElementById('view'),
             container: document.getElementById('view'),
             show: function (e) {
               _this.isShowViewBox = true;
             },
             ready: function () {
+              // document.querySelector('.viewer-close').onmouseover();
               console.log('ready')
             },
             build: function () {

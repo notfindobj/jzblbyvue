@@ -132,7 +132,7 @@
       },
       async signOut() {
         let config = {
-          url: process.env.NODE_ENV === 'production' ? 'http://140.143.240.64:8889/api/logout' : 'http://127.0.0.1:8889/api/logout',
+          url: process.env.NODE_ENV === 'production' ? 'http://192.210.170.17:8889/api/logout' : 'http://127.0.0.1:8889/api/logout',
           withCredentials: true,
           method: 'post',
           headers: {

@@ -65,7 +65,7 @@
     <div class="works-list-box" v-else>
         <ul class="works-list-change">
             <template v-for="items in RspItemDatas">
-                <li :key="items.ItemId">
+                <li :key="items.ItemId" @click="viewItem(items)">
                     <div class="works-list-left" :style="`background: url(${items.ItemTitleImg});background-size: 100% 100%;`"></div>
                     <div class="works-list-right">
                         <p>{{items.ItemName}}</p>
@@ -465,8 +465,7 @@
                     box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
-
-
+                    cursor: pointer;
                     > img {
                         display: inline-block;
                         width: 100%;

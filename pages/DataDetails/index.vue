@@ -7,7 +7,6 @@
                     <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities"
                                     :key="index"
 
-
                     ><span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
                     </BreadcrumbItem>
                     <BreadcrumbItem style="font-size:12px;color: #FF3C00;font-weight: normal;">
@@ -17,12 +16,17 @@
             </div>
             <div class="data-details-con">
                 <data-details-left
-                    id="container"
+                      v-show="isLayout"
+                      id="container"
+                      :detaDetails="detaDetails"
+                      :discussData="getGetCommentsData"
+                      :attribute="ItemAttributesEntities"
+                  />
+                  <dataDetailsPDFLeft  
+                    v-show="!isLayout"
                     :detaDetails="detaDetails"
-                    :discussData="getGetCommentsData"
-                    :attribute="ItemAttributesEntities"
-                />
-                <div>
+                   />
+                  <div>
                     <data-details-right
                         :class="{'fix-top': scrollTop > 312}" :style="rightPx"
                         :detaDetails="detaDetails"
@@ -56,6 +60,7 @@
 </template>
 <script>
   import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
+  import dataDetailsPDFLeft from '../../components/dataDetails/dataDetailsPDFLeft'
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
@@ -83,7 +88,8 @@
         isShowDateDetailsDown: false,
         ItemAttributesEntities: {},
         scrollTop: '',
-        clientWidth: ''
+        clientWidth: '',
+        isLayout: true
       }
     },
     components: {
@@ -93,6 +99,7 @@
       viewPicture,
       dateDetailsDown,
       dataDetailsCustom,
+      dataDetailsPDFLeft,
       ToTop
     },
     computed: {
@@ -127,9 +134,12 @@
       }
     },
     created() {
+      try {
+        let showLayout =  JSON.parse(this.$route.query.dataBase);
+        this.isLayout = showLayout.showLayout;
+      } catch (error) {}
     },
     mounted() {
-
       let _this = this
       $(document).ready(function () {
         _this.initLazy()
@@ -148,9 +158,7 @@
       })
     },
     methods: {
-
       clickCate(index) {
-        console.log(index);
         let attrList = [];
         let dataBase = JSON.parse(this.$route.query.dataBase);
         this.ItemAttributesEntities.forEach((item, attrIndex) => {
@@ -170,7 +178,6 @@
           }
         })
       },
-
       initLazy() {
         $("img[data-original]").lazyload()
       },

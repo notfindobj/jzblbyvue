@@ -67,7 +67,7 @@
 
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
-      let showLayout = queryData.title !== '建筑规范';
+      let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false: true;
       delete queryData.title;
       //  let [menuData, getBaseData] = Promise.all([store.dispatch('getMenu'), store.dispatch('getBaseData', queryData)])
       let menuData = await store.dispatch('getMenu');
@@ -121,13 +121,12 @@
       //一级菜单
       getItemsBaseData(row) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        this.showLayout = row.ItemAttributesFullName !== '建筑规范';
+        this.showLayout = (row.ItemAttributesFullName === '建筑规范' || row.ItemAttributesFullName === '文本') ? false: true;
         queryData.title = row.ItemAttributesFullName;
         queryData.ClassTypeId = `${ row.ItemSubAttributeCode }|${ row.ItemAttributesId }`;
         queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
+        this.$router.push({ name: "dataBase", query: {dataBase: JSON.stringify(queryData)}});
         delete queryData.title;
-        // let queryDatas = JSON.parse(this.$route.query.dataBase);
         this.getBaseDatas(queryData)
       },
       //二级菜单
@@ -183,7 +182,6 @@
         this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
         this.isFinished = true;
       },
-
       // 排序
       entrySorting(val) {
         let queryData = JSON.parse(this.$route.query.dataBase);
@@ -194,8 +192,9 @@
       // 查看详情
       viewItem(item) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        queryData.Id = item.ItemId
-        this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(queryData) } })
+        queryData.Id = item.ItemId;
+        queryData.showLayout = this.showLayout;
+        this.$router.push({ name: "DataDetails", query: {dataBase: JSON.stringify(queryData)}})
       },
       // 获取项目和粉丝量
       async showWorks (user) {
