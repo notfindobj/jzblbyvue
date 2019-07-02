@@ -97,6 +97,11 @@
               this.dataList = this.dataList.concat(res.retModels);
             }
             this.paginationData = res.paginationData;
+          } else {
+            if (isReload) {
+              this.dataList = []
+            }
+            this.paginationData = res.paginationData;
           }
         })
       },

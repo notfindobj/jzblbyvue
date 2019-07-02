@@ -47,7 +47,7 @@
                 <span class="title-name">最近访客</span>
             </h5>
             <ul class="he-and-i-introduction-bottom-list">
-                <li v-for="item in userInfo.TribeVisit" :key="item.UserId">
+                <li v-for="item in userInfo.TribeVisit" :key="item.UserId" :title="item.NickName">
                     <img :src="item.HeadIcon" alt="">
                     <p>{{item.NickName}}</p>
                 </li>
@@ -296,6 +296,10 @@
                         text-align: center;
                         font-size: 12px;
                         color: #333333;
+                        width: 100%;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
                     }
 
                     &:nth-child(4n) {

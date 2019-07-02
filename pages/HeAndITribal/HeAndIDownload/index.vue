@@ -11,7 +11,27 @@
                 </li>
             </ul>
             <Scroll :on-reach-bottom="handleReachBottom" height="630">
-                <ImageAndText v-for="(item, index) in dataList" :key="index" :itemInfo="item"></ImageAndText>
+                <template
+                    v-for="(item, index) in dataList"
+                >
+                    <ImageAndText
+                        :key="index"
+                        v-if="item.TalkType !== 2"
+                        :itemInfo="item"
+                        :index="index"
+                        @clickCollection="clickCollection"
+                        @clickLike="clickLike"
+                    ></ImageAndText>
+                    <VideoItem
+                        :key="index"
+                        v-if="item.TalkType === 2"
+                        :videoInfo="item"
+                        :index="index"
+                        @clickCollection="clickCollection"
+                        @clickLike="clickLike"
+                    ></VideoItem>
+                </template>
+
             </Scroll>
         </div>
     </div>
@@ -21,7 +41,8 @@
 
 <script>
   import ImageAndText from '~/components/projectType/imageAndText'
-
+  import VideoItem from '~/components/projectType/video'
+  import { setComments, setthumbsUp, setCollection, setFollow } from '../../../service/clientAPI'
   export default {
     layout: 'main',
     data() {
@@ -30,7 +51,8 @@
       }
     },
     components: {
-      ImageAndText
+      ImageAndText,
+      VideoItem
     },
 
     props: {
@@ -39,9 +61,53 @@
       paginationData: Object
     },
     methods: {
+
+      // 点击收藏
+      clickCollection(index, flag) {
+        setCollection({
+          ItemId: this.dataList[index].ItemId,
+          ItemName: this.dataList[index].TalkTitle,
+          ItemTitleImg: '',
+          IsDelete: !flag,
+          TalkType: this.dataList[index].TalkType
+        }).then(() => {
+          let dataInfo = JSON.parse(JSON.stringify(this.dataList[index]));
+          dataInfo.itemOperateData.IsCollection = flag;
+          flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
+          this.$set(this.dataList, index, dataInfo);
+
+          // // 如果是点击的弹框中的，就更新videoInfo
+          // if (this.isShowModal) {
+          //   this.$set(this.dataList, 'itemOperateData', dataInfo.itemOperateData)
+          // }
+        })
+      },
+
+      // 点击点赞
+      clickLike(index, flag) {
+        setthumbsUp({
+          ItemId: this.dataList[index].ItemId,
+          LikeType: this.dataList[index].TalkType,
+          CommentsId: '',
+          IsDelete: !flag
+        }).then(() => {
+          let itemInfo = JSON.parse(JSON.stringify(this.dataList[index]));
+          itemInfo.itemOperateData.IsLike = flag;
+          flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
+          this.$set(this.dataList, index, itemInfo);
+
+          // // 如果是点击的弹框中的，就更新videoInfo
+          // if (this.isShowModal) {
+          //   this.$set(this.videoInfo, 'itemOperateData', itemInfo.itemOperateData)
+          // }
+        })
+      },
+
       handleReachBottom() {
         if (this.paginationData.page < this.paginationData.total) {
           this.$emit('reachBottom')
+        } else {
+          this.$Message.warning('已经到底了~')
         }
       },
 

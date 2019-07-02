@@ -61,6 +61,8 @@
     mounted() {
       if (this.$route.name === 'QuestionsAndAnswers-id') {
         this.width = 529;
+      } else if (this.$route.name === 'HeAndITribal-id') {
+        this.width = 610;
       }
     },
 

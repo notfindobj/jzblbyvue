@@ -1,78 +1,24 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" height="800">
         <div class="container">
-            <div
-                class="public-block"
-                v-for="item in attentionList"
-                :key="item.ItemId"
-            >
-                <div class="block-head">
-                    <div class="block-head-left">
-                        <div class="avatar">
-                            <img :src="item.HeadIcon" :alt="item.NickName">
-                        </div>
-                        <div class="info">
-                            <p class="name">{{ item.NickName }}</p>
-                            <p class="time">{{ item.CreateDate }}</p>
-                        </div>
-                    </div>
-                    <div class="block-head-right">
-                        <Dropdown placement="bottom-end" trigger="click">
-                            <a href="javascript:void(0)">
-                                <Icon type="ios-arrow-down"></Icon>
-                            </a>
-                            <DropdownMenu slot="list">
-                                <DropdownItem>帮上头条</DropdownItem>
-                                <DropdownItem>投诉</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </div>
-                </div>
-                <div class="content">
-                    <p v-if="item.TalkType !== 3">{{ item.TalkContent }}</p>
-                    <p v-if="item.TalkType === 3" class="ql-editor detail-text" v-html="item.TalkContent"></p>
-                    <div class="photo-wrap" v-if="item.TalkType !== 2">
-                        <div
-                            class="img"
-                            v-for="(img, index) in item.Imgs"
-                            :key="index"
-                        >
-                            <img :src="baseUrl + img.smallImgUrl" alt="">
-                        </div>
-                    </div>
-                    <div class="photo-wrap" v-if="item.TalkType === 2">
-                        <div
-                            class="video"
-                            v-for="(video, index) in item.Imgs"
-                            :key="index"
-                        >
-                            <video controls>
-                                <source :src="baseUrl + video.videoUrl" type="video/mp4">
-                                <source :src="baseUrl + video.videoUrl" type="video/ogg">
-                                您的浏览器不支持Video标签。
-                            </video>
-                        </div>
-                    </div>
-                </div>
-                <div class="block-foot">
-                    <div class="foot-child">
-                        <i class="icon iconfont">&#xe696;</i>
-                        <span>收藏</span>
-                    </div>
-                    <div class="foot-child">
-                        <i class="icon iconfont">&#xe6be;</i>
-                        <span>12</span>
-                    </div>
-                    <div class="foot-child">
-                        <i class="icon iconfont">&#xe664;</i>
-                        <span>评论</span>
-                    </div>
-                    <div class="foot-child">
-                        <i class="icon iconfont">&#xe67e;</i>
-                        <span>点赞</span>
-                    </div>
-                </div>
-            </div>
+            <template v-for="(item, index) in attentionList">
+                <ImageAndText
+                    :key="index"
+                    v-if="item.TalkType !== 2"
+                    :itemInfo="item"
+                    :index="index"
+                    @clickCollection="clickCollection"
+                    @clickLike="clickLike"
+                ></ImageAndText>
+                <VideoItem
+                    :key="index"
+                    v-if="item.TalkType === 2"
+                    :videoInfo="item"
+                    :index="index"
+                    @clickCollection="clickCollection"
+                    @clickLike="clickLike"
+                ></VideoItem>
+            </template>
             <!--            <div class="public-block recommend">-->
             <!--                <div class="recommend-title">-->
             <!--                    <i class="icon iconfont">&#xe60b;</i>-->
@@ -133,21 +79,66 @@
 </template>
 
 <script>
+  import ImageAndText from '~/components/projectType/imageAndText'
+  import VideoItem from '~/components/projectType/video'
+  import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
 
   export default {
     layout: 'main',
     middleware: 'authenticated',
     data() {
       return {
-        baseUrl: process.env.fileBaseUrl,
         pageNum: 1,
         attentionList: [],
-        totle: 0,   // 总页数
+        total: 0,   // 总页数
       }
+    },
+    components: {
+      ImageAndText,
+      VideoItem
     },
 
     methods: {
+      // 点击收藏
+      clickCollection(index, flag) {
+        setCollection({
+          ItemId: this.attentionList[index].ItemId,
+          ItemName: this.attentionList[index].TalkTitle,
+          ItemTitleImg: '',
+          IsDelete: !flag,
+          TalkType: this.attentionList[index].TalkType
+        }).then(() => {
+          let dataInfo = JSON.parse(JSON.stringify(this.attentionList[index]));
+          dataInfo.itemOperateData.IsCollection = flag;
+          flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
+          this.$set(this.attentionList, index, dataInfo);
 
+          // // 如果是点击的弹框中的，就更新videoInfo
+          // if (this.isShowModal) {
+          //   this.$set(this.dataList, 'itemOperateData', dataInfo.itemOperateData)
+          // }
+        })
+      },
+
+      // 点击点赞
+      clickLike(index, flag) {
+        setthumbsUp({
+          ItemId: this.attentionList[index].ItemId,
+          LikeType: this.attentionList[index].TalkType,
+          CommentsId: '',
+          IsDelete: !flag
+        }).then(() => {
+          let itemInfo = JSON.parse(JSON.stringify(this.attentionList[index]));
+          itemInfo.itemOperateData.IsLike = flag;
+          flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
+          this.$set(this.attentionList, index, itemInfo);
+
+          // // 如果是点击的弹框中的，就更新videoInfo
+          // if (this.isShowModal) {
+          //   this.$set(this.videoInfo, 'itemOperateData', itemInfo.itemOperateData)
+          // }
+        })
+      },
       // 获取数据
       async getList() {
         const data = await this.$store.dispatch('getAttentionList', {
@@ -156,12 +147,12 @@
         });
 
         this.attentionList = this.attentionList.concat(data.retModels);
-        this.totle = data.paginationData.total;
+        this.total = data.paginationData.total;
       },
 
       // 触底事件
       handleReachBottom() {
-        if (this.pageNum >= this.totle) {
+        if (this.pageNum >= this.total) {
           this.$Message.info('已经是最后一页了');
           return false;
         }
@@ -178,7 +169,7 @@
 
       return {
         attentionList: data.retModels,
-        totle: data.paginationData.total
+        total: data.paginationData.total
       }
     }
   }
