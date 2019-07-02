@@ -1,12 +1,12 @@
 <template>
     <div style="position: relative;" v-show="isShow" @click="isShowEmotion = false">
-        <div class="comment-shape"></div>
+        <div class="comment-shape" :style="{right: right}"></div>
         <div class="comment">
             <div class="comment-head" v-if="isShowInput">
                 <div class="comment-avatar">
                     <img :src="$store.state.overas.auth.HeadIcon" alt="">
                 </div>
-                <div class="comment-input-wrap">
+                <div class="comment-input-wrap" :style="{'width': width}">
                     <Input v-model="commentCon"/>
                     <div class="comment-tool">
                         <div>
@@ -77,6 +77,15 @@
         isShowEmotion: false,
         showCount: 3,   // 显示几条评论
         isLast: false,
+        width: '1101px',
+        right: '439px'
+      }
+    },
+
+    mounted() {
+      if (this.$route.name === 'HeAndITribal-id') {
+        this.width = '780px';
+        this.right = '335px';
       }
     },
 
@@ -141,7 +150,6 @@
             }
 
             .comment-input-wrap {
-                width: 1101px;
                 position: relative;
             }
         }
@@ -151,7 +159,6 @@
         content: '';
         position: absolute;
         top: -7px;
-        right: 439px;
         width: 20px;
         height: 20px;
         transform: rotate(45deg);

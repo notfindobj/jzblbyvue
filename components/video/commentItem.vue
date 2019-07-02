@@ -137,6 +137,9 @@
     created() {
       if (this.$route.name === 'QuestionsAndAnswers-id') {
         this.commitWidth = '94%';
+      } else if (this.$route.name === 'HeAndITribal-id') {
+        this.commitWidth = '95%';
+        this.replyInputWith = 655;
       }
     }
   }

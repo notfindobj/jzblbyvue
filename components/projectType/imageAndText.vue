@@ -1,78 +1,91 @@
 <template>
-    <div class="public-block">
-        <div class="block-head">
-            <div class="block-head-left">
-                <div class="avatar">
-                    <img :src="itemInfo.HeadIcon" alt="">
+    <div>
+        <div class="public-block" :class="{'comment-active': isShowComment}">
+            <div class="block-head">
+                <div class="block-head-left">
+                    <div class="avatar">
+                        <img :src="itemInfo.HeadIcon" alt="">
+                    </div>
+                    <div class="info">
+                        <p class="name">{{ itemInfo.NickName }}</p>
+                        <p class="time">{{ itemInfo.CreateDate }}</p>
+                    </div>
                 </div>
-                <div class="info">
-                    <p class="name">{{ itemInfo.NickName }}</p>
-                    <p class="time">{{ itemInfo.CreateDate }}</p>
-                </div>
-            </div>
-            <div class="block-head-right">
-                <Dropdown placement="bottom-end" trigger="click">
-                    <a href="javascript:void(0)">
-                        <Icon type="ios-arrow-down"></Icon>
-                    </a>
-                    <DropdownMenu slot="list">
-                        <DropdownItem>帮上头条</DropdownItem>
-                        <DropdownItem>投诉</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
-            </div>
-        </div>
-        <div class="content">
-            <p v-if="itemInfo.TalkType !== 3">{{ itemInfo.TalkContent }}</p>
-            <p v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></p>
-            <div class="photo-wrap">
-                <div class="img" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
-                    <img :src="fileBaseUrl + item.smallImgUrl" alt="">
+                <div class="block-head-right">
+                    <Dropdown placement="bottom-end" trigger="click">
+                        <a href="javascript:void(0)">
+                            <Icon type="ios-arrow-down"></Icon>
+                        </a>
+                        <DropdownMenu slot="list">
+                            <DropdownItem>帮上头条</DropdownItem>
+                            <DropdownItem>投诉</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </div>
             </div>
+            <div class="content">
+                <p v-if="itemInfo.TalkType !== 3">{{ itemInfo.TalkContent }}</p>
+                <div v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></div>
+                <div class="photo-wrap">
+                    <div class="img" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
+                        <img :src="fileBaseUrl + item.smallImgUrl" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="block-foot" @click.stop="">
+                <div class="foot-child">
+                    <i
+                        class="icon iconfont"
+                        v-show="!itemInfo.itemOperateData.IsCollection"
+                        @click="clickCollection(true)"
+                    >&#xe696;</i>
+                    <i class="icon iconfont"
+                       style="color: #ff3c00; font-size: 17px;"
+                       v-show="itemInfo.itemOperateData.IsCollection"
+                       @click="clickCollection(false)"
+                    >&#xe69d;</i>
+                    <span :class="{ active: itemInfo.itemOperateData.IsCollection }">收藏</span>
+                </div>
+                <div class="foot-child">
+                    <i class="icon iconfont">&#xe6be;</i>
+                    <span>{{ itemInfo.itemOperateData.ShareCount }}</span>
+                </div>
+                <div class="foot-child" @click="clickComment">
+                    <i class="icon iconfont">&#xe664;</i>
+                    <span>评论</span>
+                </div>
+                <div class="foot-child">
+                    <i
+                        class="icon iconfont"
+                        v-show="!itemInfo.itemOperateData.IsLike"
+                        @click="clickLike(true)"
+                    >&#xe67e;</i>
+                    <i
+                        class="icon iconfont"
+                        style="color: #ff3c00;"
+                        v-show="itemInfo.itemOperateData.IsLike"
+                        @click="clickLike(false)"
+                    >&#xe621;</i>
+                    <span :class="{ active: itemInfo.itemOperateData.IsLike }">点赞</span>
+                </div>
+            </div>
         </div>
-        <div class="block-foot" @click.stop="">
-            <div class="foot-child">
-                <i
-                    class="icon iconfont"
-                    v-show="!itemInfo.itemOperateData.IsCollection"
-                    @click="clickCollection(true)"
-                >&#xe696;</i>
-                <i class="icon iconfont"
-                   style="color: #ff3c00; font-size: 17px;"
-                   v-show="itemInfo.itemOperateData.IsCollection"
-                   @click="clickCollection(false)"
-                >&#xe69d;</i>
-                <span :class="{ active: itemInfo.itemOperateData.IsCollection }">收藏</span>
-            </div>
-            <div class="foot-child">
-                <i class="icon iconfont">&#xe6be;</i>
-                <span>{{ itemInfo.itemOperateData.ShareCount }}</span>
-            </div>
-            <div class="foot-child" @click="clickComment">
-                <i class="icon iconfont">&#xe664;</i>
-                <span>评论</span>
-            </div>
-            <div class="foot-child">
-                <i
-                    class="icon iconfont"
-                    v-show="!itemInfo.itemOperateData.IsLike"
-                    @click="clickLike(true)"
-                >&#xe67e;</i>
-                <i
-                    class="icon iconfont"
-                    style="color: #ff3c00;"
-                    v-show="itemInfo.itemOperateData.IsLike"
-                    @click="clickLike(false)"
-                >&#xe621;</i>
-                <span :class="{ active: itemInfo.itemOperateData.IsLike }">点赞</span>
-            </div>
-        </div>
+        <v-comment
+            :isShow="isShowComment"
+            :itemId="itemInfo.ItemId"
+            :commentList="commentList"
+            :isShowLoading="isLoadingComment"
+            @submitComment="submitComment"
+            @submitReplay="submitReplay"
+            @submitLike="submitLike"
+        ></v-comment>
     </div>
 </template>
 
 <script>
   import Comment from '../video/comment'
+  import { setComments, setthumbsUp } from '../../service/clientAPI'
+
   export default {
     props: {
       itemInfo: {
@@ -186,6 +199,7 @@
 
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
+
     .photos-wrap {
         width: 700px;
         display: flex;
