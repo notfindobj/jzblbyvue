@@ -33,7 +33,6 @@
               @Collection="Collection"
               @commentValue="commentValue"
             />
-            <!-- @discussValue="discussValue" -->
             <discuss/>
           </div>
         </div>
@@ -41,163 +40,163 @@
   </div>
 </template>
 <script>
-  import Viewer from 'viewerjs';
-  import 'viewerjs/dist/viewer.css';
-  import discuss from '../comments/discuss'
-  import commentsCon from '../comments/commentsCon'
-  import { setthumbsUp, setCollection, getComments, setComments } from '../../service/clientAPI'
+import Viewer from 'viewerjs';
+import 'viewerjs/dist/viewer.css';
+import discuss from '../comments/discuss'
+import commentsCon from '../comments/commentsCon'
+import { setthumbsUp, setCollection, getComments, setComments } from '../../service/clientAPI'
 import { async } from 'q';
-  export default {
-    name: 'detaDetailsLeft',
-    props:{
-      detaDetails: {
-        type: Object,
-        required: true,
-        default: function () {
-          return {}
-        }
-      },
-      attribute: {
-        type: Array,
-        required: true,
-        default: function () {
-          return []
-        }
+export default {
+  name: 'detaDetailsLeft',
+  props:{
+    detaDetails: {
+      type: Object,
+      required: true,
+      default: function () {
+        return {}
       }
     },
-    data() {
-      return {
-        isShowViewBox: false,
-        isLeft: false,
-        isRight: false,
-        Viewer: {}
-      }
-    },
-    components: {
-      discuss,
-      commentsCon
-    },
-    asyncData() {
-    },
-    created() {},
-    mounted () {
-      this.initView()
-      // this.initViewButton()
-    },
-    methods: {
-      initView () {
-        const ViewerDom = document.getElementById('detaDetails');
-        let _this = this;
-        _this.$nextTick(() => {
-            _this.Viewer =  new Viewer(ViewerDom, {
-            title: false,
-            // inline: true,
-            zoomRatio: 0.4,
-            backdrop: false,
-            loading: false,
-            url: 'data-original',
-            // parent: document.getElementById('view'),
-            container: document.getElementById('view'),
-            show: function (e) {
-              _this.isShowViewBox = true;
-            },
-            ready: function () {
-              // document.querySelector('.viewer-close').onmouseover();
-              console.log('ready')
-            },
-            build: function () {
-              console.log('build')
-            },
-            built: function () {
-              console.log('built')
-            },
-            view: async function () {
-              console.log(document.querySelector('.viewer-canvas img').src)
-              let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
-              let queryData = {
-                ItemId: _this.detaDetails.ItemId,
-                ItemImgSrc: '',
-                ScopeType: 1
-              }
-              let msg = getComments(queryData)
-            },
-            shown: function () {
-              console.log('shown')
-              console.log(document.querySelector('.viewer-canvas img'))
-            },
-            hidden () {
-              _this.viewShowBox()
-            }
-          })
-        })
-      },
-      moveLeftClick (val) {
-        if (val === 1) {
-          document.querySelector('.viewer-prev').click()
-        } else {
-          document.querySelector('.viewer-next').click()
-        }
-        console.log('moveLeftClick')
-        // viewer-next
-      },
-      // 项目点赞
-      async thumbsUp(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          LikeType: 1,
-          IsDelete: item.islikes
-        }
-        let thumbsUpMsg = await setthumbsUp(queryData);
-        if (item.islikes) {
-          this.$set(item, 'likes', item.likes - 1)
-        } else {
-          this.$set(item, 'likes', item.likes + 1)
-        }
-        this.$set(item, 'islikes', !item.islikes)
-      },
-       // 收藏
-      async Collection(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          TalkType: 4,
-          IsDelete: item.iscollections
-        }
-        let collectionMsg = await setCollection(queryData)
-        if (item.iscollections) {
-          this.$set(item, 'collections', item.collections - 1)
-        } else {
-          this.$set(item, 'collections', item.collections + 1)
-        }
-        this.$set(item, 'iscollections', !item.iscollections)
-      },
-      //评论
-      async commentValue(row, val) {
-        let queryData = {
-          ItemId: row.ItemId,
-          IsReply: false,
-          Message: val,
-          ScopeType: 0
-        }
-        let commentMsg = await setComments(queryData)
-        if (!commentMsg) {
-          this.$set(row, 'commentss', row.commentss + 1)
-        }
-      },
-      mousemoveLeft () {
-        this.isLeft = true
-        this.isRight = true
-      },
-      mousemoveRight () {
-        this.isLeft = false
-        this.isRight = false
-      },
-      viewShowBox () {
-        document.getElementsByTagName('body')[0].className = '';
-        document.body.style.paddingRight = '0';
-        this.isShowViewBox = false;
+    attribute: {
+      type: Array,
+      required: true,
+      default: function () {
+        return []
       }
     }
+  },
+  data() {
+    return {
+      isShowViewBox: false,
+      isLeft: false,
+      isRight: false,
+      Viewer: {}
+    }
+  },
+  components: {
+    discuss,
+    commentsCon
+  },
+  asyncData() {
+  },
+  created() {},
+  mounted () {
+    this.initView()
+    // this.initViewButton()
+  },
+  methods: {
+    initView () {
+      const ViewerDom = document.getElementById('detaDetails');
+      let _this = this;
+      _this.$nextTick(() => {
+          _this.Viewer =  new Viewer(ViewerDom, {
+          title: false,
+          // inline: true,
+          zoomRatio: 0.4,
+          backdrop: false,
+          loading: false,
+          url: 'data-original',
+          // parent: document.getElementById('view'),
+          container: document.getElementById('view'),
+          show: function (e) {
+            _this.isShowViewBox = true;
+          },
+          ready: function () {
+            // document.querySelector('.viewer-close').onmouseover();
+            console.log('ready')
+          },
+          build: function () {
+            console.log('build')
+          },
+          built: function () {
+            console.log('built')
+          },
+          view: async function () {
+            console.log(document.querySelector('.viewer-canvas img').src)
+            let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
+            let queryData = {
+              ItemId: _this.detaDetails.ItemId,
+              ItemImgSrc: '',
+              ScopeType: 1
+            }
+            let msg = getComments(queryData)
+          },
+          shown: function () {
+            console.log('shown')
+            console.log(document.querySelector('.viewer-canvas img'))
+          },
+          hidden () {
+            _this.viewShowBox()
+          }
+        })
+      })
+    },
+    moveLeftClick (val) {
+      if (val === 1) {
+        document.querySelector('.viewer-prev').click()
+      } else {
+        document.querySelector('.viewer-next').click()
+      }
+      console.log('moveLeftClick')
+      // viewer-next
+    },
+    // 项目点赞
+    async thumbsUp(item) {
+      let queryData = {
+        ItemId: item.ItemId,
+        LikeType: 1,
+        IsDelete: item.islikes
+      }
+      let thumbsUpMsg = await setthumbsUp(queryData);
+      if (item.islikes) {
+        this.$set(item, 'likes', item.likes - 1)
+      } else {
+        this.$set(item, 'likes', item.likes + 1)
+      }
+      this.$set(item, 'islikes', !item.islikes)
+    },
+      // 收藏
+    async Collection(item) {
+      let queryData = {
+        ItemId: item.ItemId,
+        TalkType: 4,
+        IsDelete: item.iscollections
+      }
+      let collectionMsg = await setCollection(queryData)
+      if (item.iscollections) {
+        this.$set(item, 'collections', item.collections - 1)
+      } else {
+        this.$set(item, 'collections', item.collections + 1)
+      }
+      this.$set(item, 'iscollections', !item.iscollections)
+    },
+    //评论
+    async commentValue(row, val) {
+      let queryData = {
+        ItemId: row.ItemId,
+        IsReply: false,
+        Message: val,
+        ScopeType: 0
+      }
+      let commentMsg = await setComments(queryData)
+      if (!commentMsg) {
+        this.$set(row, 'commentss', row.commentss + 1)
+      }
+    },
+    mousemoveLeft () {
+      this.isLeft = true
+      this.isRight = true
+    },
+    mousemoveRight () {
+      this.isLeft = false
+      this.isRight = false
+    },
+    viewShowBox () {
+      document.getElementsByTagName('body')[0].className = '';
+      document.body.style.paddingRight = '0';
+      this.isShowViewBox = false;
+    }
   }
+}
 </script>
 <style lang="less">
   .isHide {
