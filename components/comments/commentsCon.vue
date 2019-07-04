@@ -48,6 +48,7 @@
         </div>
         <!-- 评论信息 -->
         <discuss
+            :style="{height: contentHeight, overflow: 'scroll'}"
             :discussData="comments"
             @commentValue="discussValue"
             @somePraise="somePraise"
@@ -86,7 +87,8 @@
         commentsInfo: {
           downNum: 2.8,
         },
-        commentV: ''
+        commentV: '',
+        contentHeight: ''
       }
     },
     components: {
@@ -142,6 +144,9 @@
       upload() {
         alert(1)
       }
+    },
+    mounted() {
+      this.contentHeight = document.documentElement.clientHeight - 460 + 'px';
     }
   }
 </script>
@@ -152,7 +157,7 @@
 
     .comments-box {
         width: 100%;
-        height: 100%;
+        /*height: 100%;*/
 
         .comments-status-box {
             background: #ffffff;
