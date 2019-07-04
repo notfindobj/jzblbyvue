@@ -31,17 +31,14 @@
                         @clickLike="clickLike"
                     ></VideoItem>
                 </template>
-
             </Scroll>
         </div>
     </div>
-
-
 </template>
 
 <script>
-  import ImageAndText from '~/components/projectType/imageAndText'
-  import VideoItem from '~/components/projectType/video'
+  import ImageAndText from '../../../components/projectType/imageAndText'
+  import VideoItem from '../../../components/projectType/video'
   import { setComments, setthumbsUp, setCollection, setFollow } from '../../../service/clientAPI'
   export default {
     layout: 'main',
@@ -54,14 +51,12 @@
       ImageAndText,
       VideoItem
     },
-
     props: {
       headList: Array,
       dataList: Array,
       paginationData: Object
     },
     methods: {
-
       // 点击收藏
       clickCollection(index, flag) {
         setCollection({
@@ -145,18 +140,14 @@
                 color: #666666;
                 box-sizing: border-box;
                 border-bottom: 1px solid #D8D8D8;
-
                 > li {
                     margin-right: 20px;
                     cursor: pointer;
                 }
-
                 .li-active {
                     color: #333333;
                 }
             }
-
-
         }
     }
 </style>

@@ -54,7 +54,6 @@
       this.isShowIcon = this.attribute.length <= 4
     },
     methods: {
-
       // 点击头像，去个人中心
       goPersonalCenter() {
         this.$router.push({
