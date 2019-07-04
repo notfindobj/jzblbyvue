@@ -42,20 +42,20 @@ app.post('/api/logout', function (req, res) {
     Msg: '退出成功！',
     Code: 200
   }
-  res.json(response)
+  res.json(response);
 })
 
 // 我们用这些选项初始化 Nuxt.js：
-let config = require('./nuxt.config.js')
-const isProd =  process.env.NODE_ENV === 'production'
+let config = require('./nuxt.config.js');
+const isProd =  process.env.NODE_ENV === 'production';
 async function start() {
   const nuxt = new Nuxt(config);
   if (!isProd) {
-    const builder = new Builder(nuxt)
-    await builder.build()
+    const builder = new Builder(nuxt);
+    await builder.build();
   }
-  app.use(nuxt.render)
-  app.listen(8889)
+  app.use(nuxt.render);
+  app.listen(8889);
   consola.ready({
     message: `Server listening on http://127.0.0.1:8889`,
     badge: true

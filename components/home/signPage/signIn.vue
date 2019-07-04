@@ -61,7 +61,7 @@ export default {
                 password: this.userItem.password
             }
             let config = {
-                url: process.env.NODE_ENV === 'production' ? 'http://192.210.170.17:8889/front/mobileLogin' : 'http://127.0.0.1:8889/front/mobileLogin',
+                url: process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/front/mobileLogin' : 'http://127.0.0.1:8889/front/mobileLogin',
                 withCredentials: true,
                 method: 'post',
                 headers: {
