@@ -22,9 +22,13 @@
                 </div>
                 <div class="user">
                     <div class="avatar">
-                        <img :src="auth.HeadIcon" alt="">
+                        <!-- <img :src="auth ? auth.HeadIcon : ''" alt=""> -->
                     </div>
-                    <span class="user-name">{{auth.NickName}}</span>
+                    <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
+                    <div class="user-name" v-else>
+                          <span>{{auth.NickName}}</span>
+                          <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                    </div>
                 </div>
                 <div class="online-map" @click="onlineMap">在线地图</div>
                 <Dropdown class="right-select">
@@ -46,7 +50,7 @@
 </template>
 <script>
   import { mapState, mapGetters } from 'vuex'
-
+  import axios from 'axios'
   export default {
     data() {
       return {
@@ -66,7 +70,28 @@
       // 回首页
       goHome() {
         this.$router.push('/')
-      }
+      },
+      SignIn() {
+        this.$store.dispatch('SETUP', true)
+      },
+      async signOut() {
+        let that = this;
+        let config = {
+          url: process.env.NODE_ENV === 'production' ? 'http://140.143.240.64:8889/api/logout' : 'http://127.0.0.1:8889/api/logout',
+          withCredentials: true,
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+        }
+        axios(config)
+          .then(res => {
+            that.$store.dispatch('LOGININ', null);
+            localStorage.removeItem('LOGININ')
+            that.$Message.success(res.data.Msg);
+            that.$router.push({ name: "index"})
+          })
+      },
     }
   }
 </script>

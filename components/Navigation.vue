@@ -16,8 +16,8 @@
                     <li>
                         <span v-if="!auth" @click="SignIn">登录</span>
                         <div v-else>
-                            <span>{{auth.NickName}}</span>
-                            <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                          <span>{{auth.NickName}}</span>
+                          <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                         </div>
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
@@ -144,6 +144,7 @@
             this.$store.dispatch('LOGININ', null);
             localStorage.removeItem('LOGININ')
             this.$Message.success(res.data.Msg);
+            
           })
       },
       searchBaseData() {

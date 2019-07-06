@@ -4,7 +4,7 @@
             <div v-swiper:mySwiper="swiperOption" class="swiper-box">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" v-for="(banner, index) in SlideList" :key="index">
-                        <img :src="`http://www.jzbl.com${banner.CoverImgUrl}`" alt="" style="width: 100%;height: 100%;">
+                        <img :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
                     </div>
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
