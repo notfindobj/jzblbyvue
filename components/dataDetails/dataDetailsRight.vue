@@ -3,7 +3,7 @@
         <div class="data-details-right-con">
             <div class="works-info">
                 <img @click="goPersonalCenter" :src="detaDetails.HeadIcon" alt="">
-                <p class="works-name">{{detaDetails.ItemName}}</p>
+                <p class="works-name">{{detaDetails.NickName}}</p>
                 <div class="focus-btn" @click="setFollow(detaDetails)">{{detaDetails.IsFollow? '+ 关注' : '取关'}}</div>
             </div>
             <div class="data-info">

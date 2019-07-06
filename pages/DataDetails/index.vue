@@ -22,20 +22,22 @@
                       :discussData="getGetCommentsData"
                       :attribute="ItemAttributesEntities"
                   />
-                  <dataDetailsPDFLeft  
+                  <dataDetailsPDFLeft
                     v-show="!isLayout"
                     :detaDetails="detaDetails"
                    />
                   <div>
                     <data-details-right
-                        :class="{'fix-top': scrollTop > 312}" :style="rightPx"
+                        :class="{'fix-top': scrollTop > 312 && distanceBottom > 362, 'fix-bottom': distanceBottom < 362}"
+                        :style="rightPx"
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
                     />
                     <commentsCon
-                        :class="{'margin-top': scrollTop > 312}"
+                        :class="{'margin-top': scrollTop > 312 && distanceBottom > 362, 'margin-bottom': distanceBottom < 362}"
+                        :style="rightPx1"
                         :width="'340px'"
                         :publish="detaDetails"
                         :comments="getGetCommentsData"
@@ -89,7 +91,9 @@
         ItemAttributesEntities: {},
         scrollTop: '',
         clientWidth: '',
-        isLayout: true
+        isLayout: true,
+        distanceBottom: 1000,
+        contentHeight: ''   // 评论列表的高度
       }
     },
     components: {
@@ -106,13 +110,53 @@
       ...mapGetters(['isLogin']),
       rightPx() {
         if (this.clientWidth >= 1200) {
-          return {
-            right: (this.clientWidth - 1200) / 2 + 'px'
-          };
+          if (this.distanceBottom < 362) {
+            return {
+              right: (this.clientWidth - 1200) / 2 + 'px',
+              bottom: 362 - this.distanceBottom + this.contentHeight + 10 + 'px'
+            };
+          } else {
+            return {
+              right: (this.clientWidth - 1200) / 2 + 'px',
+            };
+          }
         } else {
-          return {
-            right: this.clientWidth - 1200 + 'px'
-          };
+          if (this.distanceBottom < 362) {
+            return {
+              right: this.clientWidth - 1200 + 'px',
+              bottom: 362 - this.distanceBottom + this.contentHeight + 10 + 'px'
+            };
+          } else {
+            return {
+              right: this.clientWidth - 1200 + 'px'
+            };
+          }
+        }
+      },
+
+      rightPx1() {
+        if (this.clientWidth >= 1200) {
+          if (this.distanceBottom < 362) {
+            return {
+              right: (this.clientWidth - 1200) / 2 + 'px',
+              bottom: 362 - this.distanceBottom + 'px'
+            };
+          } else {
+            return {
+              right: (this.clientWidth - 1200) / 2 + 'px',
+            };
+          }
+        } else {
+          if (this.distanceBottom < 362) {
+            return {
+              right: this.clientWidth - 1200 + 'px',
+              bottom: 362 - this.distanceBottom + 'px'
+            };
+          } else {
+            return {
+              right: this.clientWidth - 1200 + 'px'
+            };
+          }
         }
       }
     },
@@ -145,11 +189,15 @@
         _this.initLazy()
       });
       this.clientWidth = document.body.clientWidth;
+      this.contentHeight = document.documentElement.clientHeight - 460;
       window.addEventListener('scroll', () => {
         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
+        console.log(this.distanceBottom)
       })
       window.onresize = () => {
         this.clientWidth = document.body.clientWidth;
+        this.contentHeight = document.documentElement.clientHeight - 460;
       }
       // 记录用户访问
       recordFrequency({
@@ -310,7 +358,9 @@
                 justify-content: space-between;
                 padding-bottom: 30px;
                 .margin-top {
-                    margin-top: 360px;
+                    position: fixed;
+                    top: 350px;
+                    z-index: 2;
                 }
                 .data-details-location {
                 }
@@ -318,7 +368,16 @@
                 .fix-top {
                     position: fixed;
                     top: 0;
-                    z-index: 99;
+                    z-index: 2;
+                }
+
+                .fix-bottom {
+                    position: fixed;
+                    z-index: 2;
+                }
+                .margin-bottom {
+                    position: fixed;
+                    z-index: 2;
                 }
             }
         }
