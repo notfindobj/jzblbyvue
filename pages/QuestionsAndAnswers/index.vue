@@ -165,7 +165,6 @@
       }
     },
     methods: {
-
       goDetail(id) {
         this.$router.push({
           name: 'QuestionsAndAnswers-id',

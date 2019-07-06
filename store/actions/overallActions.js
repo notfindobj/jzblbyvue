@@ -20,14 +20,12 @@ export const overallActions ={
         let auth = null
         if (req.headers.cookie) {
             const parsed = cookieparser.parse(req.headers.cookie);
-            console.log(parsed)
             try {
                 auth = JSON.parse(parsed.adminToken.split('j:')[1])
             } catch (err) {
                 // 找不到有效的Cookie`
             }
         }
-
         commit('setAuth', auth);
     }
 }

@@ -3,30 +3,30 @@
         <div class="model-box">
             <div class="model-box-header">
                 <span class="model-box-header-title">添加收货地址</span>
-                <span class="model-box-header-icon"> <i class="icon iconfont icon-chahao2"></i> </span>
+                <span class="model-box-header-icon"> <i class="icon iconfont icon-chahao2" @click="closeBtn"></i> </span>
             </div>
             <div class="model-box-boby">
                 <Form class="model-box-boby-form" :label-width="80">
                     <FormItem label="收货人：">
-                        <Input  placeholder="收货人" style="width: 160px;" />
+                        <Input  placeholder="收货人"  v-model="addressData.Receiver" style="width: 160px;" />
                     </FormItem>
                     <FormItem label="所在地区：">
                         <Cascader :data="data" v-model="value1" style="width: 340px;"></Cascader>
                     </FormItem>
                     <FormItem label="详细地址：">
-                        <Input  placeholder="详细地址" style="width: 340px;" />
+                        <Input  placeholder="详细地址" v-model="addressData.DetailAddress" style="width: 340px;" />
                     </FormItem>
                     <FormItem label="手机号码：">
-                        <Input  placeholder="手机号码" style="width: 160px;" />
+                        <Input  placeholder="手机号码" v-model="addressData.MobilePhone" style="width: 160px;" />
                     </FormItem>
                     <FormItem label="固定电话：">
-                        <Input  placeholder="固定电话" style="width: 240px;" />
+                        <Input  placeholder="固定电话" v-model="addressData.FixedTelephone" style="width: 240px;" />
                     </FormItem>
                     <FormItem label="邮箱：">
-                        <Input  placeholder="邮箱" style="width: 240px;" />
+                        <Input  placeholder="邮箱" v-model="addressData.Email" style="width: 240px;" />
                     </FormItem>
                     <FormItem label="地址别名：">
-                        <Input  placeholder="地址别名" style="width: 240px;" />
+                        <Input  placeholder="地址别名" v-model="addressData.AddressAlias" style="width: 240px;" />
                     </FormItem>
                 </Form>
             </div>
@@ -45,6 +45,10 @@ export default {
             type: Boolean,
             required: true,
             default: false
+        },
+        addressData: {
+            type: Object,
+            default: () => {}
         }
     },
     data () {
@@ -98,6 +102,11 @@ export default {
                     }
                 ],
             }]
+        }
+    },
+    methods: {
+        closeBtn () {
+            this.$emit('closeBtn')
         }
     }
 }

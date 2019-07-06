@@ -67,4 +67,13 @@ export const serverRequest = {
   async getSelfOrOthertribeInfo({commit}, params) {
     return await request.post(`MyTribe/GetMyOrOtherData`, params)
   },
+  // 获取所有个人信息
+  async getUserData({commit}, params) {
+    return await request.get(`UserInfo/GetUserData`, params)
+  },
+  // 获取收货地址
+  async getAddressData({commit}, params) {
+    return await request.get(`UserInfo/GetThisALLUserShippingAddress`, params)
+  },
+  
 }

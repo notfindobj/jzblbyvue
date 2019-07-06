@@ -61,9 +61,8 @@
     methods: {
       // 在线地图
       onlineMap() {
-        window.open('http://www.baidu.com')
+        window.open('https://map.51240.com/zhongguo__map/')
       },
-
       // 回首页
       goHome() {
         this.$router.push('/')

@@ -6,17 +6,17 @@
             </div>
             <div class="message-items-right">
                 <span v-if="false">您还没有收货地址</span>
-                <div>您已创建 <span class="num-color">2</span> 个收货地址，最多可创建 <span class="num-color">20</span> 个</div>
+                <div>您已创建 <span class="num-color">{{RespShippAdds.length}}</span> 个收货地址，最多可创建 <span class="num-color">{{20 - RespShippAdds.length}}</span> 个</div>
             </div>
             <div class="message-items-operation">
                 <i class="icon iconfont icon-add"></i> 
-                <span class="message-items-operation-pointer" @click="isShow= true">新增收货地址</span>
+                <span class="message-items-operation-pointer" @click="newOpenAdd">新增收货地址</span>
             </div>
         </div>
-        <div class="message-adders">
+        <div class="message-adders" v-for="(items, index) in RespShippAdds" :key="index">
             <div class="message-adders-card">
                 <div class="message-adders-card-title">
-                    <span class="message-adders-card-title-name">尼古拉斯·四儿</span>
+                    <span class="message-adders-card-title-name">{{items.Receiver}}</span>
                     <span class="default-address">默认地址</span>
                      <span class="message-adders-card-fork">
                         <i class="icon iconfont icon-chahao2"></i>
@@ -25,62 +25,100 @@
                 <div class="message-adders-content">
                     <div class="message-adders-content-box">
                         <div class="message-adders-content-box-title">收货人</div>
-                        <div class="message-adders-content-box-content">尼古拉斯·四儿</div>
+                        <div class="message-adders-content-box-content">{{items.Receiver}}</div>
                     </div>
                 </div>
                 <div class="message-adders-content">
                     <div class="message-adders-content-box">
                         <div class="message-adders-content-box-title">所在地区</div>
-                        <div class="message-adders-content-box-content">浙江省杭州市上城区</div>
+                        <div class="message-adders-content-box-content">{{items.ProvinceName}}/{{items.CityName}}/{{items.CountName}}</div>
                     </div>
                 </div>
                 <div class="message-adders-content">
                     <div class="message-adders-content-box">
                         <div class="message-adders-content-box-title">地址</div>
-                        <div class="message-adders-content-box-content">XX街道XXXX小区XX幢</div>
+                        <div class="message-adders-content-box-content">{{items.DetailAddress}}</div>
                     </div>
                 </div>
                 <div class="message-adders-content">
                     <div class="message-adders-content-box">
                         <div class="message-adders-content-box-title">手机</div>
-                        <div class="message-adders-content-box-content">1234****1234</div>
+                        <div class="message-adders-content-box-content">{{items.MobilePhone}}</div>
                     </div>
                 </div>
                 <div class="message-adders-content">
                     <div class="message-adders-content-box">
                         <div class="message-adders-content-box-title">固定电话</div>
-                        <div class="message-adders-content-box-content">0371-1234567</div>
+                        <div class="message-adders-content-box-content">{{items.FixedTelephone}}</div>
                     </div>
                 </div>
                 <div class="message-adders-content">
                     <div class="message-adders-content-box">
                         <div class="message-adders-content-box-title">电子邮箱</div>
                         <div class="message-adders-content-box-content message-adders-content-box-until">
-                            <span>12345678909@163.com</span>
+                            <span>{{items.Email}}</span>
                             <div>
                                 <span class="num-color cursor">设为默认</span>
-                                <span class="blue-color cursor">编辑</span>
+                                <span class="blue-color cursor" @click="editAdd(items)">编辑</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-        <setAddress :isShow="isShow"/>
+        <setAddress 
+        :isShow="isShow" 
+        :addressData='addressData'
+        @closeBtn="closeBtn"/>
     </div>
 </template>
 <script>
 import setAddress from './components/setAddress'
+import {getAddressData, getProvinceList} from '../../../service/clientAPI'
 export default {
     name: 'receivingAddress',
     data () {
         return {
-            isShow: false
+            isShow: false,
+            RespShippAdds: [],
+            addressData: {},
+
         }
     },
     components: {
         setAddress
     },
+    created () {
+        this.getUserInfo()
+        this.getProvinceData()
+    },
+    methods: {
+        async getUserInfo () {
+            let msg = await getAddressData();
+            if (msg) {
+                this.RespShippAdds = msg.RespShippAdds;
+            }
+        },
+        async getProvinceData() {
+            let msg = await getProvinceList({ProvinceCode: ''});
+            if (msg) {
+                console.log(msg)
+            }
+        },
+        newOpenAdd () {
+            this.isShow = true;
+            this.addressData = {}
+        },
+        editAdd (val){
+            this.isShow = true;
+            this.addressData.address = [];
+            this.addressData = val;
+            this.addressData.address = [val.ProvinceAreaId, val.CityAreaId, val.CountyAreaId];
+        },
+        closeBtn () {
+            this.isShow = false;
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

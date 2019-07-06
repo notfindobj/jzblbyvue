@@ -216,7 +216,8 @@ export default {
     left: 0;
     right: 0;
     z-index: 9;
-    background: rgba(0,0,0, .3)
+    background: rgba(0,0,0, .3);
+    z-index: 999;
   }
   .view-pointer {
     cursor: pointer;

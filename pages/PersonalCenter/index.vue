@@ -2,8 +2,10 @@
         <div class="personal">
             <div class="personal-left">
                 <div class="personal-left-header">
-                    <div class="personal-left-header-img"></div>
-                    <div class="personal-left-header-name">尼古拉斯·赵四</div>
+                    <div class="personal-left-header-img">
+                        <img :src="userInfo.HeadIcon" alt="" width="100px;">
+                    </div>
+                    <div class="personal-left-header-name">{{userInfo.NickName}}</div>
                 </div>
                 <ul class="personal-left-nav">
                     <li :class="PersonalCenter === 'myMessage' ? 'action' : ''" @click="personal('myMessage')">
@@ -42,6 +44,7 @@ import myMessage from './myMessage'
 import accountSecurity from './accountSecurity'
 import accountBinding from './accountBinding'
 import receivingAddress from './receivingAddress'
+  import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'PersonalCenter',
     components: {
@@ -49,6 +52,11 @@ export default {
         accountSecurity,
         accountBinding,
         receivingAddress
+    },
+    computed: {
+        ...mapState({
+        userInfo: state => state.overas.auth
+      }),
     },
     data () {
         return {
@@ -88,6 +96,7 @@ export default {
                     border-radius: 50%;
                     margin: 50px 50px 10px 50px;
                     background: #999999;
+                    overflow: hidden;
                 }
                 &-name {
                     font-size: 16px;

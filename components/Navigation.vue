@@ -75,7 +75,7 @@
                 <li @click="goBuilding">建筑圈</li>
                 <li @click="goHeAndI">建筑游学</li>
                 <li @click="goAboutUs">建筑书店</li>
-                <li>我的部落</li>
+                <li  @click="goMytribe">我的部落</li>
             </ul>
             <div class="main-nav-publish" @click="publish">发布</div>
         </div>
@@ -165,7 +165,7 @@
       },
       // 在线地图
       onlineMap() {
-        window.open('http://www.baidu.com')
+        window.open('https://map.51240.com/zhongguo__map/')
       },
       // 百度搜索
       onSearch() {
@@ -196,10 +196,13 @@
         this.$router.push({ path: "/BuildingCircle" })
       },
       goHeAndI() {
-        this.$router.push({ path: "/HeAndITribal" })
+        this.$router.push({ path: "/PersonalCenter" })
       },
       goAboutUs() {
         this.$router.push({ path: "/aboutUS" })
+      },
+      goMytribe () {
+        this.$router.push({ path: "/HeAndITribal" })
       }
     }
   }
@@ -211,7 +214,6 @@
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
-
     .ad {
         height: 60px;
         background: #bbbbbb;

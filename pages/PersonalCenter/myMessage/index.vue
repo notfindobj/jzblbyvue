@@ -214,6 +214,7 @@
     </div>
 </template>
 <script>
+import {getUserData} from '../../../service/clientAPI'
 export default {
     data () {
         return {
@@ -271,7 +272,23 @@ export default {
                 ],
             }]
         }
-    }
+    },
+    created () {
+        this.getUserInfo()
+    },
+    methods: {
+        async getUserInfo () {
+            let msg =await getUserData();
+            // console.log(msg)
+        }
+    },
+    async asyncData({store}) {
+        let msg = store.dispatch('getUserData');
+        // console.log('>>1111111111111111111>>', msg)
+        return {
+            userInfo: msg
+        }
+    },
 }
 </script>
 <style lang="less" scoped>

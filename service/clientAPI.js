@@ -89,3 +89,15 @@ export const recordFrequency = async params => {
 export const getTypeMeun = async params => {
   return await request.post(`MyTribe/GetTypeMeunBy`, params)
 }
+// 获取所有个人信息
+export const getUserData = async params => {
+  return await request.get(`UserInfo/GetUserData`, params)
+}
+// 获取收货地址
+export const getAddressData = async params => {
+  return await request.get(`UserInfo/GetThisALLUserShippingAddress`, params)
+}
+// 获取三级联动数据
+export const getProvinceList = async params => {
+  return await request.post(`UserInfo/GetProvinceData`, params)
+}
