@@ -29,7 +29,7 @@
                 <Row>
                     <template v-for=" (items, index) in sfqList" v-if="index < 8">
                         <i-col span="6" :key="index">
-                            <Small-Cards @viewItem="viewItem" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(items, 'sfqList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -53,11 +53,11 @@
                     <template v-for="(items, index) in lpList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards @viewItem="viewItem" :bigCardsDate="items"/>
+                                <Big-Cards @viewItem="viewItem(items, 'lpList')" :bigCardsDate="items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards @viewItem="viewItem" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -81,18 +81,18 @@
                     <i-col span="12">
                         <div class="left-items">
                             <template v-for="(items, lp) in lpList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem" :smallCardsDate="items" :key="lp"/>
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items" :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in lpList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem" :smallCardsDate="items"
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items"
                                              :key="lp"/>
                             </template>
                         </div>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards @viewItem="viewItem" :bigCardsDate="items"/>
+                        <Big-Cards @viewItem="viewItem(items, 'lpList')" :bigCardsDate="items"/>
                     </i-col>
                 </Row>
             </div>
@@ -115,11 +115,11 @@
                     <template v-for="(items, index) in suList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards @viewItem="viewItem" :bigCardsDate="items"/>
+                                <Big-Cards @viewItem="viewItem(items, 'suList')" :bigCardsDate="items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards @viewItem="viewItem" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(items, 'suList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -143,18 +143,18 @@
                     <i-col span="12">
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem" :smallCardsDate="items" :key="lp"/>
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items" :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem" :smallCardsDate="items"
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items"
                                              :key="lp"/>
                             </template>
                         </div>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards @viewItem="viewItem" :bigCardsDate="items"/>
+                        <Big-Cards @viewItem="viewItem(items, 'ztList')" :bigCardsDate="items"/>
                     </i-col>
                 </Row>
             </div>
@@ -177,11 +177,11 @@
                     <template v-for="(items, index) in pmList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards @viewItem="viewItem" :bigCardsDate="items"/>
+                                <Big-Cards @viewItem="viewItem(items, 'pmList')" :bigCardsDate="items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards @viewItem="viewItem" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(items, 'pmList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -376,16 +376,19 @@
     created() {
     },
     methods: {
-      viewItem(item) {
+      viewItem(item, val) {
         let baseDateId = {
           Id: item.ItemId,
-          ClassTypeId: '',
-          ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-          SortType: 0,
-          KeyWords: "",
-          Order: true,
-          Page: 0,
-          Rows: 8
+          reqItemList: {
+            ClassTypeId: '',
+            ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
+            SortType: 0,
+            KeyWords: "",
+            Order: true,
+            Page: 0,
+            Rows: 8
+          },
+          showLayout: val === 'jzList' || val === 'wbList' ? false: true
         }
         this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(baseDateId) } })
       }

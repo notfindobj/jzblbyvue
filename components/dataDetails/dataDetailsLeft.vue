@@ -1,7 +1,13 @@
 <template>
   <div class="data-details-left">
     <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
-     <div class="view-box-model" v-show="isShowViewBox">
+    <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
+      <img :class="!isLeft ? 'isHide' : 'isShow'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(1)" width="50px" alt="">
+    </div>
+    <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
+      <img :class="!isRight ? 'isHide moveRight' : 'isShow moveRight'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(2)" width="50px" alt="">
+    </div>
+     <!-- <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
           <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
             <img :class="!isLeft ? 'isHide' : 'isShow'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(1)" width="50px" alt="">
@@ -36,7 +42,7 @@
             <discuss/>
           </div>
         </div>
-      </div>
+      </div> -->
   </div>
 </template>
 <script>
@@ -69,7 +75,8 @@ export default {
       isShowViewBox: false,
       isLeft: false,
       isRight: false,
-      Viewer: {}
+      Viewer: {},
+      isBtnSile: false
     }
   },
   components: {
@@ -89,14 +96,18 @@ export default {
       let _this = this;
       _this.$nextTick(() => {
           _this.Viewer =  new Viewer(ViewerDom, {
-          title: false,
-          // inline: true,
-          zoomRatio: 0.4,
-          backdrop: false,
-          loading: false,
-          url: 'data-original',
+            url: 'data-original',
+            button: false,
+            toolbar: true,
+            navbar: true,
+            title: false,
+          // inline: false,
+            zoomRatio: 0.4,
+            maxZoomRatio: 3,
+          // backdrop: false,
+          // loading: false,
           // parent: document.getElementById('view'),
-          container: document.getElementById('view'),
+          // container: document.getElementById('view'),
           show: function (e) {
             _this.isShowViewBox = true;
           },
@@ -118,13 +129,17 @@ export default {
               ItemImgSrc: '',
               ScopeType: 1
             }
-            let msg = getComments(queryData)
+            // let msg = getComments(queryData)
           },
-          shown: function () {
-            console.log('shown')
-            console.log(document.querySelector('.viewer-canvas img'))
+          shown: function (e) {
+            _this.isBtnSile = true;
+            var that = e.target.viewer;
+            $(e.target.viewer.viewer).find(".viewer-canvas").on("dblclick", "img", function () {
+              that.hide();
+            });
           },
           hidden () {
+            _this.isBtnSile = false;
             _this.viewShowBox()
           }
         })
@@ -266,9 +281,9 @@ export default {
     position: relative;
     background: rgba(0,0,0, .6)
   }
-  .viewer-fixed {
-    position: absolute;
-  }
+  // .viewer-fixed {
+  //   position: absolute;
+  // }
   .details-box {
     width: 270px;
     background: #ffffff;
@@ -328,25 +343,33 @@ export default {
   }
   .view-left-move {
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     display: inline-block;
     width: 50px;
-    height: 200px;
+    height: 100%;
     background: transparent;
     z-index: 9999;
-    top: 280px;
+    top: 0;
     left: 0;
+    >img {
+      top: 50%;
+      position: relative;
+    }
   }
   .view-right-move {
     cursor: pointer;
-    position: absolute;
+    position: fixed;
     display: inline-block;
     width: 50px;
-    height: 200px;
+    height: 100%;
     background: transparent;
     z-index: 9999;
-    top: 280px;
-    right: 300px;
+    top: 0;
+    right: 0;
+    >img {
+      top: 50%;
+      position: relative;
+    }
   }
   .viewer-toolbar {
     display: none;
