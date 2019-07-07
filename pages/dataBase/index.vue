@@ -23,12 +23,19 @@
             @loadData="loadData"
             @handleCollections="handleCollections"
         />
+        <div class="page-box">
+            <Page :total="RspPaginationData.records" :current="pageNum" @on-change="changePage" :page-size="4"
+                  show-elevator/>
+        </div>
+        <ToTop></ToTop>
     </div>
 </template>
 <script>
   import ContenNav from '../../components/contenLayout/ContenNav.vue'
   import Conten from '../../components/contenLayout/Content.vue'
-  import { getBaseData , getUserProAndFans, setFollow, setCollection} from '../../service/clientAPI'
+  import ToTop from '../../components/toTop'
+  import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
+
   export default {
     middleware: 'authenticated',
     head() {
@@ -42,7 +49,8 @@
     },
     components: {
       ContenNav,
-      Conten
+      Conten,
+      ToTop
     },
     data() {
       return {
@@ -56,6 +64,7 @@
         showLayout: true,
         currentWorks: '',
         isFinished: true,   // 判断请求是否完成
+        pageNum: 1
       }
     },
     computed: {
@@ -67,7 +76,7 @@
 
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
-      let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false: true;
+      let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false : true;
       delete queryData.title;
       //  let [menuData, getBaseData] = Promise.all([store.dispatch('getMenu'), store.dispatch('getBaseData', queryData)])
       let menuData = await store.dispatch('getMenu');
@@ -85,11 +94,11 @@
     },
 
     watch: {
-        '$route': function (oldVal, newVal) {
-          let queryData = JSON.parse(newVal.query.dataBase);
-          delete queryData.title;
-          this.getBaseDatas(queryData);
-        }
+      '$route': function (oldVal, newVal) {
+        let queryData = JSON.parse(newVal.query.dataBase);
+        delete queryData.title;
+        this.getBaseDatas(queryData);
+      }
     },
     methods: {
       // 点击收藏
@@ -109,23 +118,31 @@
       loadData() {
         if (this.isFinished && this.RspPaginationData.page < this.RspPaginationData.total) {
           this.isFinished = false;
-          if (this.queryData.Page === 0) {
-            this.queryData.Page = 9;
-            this.queryData.Rows = 4
-          } else {
-            this.queryData.Page++;
-          }
-          this.getBaseDatas(this.queryData)
+          this.queryData.Page++;
+          this.getBaseDatas(this.queryData, true)
         }
       },
+
+      // 点击分页
+      changePage(page) {
+        this.pageNum = page;
+        if (document.documentElement.scrollTop) {
+          document.documentElement.scrollTop = 0;
+        } else {
+          document.body.scrollTop = 0;
+        }
+        this.queryData.Page = page;
+        this.getBaseDatas(this.queryData, false)
+      },
+
       //一级菜单
       getItemsBaseData(row) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        this.showLayout = (row.ItemAttributesFullName === '建筑规范' || row.ItemAttributesFullName === '文本') ? false: true;
+        this.showLayout = (row.ItemAttributesFullName === '建筑规范' || row.ItemAttributesFullName === '文本') ? false : true;
         queryData.title = row.ItemAttributesFullName;
         queryData.ClassTypeId = `${ row.ItemSubAttributeCode }|${ row.ItemAttributesId }`;
         queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
-        this.$router.push({ name: "dataBase", query: {dataBase: JSON.stringify(queryData)}});
+        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
         delete queryData.title;
         this.getBaseDatas(queryData)
       },
@@ -174,12 +191,13 @@
         delete queryData.title;
         this.getBaseDatas(queryData)
       },
-      async getBaseDatas(queryData) {
+      async getBaseDatas(queryData, isAutoLoading = false) {
         let BaseData = await getBaseData(queryData);
         this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
-        this.RspItemDatas = queryData.Page === 0 ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
+        this.RspItemDatas = !isAutoLoading ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
         this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
         this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
+        this.pageNum = queryData.Page;
         this.isFinished = true;
       },
       // 排序
@@ -194,10 +212,15 @@
         let queryData = JSON.parse(this.$route.query.dataBase);
         queryData.Id = item.ItemId;
         queryData.showLayout = this.showLayout;
-        this.$router.push({ name: "DataDetails", query: {dataBase: JSON.stringify(queryData)}})
+        console.log(queryData)
+        let routeData = this.$router.resolve({
+          name: "DataDetails",
+          query: { dataBase: JSON.stringify(queryData) }
+        });
+        window.open(routeData.href, '_blank');
       },
       // 获取项目和粉丝量
-      async showWorks (user) {
+      async showWorks(user) {
         let msg = await getUserProAndFans(user.UserId)
         if (msg) {
           this.currentWorks = user.ItemId
@@ -205,22 +228,22 @@
         }
       },
       // 关注
-      async worksFocus (item) {
+      async worksFocus(item) {
         let queryData = {
           UserId: item.UserId,
           IsDelete: item.IsFollow
-        }
+        };
         let collectionMsg = await setFollow(queryData)
         if (collectionMsg) {
           this.$set(item, 'IsFollow', !item.IsFollow)
-        };
+        }
       },
-      hideWorks () {
+      hideWorks() {
         this.currentWorks = ''
       },
       // 路由跳转
-      jumpRoute (items) {
-        this.$router.push({ name: "HeAndITribal", query: { id: JSON.stringify(items.UserId)}})
+      jumpRoute(items) {
+        this.$router.push({ name: "HeAndITribal", query: { id: JSON.stringify(items.UserId) } })
       },
       tipClick() {
         this.$Message.info('This is a info tip');
@@ -234,5 +257,11 @@
         width: 1200px;
         height: auto;
         margin: 0 auto;
+    }
+
+    .page-box {
+        display: flex;
+        justify-content: center;
+        padding: 20px 0;
     }
 </style>

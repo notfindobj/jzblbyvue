@@ -145,7 +145,7 @@
                     cursor: pointer;
                 }
                 .li-active {
-                    color: #333333;
+                    color: #FF3C00;
                 }
             }
         }

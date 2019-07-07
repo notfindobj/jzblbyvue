@@ -197,19 +197,20 @@
                     </div>
                 </div>
                 <Row>
-                    <Col span="8" v-for="i in 3" :key="i">
+                    <Col span="8" v-for="(item, index) in wbList" v-if="index < 3" :key="index">
                         <div class="text-box">
                             <div class="text-box-img">
-                                <img src="../assets/images/smail.png" alt="">
+                                <img :src="item.ItemTitleImg" alt="">
                             </div>
                             <div class="text-box-content">
                                 <div class="text-box-content-had">
-                                    <span class="text-box-content-had-img"></span>
+                                    <span class="text-box-content-had-img">
+                                        <img :src="item.HeadIcon" alt="">
+                                    </span>
                                 </div>
-                                <div class="text-box-content-name">包贝尔</div>
+                                <div class="text-box-content-name">{{ item.NickName }}</div>
                                 <div class="text-box-content-sub-cpntent">
-                                    项目是日本服装品牌 Christian Dada 在台北的旗舰店，也是该品牌在海外的第二家专卖
-                                    项目是日本服装品牌 Christian Dada 在台北的旗舰店，也是该品牌在海外的第二家专卖店…
+                                    {{ item.ItemName }}
                                 </div>
                             </div>
                         </div>
@@ -217,85 +218,85 @@
                 </Row>
             </div>
             <!-- 建筑游学 -->
-            <div>
-                <div class="main-conment">
-                    <div class="main-conment-top">
-                        <ul class="main-conment-sub">
-                            <li>建筑游学</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
-                        </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
-                    </div>
-                </div>
-                <Row>
-                    <i-col span="12">
-                        <Big-Cards/>
-                    </i-col>
-                    <i-col span="12">
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                        <Small-Cards/>
-                    </i-col>
-                </Row>
-            </div>
-            <!-- 优秀设计师 -->
-            <div>
-                <div class="main-conment">
-                    <div class="main-conment-top">
-                        <ul class="main-conment-sub">
-                            <li>优秀设计师</li>
-                        </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
-                    </div>
-                </div>
-                <Row>
-                    <i-col span="24">
-                        <div id="excellent">
-                            <div v-swiper:mySwipers="excellent">
-                                <div class="swiper-wrapper excellent">
-                                    <div class="swiper-slide excellent-slide" v-for="(banner, index) in banners"
-                                         :key="index">
-                                        <div class="excellent-slide-title">
-                                            <img src="../assets/images/smail.png" alt="">
-                                        </div>
-                                        <div class="excellent-slide-content">
-                                            <div class="excellent-slide-content-name">张小杰</div>
-                                            <div class="excellent-slide-content-subdel">一个有态度的设计师，给你精彩</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="swiper-pagination swiper-pagination-bullets"></div>
-                            </div>
-                            <div class="swiper-button-next"></div>
-                            <div class="swiper-button-prev"></div>
-                        </div>
-                    </i-col>
-                </Row>
-            </div>
-            <!-- 优秀品牌商 -->
-            <div>
-                <div class="main-conment">
-                    <div class="main-conment-top">
-                        <ul class="main-conment-sub">
-                            <li>优秀品牌商</li>
-                        </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
-                    </div>
-                </div>
-                <div>
-                    <div v-for="i in 12" :key="'2'+i " class="matrix">
-                        <div class="matrix-img">
-                            <img src="../assets/images/matrix.png" alt="">
-                        </div>
-                        <div class="matrix-text">matrix</div>
-                    </div>
-                </div>
-            </div>
+<!--            <div>-->
+<!--                <div class="main-conment">-->
+<!--                    <div class="main-conment-top">-->
+<!--                        <ul class="main-conment-sub">-->
+<!--                            <li>建筑游学</li>-->
+<!--                            <li>新亚洲/</li>-->
+<!--                            <li>（新）古典/</li>-->
+<!--                            <li>现代/</li>-->
+<!--                            <li>英式/</li>-->
+<!--                            <li>地中海</li>-->
+<!--                        </ul>-->
+<!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <Row>-->
+<!--                    <i-col span="12">-->
+<!--                        <Big-Cards/>-->
+<!--                    </i-col>-->
+<!--                    <i-col span="12">-->
+<!--                        <Small-Cards/>-->
+<!--                        <Small-Cards/>-->
+<!--                        <Small-Cards/>-->
+<!--                        <Small-Cards/>-->
+<!--                    </i-col>-->
+<!--                </Row>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; 优秀设计师 &ndash;&gt;-->
+<!--            <div>-->
+<!--                <div class="main-conment">-->
+<!--                    <div class="main-conment-top">-->
+<!--                        <ul class="main-conment-sub">-->
+<!--                            <li>优秀设计师</li>-->
+<!--                        </ul>-->
+<!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <Row>-->
+<!--                    <i-col span="24">-->
+<!--                        <div id="excellent">-->
+<!--                            <div v-swiper:mySwipers="excellent">-->
+<!--                                <div class="swiper-wrapper excellent">-->
+<!--                                    <div class="swiper-slide excellent-slide" v-for="(banner, index) in banners"-->
+<!--                                         :key="index">-->
+<!--                                        <div class="excellent-slide-title">-->
+<!--                                            <img src="../assets/images/smail.png" alt="">-->
+<!--                                        </div>-->
+<!--                                        <div class="excellent-slide-content">-->
+<!--                                            <div class="excellent-slide-content-name">张小杰</div>-->
+<!--                                            <div class="excellent-slide-content-subdel">一个有态度的设计师，给你精彩</div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="swiper-pagination swiper-pagination-bullets"></div>-->
+<!--                            </div>-->
+<!--                            <div class="swiper-button-next"></div>-->
+<!--                            <div class="swiper-button-prev"></div>-->
+<!--                        </div>-->
+<!--                    </i-col>-->
+<!--                </Row>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; 优秀品牌商 &ndash;&gt;-->
+<!--            <div>-->
+<!--                <div class="main-conment">-->
+<!--                    <div class="main-conment-top">-->
+<!--                        <ul class="main-conment-sub">-->
+<!--                            <li>优秀品牌商</li>-->
+<!--                        </ul>-->
+<!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div>-->
+<!--                    <div v-for="i in 12" :key="'2'+i " class="matrix">-->
+<!--                        <div class="matrix-img">-->
+<!--                            <img src="../assets/images/matrix.png" alt="">-->
+<!--                        </div>-->
+<!--                        <div class="matrix-text">matrix</div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
         </div>
         <ToTop></ToTop>
     </div>
@@ -463,7 +464,8 @@
         width: 384px;
         display: inline-block;
         height: 394px;
-
+        padding-top: 10px;
+        border: 1px solid #ccc;
         &-img {
             height: 266px;
 
@@ -491,6 +493,11 @@
                     height: 60px;
                     border-radius: 50%;
                     background: #FF0;
+                    overflow: hidden;
+                    img {
+                        height: 100%;
+                        width: 100%;
+                    }
                 }
 
                 // height: 60px;
