@@ -7,7 +7,7 @@
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
-                    5245
+                    {{ smallCardsDate.Views }}
                 </div>
                 <div class="cards-eye-name" @click.stop="vivewCol(smallCardsDate)">
                     <i class="iconfont icon-shangchuan"></i>
@@ -58,6 +58,7 @@ export default {
         margin-top: 10px;
         display: inline-block;
         border-radius: 3px;
+        border: 1px solid #ccc;
         &-top {
             position: relative;
             height: 194px;

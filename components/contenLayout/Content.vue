@@ -1,116 +1,127 @@
 <template>
-  <div class="content-box">
-    <ul class="content-screening-list">
-      <li :class="sortAction === 0 ?'li-active' : ''" @click="entrySorting(0)">最新上传</li>
-      <li :class="sortAction === 1 ?'li-active' : ''" @click="entrySorting(1)">人气</li>
-      <li :class="sortAction === 2 ?'li-active' : ''" @click="entrySorting(2)">下载</li>
-      <li :class="sortAction === 3 ?'li-active' : ''" @click="entrySorting(3)">收藏</li>
-    </ul>
-    <!--建筑规范之外的布局 四列-->
-    <div v-if="showLayout" class="works-list_box">
-        <ScrollBox @willReachBottom="willReachBottom" :isLast="isLast">
-            <ul class="works-list">
-                <li @mouseleave="hideWorks()" v-for="(items, index) in RspItemDatas" :key="items.ItemId">
-                    <div class="img-box" @click="viewItem(items)">
-                        <img :src="items.ItemTitleImg" alt="">
-                        <div class="works-like">
-                        <p><i class="icon iconfont icon-chakan"></i>{{items.Views}}</p>
-                        <p>
-                            <i class="icon iconfont icon-favorite"
-                            v-show="!items.IsCollections"
-                            @click.stop="clickCollections(true, index)"
-                        ></i>
-                        <i
-                            class="icon iconfont"
-                            style="color: #ff3c00; margin-right: 8px;"
-                            v-show="items.IsCollections"
-                            @click.stop="clickCollections(false, index)"
-                        >&#xe69d;</i>收藏
-                        </p>
-                    </div>
-                    </div>
-                    <div class="works-introduce">
-                        <p>{{items.ItemName}}</p>
-                        <div>
-                            <div class="avatar-wrap">
-                                <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
-                            </div>
-                        <span class="headPortrait">{{items.NickName}}</span>
-                        </div>
-                    </div>
-                    <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"  @mouseleave="hideWorks(items)">
-                        <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt="" @click="jumpRoute(UserProAndFans)">
-                        <p>{{UserProAndFans.NickName || items.NickName}}</p>
-                        <ul class="works-con-introduce">
-                            <li>
-                                <p>项目</p>
-                                <p>{{UserProAndFans.proCount}}</p>
-                            </li>
-                            <li>
-                                <p>粉丝</p>
-                                <p>{{UserProAndFans.Fans}}</p>
-                            </li>
-                        </ul>
-                        <div class="btn-group-box">
-                            <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
-                            <div @click="direct()">私信</div>
-                        </div>
-
-                    </div>
-                </li>
-            </ul>
-        </ScrollBox>
-    </div>
-    <!--建筑规范的布局两列-->
-    <div class="works-list-box" v-else>
-        <ul class="works-list-change">
-            <template v-for="items in RspItemDatas">
-                <li :key="items.ItemId" @click="viewItem(items)">
-                    <div class="works-list-left" :style="`background: url(${items.ItemTitleImg});background-size: 100% 100%;`"></div>
-                    <div class="works-list-right">
-                        <p>{{items.ItemName}}</p>
-                        <div class="works-list-con">
-                            <div class="works-name">
-                                <div class="avatar-wrap">
-                                    <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
-                                </div>
-                                <span>{{items.NickName}}</span>
-                            </div>
-                            <div class="works-list-con-box">
-                                <i class="icon iconfont icon-chakan"></i>
-                                <span>{{items.Views}}</span>
-                                <i class="icon iconfont icon-favorite"></i>
-                                <span>{{items.Collections}}</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div :class="currentWorks === items.ItemId ? 'works-active works-con' : ' works-con'"  @mouseleave="hideWorks(items)">
-                        <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt="" @click="jumpRoute(UserProAndFans)">
-                        <p>{{UserProAndFans.NickName || items.NickName}}</p>
-                        <ul class="works-con-introduce">
-                            <li>
-                                <p>项目</p>
-                                <p>{{UserProAndFans.proCount}}</p>
-                            </li>
-                            <li>
-                                <p>粉丝</p>
-                                <p>{{UserProAndFans.Fans}}</p>
-                            </li>
-                        </ul>
-                        <div class="btn-group-box">
-                            <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
-                            <div @click="direct()">私信</div>
-                        </div>
-                    </div>
-                </li>
-            </template>
+    <div class="content-box">
+        <ul class="content-screening-list">
+            <li :class="sortAction === 0 ?'li-active' : ''" @click="entrySorting(0)">最新上传</li>
+            <li :class="sortAction === 1 ?'li-active' : ''" @click="entrySorting(1)">人气</li>
+            <li :class="sortAction === 2 ?'li-active' : ''" @click="entrySorting(2)">下载</li>
+            <li :class="sortAction === 3 ?'li-active' : ''" @click="entrySorting(3)">收藏</li>
         </ul>
-    </div>
+        <!--建筑规范之外的布局 四列-->
+        <div v-if="showLayout" class="works-list_box">
+            <ScrollBox @willReachBottom="willReachBottom" :isLast="isLast">
+                <ul class="works-list">
+                    <li @mouseleave="hideWorks()" v-for="(items, index) in RspItemDatas" :key="index">
+                        <div class="img-box" @click="viewItem(items)">
+                            <img :src="items.ItemTitleImg" alt="">
+                            <div class="works-like">
+                                <p><i class="icon iconfont icon-chakan"></i>{{items.Views}}</p>
+                                <p>
+                                    <i class="icon iconfont icon-favorite"
+                                       v-show="!items.IsCollections"
+                                       @click.stop="clickCollections(true, index)"
+                                    ></i>
+                                    <i
+                                        class="icon iconfont"
+                                        style="color: #ff3c00; margin-right: 8px;"
+                                        v-show="items.IsCollections"
+                                        @click.stop="clickCollections(false, index)"
+                                    >&#xe69d;</i>收藏
+                                </p>
+                            </div>
+                        </div>
+                        <div class="works-introduce">
+                            <p>{{items.ItemName}}</p>
+                            <div>
+                                <div class="avatar-wrap">
+                                    <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon"
+                                         alt="">
+                                </div>
+                                <span class="headPortrait">{{items.NickName}}</span>
+                            </div>
+                        </div>
+                        <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"
+                             @mouseleave="hideWorks(items)">
+                            <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt=""
+                                 @click="jumpRoute(UserProAndFans)">
+                            <p>{{UserProAndFans.NickName || items.NickName}}</p>
+                            <ul class="works-con-introduce">
+                                <li>
+                                    <p>项目</p>
+                                    <p>{{UserProAndFans.proCount}}</p>
+                                </li>
+                                <li>
+                                    <p>粉丝</p>
+                                    <p>{{UserProAndFans.Fans}}</p>
+                                </li>
+                            </ul>
+                            <div class="btn-group-box">
+                                <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
+                                <div @click="direct()">私信</div>
+                            </div>
+
+                        </div>
+                    </li>
+                </ul>
+            </ScrollBox>
+        </div>
+        <!--建筑规范的布局两列-->
+        <div class="works-list-box" v-else>
+            <ScrollBox @willReachBottom="willReachBottom" :isLast="isLast">
+                <ul class="works-list-change">
+                    <template v-for="items in RspItemDatas">
+                        <li :key="items.ItemId" @click="viewItem(items)">
+                            <div class="works-list-left"
+                                 :style="`background: url(${items.ItemTitleImg});background-size: 100% 100%;`"></div>
+                            <div class="works-list-right">
+                                <p>{{items.ItemName}}</p>
+                                <div class="works-list-con">
+                                    <div class="works-name">
+                                        <div class="avatar-wrap">
+                                            <img class="headPortrait" @mouseenter="showWorks(items)"
+                                                 :src="items.HeadIcon"
+                                                 alt="">
+                                        </div>
+                                        <span>{{items.NickName}}</span>
+                                    </div>
+                                    <div class="works-list-con-box">
+                                        <i class="icon iconfont icon-chakan"></i>
+                                        <span>{{items.Views}}</span>
+                                        <i class="icon iconfont icon-favorite"></i>
+                                        <span>{{items.Collections}}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div :class="currentWorks === items.ItemId ? 'works-active works-con' : ' works-con'"
+                                 @mouseleave="hideWorks(items)">
+                                <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt=""
+                                     @click="jumpRoute(UserProAndFans)">
+                                <p>{{UserProAndFans.NickName || items.NickName}}</p>
+                                <ul class="works-con-introduce">
+                                    <li>
+                                        <p>项目</p>
+                                        <p>{{UserProAndFans.proCount}}</p>
+                                    </li>
+                                    <li>
+                                        <p>粉丝</p>
+                                        <p>{{UserProAndFans.Fans}}</p>
+                                    </li>
+                                </ul>
+                                <div class="btn-group-box">
+                                    <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
+                                    <div @click="direct()">私信</div>
+                                </div>
+                            </div>
+                        </li>
+                    </template>
+                </ul>
+            </ScrollBox>
+        </div>
     </div>
 </template>
 
 <script>
   import ScrollBox from '~/components/crollBox'
+
   export default {
     name: 'conten',
     props: {
@@ -125,16 +136,16 @@
         type: Boolean,
         default: true
       },
-      UserProAndFans:{
+      UserProAndFans: {
         type: Object,
-        default:function () {
+        default: function () {
           return {}
         }
       },
       currentWorks: {
         type: String,
         default: ''
-        },
+      },
       isLast: {
         type: Boolean,
         default: false
@@ -155,37 +166,37 @@
     mounted() {
     },
     methods: {
-        // 将要滚动到底部
-        willReachBottom() {
-            this.$emit('loadData')
-        },
-        entrySorting(val) {
-            this.$emit('entrySorting', val)
-        },
-        showWorks (item) {
-            this.$emit('showWorks', item)
-        },
-        // 查看项目
-        viewItem(val) {
-            this.$emit('viewItem', val);
-        },
-        hideWorks (item) {
-            // this.currentWorks = null;
-            this.$emit('hideWorks', item);
-        },
-        focus() {
-            this.$emit('worksFocus', this.UserProAndFans);
-        },
-        clickCollections (flag, index) {
-            this.$emit('handleCollections', flag, index)
-        },
-        // 跳转
-        jumpRoute (item) {
-            this.$emit('jumpRoute', item);
-        },
-        direct() {
-            //this.currentWorks = null;
-        }
+      // 将要滚动到底部
+      willReachBottom() {
+        this.$emit('loadData')
+      },
+      entrySorting(val) {
+        this.$emit('entrySorting', val)
+      },
+      showWorks(item) {
+        this.$emit('showWorks', item)
+      },
+      // 查看项目
+      viewItem(val) {
+        this.$emit('viewItem', val);
+      },
+      hideWorks(item) {
+        // this.currentWorks = null;
+        this.$emit('hideWorks', item);
+      },
+      focus() {
+        this.$emit('worksFocus', this.UserProAndFans);
+      },
+      clickCollections(flag, index) {
+        this.$emit('handleCollections', flag, index)
+      },
+      // 跳转
+      jumpRoute(item) {
+        this.$emit('jumpRoute', item);
+      },
+      direct() {
+        //this.currentWorks = null;
+      }
     },
   }
 </script>
@@ -200,13 +211,16 @@
             clear: both;
         }
     }
+
     .content-box {
         width: 100%;
         height: auto;
+
         .content-screening-list {
             display: flex;
             flex-direction: row;
             margin-bottom: 23px;
+
             > li {
                 line-height: 20px;
                 font-size: 14px;
@@ -214,6 +228,7 @@
                 margin-right: 36px;
                 cursor: pointer;
             }
+
             .li-active {
                 color: #ED1B24;
                 font-weight: 500;
@@ -232,37 +247,45 @@
                 }
             }
         }
+
         .works-list-box {
             width: 100%;
             height: auto;
         }
+
         .works-list {
             width: 100%;
             .clearfix();
+
             > li {
                 float: left;
                 width: 292px;
                 height: 266px;
                 background: #FFFFFF;
-                box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                 border-radius: 4px;
                 margin-right: 10px;
                 margin-bottom: 20px;
                 position: relative;
+                &:hover {
+                    box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
+                }
 
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
+
                 .img-box {
                     height: 200px;
                     position: relative;
                     cursor: pointer;
                     overflow: hidden;
+
                     > img {
                         display: inline-block;
                         width: 100%;
                         height: auto;
                     }
+
                     .works-like {
                         width: 100%;
                         height: 40px;
@@ -295,6 +318,7 @@
                         }
                     }
                 }
+
                 .works-introduce {
                     height: 66px;
                     padding: 8px 0 10px 6px;
@@ -308,28 +332,33 @@
                         color: #666666;
                         margin-bottom: 8px;
                     }
+
                     > div {
                         display: flex;
                         flex-direction: row;
                         justify-content: flex-start;
                         align-items: flex-start;
+
                         .avatar-wrap {
                             width: 20px;
                             height: 20px;
                             margin-right: 4px;
                             border-radius: 50%;
                             overflow: hidden;
+
                             img {
                                 width: 20px;
                                 height: 20px;
                             }
                         }
+
                         > span {
                             font-size: 14px;
                             color: #333333;
                         }
                     }
                 }
+
                 .works-con {
                     width: 163px;
                     height: 217px;
@@ -341,6 +370,7 @@
                     left: 45px;
                     top: 8px;
                     display: none;
+
                     > img {
                         cursor: pointer;
                         display: block;
@@ -350,6 +380,7 @@
                         background: red;
                         margin: 0 auto 10px;
                     }
+
                     > p {
                         cursor: pointer;
                         font-size: 14px;
@@ -357,6 +388,7 @@
                         margin-bottom: 12px;
                         text-align: center;
                     }
+
                     .works-con-introduce {
                         height: 40px;
                         margin-bottom: 12px;
@@ -394,12 +426,14 @@
                             transform: translateX(-50%);
                         }
                     }
+
                     .btn-group-box {
                         height: 21px;
                         display: flex;
                         flex-direction: row;
                         align-items: center;
                         justify-content: space-between;
+
                         > div {
                             cursor: pointer;
                             width: 60px;
@@ -428,6 +462,7 @@
                         }
                     }
                 }
+
                 .works-active {
                     display: block;
                 }
@@ -466,6 +501,7 @@
                     background-size: 100% 100%;
                     background-repeat: no-repeat;
                     cursor: pointer;
+
                     > img {
                         display: inline-block;
                         width: 100%;
@@ -484,6 +520,7 @@
                         padding-bottom: 82px;
                         margin-bottom: 14px;
                         border-bottom: 1px solid #D9D9D9;
+                        cursor: pointer;
                     }
 
                     .works-list-con {
@@ -538,6 +575,7 @@
                         }
                     }
                 }
+
                 .works-con {
                     width: 150px;
                     height: 200px;
@@ -549,6 +587,7 @@
                     left: 160px;
                     top: 0px;
                     display: none;
+
                     > img {
                         cursor: pointer;
                         display: block;
@@ -558,12 +597,14 @@
                         background: red;
                         margin: 0 auto 10px;
                     }
+
                     > p {
                         font-size: 14px;
                         color: #333333;
                         margin-bottom: 8px;
                         text-align: center;
                     }
+
                     .works-con-introduce {
                         height: 40px;
                         // margin-bottom: 12px;
@@ -637,26 +678,31 @@
                         }
                     }
                 }
+
                 .works-active {
                     display: block;
                 }
             }
         }
     }
+
     .avatar-wrap {
         width: 20px;
         height: 20px;
         margin-right: 4px;
         border-radius: 50%;
         overflow: hidden;
+
         img {
             width: 20px;
             height: 20px;
         }
     }
+
     .ivu-page {
         text-align: center;
     }
+
     .headPortrait {
         cursor: pointer;
     }

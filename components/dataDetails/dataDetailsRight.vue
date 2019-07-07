@@ -9,6 +9,10 @@
             <div class="data-info">
                 <p class="data-name">项目信息</p>
                 <ul :class="!isShowIcon ? 'data-introduce' : 'data-introduce data-introduce-active '">
+                    <li>
+                        <span>项目名称</span>
+                        <span>{{ detaDetails.ItemName }}</span>
+                    </li>
                     <li v-for="(item,index) in attribute" :key="index">
                         <span>{{item.ItemAttributesFullName}}</span>
                         <span>{{item.ItemSubAttributeFullName}}</span>

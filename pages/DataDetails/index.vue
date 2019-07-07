@@ -26,6 +26,7 @@
                 <template v-if="!isLayout">
                     <dataDetailsPDFLeft
                     :detaDetails="detaDetails"
+                    :PdfInfo="PdfInfo"
                    />
                 </template>
                   <div>
@@ -59,7 +60,7 @@
         <date-details-down
             @dataDetailsMaskClose="dataDetailsMaskClose"
             v-show="isShowDateDetailsDown"/>
-        <ToTop></ToTop>
+            <ToTop></ToTop>
     </div>
 </template>
 <script>
@@ -68,7 +69,7 @@
   import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
   import commentsCon from '../../components/comments/commentsCon.vue'
   import viewPicture from '../../components/comments/viewPicture.vue'
-  import ToTop from '~/components/toTop'
+  import ToTop from '../../components/toTop'
   import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency } from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
@@ -95,7 +96,7 @@
         clientWidth: '',
         isLayout: true,
         distanceBottom: 1000,
-        contentHeight: ''   // 评论列表的高度
+        contentHeight: '',   // 评论列表的高度
       }
     },
     components: {
@@ -165,7 +166,12 @@
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       delete queryData.title;
-      let getBaseDataDetail = await store.dispatch('getBaseDataDetails', queryData);
+      let reqItemList = JSON.parse(JSON.stringify(queryData));
+      delete reqItemList.Id;
+      let getBaseDataDetail = await store.dispatch('getBaseDataDetails', {
+        Id: queryData.Id,
+        reqItemList
+      });
       // 根据项目详情请求评论信息
       let Comment = {
         itemId: getBaseDataDetail.ItemEntity.ItemId,
@@ -173,6 +179,7 @@
       }
       let getGetCommentsData = await store.dispatch('getGetComments', Comment);
       return {
+        PdfInfo: getBaseDataDetail.PdfInfo,
         detaDetails: getBaseDataDetail.ItemEntity,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
         getGetCommentsData: getGetCommentsData,
@@ -195,7 +202,6 @@
       window.addEventListener('scroll', () => {
         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
-        console.log(this.distanceBottom)
       })
       window.onresize = () => {
         this.clientWidth = document.body.clientWidth;

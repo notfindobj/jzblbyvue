@@ -8,7 +8,7 @@
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
-                    5245
+                    {{ bigCardsDate.Views }}
                 </div>
                 <div class="cards-eye-name">
                     <i class="iconfont icon-shangchuan"></i>
@@ -52,6 +52,7 @@ export default {
         display: inline-block;
         border-radius: 3px;
         height: 475px;
+        border: 1px solid #ccc;
         &-top {
             position: relative;
             height: 356px;
