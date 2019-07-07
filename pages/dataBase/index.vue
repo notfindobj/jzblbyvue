@@ -192,9 +192,11 @@
       // 查看详情
       viewItem(item) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        queryData.Id = item.ItemId;
-        queryData.showLayout = this.showLayout;
-        this.$router.push({ name: "DataDetails", query: {dataBase: JSON.stringify(queryData)}})
+        let queryDatas = {}
+        queryDatas.Id = item.ItemId;
+        queryDatas.reqItemList = queryData;
+        queryDatas.showLayout = this.showLayout;
+        this.$router.push({ name: "DataDetails", query: {dataBase: JSON.stringify(queryDatas)}})
       },
       // 获取项目和粉丝量
       async showWorks (user) {
