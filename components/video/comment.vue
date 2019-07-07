@@ -4,7 +4,7 @@
         <div class="comment">
             <div class="comment-head" v-if="isShowInput">
                 <div class="comment-avatar">
-                    <img :src="$store.state.overas.auth.HeadIcon" alt="">
+                    <img :src="auth ? auth.HeadIcon : ''" alt="">
                 </div>
                 <div class="comment-input-wrap" :style="{'width': width}">
                     <Input v-model="commentCon"/>
@@ -44,7 +44,7 @@
 <script>
   import Emotion from '~/components/Emotion/index'
   import CommentItem from '~/components/video/commentItem'
-
+  import { mapState, mapGetters } from 'vuex'
   export default {
     props: {
       isShow: {
@@ -81,19 +81,21 @@
         right: '439px'
       }
     },
-
     mounted() {
       if (this.$route.name === 'HeAndITribal-id') {
         this.width = '780px';
         this.right = '335px';
       }
     },
-
+    computed: {
+        ...mapState({
+            auth: state => state.overas.auth
+        }),
+    },
     components: {
       Emotion,
       'comment-item': CommentItem
     },
-
     methods: {
       // 选择表情
       handleEmotion(item) {

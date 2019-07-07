@@ -15,18 +15,20 @@
                 </Breadcrumb>
             </div>
             <div class="data-details-con">
-                <data-details-left
-                      v-show="isLayout"
+              <template v-if="isLayout">
+                  <data-details-left
                       id="container"
                       :detaDetails="detaDetails"
                       :discussData="getGetCommentsData"
                       :attribute="ItemAttributesEntities"
                   />
-                  <dataDetailsPDFLeft
-                    v-show="!isLayout"
+              </template>
+                <template v-if="!isLayout">
+                    <dataDetailsPDFLeft
                     :detaDetails="detaDetails"
                     :PdfInfo="PdfInfo"
                    />
+                </template>
                   <div>
                     <data-details-right
                         :class="{'fix-top': scrollTop > 312 && distanceBottom > 362, 'fix-bottom': distanceBottom < 362}"
