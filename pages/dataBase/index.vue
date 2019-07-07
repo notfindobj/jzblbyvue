@@ -220,7 +220,7 @@
       },
       // 路由跳转
       jumpRoute (items) {
-        this.$router.push({ name: "HeAndITribal", query: { id: JSON.stringify(items.UserId)}})
+        this.$router.push({name: "HeAndITribal-id", params: {id: items.UserId}})
       },
       tipClick() {
         this.$Message.info('This is a info tip');
