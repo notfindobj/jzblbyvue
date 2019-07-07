@@ -132,7 +132,7 @@
       },
       async signOut() {
         let config = {
-          url: process.env.NODE_ENV === 'production' ? 'http://140.143.240.64:8889/api/logout' : 'http://127.0.0.1:8889/api/logout',
+          url: process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/api/logout' : 'http://127.0.0.1:8889/api/logout',
           withCredentials: true,
           method: 'post',
           headers: {
@@ -144,7 +144,7 @@
             this.$store.dispatch('LOGININ', null);
             localStorage.removeItem('LOGININ')
             this.$Message.success(res.data.Msg);
-            
+
           })
       },
       searchBaseData() {
