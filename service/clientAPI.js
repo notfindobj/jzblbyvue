@@ -3,6 +3,27 @@ import request from './index'
 export const getMenu = async (params) => {
   return await request.get('Menu/GetMenuAll', params)
 }
+
+// qq登录
+export const loginByQQ = async () => {
+  return await request.post('Account/Thirdparty_QQ_binding?redirectUri=http://www.demo.jzbl.com/qq')
+}
+
+// 微信登录
+export const loginByWX = async () => {
+  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.demo.jzbl.com')
+}
+
+// 微信登录获取用户信息
+export const getUserByWX = async (params) => {
+  return await request.get('Account/wx', params)
+}
+
+// 微信qq获取用户信息
+export const getUserByQQ = async (params) => {
+  return await request.get('Account/qq', params)
+}
+
 // 获取验证码
 export const getMobileCode = async (params) => {
   return await request.post('Account/GetMobileCode', params)

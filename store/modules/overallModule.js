@@ -6,7 +6,8 @@ export const overas = {
         showSign: false, // 打开模态框状态
         isItLoggedIn: '', // 打开模态框状态
         auth: null, // 登录状态，
-        queryBaseData: {}// 资料库导航
+        queryBaseData: {},  // 资料库导航
+        wxRegister: {}, // 微信注册时的信息
     },
     actions: overallActions,
     getters: overallGetters,

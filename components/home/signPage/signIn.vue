@@ -20,16 +20,15 @@
         </div>
         <div class="third-party">第三方登录</div>
         <div class="third-party-iocn">
-            <i class="icon iconfont">&#xe73b;</i>
-            <i class="icon iconfont">&#xe73e;</i>
+            <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
+            <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
         </div>
-    </div>
     </div>
 </template>
 <script>
   import axios from 'axios'
   import qs from 'qs'
-  import { lognIn } from '../../../service/clientAPI'
+  import { lognIn, loginByQQ, loginByWX, getUserByWX, getUserByQQ } from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -50,6 +49,69 @@
       }
     },
     methods: {
+      // qq登录
+      handleLoginByQQ() {
+        loginByQQ().then(res => {
+          const qqWindow = this.loginAtQQ(res, 1);
+          const interId = setInterval(() => {
+            const code = localStorage.getItem('code');
+            const state = localStorage.getItem('state');
+            if (code && state) {
+              qqWindow.close();
+              getUserByQQ({
+                code,
+                state
+              }).then(res => {
+                if (!res.token) {
+                  this.$store.dispatch('WXREGISTER', res);
+                  this.goToRegister('register');
+                } else {
+                  this.$store.dispatch('LOGININ', res);
+                  localStorage.setItem('LOGININ', JSON.stringify(res))
+                  this.$Message.success('登录成功');
+                }
+              });
+              clearInterval(interId);
+            }
+          }, 200)
+        })
+      },
+
+      // 微信登录
+      handleLoginByWX() {
+        loginByWX().then(res => {
+          const wxWindow = this.loginAtQQ(res, 2);
+          const interId = setInterval(() => {
+            const code = localStorage.getItem('code');
+            const state = localStorage.getItem('state');
+            if (code && state) {
+              wxWindow.close();
+              getUserByWX({
+                code,
+                state
+              }).then(res => {
+                if (!res.token) {
+                  this.$store.dispatch('WXREGISTER', res);
+                  this.goToRegister('register');
+                } else {
+                  this.$store.dispatch('LOGININ', res);
+                  localStorage.setItem('LOGININ', JSON.stringify(res))
+                  this.$Message.success('登录成功');
+                }
+              });
+              clearInterval(interId);
+            }
+          }, 200)
+        })
+      },
+
+      // 打开登录窗口 type 1 qq登录 2 微信登录
+      loginAtQQ(url, type) {
+        const LEFT = (window.screen.width - 685) / 2;
+        const TOP = (window.screen.height - 555) / 2;
+        return window.open(url,'oauth2Login_qq','height=555,width=685, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes, top=' + TOP + ', left=' + LEFT);
+      },
+
       goToRegister(val) {
         this.$store.dispatch('LOGGEDIN', val);
       },
@@ -159,9 +221,11 @@
             display: block;
             font-size: 35px;
             cursor: pointer;
+
             &:first-child {
                 color: #6CB37A;
             }
+
             &:last-child {
                 color: #54A4D8;
             }
