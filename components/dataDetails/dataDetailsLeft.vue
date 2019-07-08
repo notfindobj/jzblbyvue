@@ -2,10 +2,10 @@
   <div class="data-details-left">
     <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
     <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
-      <img :class="!isLeft ? 'isHide' : 'isShow'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(1)" width="50px" alt="">
+      <img :src="!isLeft ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(1)" width="50px" alt="">
     </div>
     <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
-      <img :class="!isRight ? 'isHide moveRight' : 'isShow moveRight'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(2)" width="50px" alt="">
+      <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(2)" width="50px" alt="">
     </div>
      <!-- <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
@@ -73,6 +73,8 @@ export default {
   data() {
     return {
       isShowViewBox: false,
+      isLeftPngF: require('../../assets/images/leftButtonColor.png'),
+      isLeftPngR: require('../../assets/images/leftButton.png'),
       isLeft: false,
       isRight: false,
       Viewer: {},
@@ -345,14 +347,16 @@ export default {
     cursor: pointer;
     position: fixed;
     display: inline-block;
-    width: 50px;
+    width: 150px;
     height: 100%;
     background: transparent;
     z-index: 9999;
     top: 0;
     left: 0;
+    padding-left: 30px;
     >img {
       top: 50%;
+      width: 80px;
       position: relative;
     }
   }
@@ -360,15 +364,19 @@ export default {
     cursor: pointer;
     position: fixed;
     display: inline-block;
-    width: 50px;
+    width: 150px;
     height: 100%;
     background: transparent;
     z-index: 9999;
     top: 0;
     right: 0;
+    text-align: right;
+    padding-right: 30px;
     >img {
       top: 50%;
+      width: 80px;
       position: relative;
+     
     }
   }
   .viewer-toolbar {
