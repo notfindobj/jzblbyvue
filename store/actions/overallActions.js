@@ -16,12 +16,10 @@ export const overallActions ={
     BASEDATA ({ commit, state }, params) {
         commit("setqueryBase", params)
     },
-
     // 设置微信注册时的信息
     WXREGISTER ({ commit, state }, params) {
       commit("setWxRegister", params)
     },
-
     nuxtServerInit({ commit, state }, { req }) {
         let auth = null
         if (req.headers.cookie) {
