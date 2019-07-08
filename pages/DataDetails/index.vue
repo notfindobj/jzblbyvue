@@ -372,7 +372,6 @@
                 }
                 .data-details-location {
                 }
-
                 .fix-top {
                     position: fixed;
                     top: 0;

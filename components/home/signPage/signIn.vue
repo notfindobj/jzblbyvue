@@ -34,8 +34,10 @@
     data() {
       return {
         userItem: {
-          mobile: '18321284508',
-          password: '123456'
+          // mobile: '18321284508',
+          mobile: '',
+          // password: '123456'
+          password: ''
         },
         ruleInline: {
           mobile: [
