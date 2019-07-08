@@ -21,7 +21,7 @@
         <li v-for="(item,index) in itemAttribute" :key="index" :class="item.ItemAttributesId ? 'li-active' : ''">
           <p>{{item.ItemAttributesFullName}}</p>
           <ol>
-            <li v-for="(items,index) in  item.ChildNode" :key="index" @click="choseSomeOne(item,items)">{{items.ItemAttributesFullName}}</li>
+            <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)">{{items.ItemAttributesFullName}}</li>
           </ol>
           <i :class="item.ItemAttributesId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'" v-if="item.ChildNode.length > 13"  @click="upAndDown(item)"></i>
         </li>
@@ -198,11 +198,10 @@
           >p{
             /*width: 76px;*/
             margin-right: 20px;
-            font-weight: 500;
+            font-weight: bold;
           }
           >ol{
             flex: 1;
-
             >li{
               float: left;
               margin-right: 24px;

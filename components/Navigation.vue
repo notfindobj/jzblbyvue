@@ -274,10 +274,10 @@
             display: flex;
             width: 1200px;
             margin: 0 auto;
-
             > li {
-                padding: 8px 30px;
-                cursor: pointer;
+              padding: 8px 30px;
+              cursor: pointer;
+              font-size: 20px;
             }
         }
 

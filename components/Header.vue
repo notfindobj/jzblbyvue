@@ -134,19 +134,16 @@
                 align-items: center;
                 margin-left: 70px;
                 font-size: 16px;
-
                 a {
                     height: 60px;
                     margin: 0 20px;
                     line-height: 60px;
 
                 }
-
                 a:hover {
                     color: #FF3C00;
                     border-bottom: 2px solid #ff3c00;
                 }
-
                 .nuxt-link-active {
                     color: #FF3C00;
                     border-bottom: 2px solid #ff3c00;
