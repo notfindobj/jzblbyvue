@@ -99,7 +99,7 @@
         }
       },
       async register() {
-        if (!registeredItem.isAgree) {
+        if (!this.registeredItem.isAgree) {
           this.$Message.warning('请先阅读并同意用户协议');
           return false;
         }

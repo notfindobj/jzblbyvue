@@ -33,6 +33,57 @@ app.post('/front/mobileLogin', function (req, res) {
     return res.json(err)
   })
 });
+
+// 微信登录
+app.post('/front/wxLogin', function(req, res) {
+  let config = {
+    url: `http://www.api.jzbl.com/api/Account/wx`,
+    withCredentials: true,
+    method: 'get',
+    params: req.body
+  }
+  axios(config).then(data => {
+    if (data.data.Data.token) {
+      const token = data.data.Data;
+      if (token) {
+        res.cookie('adminToken', token, {
+          maxAge: 60000 * 60 * 30
+        })
+      }
+    }
+    return res.json(data.data)
+  }, err => {
+    return res.json(err)
+  })
+});
+
+
+// QQ登录
+app.post('/front/qqLogin', function(req, res) {
+  let config = {
+    url: `http://www.api.jzbl.com/api/Account/qq`,
+    withCredentials: true,
+    method: 'get',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    params: req.body
+  }
+  axios(config).then(data => {
+    if (data.data.Data.token) {
+      const token = data.data.Data;
+      if (token) {
+        res.cookie('adminToken', token, {
+          maxAge: 60000 * 60 * 30
+        })
+      }
+    }
+    return res.json(data.data)
+  }, err => {
+    return res.json(err)
+  })
+});
+
 // 发起 POST /api/logout 请求注销当前用户，并从 req.session 中移除
 app.post('/api/logout', function (req, res) {
   delete res.clearCookie('adminToken');

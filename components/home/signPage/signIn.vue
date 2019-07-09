@@ -71,8 +71,11 @@
                   this.$store.dispatch('WXREGISTER', res);
                   this.goToRegister('register');
                 } else {
+                  localStorage.removeItem('code');
+                  localStorage.removeItem('state');
                   this.$store.dispatch('LOGININ', res);
                   localStorage.setItem('LOGININ', JSON.stringify(res))
+                  this.$store.dispatch('SETUP', false)
                   this.$Message.success('登录成功');
                 }
               });
@@ -98,8 +101,11 @@
                   this.$store.dispatch('WXREGISTER', res);
                   this.goToRegister('register');
                 } else {
+                  localStorage.removeItem('code');
+                  localStorage.removeItem('state');
                   this.$store.dispatch('LOGININ', res);
                   localStorage.setItem('LOGININ', JSON.stringify(res))
+                  this.$store.dispatch('SETUP', false)
                   this.$Message.success('登录成功');
                 }
               });

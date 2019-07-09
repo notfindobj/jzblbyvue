@@ -16,12 +16,14 @@ export const loginByWX = async () => {
 
 // 微信登录获取用户信息
 export const getUserByWX = async (params) => {
-  return await request.get('Account/wx', params)
+  const url = process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/front/wxLogin' : 'http://127.0.0.1:8889/front/wxLogin';
+  return await request.post(url, params)
 }
 
 // 微信qq获取用户信息
 export const getUserByQQ = async (params) => {
-  return await request.get('Account/qq', params)
+  const url = process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/front/qqLogin' : 'http://127.0.0.1:8889/front/qqLogin';
+  return await request.post(url, params)
 }
 
 // 获取验证码
