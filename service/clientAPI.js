@@ -11,7 +11,7 @@ export const loginByQQ = async () => {
 
 // 微信登录
 export const loginByWX = async () => {
-  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.demo.jzbl.com')
+  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.demo.jzbl.com/wx')
 }
 
 // 微信登录获取用户信息
