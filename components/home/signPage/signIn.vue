@@ -78,7 +78,6 @@
           }, 200)
         })
       },
-
       // 微信登录
       handleLoginByWX() {
         loginByWX().then(res => {
@@ -106,14 +105,12 @@
           }, 200)
         })
       },
-
       // 打开登录窗口 type 1 qq登录 2 微信登录
       loginAtQQ(url, type) {
         const LEFT = (window.screen.width - 685) / 2;
         const TOP = (window.screen.height - 555) / 2;
         return window.open(url,'oauth2Login_qq','height=555,width=685, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes, top=' + TOP + ', left=' + LEFT);
       },
-
       goToRegister(val) {
         this.$store.dispatch('LOGGEDIN', val);
       },
