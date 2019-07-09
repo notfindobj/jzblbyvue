@@ -23,6 +23,9 @@
             <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
             <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
         </div>
+        <div class="block-none">
+            您好！此网站暂未对外开放，了解更多请联系：15121173536
+        </div>
     </div>
 </template>
 <script>
@@ -145,6 +148,19 @@
 <style lang="less" scoped>
     .ivu-modal-body {
         padding: 40px 30px 20px 30px;
+    }
+
+    .block-none {
+        position: absolute;
+        top: 210px;
+        left: 0;
+        width: 100%;
+        height: 91px;
+        padding-top: 15px;
+        background-color: #ff3c00;
+        color: #fff;
+        font-size: 18px;
+        text-align: center;
     }
 
     .desabled-btn {
