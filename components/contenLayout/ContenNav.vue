@@ -178,7 +178,7 @@
       border: 1px solid #303030;
       border-radius: 4px;
       box-sizing: border-box;
-      padding: 10px 20px 0;
+      padding: 10px 20px 10px;
       .screening-nav-list{
         width: 100%;
         >li{

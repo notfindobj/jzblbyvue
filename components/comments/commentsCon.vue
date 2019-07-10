@@ -48,7 +48,8 @@
         </div>
         <!-- 评论信息 -->
         <discuss
-            :style="{height: contentHeight, overflow: 'scroll'}"
+            class="comment-scroll"
+            :style="{height: contentHeight}"
             :discussData="comments"
             @commentValue="discussValue"
             @somePraise="somePraise"
@@ -154,7 +155,10 @@
     .comment-box {
         padding: 10px 10px;
     }
-
+    .comment-scroll {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
     .comments-box {
         width: 100%;
         /*height: 100%;*/

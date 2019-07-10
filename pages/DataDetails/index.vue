@@ -4,10 +4,8 @@
             <div class="data-details-location">
                 <Breadcrumb separator=">" style="margin-bottom: 20px">
                     <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
-                    <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities"
-                                    :key="index"
-
-                    ><span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
+                    <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities" :key="index">
+                      <span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
                     </BreadcrumbItem>
                     <BreadcrumbItem style="font-size:12px;color: #FF3C00;font-weight: normal;">
                         {{ detaDetails.ItemName }}
@@ -16,11 +14,13 @@
             </div>
             <div class="data-details-con">
               <template v-if="isLayout">
+                <!--  :discussData="getGetCommentsData" -->
                   <data-details-left
                       id="container"
                       :detaDetails="detaDetails"
-                      :discussData="getGetCommentsData"
+                      :pageTurning="pageTurning"
                       :attribute="ItemAttributesEntities"
+                      @pageTurning="PNpage"
                   />
               </template>
                 <template v-if="!isLayout">
@@ -178,11 +178,16 @@
         ScopeType: 0
       }
       let getGetCommentsData = await store.dispatch('getGetComments', Comment);
+      let pageTurning = {
+        PrevItemId: getBaseDataDetail.PrevItemId,
+        NextItemId: getBaseDataDetail.NextItemId,
+      }
       return {
         PdfInfo: getBaseDataDetail.PdfInfo,
         detaDetails: getBaseDataDetail.ItemEntity,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
         getGetCommentsData: getGetCommentsData,
+        pageTurning,
         id: getBaseDataDetail.ItemEntity.ItemId
       }
     },
@@ -214,6 +219,14 @@
       })
     },
     methods: {
+      // 上写翻页，项目详情
+      PNpage (val) {
+        try {
+          let dataBase =  JSON.parse(this.$route.query.dataBase);
+          dataBase.Id = val
+          window.location.href = 'DataDetails?dataBase='+JSON.stringify(dataBase);
+        } catch (error) {}
+      },
       clickCate(index) {
         let attrList = [];
         let dataBase = JSON.parse(this.$route.query.dataBase);

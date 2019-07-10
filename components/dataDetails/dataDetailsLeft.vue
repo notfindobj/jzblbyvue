@@ -1,11 +1,11 @@
 <template>
   <div class="data-details-left">
     <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
-    <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
-      <img :src="!isLeft ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(1)" width="50px" alt="">
+    <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
+      <img :src="!isLeft ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(isBtnSile ? 1 : pageTurning.PrevItemId)" width="50px" alt="">
     </div>
-    <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
-      <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(2)" width="50px" alt="">
+    <div class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
+      <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(isBtnSile ? 2 : pageTurning.NextItemId)" width="50px" alt="">
     </div>
      <!-- <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
@@ -68,6 +68,12 @@ export default {
       default: function () {
         return []
       }
+    },
+    pageTurning: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   data() {
@@ -124,14 +130,12 @@ export default {
             console.log('built')
           },
           view: async function () {
-            console.log(document.querySelector('.viewer-canvas img').src)
             let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
             let queryData = {
               ItemId: _this.detaDetails.ItemId,
               ItemImgSrc: '',
               ScopeType: 1
             }
-            // let msg = getComments(queryData)
           },
           shown: function (e) {
             _this.isBtnSile = true;
@@ -148,13 +152,18 @@ export default {
       })
     },
     moveLeftClick (val) {
-      if (val === 1) {
-        document.querySelector('.viewer-prev').click()
+      if (!this.isBtnSile) {
+        this.$emit('pageTurning', val)
+        console.log('left', val)
       } else {
-        document.querySelector('.viewer-next').click()
+        if (val === 1) {
+          document.querySelector('.viewer-prev').click()
+        } else {
+          document.querySelector('.viewer-next').click()
+        }
       }
-      console.log('moveLeftClick')
-      // viewer-next
+      
+      
     },
     // 项目点赞
     async thumbsUp(item) {
