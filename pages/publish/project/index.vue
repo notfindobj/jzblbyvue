@@ -35,14 +35,14 @@
                         size="large"
                     ></Input>
                 </FormItem>
-                <FormItem label="类型选择" class="type-select">
+                <FormItem label="类型选择" class="type-select" prop="typeId">
                     <i
                         v-for="item in menu.RetMenuData"
                         :key="item.ItemAttributesId"
                     >
                         <Button
                             size="large"
-                            v-if="typeId === item.ItemAttributesId"
+                            v-if="formValidate.typeId === item.ItemAttributesId"
                             type="primary"
                         >{{ item.ItemAttributesFullName }}
                         </Button>
@@ -161,7 +161,7 @@
                 <FormItem label="项目描述" class="description">
                     <textarea v-model="formValidate.description" placeholder="请填写项目描述"></textarea>
                 </FormItem>
-                <FormItem label="项目内容" v-show="typeName !== '文本' && typeName !== '建筑规范'">
+                <FormItem label="项目内容" prop="content" v-show="typeName !== '文本' && typeName !== '建筑规范'">
                     <div class="editor-wrap">
                         <div class="quill-editor"
                              :content="formValidate.content"
@@ -177,6 +177,7 @@
                     style="display: none;"
                     id="getFile"
                     @change="selectContentImg($event)"
+                    multiple
                     accept="image/gif,image/jpeg,image/jpg,image/png"
                 >
             </Form>
@@ -204,10 +205,9 @@
                 <Form
                     ref="serviceValidate"
                     :model="serviceValidate"
-                    :rules="ruleServiceValidate"
                     :label-width="80"
                 >
-                    <FormItem label="定制类型:" prop="type">
+                    <FormItem label="定制类型:">
                         <span
                             class="service-type-name"
                             :class="{'service-active': item.ItemDetailId === serviceValidate.serviceId}"
@@ -217,13 +217,13 @@
                         >{{ item.ItemValue }}</span>
                     </FormItem>
 
-                    <FormItem label="定制金额:" prop="money">
+                    <FormItem label="定制金额:">
                         <Input v-model="serviceValidate.money" placeholder="请选择"></Input>
                     </FormItem>
-                    <FormItem label="手机号码:" prop="mobile">
+                    <FormItem label="手机号码:">
                         <Input v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
                     </FormItem>
-                    <FormItem label="定制描述:" prop="desc">
+                    <FormItem label="定制描述:">
                         <Input
                             v-model="serviceValidate.desc"
                             type="textarea"
@@ -235,7 +235,7 @@
             </div>
             <div slot="footer">
                 <Button @click="cancelService">取消</Button>
-                <Button type="primary" @click="serviceModal = false">确定</Button>
+                <Button type="primary" @click="clickModalConfirm">确定</Button>
             </div>
         </Modal>
     </div>
@@ -251,7 +251,6 @@
         token: '',
         typeFile: null,  // 选择类型需要上传文件时的，文件信息
         price: '',  // 上传文件时所填的价格
-        typeId: '',
         typeName: '',
         serviceModal: false,    // 是否显示定制信息的输入框
         serviceId: '',
@@ -259,11 +258,21 @@
           name: '',
           img: '',
           content: '',
-          description: ''
+          description: '',
+          typeId: ''
         },
         ruleValidate: {
+          img: [
+            { required: true, message: ' ', trigger: 'blur' }
+          ],
           name: [
             { required: true, message: '项目名称不能为空', trigger: 'blur' }
+          ],
+          typeId: [
+            { required: true, message: ' ', trigger: 'blur' }
+          ],
+          content: [
+            { required: true, message: ' ', trigger: 'blur' }
           ]
         },
         serviceValidate: {
@@ -271,20 +280,6 @@
           money: '',
           mobile: '',
           desc: ''
-        },
-        ruleServiceValidate: {
-          serviceId: [
-            { required: true, message: ' ', trigger: 'blur' }
-          ],
-          mobile: [
-            { required: true, message: ' ', trigger: 'blur' }
-          ],
-          money: [
-            { required: true, message: ' ', trigger: 'blur' }
-          ],
-          desc: [
-            { required: true, message: ' ', trigger: 'blur' }
-          ]
         },
         spinShow: false,
         serviceList: [],
@@ -326,7 +321,7 @@
       // 查询所有菜单数据，根据id找出的属性列表
       attrList() {
         for (let i of this.menu.RetMenuData) {
-          if (this.typeId === i.ItemAttributesId) {
+          if (this.formValidate.typeId === i.ItemAttributesId) {
             return i.ChildNode;
           }
         }
@@ -393,7 +388,10 @@
             data.append('files', item)
           }
           uploadFile(data, 1).then(res => {
-            this.formValidate.content += `<img src="${ res[0].smallImgUrl }" alt="内容图片">`;
+            console.log(res,1)
+            for(let i = 0; i < res.length; i++) {
+              this.formValidate.content += `<img src="${ res[i].smallImgUrl }" alt="内容图片">`;
+            }
           })
         }
       },
@@ -403,7 +401,7 @@
         this.typeFile = null; // 清空已上传内容
         getProjectType(id).then(res => {
           this.queryAttrList = res;
-          this.typeId = id;
+          this.formValidate.typeId = id;
           this.typeName = name;
         });
         getCustomizeService(id).then(res => {
@@ -428,6 +426,17 @@
         this.typeFile = null;
       },
 
+      // 点击定制服务弹出框确定
+      clickModalConfirm() {
+        if (this.serviceValidate.serviceId) {
+          if (!this.serviceValidate.money || !this.serviceValidate.mobile || !this.serviceValidate.desc ) {
+            this.$Message.warning('请填写完整');
+            return false;
+          }
+        }
+        this.serviceModal = false;
+      },
+
       // 点击完成上传
       clickSubmit() {
         this.$refs['formValidate'].validate(valid => {
@@ -439,7 +448,7 @@
             this.$Message.warning('请上传项目图片');
             return false;
           }
-          if (!this.typeId || !this.typeName) {
+          if (!this.formValidate.typeId || !this.typeName) {
             this.$Message.warning('请选择类型');
             return false;
           }
@@ -453,7 +462,7 @@
               const attrItem = {
                 AttributesId: '',
                 ItemId: '',
-                TypeId: this.typeId,
+                TypeId: this.formValidate.typeId,
                 ItemAttributesId: this.queryAttrList[i].id,
                 ItemSubAttributeId: this.queryAttrList[i].ItemSubAttributeId,
                 sort: i
@@ -506,6 +515,16 @@
           }
         }
 
+        const CustomizeList = this.serviceValidate.serviceId ? [
+          {
+            customizedId: '',
+            customizedTypeId: this.serviceValidate.serviceId,
+            customizedMoney: this.serviceValidate.money,
+            customizeMobile: this.serviceValidate.mobile,
+            customizeDescription: this.serviceValidate.desc,
+            ItemId: ''
+          }
+        ] : [];
         let postData = {
           ItemId: '',
           ItemName: this.formValidate.name,
@@ -519,25 +538,28 @@
           TypeModel: {
             TypeId: '',
             ItemId: '',
-            ItemTypeId: this.typeId
+            ItemTypeId: this.formValidate.typeId
           },
           AttributesList: attributesList,
-          CustomizeList: [
-            {
-              customizedId: '',
-              customizedTypeId: this.serviceValidate.serviceId,
-              customizedMoney: this.serviceValidate.money,
-              customizeMobile: this.serviceValidate.mobile,
-              customizeDescription: this.serviceValidate.desc,
-              ItemId: ''
-            }
-          ],
+          CustomizeList,
           PdfModel
         }
-
-        console.log(postData)
+        this.$Spin.show({
+          render: (h) => {
+            return h('div', [
+              h('Icon', {
+                'class': 'demo-spin-icon-load',
+                props: {
+                  type: 'ios-loading',
+                  size: 18
+                }
+              }),
+              h('div', 'Loading')
+            ])
+          }
+        });
         publishProject(postData).then(res => {
-          console.log(res, 123)
+          this.$Spin.hide();
         })
       }
     },
@@ -666,10 +688,6 @@
         }
     }
 
-    .demo-spin-icon-load {
-        animation: ani-demo-spin 1s linear infinite;
-    }
-
     .service-type-name {
         font-size: 12px;
         color: #666;
@@ -711,5 +729,22 @@
         }
     }
 
+</style>
 
+<style>
+    @keyframes ani-demo-spin {
+        from {
+            transform: rotate(0deg);
+        }
+        50% {
+            transform: rotate(180deg);
+        }
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .demo-spin-icon-load {
+        animation: ani-demo-spin 1s linear infinite;
+    }
 </style>

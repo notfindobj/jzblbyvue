@@ -23,9 +23,9 @@
             <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
             <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
         </div>
-        <div class="block-none">
-            您好！此网站暂未对外开放，了解更多请联系：15121173536
-        </div>
+<!--        <div class="block-none">-->
+<!--            您好！此网站暂未对外开放，了解更多请联系：15121173536-->
+<!--        </div>-->
     </div>
 </template>
 <script>
@@ -37,10 +37,10 @@
     data() {
       return {
         userItem: {
-          // mobile: '18321284508',
-          mobile: '',
-          // password: '123456'
-          password: ''
+          mobile: '18321284508',
+          // mobile: '',
+          password: '123456'
+          // password: ''
         },
         ruleInline: {
           mobile: [
@@ -59,8 +59,8 @@
         loginByQQ().then(res => {
           const qqWindow = this.loginAtQQ(res, 1);
           const interId = setInterval(() => {
-            const code = localStorage.getItem('code');
-            const state = localStorage.getItem('state');
+            const code = sessionStorage.getItem('code');
+            const state = sessionStorage.getItem('state');
             if (code && state) {
               qqWindow.close();
               getUserByQQ({
@@ -71,8 +71,8 @@
                   this.$store.dispatch('WXREGISTER', res);
                   this.goToRegister('register');
                 } else {
-                  localStorage.removeItem('code');
-                  localStorage.removeItem('state');
+                  sessionStorage.removeItem('code');
+                  sessionStorage.removeItem('state');
                   this.$store.dispatch('LOGININ', res);
                   localStorage.setItem('LOGININ', JSON.stringify(res))
                   this.$store.dispatch('SETUP', false)
@@ -89,8 +89,8 @@
         loginByWX().then(res => {
           const wxWindow = this.loginAtQQ(res, 2);
           const interId = setInterval(() => {
-            const code = localStorage.getItem('code');
-            const state = localStorage.getItem('state');
+            const code = sessionStorage.getItem('code');
+            const state = sessionStorage.getItem('state');
             if (code && state) {
               wxWindow.close();
               getUserByWX({
@@ -101,8 +101,8 @@
                   this.$store.dispatch('WXREGISTER', res);
                   this.goToRegister('register');
                 } else {
-                  localStorage.removeItem('code');
-                  localStorage.removeItem('state');
+                  sessionStorage.removeItem('code');
+                  sessionStorage.removeItem('state');
                   this.$store.dispatch('LOGININ', res);
                   localStorage.setItem('LOGININ', JSON.stringify(res))
                   this.$store.dispatch('SETUP', false)
