@@ -59,8 +59,8 @@
         this.$set(this.registeredItem, 'name', this.$store.state.overas.wxRegister.Name);
         this.$set(this.registeredItem, 'singuptype', this.$store.state.overas.wxRegister.OpCode);
         this.$set(this.registeredItem, 'state', this.$store.state.overas.wxRegister.State);
-        sessionStorage.removeItem('code');
-        sessionStorage.removeItem('state');
+        localStorage.removeItem('code');
+        localStorage.removeItem('state');
       }
     },
 
@@ -71,12 +71,12 @@
           OperationType: 0,
           SendType: 0,
           MobileNumber: this.registeredItem.mobile
-        }
+        };
         if (!this.registeredItem.mobile) {
-          this.$Message.warning('请输入手机号')
+          this.$Message.warning('请输入手机号');
           return false
         }
-        ;
+
         let mobile = await getMobileCode(queruys)// 倒计时
         if (mobile) {
           this.$Message.success('信息已发送，请注意查收！');

@@ -153,9 +153,18 @@
 
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
-                    <span class="add-service-btn" @click="serviceModal = true">
+                    <span
+                        class="service-item"
+                        v-for="item in serviceSelectList"
+                        :key="item.serviceId"
+                    >{{ item.name }}</span>
+                    <span class="add-service-btn" @click="serviceModal = true"
+                          v-show="serviceSelectList.length < serviceList.length">
                         <Icon type="md-add" size="12"/>
                         添加定制服务
+                    </span>
+                    <span class="add-service-btn" v-show="formValidate.typeId && serviceList.length === 0">
+                        无可添加定制服务
                     </span>
                 </FormItem>
                 <FormItem label="项目描述" class="description">
@@ -208,34 +217,49 @@
                     :label-width="80"
                 >
                     <FormItem label="定制类型:">
-                        <span
-                            class="service-type-name"
-                            :class="{'service-active': item.ItemDetailId === serviceValidate.serviceId}"
+                        <template
                             v-for="item in serviceList"
-                            :key="item.ItemDetailId"
-                            @click="selectSerice(item.ItemDetailId)"
-                        >{{ item.ItemValue }}</span>
+                        >
+                            <Button
+                                class="service-btn"
+                                size="small"
+                                :key="item.ItemDetailId"
+                                v-if="item.ItemDetailId !== serviceValidate.serviceId"
+                                @click="selectSerice(item.ItemDetailId, item.ItemValue)"
+                            >
+                                {{ item.ItemValue }}
+                            </Button>
+                            <Button
+                                class="service-btn"
+                                size="small"
+                                :key="item.ItemDetailId"
+                                v-else
+                                type="primary"
+                            >
+                                {{ item.ItemValue }}
+                            </Button>
+                        </template>
                     </FormItem>
-
                     <FormItem label="定制金额:">
-                        <Input v-model="serviceValidate.money" placeholder="请选择"></Input>
+                        <Input type="number" v-model="serviceValidate.money" placeholder="请选择"></Input>
                     </FormItem>
                     <FormItem label="手机号码:">
-                        <Input v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
+                        <Input type="tel" v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
                     </FormItem>
                     <FormItem label="定制描述:">
                         <Input
                             v-model="serviceValidate.desc"
                             type="textarea"
+                            :maxlength="500"
                             :autosize="{minRows: 5,maxRows: 5}"
-                            placeholder="请填写0-200字简介"
+                            placeholder="请填写0-500字定制描述"
                         ></Input>
                     </FormItem>
                 </Form>
             </div>
             <div slot="footer">
                 <Button @click="cancelService">取消</Button>
-                <Button type="primary" @click="clickModalConfirm">确定</Button>
+                <Button type="primary" @click="clickModalConfirm()">确定</Button>
             </div>
         </Modal>
     </div>
@@ -313,6 +337,8 @@
         },
         queryAttrList: [], // 通过类型id查询出的属性列表
         isAgree: false, // 是否同意
+        serviceSelectList: [],
+        serviceName: ''
       }
     },
 
@@ -348,8 +374,9 @@
       },
 
       // 选择定制服务
-      selectSerice(id) {
+      selectSerice(id, name) {
         this.$set(this.serviceValidate, 'serviceId', id);
+        this.serviceName = name;
       },
 
       // 取消定制服务
@@ -388,8 +415,8 @@
             data.append('files', item)
           }
           uploadFile(data, 1).then(res => {
-            console.log(res,1)
-            for(let i = 0; i < res.length; i++) {
+            console.log(res, 1)
+            for (let i = 0; i < res.length; i++) {
               this.formValidate.content += `<img src="${ res[i].smallImgUrl }" alt="内容图片">`;
             }
           })
@@ -429,11 +456,41 @@
       // 点击定制服务弹出框确定
       clickModalConfirm() {
         if (this.serviceValidate.serviceId) {
-          if (!this.serviceValidate.money || !this.serviceValidate.mobile || !this.serviceValidate.desc ) {
+          if (!this.serviceValidate.money || !this.serviceValidate.mobile || !this.serviceValidate.desc) {
             this.$Message.warning('请填写完整');
             return false;
           }
+          if (this.serviceValidate.money < 0) {
+            this.$Message.warning('定制金额不能小于0');
+            return false;
+          }
+          if (this.serviceValidate.money > 5000) {
+            this.$Message.warning('定制金额不能大于5000');
+            return false;
+          }
         }
+
+        for (let i = 0; i < this.serviceSelectList.length; i++) {
+          if (this.serviceSelectList[i].serviceId === this.serviceValidate.serviceId) {
+            this.$Message.warning('不能重复添加定制服务');
+            return false;
+          }
+        }
+        const obj = {
+          name: this.serviceName,
+          serviceId: this.serviceValidate.serviceId,
+          money: this.serviceValidate.money,
+          mobile: this.serviceValidate.mobile,
+          desc: this.serviceValidate.desc
+        };
+        this.serviceSelectList.push(obj);
+        this.serviceValidate = {
+          serviceId: '',
+          money: '',
+          mobile: '',
+          desc: ''
+        };
+        this.serviceName = '';
         this.serviceModal = false;
       },
 
@@ -480,25 +537,20 @@
               return false;
             }
           }
-          this.$refs['serviceValidate'].validate(valid1 => {
-            // if (!valid1) {
-            //   this.$Message.warning('请将定制服务相关数据，填写完整');
-            //   return false;
-            // }
-            if (this.typeName === '文本' || this.typeName === '建筑规范') {
-              this.$set(this.formValidate, 'content', this.typeName)
-            } else {
-              if (!this.formValidate.content) {
-                this.$Message.warning('项目内容不能为空');
-                return false;
-              }
-            }
-            if (!this.isAgree) {
-              this.$Message.warning('请阅读并同意《建筑部落用户协议》');
+
+          if (this.typeName === '文本' || this.typeName === '建筑规范') {
+            this.$set(this.formValidate, 'content', this.typeName)
+          } else {
+            if (!this.formValidate.content) {
+              this.$Message.warning('项目内容不能为空');
               return false;
             }
-            this.sendPost(attributesList);
-          })
+          }
+          if (!this.isAgree) {
+            this.$Message.warning('请阅读并同意《建筑部落用户协议》');
+            return false;
+          }
+          this.sendPost(attributesList);
         })
       },
 
@@ -514,17 +566,18 @@
             ItemFilePath: this.typeFile.packageOrPdfUrl
           }
         }
-
-        const CustomizeList = this.serviceValidate.serviceId ? [
-          {
+        const CustomizeList = [];
+        for (let i = 0; i < this.serviceSelectList.length; i++) {
+          CustomizeList.push({
             customizedId: '',
-            customizedTypeId: this.serviceValidate.serviceId,
-            customizedMoney: this.serviceValidate.money,
-            customizeMobile: this.serviceValidate.mobile,
-            customizeDescription: this.serviceValidate.desc,
+            customizedTypeId: this.serviceSelectList[i].serviceId,
+            customizedMoney: this.serviceSelectList[i].money,
+            customizeMobile: this.serviceSelectList[i].mobile,
+            customizeDescription: this.serviceSelectList[i].desc,
             ItemId: ''
-          }
-        ] : [];
+          })
+        }
+
         let postData = {
           ItemId: '',
           ItemName: this.formValidate.name,
@@ -560,6 +613,21 @@
         });
         publishProject(postData).then(res => {
           this.$Spin.hide();
+          // const queryData = {
+          //   ClassTypeArrList: [],
+          //   ClassTypeId: postData.TypeModel.ItemTypeId,
+          //   Id: res,
+          //   KeyWords: "",
+          //   Order: true,
+          //   Page: 0,
+          //   Rows: 32,
+          //   SortType: 0,
+          //   showLayout: true
+          // }
+          // this.$router.push({
+          //   name: "DataDetails",
+          //   query: { dataBase: JSON.stringify(queryData) }
+          // });
         })
       }
     },
@@ -729,6 +797,14 @@
         }
     }
 
+    .service-item {
+        font-size: 14px;
+        margin-right: 5px;
+    }
+
+    .service-btn {
+        margin-right: 10px;
+    }
 </style>
 
 <style>
