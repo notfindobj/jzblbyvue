@@ -24,8 +24,7 @@
             @handleCollections="handleCollections"
         />
         <div class="page-box">
-            <Page :total="RspPaginationData.records" :current="pageNum" @on-change="changePage" :page-size="4"
-                  show-elevator/>
+            <Page :total="RspPaginationData.records" :current="pageNum" @on-change="changePage" :page-size="4" show-elevator/>
         </div>
         <ToTop></ToTop>
     </div>
@@ -73,7 +72,6 @@
         return this.RspPaginationData.page === this.RspPaginationData.total;
       }
     },
-
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false : true;
@@ -263,5 +261,8 @@
         display: flex;
         justify-content: center;
         padding: 20px 0;
+    }
+    .ivu-page {
+      display: inline-block;
     }
 </style>

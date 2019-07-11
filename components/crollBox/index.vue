@@ -25,6 +25,7 @@
         const t = document.documentElement.scrollTop || document.body.scrollTop;
         const sh = document.documentElement.scrollHeight || document.body.scrollHeight;
         let bt = parseInt(sh - (h + t));
+        console.log(bt)
         if (bt <= 250) {
           this.$emit('willReachBottom')
         }

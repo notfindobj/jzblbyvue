@@ -326,6 +326,7 @@
             position: absolute;
             top: 43px;
             left: 0;
+            z-index: 10000;
         }
     }
 

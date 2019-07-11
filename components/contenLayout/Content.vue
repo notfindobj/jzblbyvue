@@ -285,11 +285,10 @@
                         width: 100%;
                         height: auto;
                     }
-
                     .works-like {
                         width: 100%;
-                        height: 40px;
-                        padding-top: 16px;
+                        height: 30px;
+                        line-height: 30px;
                         padding-left: 6px;
                         padding-right: 6px;
                         opacity: 0.6;
