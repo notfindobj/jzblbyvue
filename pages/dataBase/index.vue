@@ -72,6 +72,7 @@
         return this.RspPaginationData.page === this.RspPaginationData.total;
       }
     },
+
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
       let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false : true;
@@ -91,13 +92,6 @@
       }
     },
 
-    watch: {
-      '$route': function (oldVal, newVal) {
-        let queryData = JSON.parse(newVal.query.dataBase);
-        delete queryData.title;
-        this.getBaseDatas(queryData);
-      }
-    },
     methods: {
       // 点击收藏
       handleCollections(flag, index) {

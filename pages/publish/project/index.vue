@@ -153,11 +153,15 @@
 
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
-                    <span
-                        class="service-item"
-                        v-for="item in serviceSelectList"
+                    <Button
+                        type="primary"
+                        v-for="(item, index) in serviceSelectList"
                         :key="item.serviceId"
-                    >{{ item.name }}</span>
+                        size="small"
+                        @click="updateService(index)"
+                    >
+                        {{ item.name }}
+                    </Button>
                     <span class="add-service-btn" @click="serviceModal = true"
                           v-show="serviceSelectList.length < serviceList.length">
                         <Icon type="md-add" size="12"/>
@@ -266,7 +270,7 @@
 </template>
 
 <script>
-  import { uploadFile, getProjectType, getCustomizeService, getMenu, publishProject } from '../../../service/clientAPI'
+  import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -338,7 +342,8 @@
         queryAttrList: [], // 通过类型id查询出的属性列表
         isAgree: false, // 是否同意
         serviceSelectList: [],
-        serviceName: ''
+        serviceName: '',
+        isUpdateService: false, // 是否是更新定制服务
       }
     },
 
@@ -382,12 +387,24 @@
       // 取消定制服务
       cancelService() {
         this.serviceModal = false;
+        this.isUpdateService = false;
         this.serviceValidate = {
           type: '',
           money: '',
           mobile: '',
           desc: ''
         }
+      },
+
+      // 更新定制服务
+      updateService(index) {
+        const temporaryObj = JSON.parse(JSON.stringify(this.serviceSelectList[index]));
+        this.serviceName = temporaryObj.name;
+        delete temporaryObj.name;
+        this.serviceValidate = temporaryObj;
+        this.isUpdateService = true;
+        this.serviceModal = true;
+
       },
 
       // 选择图片
@@ -471,8 +488,26 @@
         }
 
         for (let i = 0; i < this.serviceSelectList.length; i++) {
-          if (this.serviceSelectList[i].serviceId === this.serviceValidate.serviceId) {
+          if (this.serviceSelectList[i].serviceId === this.serviceValidate.serviceId && !this.isUpdateService) {
             this.$Message.warning('不能重复添加定制服务');
+            return false;
+          } else if (this.serviceSelectList[i].serviceId === this.serviceValidate.serviceId && this.isUpdateService) {
+            this.serviceSelectList[i] = {
+              name: this.serviceName,
+              serviceId: this.serviceValidate.serviceId,
+              money: this.serviceValidate.money,
+              mobile: this.serviceValidate.mobile,
+              desc: this.serviceValidate.desc
+            };
+            this.serviceValidate = {
+              serviceId: '',
+              money: '',
+              mobile: '',
+              desc: ''
+            };
+            this.serviceName = '';
+            this.isUpdateService = false;
+            this.serviceModal = false;
             return false;
           }
         }
@@ -613,21 +648,20 @@
         });
         publishProject(postData).then(res => {
           this.$Spin.hide();
-          // const queryData = {
-          //   ClassTypeArrList: [],
-          //   ClassTypeId: postData.TypeModel.ItemTypeId,
-          //   Id: res,
-          //   KeyWords: "",
-          //   Order: true,
-          //   Page: 0,
-          //   Rows: 32,
-          //   SortType: 0,
-          //   showLayout: true
-          // }
-          // this.$router.push({
-          //   name: "DataDetails",
-          //   query: { dataBase: JSON.stringify(queryData) }
-          // });
+          const queryData = {
+            Id: res,
+            reqItemList: {
+              SortType: 0,
+              KeyWords: "",
+              Order: true,
+              Page: 0,
+              Rows: 32
+            }
+          };
+          this.$router.push({
+            name: "DataDetails",
+            query: { dataBase: JSON.stringify(queryData) }
+          });
         })
       }
     },
