@@ -39,7 +39,7 @@
                         @setFollow="setFollow"
                     />
                     <commentsCon
-                        :class="{'margin-top': scrollTop > 312 && distanceBottom > 362, 'margin-bottom': distanceBottom < 362}"
+                        :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362}"
                         :style="rightPx1"
                         :width="'340px'"
                         :publish="detaDetails"
@@ -116,7 +116,7 @@
           if (this.distanceBottom < 362) {
             return {
               right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 362 + 81 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -127,7 +127,7 @@
           if (this.distanceBottom < 362) {
             return {
               right: this.clientWidth - 1200 + 'px',
-              bottom: 362 + 81 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -381,6 +381,11 @@
                 .margin-top {
                     position: fixed;
                     top: 457px;
+                    z-index: 2;
+                }
+                .margin-top2 {
+                    position: fixed;
+                    top: 378px;
                     z-index: 2;
                 }
                 .data-details-location {
