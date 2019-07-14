@@ -32,7 +32,7 @@
     },
     methods: {}
   }
-</script>`
+</script>
 <style scoped lang="less">
     @keyframes rotate {
         0% {

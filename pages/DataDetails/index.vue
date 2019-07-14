@@ -116,7 +116,7 @@
           if (this.distanceBottom < 470) {
             return {
               right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 470 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 362 + 81 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -127,7 +127,7 @@
           if (this.distanceBottom < 470) {
             return {
               right: this.clientWidth - 1200 + 'px',
-              bottom: 470 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 362 + 81 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
