@@ -116,7 +116,7 @@
           if (this.distanceBottom < 362) {
             return {
               right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 362 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 362 + 81 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -127,7 +127,7 @@
           if (this.distanceBottom < 362) {
             return {
               right: this.clientWidth - 1200 + 'px',
-              bottom: 362 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 362 + 81 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -380,7 +380,7 @@
                 padding-bottom: 30px;
                 .margin-top {
                     position: fixed;
-                    top: 350px;
+                    top: 457px;
                     z-index: 2;
                 }
                 .data-details-location {
