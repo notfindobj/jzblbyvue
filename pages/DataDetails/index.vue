@@ -113,10 +113,10 @@
       ...mapGetters(['isLogin']),
       rightPx() {
         if (this.clientWidth >= 1200) {
-          if (this.distanceBottom < 362) {
+          if (this.distanceBottom < 470) {
             return {
               right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 362 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 470 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -124,10 +124,10 @@
             };
           }
         } else {
-          if (this.distanceBottom < 362) {
+          if (this.distanceBottom < 470) {
             return {
               right: this.clientWidth - 1200 + 'px',
-              bottom: 362 - this.distanceBottom + this.contentHeight + 10 + 'px'
+              bottom: 470 - this.distanceBottom + this.contentHeight + 10 + 'px'
             };
           } else {
             return {
@@ -139,10 +139,10 @@
 
       rightPx1() {
         if (this.clientWidth >= 1200) {
-          if (this.distanceBottom < 362) {
+          if (this.distanceBottom < 470) {
             return {
               right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 362 - this.distanceBottom + 'px'
+              bottom: 470 - this.distanceBottom + 'px'
             };
           } else {
             return {
@@ -150,10 +150,10 @@
             };
           }
         } else {
-          if (this.distanceBottom < 362) {
+          if (this.distanceBottom < 470) {
             return {
               right: this.clientWidth - 1200 + 'px',
-              bottom: 362 - this.distanceBottom + 'px'
+              bottom: 470 - this.distanceBottom + 'px'
             };
           } else {
             return {
@@ -183,6 +183,7 @@
         NextItemId: getBaseDataDetail.NextItemId,
       }
       return {
+        getBaseDataDetail,
         PdfInfo: getBaseDataDetail.PdfInfo,
         detaDetails: getBaseDataDetail.ItemEntity,
         ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
@@ -205,6 +206,7 @@
       this.clientWidth = document.body.clientWidth;
       this.contentHeight = document.documentElement.clientHeight - 460;
       window.addEventListener('scroll', () => {
+
         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
         this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
       })
@@ -221,6 +223,10 @@
     methods: {
       // 上写翻页，项目详情
       PNpage (val) {
+        if (!val) {
+            this.$Message.warning('没有项目');
+            return false
+        }
         try {
           let dataBase =  JSON.parse(this.$route.query.dataBase);
           dataBase.Id = val
@@ -380,7 +386,7 @@
                 padding-bottom: 30px;
                 .margin-top {
                     position: fixed;
-                    top: 350px;
+                    top: 457px;
                     z-index: 2;
                 }
                 .data-details-location {

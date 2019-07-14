@@ -391,7 +391,7 @@
           },
           showLayout: val === 'jzList' || val === 'wbList' ? false: true
         }
-        this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(baseDateId) } })
+        this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(baseDateId)}})
       }
     }
   }

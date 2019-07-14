@@ -1,14 +1,12 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" height="800">
         <div class="container">
-
-            <image-text
+            <!-- <image-text
                 v-for="(item, index) in recommendContent"
                 :key="index"
                 :project="index"
                 :index="index"
-            ></image-text>
-
+            ></image-text> -->
             <div class="public-block recommend">
                 <div class="recommend-title">
                     <i class="icon iconfont">&#xe60b;</i>
@@ -77,7 +75,6 @@
     components: {
       'image-text': ImagesText
     },
-
     // async asyncData({ app, store, route }) {
     //   let recommendContent = await store.dispatch('getRecommendContent', {
     //     Page: 1,
