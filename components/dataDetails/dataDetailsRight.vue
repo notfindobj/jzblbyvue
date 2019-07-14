@@ -23,7 +23,7 @@
                    @click="unAnddown()"></i>
             </div>
             <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
-                <div v-if="detaDetails.IsDownload" @click="immediatelyDown()">立即下载</div>
+                <div v-if="detaDetails.IsDownload" @click="immediatelyDown()">立即下载 <span class="btn-group-Price">￥{{detaDetails.Price}}</span></div>
                 <div v-if="detaDetails.IsCustomized" @click="customthis()">同款定制</div>
             </div>
         </div>
@@ -85,6 +85,10 @@
   }
 </script>
 <style lang="less" scoped>
+    .btn-group-Price {
+      font-size: 12px;
+      color: #666666;
+    }
     .data-details-right {
         width: 340px;
         background-color: #F2F4F2;
@@ -208,7 +212,7 @@
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-
+                overflow: hidden;
                 > div {
                     flex: 1;
                     font-size: 22px;
@@ -219,7 +223,6 @@
                     &:nth-child(1) {
                         color: #FF3C00;
                         position: relative;
-
                         &:before {
                             width: 2px;
                             height: 30px;
@@ -227,7 +230,7 @@
                             background: #D8D8D8;
                             border-radius: 1px;
                             position: absolute;
-                            right: 0;
+                            right: -3px;
                             top: 20px;
                         }
 
@@ -238,7 +241,8 @@
                             background: #FF3C00;
                             border-radius: 1px;
                             position: absolute;
-                            right: 70px;
+                            // right: 70px;
+                            left: 42%;
                             top: 50px;
                         }
                     }

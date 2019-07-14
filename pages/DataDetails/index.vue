@@ -55,11 +55,13 @@
         </div>
         <viewPicture/>
         <data-details-custom
-            @dataDetailsMaskClose="dataDetailsMaskClose"
-            v-show="isShowDataDetailsCustom"/>
+          
+          @dataDetailsMaskClose="dataDetailsMaskClose"
+          v-show="isShowDataDetailsCustom"/>
         <date-details-down
-            @dataDetailsMaskClose="dataDetailsMaskClose"
-            v-show="isShowDateDetailsDown"/>
+          :payInfos="detaDetails"
+          @dataDetailsMaskClose="dataDetailsMaskClose"
+          v-show="isShowDateDetailsDown"/>
             <ToTop></ToTop>
     </div>
 </template>
@@ -358,12 +360,10 @@
         width: 100%;
         height: auto;
         background: rgba(242, 244, 242, 1);
-
         .data-details-con-box {
             width: 1200px;
             height: auto;
             margin: 0 auto;
-
             .data-details-location {
                 height: 46px;
                 width: 100%;
@@ -375,7 +375,6 @@
                     }
                 }
             }
-
             .data-details-con {
                 width: 100%;
                 height: auto;
@@ -396,7 +395,6 @@
                     top: 0;
                     z-index: 2;
                 }
-
                 .fix-bottom {
                     position: fixed;
                     z-index: 2;

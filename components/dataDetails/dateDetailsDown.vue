@@ -6,8 +6,8 @@
         <span>该服务不支持退款</span>
         <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
       </div>
-      <p class="window-name">资源名称：{{payInfos.payName}}</p>
-      <p class="window-price">支付金额：{{payInfos.payPrice}}</p>
+      <p class="window-name">项目名称：{{payInfos.ItemName}}</p>
+      <p class="window-price">支付金额：{{payInfos.Price}}元</p>
       <div class="window-type">
         <div class="pay-type">支付方式：</div>
         <ul>
@@ -29,23 +29,25 @@
   export default {
     name: 'detaDetailsDown',
     props: {
+      payInfos: {
+        type: Object,
+        default: function () {
+          return {}
+        }
+      }
     },
     data() {
       return {
-        payInfos:{
-          payName:'这是叫什么的资源名称',
-          payPrice:'1888.00元'
-        },
         payType:[
           {
             typeName:'微信支付',
-            typeCode:'',
-            typeIcon:'../../assets/images/Wechat.png'
+            typeCode: '',
+            typeIcon: require('../../assets/images/WeChat.png')
           },
           {
             typeName:'支付宝支付',
             typeCode:'',
-            typeIcon:'../../assets/images/payZFB.png'
+            typeIcon: require('../../assets/images/payZFB.png')
           },
         ],
         currentIndex:-1

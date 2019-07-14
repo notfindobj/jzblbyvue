@@ -75,9 +75,12 @@
           title: pre.ItemAttributesFullName,
         }
         this.$store.dispatch('BASEDATA', baseDateId);
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })
+        if (this.$route.name === "dataBase") {
+          window.location.href = 'dataBase?dataBase='+JSON.stringify(baseDateId);
+        } else {
+          this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId)}})
+        }
       },
-
       // 点击一级分类
       goList(cate) {
         let baseDateId = {
@@ -91,7 +94,11 @@
           title: cate.ItemAttributesFullName,
         }
         this.$store.dispatch('BASEDATA', baseDateId);
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })
+        if (this.$route.name === "dataBase") {
+          window.location.href = 'dataBase?dataBase='+JSON.stringify(baseDateId);
+        } else {
+          this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId)}})
+        }
       }
     }
   }

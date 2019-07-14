@@ -24,7 +24,7 @@
             @handleCollections="handleCollections"
         />
         <div class="page-box">
-            <Page :total="RspPaginationData.records" :current="pageNum" @on-change="changePage" :page-size="4" show-elevator/>
+            <Page :total="RspPaginationData.records" :current="RspPaginationData.page" @on-change="changePage" :page-size="32" show-elevator/>
         </div>
         <ToTop></ToTop>
     </div>
@@ -185,12 +185,14 @@
       },
       async getBaseDatas(queryData, isAutoLoading = false) {
         let BaseData = await getBaseData(queryData);
-        this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
-        this.RspItemDatas = !isAutoLoading ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
-        this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
-        this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
-        this.pageNum = queryData.Page;
-        this.isFinished = true;
+        if (BaseData) {
+          this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
+          this.RspItemDatas = !isAutoLoading ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
+          this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
+          this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
+          this.pageNum = queryData.Page;
+          this.isFinished = true;
+        }
       },
       // 排序
       entrySorting(val) {
@@ -204,7 +206,6 @@
         let queryData = JSON.parse(this.$route.query.dataBase);
         queryData.Id = item.ItemId;
         queryData.showLayout = this.showLayout;
-        console.log(queryData)
         let routeData = this.$router.resolve({
           name: "DataDetails",
           query: { dataBase: JSON.stringify(queryData) }
@@ -252,7 +253,8 @@
     }
 
     .page-box {
-        display: flex;
+        // display: flex;
+        text-align: center;
         justify-content: center;
         padding: 20px 0;
     }
