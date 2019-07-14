@@ -306,6 +306,24 @@
   import ToTop from '~/components/toTop'
 
   export default {
+    head: {
+        title: '建筑部落',
+        meta: [
+            { charset: 'utf-8' },
+            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+            {
+            hid: 'description',
+            name: 'description',
+            content:
+                '建筑部落（jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产开发设计、房地产设计网站；加快信息传播速度,降低运营成本'
+            },
+            {
+            hid: 'keywords',
+            name: 'keywords',
+            content: '建筑部落（jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产开发设计、房地产设计网站；加快信息传播速度,降低运营成本'
+            }
+        ]
+    },
     data() {
       return {
         banners: [
@@ -391,7 +409,7 @@
           },
           showLayout: val === 'jzList' || val === 'wbList' ? false: true
         }
-        this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(baseDateId) } })
+        this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(baseDateId)}})
       }
     }
   }
@@ -419,25 +437,20 @@
         width: 1200px;
         margin: 0 auto;
     }
-
     .swiper-box {
         height: 374px;
     }
-
     .nav-atvite {
         background: #FF3C00;
     }
-
     .main-conment {
         margin-top: 50px;
         border-top: 1px solid #999999;
-
         &-top {
             display: flex;
             justify-content: space-between;
             padding: 3px 0;
         }
-
         &-sub {
             display: flex;
 
@@ -452,17 +465,14 @@
                 }
             }
         }
-
         &-more {
             line-height: 42px;
             cursor: pointer;
         }
     }
-
     .jiantou-clolr {
         color: #FF3C00;
     }
-
     .text-box {
         width: 384px;
         display: inline-block;
@@ -477,7 +487,6 @@
                 height: 100%;
             }
         }
-
         &-content {
             width: 100%;
             height: 128px;

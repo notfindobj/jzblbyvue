@@ -343,12 +343,11 @@
         isAgree: false, // 是否同意
         serviceSelectList: [],
         serviceName: '',
-        isUpdateService: false, // 是否是更新定制服务
+        isUpdateService: false, // 是否是更新定制服务,
+        showLayout: true
       }
     },
-
     computed: {
-
       // 查询所有菜单数据，根据id找出的属性列表
       attrList() {
         for (let i of this.menu.RetMenuData) {
@@ -432,7 +431,6 @@
             data.append('files', item)
           }
           uploadFile(data, 1).then(res => {
-            console.log(res, 1)
             for (let i = 0; i < res.length; i++) {
               this.formValidate.content += `<img src="${ res[i].smallImgUrl }" alt="内容图片">`;
             }
@@ -588,14 +586,15 @@
           this.sendPost(attributesList);
         })
       },
-
       // 发送请求
       sendPost(attributesList) {
         let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];
         if (this.typeFile && this.typeName !== '文本' && this.typeName !== '建筑规范') {
+          this.showLayout = false
           ItemFilePath = this.typeFile.packageOrPdfUrl;
           ItemFileName = this.typeFile.fileName;
         } else if (this.typeName === '文本' || this.typeName === '建筑规范') {
+          this.showLayout = true
           PdfModel = {
             ItemFileName: this.typeFile.fileName,
             ItemFilePath: this.typeFile.packageOrPdfUrl
@@ -650,6 +649,7 @@
           this.$Spin.hide();
           const queryData = {
             Id: res,
+            showLayout: this.showLayout,
             reqItemList: {
               SortType: 0,
               KeyWords: "",

@@ -64,6 +64,10 @@
   export default {
     name: 'detaDetailsCustom',
     props: {
+      itemId: {
+        type: String,
+        default: ''
+      }
     },
     data() {
       return {
@@ -86,9 +90,10 @@
     },
     components: {
     },
-    asyncData() {
-    },
     created() {
+    },
+    mounted () {
+      console.log('aaaaaaaaa')
     },
     methods: {
       choseNeedType (inx) {

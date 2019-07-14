@@ -2,6 +2,9 @@
     <div>
         <Form :model="registeredItem" :label-width="0">
             <FormItem>
+              <Input v-model="registeredItem.name" size="large" type="text" placeholder="请输入名称"/>
+            </FormItem>
+            <FormItem>
                 <Input v-model="registeredItem.mobile" size="large" type="text" placeholder="请输入手机号码"/>
             </FormItem>
             <FormItem>
@@ -14,9 +17,9 @@
             <FormItem>
                 <Input v-model="registeredItem.password" size="large" type="password" placeholder="请设置密码"/>
             </FormItem>
-            <FormItem>
+            <!-- <FormItem>
                 <Input v-model="registeredItem.passWordAgain" size="large" type="password" placeholder="再次输入密码"/>
-            </FormItem>
+            </FormItem> -->
             <FormItem>
                 <Checkbox v-model="registeredItem.isAgree">我已阅读并同意用户协议</Checkbox>
             </FormItem>

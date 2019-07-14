@@ -1,11 +1,11 @@
 <template>
   <div class="data-details-left">
     <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
-    <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
-      <img :src="!isLeft ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(isBtnSile ? 1 : pageTurning.PrevItemId)" width="50px" alt="">
+    <div :class="isBtnSile ? 'view-left-move': 'view-left-move-del'" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" @click="moveLeftClick(isBtnSile ? 1 : pageTurning.PrevItemId)">
+      <img :src="!isLeft ? isLeftPngF : isLeftPngR"   width="50px" alt="">
     </div>
-    <div class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
-      <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR"  @click="moveLeftClick(isBtnSile ? 2 : pageTurning.NextItemId)" width="50px" alt="">
+    <div :class="isBtnSile ? 'view-right-move': 'view-right-move-del'" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight"  @click="moveLeftClick(isBtnSile ? 2 : pageTurning.NextItemId)" >
+      <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
     </div>
      <!-- <div class="view-box-model" v-show="isShowViewBox">
         <div class="view-box">
@@ -154,7 +154,6 @@ export default {
     moveLeftClick (val) {
       if (!this.isBtnSile) {
         this.$emit('pageTurning', val)
-        console.log('left', val)
       } else {
         if (val === 1) {
           document.querySelector('.viewer-prev').click()
@@ -350,6 +349,38 @@ export default {
     padding-right: 10px;
     img {
       width: 100%;
+    }
+  }
+  .view-left-move-del {
+    cursor: pointer;
+    position: fixed;
+    display: inline-block;
+    width: 150px;
+    // height: 100%;
+    background: transparent;
+    z-index: 8888;
+    top: 50%;
+    left: 0;
+    padding-left: 30px;
+    img {
+      width: 80px;
+    }
+  }
+  .view-right-move-del {
+    cursor: pointer;
+    position: fixed;
+    display: inline-block;
+    width: 150px;
+    background: transparent;
+     z-index: 8888;
+    top: 50%;
+    right: 0;
+    text-align: right;
+    padding-right: 30px;
+    >img {
+     
+      width: 80px;
+     
     }
   }
   .view-left-move {

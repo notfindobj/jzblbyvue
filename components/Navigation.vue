@@ -1,7 +1,9 @@
 <template>
     <div>
         <!-- 广告 -->
-        <div class="ad"></div>
+        <div class="ad" v-show="!isAd">
+          
+        </div>
         <!-- 头部导航 -->
         <div class="home-bar">
             <div class="home-bar-content">
@@ -92,6 +94,7 @@
   export default {
     data() {
       return {
+        isAd: false,
         seatchData: '',
         searchTitle: '',
         baiduData: '',
@@ -322,6 +325,7 @@
         color: #ffffff;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
+        width: 143px;
         .banner-nav {
             position: absolute;
             top: 43px;

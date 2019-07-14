@@ -37,7 +37,6 @@
         }
       }
     },
-
     data() {
       return {
         theme_list: [
