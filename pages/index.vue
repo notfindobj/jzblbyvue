@@ -409,7 +409,11 @@
           },
           showLayout: val === 'jzList' || val === 'wbList' ? false: true
         }
-        this.$router.push({ name: "DataDetails", query: { dataBase: JSON.stringify(baseDateId)}})
+        let routeData = this.$router.resolve({
+          name: "DataDetails",
+          query: { dataBase: JSON.stringify(baseDateId) }
+        });
+        window.open(routeData.href, '_blank');
       }
     }
   }

@@ -1,17 +1,14 @@
 <template>
     <div class="he-and-i-con-box">
         <ul class="he-and-i-con-box-nav">
-            <li
-                v-for="(item,index) in userInfo.MyOrOtherMeun"
-                :key="item.id"
-                :class="currentIndex === index ? 'li-active' :''"
-                @click="choseOne(item,index)"
-            >
+            <li v-for="(item,index) in userInfo.MyOrOtherMeun" :key="item.id" 
+            :class="currentIndex === index ? 'li-active' :''" @click="choseOne(item,index)" >
                 {{item.Name}}
             </li>
         </ul>
         <div class="he-and-i-con-box-content">
             <div class="he-and-i-con-box-content-left">
+
                 <div
                     :is="PersonalCenter"
                     :headList="headList"
@@ -25,7 +22,7 @@
                 <HeAndIIntroduction
                     :userInfo="userInfo"
                     @changeComponents="changeComponents"
-                ></HeAndIIntroduction>
+                />
             </div>
         </div>
     </div>
@@ -36,7 +33,6 @@
   import HeAndIDownload from '../HeAndIDownload'
   import mySomethingStatistical from '../mySomethingStatistical'
   import { getTypeMeun } from '~/service/clientAPI'
-
   export default {
     name: 'HeAndIContent',
     components: {
@@ -50,9 +46,12 @@
         default: function () {
           return {}
         }
+      },
+      userId: {
+        type: String,
+        default: ''
       }
     },
-
     data() {
       return {
         PersonalCenter: 'HeAndIDownload',
@@ -71,16 +70,14 @@
     mounted() {
       getTypeMeun({
         typeId: 0,
-        UserId: this.$route.params.id
+        UserId: this.$route.params.id ? this.$route.params.id : this.userId
       }).then(res => {
         this.headList = res.typeMenuButs;
         this.PersonalCenter = 'HeAndIDownload';
       })
       this.getList();
     },
-
     methods: {
-
       // 获取数据
       getList(isReload = true) {
         this.$store.dispatch('getSelfOrOthertribeInfo', {
@@ -88,7 +85,7 @@
           Rows: 8,
           ItemTypeId: this.typeId,
           typeId: this.menuId,
-          UserId: this.$route.params.id
+          UserId: this.$route.params.id ? this.$route.params.id : this.userId
         }).then(res => {
           if (res.retModels !== '') {
             if (isReload) {
@@ -96,12 +93,12 @@
             } else {
               this.dataList = this.dataList.concat(res.retModels);
             }
-            this.paginationData = res.paginationData;
+            this.paginationData = res.paginationData || {};
           } else {
             if (isReload) {
               this.dataList = []
             }
-            this.paginationData = res.paginationData;
+            this.paginationData = res.paginationData  || {};
           }
         })
       },
@@ -112,7 +109,7 @@
           this.menuId = item.Id;
           getTypeMeun({
             typeId: inx,
-            UserId: this.$route.params.id
+            UserId: this.$route.params.id ? this.$route.params.id : this.userId
           }).then(res => {
             this.headList = res.typeMenuButs;
             this.currentIndex = inx;
@@ -186,7 +183,7 @@
         "Rows": 0,
         "ItemTypeId": "",
         "typeId": 0,
-        "UserId": store.state.overas.auth.UserId
+        "UserId": store.getters.getToken.UserId
       });
       return {
         tribeInfo: data
