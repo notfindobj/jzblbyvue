@@ -158,12 +158,13 @@
                         v-for="(item, index) in serviceSelectList"
                         :key="item.serviceId"
                         size="small"
+                        style="margin-right: 10px;"
                         @click="updateService(index)"
                     >
                         {{ item.name }}
                     </Button>
-                    <span class="add-service-btn" @click="serviceModal = true"
-                          v-show="serviceSelectList.length < serviceList.length">
+                    <span class="add-service-btn" @click="addService"
+                          v-show="this.serviceList.length > 0">
                         <Icon type="md-add" size="12"/>
                         添加定制服务
                     </span>
@@ -222,6 +223,7 @@
                 >
                     <FormItem label="定制类型:">
                         <template
+                            v-if="!isUpdateService"
                             v-for="item in serviceList"
                         >
                             <Button
@@ -241,6 +243,15 @@
                                 type="primary"
                             >
                                 {{ item.ItemValue }}
+                            </Button>
+                        </template>
+                        <template v-if="isUpdateService">
+                            <Button
+                                class="service-btn"
+                                size="small"
+                                type="primary"
+                            >
+                                {{ serviceName }}
                             </Button>
                         </template>
                     </FormItem>
@@ -377,6 +388,13 @@
         this.formValidate.content = e.html;
       },
 
+      // 添加定制服务
+      addService() {
+        this.serviceValidate.serviceId = this.serviceList[0].ItemDetailId;
+        this.serviceName = this.serviceList[0].ItemValue;
+        this.serviceModal = true;
+      },
+
       // 选择定制服务
       selectSerice(id, name) {
         this.$set(this.serviceValidate, 'serviceId', id);
@@ -441,6 +459,7 @@
       // 选择类型
       clickType(id, name) {
         this.typeFile = null; // 清空已上传内容
+        this.serviceSelectList = [];
         getProjectType(id).then(res => {
           this.queryAttrList = res;
           this.formValidate.typeId = id;
@@ -497,6 +516,7 @@
               mobile: this.serviceValidate.mobile,
               desc: this.serviceValidate.desc
             };
+
             this.serviceValidate = {
               serviceId: '',
               money: '',
@@ -517,6 +537,14 @@
           desc: this.serviceValidate.desc
         };
         this.serviceSelectList.push(obj);
+        let arr = JSON.parse(JSON.stringify(this.serviceList));
+        for (let i = 0; i < arr.length; i++) {
+          if (this.serviceValidate.serviceId === arr[i].ItemDetailId) {
+            arr.splice(i, 1);
+            this.serviceList = arr;
+          }
+        }
+        console.log(this.serviceList)
         this.serviceValidate = {
           serviceId: '',
           money: '',
@@ -530,7 +558,7 @@
       // 点击完成上传
       clickSubmit() {
         this.$refs['formValidate'].validate(valid => {
-          if (!valid) {
+          if (!this.formValidate.name) {
             this.$Message.warning('请填写项目名称');
             return false;
           }

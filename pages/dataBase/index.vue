@@ -53,7 +53,7 @@
     },
     data() {
       return {
-        queruyDate: {},
+        queryData: {},
         listInfo: {},
         RspSelectMenuDatas: [],
         RspItemDatas: [],
@@ -110,7 +110,7 @@
       loadData() {
         if (this.isFinished && this.RspPaginationData.page < this.RspPaginationData.total) {
           this.isFinished = false;
-          this.queryData.Page++;
+          this.queryData.Page = this.queryData.Page === 0 ? 2 : this.queryData.Page + 1;
           this.getBaseDatas(this.queryData, true)
         }
       },
@@ -136,6 +136,7 @@
         queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
         this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
         delete queryData.title;
+        this.queryData = queryData;
         this.getBaseDatas(queryData)
       },
       //二级菜单
