@@ -138,7 +138,6 @@
           }
         }
       },
-
       rightPx1() {
         if (this.clientWidth >= 1200) {
           if (this.distanceBottom < 470) {

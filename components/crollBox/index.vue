@@ -45,11 +45,9 @@
             transform: rotate(360deg);
         }
     }
-
     .loading-box {
         text-align: center;
         padding: 10px 0 20px;
-
         .loading-wrap {
             width: 30px;
             height: 30px;
@@ -58,7 +56,6 @@
             line-height: 30px;
             animation: rotate 1.2s linear infinite;
         }
-
         .loading-icon {
             font-size: 30px;
         }

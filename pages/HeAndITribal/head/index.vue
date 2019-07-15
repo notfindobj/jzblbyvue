@@ -20,7 +20,6 @@
                     :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i></p>
                 <p class="my-Introduction-con">{{ userInfo.Description }}</p>
             </div>
-
         </div>
     </div>
 </template>

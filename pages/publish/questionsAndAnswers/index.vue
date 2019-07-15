@@ -164,17 +164,13 @@
     components: {
       'v-upload': Upload
     },
-
     methods: {
-
       onEditorChange(e) {
         this.formValidate.content = e.html;
       },
-
       inputTag() {
         this.$refs.input.focus();
       },
-
       // 切换标签
       switchLabel() {
         if (this.pageNum < this.labelInfo.total) {
@@ -185,11 +181,10 @@
           this.getLabel();
         }
       },
-
       // 点击提交
       handleSubmit(name) {
+        let that = this;
         this.$refs[name].validate(() => {
-
           if (!this.formValidate.title.trim()) {
             this.$Message.warning('标题不能为空');
             return false;
@@ -220,9 +215,9 @@
             listImg: this.imgList
           }).then(res => {
             this.$Message.success('发布成功！');
-            // setTimeout(() => {
-            //   window.location.reload();
-            // }, 1800)
+            setTimeout(() => {
+              that.$router.push({name: "QuestionsAndAnswers"});
+            }, 1000)
           }).catch(err => {
             console.log(err, '发布问答')
           })

@@ -1,12 +1,13 @@
 <template>
   <div class="he-and-i-tribal">
     <div class="he-and-i-tribal-content">
-      <heads :userInfo="tribeInfo"></heads>
-      <HeAndIContent :userInfo="tribeInfo"></HeAndIContent>
+      <heads :userInfo="tribeInfo"/>
+      <HeAndIContent
+        :userId="userInfoID"
+       :userInfo="tribeInfo" />
     </div>
   </div>
 </template>
-
 <script>
   import HeAndIContent from './HeAndIContent'
   import { mapState } from 'vuex'
@@ -23,18 +24,22 @@
       }
     },
     computed: {
-        ...mapState({
-            UserId: state => state.overas.auth.UserId
-        }),
-    },
-    methods: {
+      ...mapState({
+          userInfoID: state => state.overas.auth.UserId
+      }),
     },
     async asyncData({ store, params }) {
-      const data = await store.dispatch('getTribeInfo', params.id);
+      let id = params.id ? params.id : store.getters.getToken.UserId
+      const data = await store.dispatch('getTribeInfo',id);
       return {
         tribeInfo: data
       }
-    }
+    },
+    mounted () {
+      // console.log('>>>>>>>>>>', this.UserId)
+    },
+    methods: {
+    },
   }
 </script>
 <style lang="less" scoped>
