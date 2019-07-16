@@ -113,7 +113,7 @@ export default {
             width: 100%;
             background: #ffffff;
             box-shadow: 0 0 4px 0 #c8c3c3;
-            padding: 50px 50px 0;
+            padding: 50px 50px 30px;
         }
     }
     .action {

@@ -17,9 +17,9 @@
             <div class="message-adders-card">
                 <div class="message-adders-card-title">
                     <span class="message-adders-card-title-name">{{items.Receiver}}</span>
-                    <span class="default-address">默认地址</span>
+                    <span class="default-address" v-if="!items.IsDetail">默认地址</span>
                      <span class="message-adders-card-fork">
-                        <i class="icon iconfont icon-chahao2"></i>
+                        <i class="icon iconfont icon-chahao2" @click="delAddres(items.Id)"></i>
                     </span>
                 </div>
                 <div class="message-adders-content">
@@ -58,7 +58,7 @@
                         <div class="message-adders-content-box-content message-adders-content-box-until">
                             <span>{{items.Email}}</span>
                             <div>
-                                <span class="num-color cursor">设为默认</span>
+                                <span class="num-color cursor" v-if="!items.IsDetail" @click="seTdefault(items)">设为默认</span>
                                 <span class="blue-color cursor" @click="editAdd(items)">编辑</span>
                             </div>
                         </div>
@@ -69,12 +69,13 @@
         <setAddress 
         :isShow="isShow" 
         :addressData='addressData'
+        @upAddres="upAddres"
         @closeBtn="closeBtn"/>
     </div>
 </template>
 <script>
 import setAddress from './components/setAddress'
-import {getAddressData, getProvinceList} from '../../../service/clientAPI'
+import {getAddressData, getProvinceList, delAddressData, setAddressData} from '../../../service/clientAPI'
 export default {
     name: 'receivingAddress',
     data () {
@@ -114,6 +115,30 @@ export default {
             this.addressData.address = [];
             this.addressData = val;
             this.addressData.address = [val.ProvinceAreaId, val.CityAreaId, val.CountyAreaId];
+        },
+        upAddres (val) {
+            this.isShow = false;
+            this.getUserInfo()
+        },
+        async delAddres (val) {
+            let queryData = {
+               Id: val
+            }
+            let msg = await delAddressData(queryData);
+            if (msg) {
+                this.$Message.success('删除成功！');
+                this.getUserInfo()
+            }
+        },
+        async seTdefault (item) {
+            let queryData = {}
+            queryData = item
+            queryData.IsDetail = true;
+            let msg = await setAddressData(queryData);
+            if (msg) {
+                this.$Message.success('操作成功！');
+                this.getUserInfo()
+            }
         },
         closeBtn () {
             this.isShow = false;
@@ -165,6 +190,7 @@ export default {
         }
         &-adders {
             margin-left: 83px;
+            margin-top: 10px;
             width: 797px;
             height: 252px;
             border: 1px solid #dddddd;

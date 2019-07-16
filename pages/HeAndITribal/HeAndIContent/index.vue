@@ -8,7 +8,6 @@
         </ul>
         <div class="he-and-i-con-box-content">
             <div class="he-and-i-con-box-content-left">
-
                 <div
                     :is="PersonalCenter"
                     :headList="headList"

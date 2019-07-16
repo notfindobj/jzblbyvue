@@ -15,20 +15,20 @@
                     <div  class="means">
                         <div >
                             <span class="means-left-label">手机号码：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
+                            <Input type="text" style="width: 160px;" v-model="userMobile.mobile" size="small" />
                         </div>
                     </div>
                     <div class="means">
                         <div>
                             <span class="means-left-label">验证码：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
+                            <Input type="text" style="width: 160px;" size="small" v-model="userMobile.mobileVerifyCode" />
                             <span class="cerificationCode">获取验证码</span>
                         </div>
                     </div>
                     <div  class="means">
                         <div >
                             <span class="means-left-label">新密码：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
+                            <Input type="text" style="width: 160px;" size="small" v-model="userMobile.newPwd" />
                         </div>
                     </div>
                     <div class="message-items-right-save">
@@ -45,7 +45,12 @@
 export default {
     data () {
         return {
-            account: true
+            account: true,
+            userMobile:{
+                mobile: "",
+                mobileVerifyCode: "",
+                newPwd: ""
+            }
         }
     }
 }

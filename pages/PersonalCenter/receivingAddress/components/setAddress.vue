@@ -31,13 +31,14 @@
                 </Form>
             </div>
             <div class="model-box-footer">
-                <div class="modifying-head">保存</div>
-                <div class="modifying-cancel">取消</div>
+                <div class="modifying-head" @click="saveAddres">保存</div>
+                <div class="modifying-cancel" @click="closeBtn">取消</div>
             </div>
         </div>
     </div>
 </template>
 <script>
+import {setAddressData} from '../../../../service/clientAPI'
 export default {
     name: 'setAddress',
     props: {
@@ -107,6 +108,29 @@ export default {
     methods: {
         closeBtn () {
             this.$emit('closeBtn')
+        },
+        async saveAddres () {
+            let queryData = {
+                "Id": "",
+                "Receiver": "张先生ceshi",
+                "ProvinceAreaId": "110000",
+                "ProvinceName": "北京",
+                "CityAreaId": "110100",
+                "CityName": "北京市",
+                "CountyAreaId": "110101",
+                "CountName": "东城区",
+                "DetailAddress": "详细地址1005号105室",
+                "MobilePhone": "18321284508",
+                "FixedTelephone": "0370-7766589",
+                "Email": "sqliuen@163.com",
+                "AddressAlias": "家",
+                // "IsDetail": true
+            }
+            let msg  = await setAddressData(queryData);
+            if (msg) {
+                this.$Message.success('添加成功');
+                this.$emit('upAddres', true)
+            }
         }
     }
 }
@@ -123,7 +147,7 @@ export default {
         &-box {
             position: relative;
             top: 50%;
-            left: 55%;
+            left: 50%;
             transform: translate(-50% ,-50%);
             width: 812px;
             height: 533px;

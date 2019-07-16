@@ -120,6 +120,15 @@ export const getUserData = async params => {
 export const getAddressData = async params => {
   return await request.get(`UserInfo/GetThisALLUserShippingAddress`, params)
 }
+// 更新收货地址
+export const setAddressData = async params => {
+  return await request.post(`UserInfo/SetOrAddUserShippingAddress`, params)
+}
+// 删除收货地址
+export const delAddressData = async params => {
+  return await request.post(`UserInfo/DeleteUserShippingAddress`, params)
+}
+
 // 获取三级联动数据
 export const getProvinceList = async params => {
   return await request.post(`UserInfo/GetProvinceData`, params)
