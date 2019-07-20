@@ -23,9 +23,9 @@
             <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
             <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
         </div>
-        <div class="block-none">
-            您好！此网站暂未对外开放，了解更多请联系：15121173536
-        </div>
+<!--        <div class="block-none">-->
+<!--            您好！此网站暂未对外开放，了解更多请联系：15121173536-->
+<!--        </div>-->
     </div>
 </template>
 <script>
@@ -37,10 +37,10 @@
     data() {
       return {
         userItem: {
-          // mobile: '18321284508',
-          mobile: '',
-          // password: '123456'
-          password: ''
+          mobile: '18321284508',
+          // mobile: '',
+          password: '123456'
+          // password: ''
         },
         ruleInline: {
           mobile: [

@@ -618,11 +618,11 @@
       sendPost(attributesList) {
         let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];
         if (this.typeFile && this.typeName !== '文本' && this.typeName !== '建筑规范') {
-          this.showLayout = false
+          this.showLayout = true
           ItemFilePath = this.typeFile.packageOrPdfUrl;
           ItemFileName = this.typeFile.fileName;
         } else if (this.typeName === '文本' || this.typeName === '建筑规范') {
-          this.showLayout = true
+          this.showLayout = false
           PdfModel = {
             ItemFileName: this.typeFile.fileName,
             ItemFilePath: this.typeFile.packageOrPdfUrl
@@ -675,21 +675,23 @@
         });
         publishProject(postData).then(res => {
           this.$Spin.hide();
-          const queryData = {
-            Id: res,
-            showLayout: this.showLayout,
-            reqItemList: {
-              SortType: 0,
-              KeyWords: "",
-              Order: true,
-              Page: 0,
-              Rows: 32
-            }
-          };
-          this.$router.push({
-            name: "DataDetails",
-            query: { dataBase: JSON.stringify(queryData) }
-          });
+          if (res) {
+            const queryData = {
+              Id: res,
+              showLayout: this.showLayout,
+              reqItemList: {
+                SortType: 0,
+                KeyWords: "",
+                Order: true,
+                Page: 0,
+                Rows: 32
+              }
+            };
+            this.$router.push({
+              name: "DataDetails",
+              query: { dataBase: JSON.stringify(queryData) }
+            });
+          }
         })
       }
     },

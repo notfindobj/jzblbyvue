@@ -38,7 +38,7 @@
                                 v-for="item in slideList"
                                 :key="item.Id"
                             >
-                                <img :src="fileBaseUrl + item.CoverImgUrl" alt="">
+                                <img :src="item.CoverImgUrl" alt="">
                             </div>
                         </div>
                         <div class="swiper-pagination"></div>
@@ -115,7 +115,7 @@
                         <div class="item-right">
                             <span>{{ item.LatestAnswerDate }}</span>
                             <div class="img">
-                                <img :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
                             </div>
                         </div>
                     </div>
@@ -137,7 +137,7 @@
     layout: 'main',
     data() {
       return {
-        fileBaseUrl: 'http://www.jzbl.com',   // 文件的域名
+        fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
         htzhIcon: require('~/assets/images/htzq.png'),
         swiperOption: {
           slidesPerView: 1,
@@ -489,7 +489,6 @@
                     .img {
                         width: 150px;
                         height: 100px;
-                        background-color: #ccc;
                         margin-left: 10px;
                         img {
                             width: 100%;

@@ -110,7 +110,7 @@
     layout: 'main',
     data() {
       return {
-        fileBaseUrl: 'http://www.jzbl.com',   // 文件的域名
+        fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
         content: '',
         commentList: [],    // 评论列表
         isShowEmotion: false,

@@ -2,7 +2,7 @@
     <div>
         <!-- 广告 -->
         <div class="ad" v-show="!isAd">
-          
+
         </div>
         <!-- 头部导航 -->
         <div class="home-bar">
@@ -153,6 +153,7 @@
       searchBaseData() {
         let _this = this;
         if (!this.searchTitle) {
+          this.$Message.warning('请先选择资源库类型~');
           return false;
         }
         let baseDateId = {
@@ -162,7 +163,7 @@
           KeyWords: this.seatchData,
           Order: true,
           Page: 0,
-          Rows: 8,
+          Rows: 32,
           title: _this.searchTitle.split(',')[1],
         }
         this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })

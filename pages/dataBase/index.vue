@@ -92,6 +92,15 @@
       }
     },
 
+    watch: {
+      $route(to, from) {
+        let queryData = JSON.parse(this.$route.query.dataBase);
+        let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false : true;
+        delete queryData.title;
+        this.getBaseDatas(queryData);
+      }
+    },
+
     methods: {
       // 点击收藏
       handleCollections(flag, index) {
@@ -137,7 +146,7 @@
         this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
         delete queryData.title;
         this.queryData = queryData;
-        this.getBaseDatas(queryData)
+        // this.getBaseDatas(queryData)
       },
       //二级菜单
       choseSomeOne(row, rows) {
@@ -168,7 +177,7 @@
           this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } })
         }
         delete queryData.title;
-        this.getBaseDatas(queryData)
+        // this.getBaseDatas(queryData)
       },
       // 删除选项
       delItems(items) {
@@ -182,7 +191,7 @@
         queryData.ClassTypeArrList = ClassTypeArrList;
         this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } })
         delete queryData.title;
-        this.getBaseDatas(queryData)
+        // this.getBaseDatas(queryData)
       },
       async getBaseDatas(queryData, isAutoLoading = false) {
         let BaseData = await getBaseData(queryData);
