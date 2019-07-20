@@ -9,14 +9,15 @@
         <div class="need-type">
           <span>类型：</span>
           <ul>
-            <li  v-for="(item,index) in needType" :key="index"  @click="choseNeedType(index)"  :class="currentNeedIndex == index ? 'li-active' : ''">{{item.typeName}}</li>
+            <li class="li-active">{{itemCustomizes.customizedTypeName}}</li>
+            <!-- <li v-for="(item,index) in needType" :key="index" @click="choseNeedType(index)"  :class="currentNeedIndex == index ? 'li-active' : ''">{{item.typeName}}</li> -->
           </ul>
         </div>
         <div class="need-con">
           <span>定制说明</span>
         </div>
-        <p class="need-coc-box">作者描述：发布者在发布过程中填写的内容，展示给用户查看，作为报价的参考</p>
-        <p class="need-price">预算金额：20000元/套</p>
+        <p class="need-coc-box">{{itemCustomizes.customizedDescription}}</p>
+        <p class="need-price">预算金额：{{itemCustomizes.customizedMoney}}元/套</p>
       </div>
       <div class="submit-custom">
         <div class="submit-custom-title">
@@ -27,7 +28,7 @@
         <p class="submit-type">类型：<span>平面填色</span></p>
         <div class="submit-describe">
           <span><i>*</i>描述</span>
-          <textarea></textarea>
+          <textarea v-model="customized.customizedDescription"></textarea>
         </div>
         <div class="submit-budget">
           <span><i>*</i>预算金额</span>
@@ -41,7 +42,7 @@
         <div class="submit-phone">
           <span><i>*</i>手机号码</span>
           <div class="submit-phone-con">
-            <input type="text">
+            <input type="text" v-model="customized.customizedMobile">
             <div>发送验证码</div>
           </div>
         </div>
@@ -59,8 +60,8 @@
     </div>
   </div>
 </template>
-
 <script>
+import {getCustomizeDataByItemId} from '../../service/clientAPI'
   export default {
     name: 'detaDetailsCustom',
     props: {
@@ -72,6 +73,15 @@
     data() {
       return {
         currentNeedIndex:-1,
+        itemCustomizes: {},
+        customized: {
+          customizedCount: 0,
+          itemId: "",
+          customizedTypeId: "",
+          customizedMoney: "",
+          customizedMobile: "",
+          customizedDescription: ""
+        },
         needType:[
           {
             typeCode:'',
@@ -93,11 +103,17 @@
     created() {
     },
     mounted () {
-      console.log('aaaaaaaaa')
+      this.getCustomize()
     },
     methods: {
       choseNeedType (inx) {
         this.currentNeedIndex = inx
+      },
+      async getCustomize() {
+        let msg = await getCustomizeDataByItemId(this.itemId);
+        if (msg) {
+          this.itemCustomizes = msg.itemCustomizes[0];
+        }
       },
       closeMask () {
         this.$emit('dataDetailsMaskClose',{type:'Custom'})
@@ -284,6 +300,7 @@
             }
           }
           .icon-position{
+            cursor: pointer;
             display: block;
             width: 16px;
             height: 16px;
@@ -463,27 +480,21 @@
           align-items: flex-end;
           justify-content: flex-end;
           >div{
+            cursor: pointer;
+            text-align: center;
+            width: 78px;
+            height: 32px;
+            font-size: 14px;
+            border-radius: 4px;
+            margin-right: 30px;
+            line-height: 32px;
             &:nth-child(1){
-              width: 78px;
-              height: 32px;
-              font-size: 14px;
               color: #666666;
-              text-align: center;
-              line-height: 32px;
               border: 1px solid #D9D9D9;
-              border-radius: 4px;
-              margin-right: 40px;
             }
             &:nth-child(2){
-              width: 78px;
-              height: 32px;
-              font-size: 14px;
               color: #ffffff;
-              text-align: center;
-              line-height: 32px;
               background: #3E85FF;
-              border-radius: 4px;
-              margin-right: 30px;
             }
           }
         }

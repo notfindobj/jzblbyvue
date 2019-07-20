@@ -8,7 +8,7 @@
                       <span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
                     </BreadcrumbItem>
                     <BreadcrumbItem style="font-size:12px;color: #FF3C00;font-weight: normal;">
-                        {{ detaDetails.ItemName }}
+                        {{detaDetails.ItemName }}
                     </BreadcrumbItem>
                 </Breadcrumb>
             </div>
@@ -54,14 +54,15 @@
             </div>
         </div>
         <viewPicture/>
+        <!--  :itemId="" -->
         <data-details-custom
-          
+          :itemId="detaDetails.ItemId"
           @dataDetailsMaskClose="dataDetailsMaskClose"
-          v-show="isShowDataDetailsCustom"/>
+          v-if="isShowDataDetailsCustom"/>
         <date-details-down
           :payInfos="detaDetails"
           @dataDetailsMaskClose="dataDetailsMaskClose"
-          v-show="isShowDateDetailsDown"/>
+          v-if="isShowDateDetailsDown"/>
             <ToTop></ToTop>
     </div>
 </template>
@@ -345,11 +346,8 @@
         }
       },
       dataDetailsMaskClose(obj) {
-        if (obj.type == 'Down') {
-          this.isShowDateDetailsDown = false;
-        } else {
-          this.isShowDataDetailsCustom = false;
-        }
+        this.isShowDateDetailsDown = false;
+        this.isShowDataDetailsCustom = false;
       }
     }
   }

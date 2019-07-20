@@ -133,3 +133,19 @@ export const delAddressData = async params => {
 export const getProvinceList = async params => {
   return await request.post(`UserInfo/GetProvinceData`, params)
 }
+// 获取定制服务数据
+export const getCustomizeDataByItemId = async params => {
+  return await request.post(`ItemDetails/GetCustomizeDataByItemId?itemId=${params}`)
+}
+// 回复定制服务数据
+export const setReplyCustomize = async params => {
+  return await request.post(`ItemDetails/ReplyCustomize`, params)
+}
+// 支付宝接口
+export const setAiliPay = async params => {
+  return await request.post(`AllPay/AiliPay`, params)
+}
+// 微信支付接口
+export const setWechatPay = async params => {
+  return await request.post(`AllPay/WechatPay`, params)
+}

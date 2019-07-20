@@ -19,13 +19,13 @@
       </div>
       <div class="window-btn">
         <div @click="closeMask()">取消</div>
-        <div @click="closeMask()">去支付</div>
+        <div @click="payment(payInfos)">去支付</div>
       </div>
     </div>
   </div>
 </template>
-
 <script>
+  import{setAiliPay, setWechatPay} from '../../service/clientAPI'
   export default {
     name: 'detaDetailsDown',
     props: {
@@ -50,21 +50,37 @@
             typeIcon: require('../../assets/images/payZFB.png')
           },
         ],
-        currentIndex:-1
+        currentIndex: 0
       }
     },
     components: {
     },
     asyncData() {
     },
-    created() {
-    },
+    mounted () {},
     methods: {
       chosePayType(inx) {
         this.currentIndex = inx
       },
       closeMask () {
         this.$emit('dataDetailsMaskClose',{type:'Down'})
+      },
+      async payment (value) {
+        let qq =
+          {
+          "Money": value.Price,
+          "ItemId": value.ItemId,
+          "IsDebug": false
+        }
+        let msg = null;
+        if (this.currentIndex === 0) {
+          msg = await setWechatPay(qq);
+        } else if (this.currentIndex === 1) {
+          msg = await setAiliPay(qq);
+        }
+        if (msg) {
+          window.location.href = msg
+        }
       }
     }
   }
