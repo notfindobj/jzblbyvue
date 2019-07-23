@@ -160,7 +160,8 @@
                                 </p>
                                 <div class="comment-operation">
                                     <p>
-                                        <i class="icon iconfont icon1">&#xe643;</i>
+                                        <i class="icon iconfont icon1" v-if="!item.islikes">&#xe643;</i>
+                                        <i class="icon iconfont icon1-active" v-if="item.islikes">&#xe621;</i>
                                         <span>点赞</span>
                                     </p>
                                     <Divider type="vertical" style="margin: 0 10px;"/>
@@ -172,7 +173,8 @@
                             </div>
                         </div>
                         <div class="show-more-box" v-if="commentList.length > 3">
-                            <span>{{ commentList[0].NickName }}</span>等人<span>共{{ commentList.length }}条回复</span> <i class="icon iconfont" @click="showAllComment">&#xe64a;</i>
+                            <span>{{ commentList[0].NickName }}</span>等人<span>共{{ commentList.length }}条回复</span> <i
+                            class="icon iconfont" @click="showAllComment">&#xe64a;</i>
                         </div>
                     </div>
                 </div>
@@ -712,6 +714,11 @@
                             .icon1 {
                                 position: relative;
                                 bottom: 2px;
+                            }
+
+                            .icon1-active {
+                                color: #FF3C00;
+                                font-size: 14px;
                             }
                         }
                     }

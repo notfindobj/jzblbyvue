@@ -75,7 +75,7 @@
 
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
-      let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false : true;
+      let showLayout = !(queryData.title === '建筑规范' || queryData.title === '文本');
       delete queryData.title;
       //  let [menuData, getBaseData] = Promise.all([store.dispatch('getMenu'), store.dispatch('getBaseData', queryData)])
       let menuData = await store.dispatch('getMenu');
@@ -95,8 +95,9 @@
     watch: {
       $route(to, from) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        let showLayout = queryData.title === '建筑规范' || queryData.title === '文本' ? false : true;
+        let showLayout = !(queryData.title === '建筑规范' || queryData.title === '文本');
         delete queryData.title;
+        this.queryData = queryData;
         this.getBaseDatas(queryData);
       }
     },
