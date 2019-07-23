@@ -54,16 +54,20 @@
             </div>
         </div>
         <viewPicture/>
-        <!--  :itemId="" -->
         <data-details-custom
           :itemId="detaDetails.ItemId"
           @dataDetailsMaskClose="dataDetailsMaskClose"
           v-if="isShowDataDetailsCustom"/>
         <date-details-down
           :payInfos="detaDetails"
+          @payment="payment"
           @dataDetailsMaskClose="dataDetailsMaskClose"
           v-if="isShowDateDetailsDown"/>
-            <ToTop></ToTop>
+        <weixinBox 
+        :modalConfig="modalConfig"
+        :paymentConfig="paymentConfig"
+        />
+        <ToTop></ToTop>
     </div>
 </template>
 <script>
@@ -76,6 +80,7 @@
   import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency } from '../../service/clientAPI'
   import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
+  import weixinBox from '../../components/weixin'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -100,9 +105,14 @@
         isLayout: true,
         distanceBottom: 1000,
         contentHeight: '',   // 评论列表的高度
+        modalConfig: {
+          isWxConfig: false
+        },
+        paymentConfig: {}
       }
     },
     components: {
+      weixinBox,
       dataDetailsLeft,
       dataDetailsRight,
       commentsCon,
@@ -339,11 +349,24 @@
         this.$set(item, 'IsFollow', !item.iscollections)
       },
       dataDetailsMaskShow(obj) {
+        this.paymentConfig.url = '';
+        this.modalConfig.isWxConfig = false;
         if (obj.type == 'Down') {
           this.isShowDateDetailsDown = true;
         } else {
           this.isShowDataDetailsCustom = true;
         }
+      },
+      // 支付接口调用成功的回调
+      payment (config, type) {
+        if (type === 0) {
+          this.modalConfig.isWxConfig = true;
+          this.paymentConfig = config;
+        } else {
+          window.location.href = config.data
+        }
+        this.isShowDateDetailsDown = false;
+        this.isShowDataDetailsCustom = false;
       },
       dataDetailsMaskClose(obj) {
         this.isShowDateDetailsDown = false;

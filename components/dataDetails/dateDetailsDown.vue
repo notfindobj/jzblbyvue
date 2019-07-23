@@ -70,16 +70,22 @@
           {
           "Money": value.Price,
           "ItemId": value.ItemId,
-          "IsDebug": false
+          "IsDebug": true
         }
         let msg = null;
+        // 微信
         if (this.currentIndex === 0) {
           msg = await setWechatPay(qq);
+        // 支付宝
         } else if (this.currentIndex === 1) {
           msg = await setAiliPay(qq);
         }
         if (msg) {
-          window.location.href = msg
+          let pay ={
+            data: msg,
+            Price: this.payInfos.Price
+          }
+          this.$emit('payment', pay, this.currentIndex)
         }
       }
     }

@@ -149,3 +149,8 @@ export const setAiliPay = async params => {
 export const setWechatPay = async params => {
   return await request.post(`AllPay/WechatPay`, params)
 }
+
+// 绑定微信登录
+export const bindingByWX = async () => {
+  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.api.jzbl.com/api/UserInfo/BindWx')
+}

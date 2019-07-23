@@ -21,7 +21,6 @@
     props: {
       uploadType: Number
     },
-
     methods: {
       fileSelected(e) {
         let file = e.target.files;

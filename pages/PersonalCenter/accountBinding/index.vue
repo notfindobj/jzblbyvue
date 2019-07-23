@@ -59,7 +59,7 @@
             <div class="message-items-right">
                 <span>未绑定</span>
             </div>
-            <div class="message-items-operation">编辑</div>
+            <div class="message-items-operation" @click="bindingWX">绑定</div>
         </div>
         <!-- 邮箱绑定 -->
         <div class="message-items message-items-text">
@@ -108,11 +108,20 @@
     </div>
 </template>
 <script>
+import {bindingByWX} from '../../../service/clientAPI'
 export default {
     data () {
         return {
             cellPhone:  true,
             mailbox: true
+        }
+    },
+    methods: {
+        async bindingWX () {
+            let msg = await bindingByWX()
+            if (msg) {
+                window.open(msg)
+            }
         }
     }
 }

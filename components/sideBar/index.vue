@@ -11,11 +11,6 @@
 </template>
 <script>
 export default {
-    data() {
-        return  {
-
-        }
-    },
     methods: {
         backTop () {
             let scrollToTop = setInterval(function() {
