@@ -5,7 +5,7 @@
                 <Breadcrumb separator=">" style="margin-bottom: 20px">
                     <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
                     <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities" :key="index">
-                      <span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
+                        <span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
                     </BreadcrumbItem>
                     <BreadcrumbItem style="font-size:12px;color: #FF3C00;font-weight: normal;">
                         {{detaDetails.ItemName }}
@@ -13,23 +13,23 @@
                 </Breadcrumb>
             </div>
             <div class="data-details-con">
-              <template v-if="isLayout">
-                <!--  :discussData="getGetCommentsData" -->
-                  <data-details-left
-                      id="container"
-                      :detaDetails="detaDetails"
-                      :pageTurning="pageTurning"
-                      :attribute="ItemAttributesEntities"
-                      @pageTurning="PNpage"
-                  />
-              </template>
+                <template v-if="isLayout">
+                    <!--  :discussData="getGetCommentsData" -->
+                    <data-details-left
+                        id="container"
+                        :detaDetails="detaDetails"
+                        :pageTurning="pageTurning"
+                        :attribute="ItemAttributesEntities"
+                        @pageTurning="PNpage"
+                    />
+                </template>
                 <template v-if="!isLayout">
                     <dataDetailsPDFLeft
-                    :detaDetails="detaDetails"
-                    :PdfInfo="PdfInfo"
-                   />
+                        :detaDetails="detaDetails"
+                        :PdfInfo="PdfInfo"
+                    />
                 </template>
-                  <div>
+                <div>
                     <data-details-right
                         :class="{'fix-top': scrollTop > 312 && distanceBottom > 362, 'fix-bottom': distanceBottom < 362}"
                         :style="rightPx"
@@ -55,18 +55,21 @@
         </div>
         <viewPicture/>
         <data-details-custom
-          :itemId="detaDetails.ItemId"
-          @dataDetailsMaskClose="dataDetailsMaskClose"
-          v-if="isShowDataDetailsCustom"/>
+            :itemId="detaDetails.ItemId"
+            @dataDetailsMaskClose="dataDetailsMaskClose"
+            v-if="isShowDataDetailsCustom"/>
         <date-details-down
           :payInfos="detaDetails"
           @payment="payment"
           @dataDetailsMaskClose="dataDetailsMaskClose"
           v-if="isShowDateDetailsDown"/>
-        <weixinBox 
-        :modalConfig="modalConfig"
-        :paymentConfig="paymentConfig"
-        />
+          <weixinBox 
+          :modalConfig="modalConfig"
+          :paymentConfig="paymentConfig"
+          />
+            :payInfos="detaDetails"
+            @dataDetailsMaskClose="dataDetailsMaskClose"
+            v-if="isShowDateDetailsDown"/>
         <ToTop></ToTop>
     </div>
 </template>
@@ -206,9 +209,10 @@
     },
     created() {
       try {
-        let showLayout =  JSON.parse(this.$route.query.dataBase);
+        let showLayout = JSON.parse(this.$route.query.dataBase);
         this.isLayout = showLayout.showLayout;
-      } catch (error) {}
+      } catch (error) {
+      }
     },
     mounted() {
       let _this = this
@@ -234,16 +238,17 @@
     },
     methods: {
       // 上写翻页，项目详情
-      PNpage (val) {
+      PNpage(val) {
         if (!val) {
-            this.$Message.warning('没有项目');
-            return false
+          this.$Message.warning('没有项目');
+          return false
         }
         try {
-          let dataBase =  JSON.parse(this.$route.query.dataBase);
+          let dataBase = JSON.parse(this.$route.query.dataBase);
           dataBase.Id = val
-          window.location.href = 'DataDetails?dataBase='+JSON.stringify(dataBase);
-        } catch (error) {}
+          window.location.href = 'DataDetails?dataBase=' + JSON.stringify(dataBase);
+        } catch (error) {
+        }
       },
       clickCate(index) {
         let attrList = [];
@@ -380,21 +385,26 @@
         width: 100%;
         height: auto;
         background: rgba(242, 244, 242, 1);
+
         .data-details-con-box {
             width: 1200px;
             height: auto;
             margin: 0 auto;
+
             .data-details-location {
                 height: 46px;
                 width: 100%;
                 padding-top: 9px;
+
                 .cate-span {
                     cursor: pointer;
+
                     &:hover {
                         color: #ff3c00;
                     }
                 }
             }
+
             .data-details-con {
                 width: 100%;
                 height: auto;
@@ -403,27 +413,33 @@
                 align-items: flex-start;
                 justify-content: space-between;
                 padding-bottom: 30px;
+
                 .margin-top {
                     position: fixed;
                     top: 457px;
                     z-index: 2;
                 }
+
                 .margin-top2 {
                     position: fixed;
                     top: 378px;
                     z-index: 2;
                 }
+
                 .data-details-location {
                 }
+
                 .fix-top {
                     position: fixed;
                     top: 0;
                     z-index: 2;
                 }
+
                 .fix-bottom {
                     position: fixed;
                     z-index: 2;
                 }
+
                 .margin-bottom {
                     position: fixed;
                     z-index: 2;
