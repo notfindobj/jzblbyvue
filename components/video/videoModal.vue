@@ -160,13 +160,25 @@
                                 </p>
                                 <div class="comment-operation">
                                     <p>
-                                        <i class="icon iconfont icon1" v-if="!item.islikes">&#xe643;</i>
-                                        <i class="icon iconfont icon1-active" v-if="item.islikes">&#xe621;</i>
+                                        <i
+                                            class="icon iconfont icon1"
+                                            v-if="!item.islikes"
+                                            @click="likeComment(index, true)"
+                                        >
+                                            &#xe643;
+                                        </i>
+                                        <i
+                                            class="icon iconfont icon1-active"
+                                            v-if="item.islikes"
+                                            @click="likeComment(index, false)"
+                                        >
+                                            &#xe621;
+                                        </i>
                                         <span>点赞</span>
                                     </p>
                                     <Divider type="vertical" style="margin: 0 10px;"/>
                                     <p>
-                                        <i class="icon iconfont icon4">&#xe664;</i>
+                                        <i class="icon iconfont reply-comment-icon">&#xe664;</i>
                                         <span>评论</span>
                                     </p>
                                 </div>
@@ -185,7 +197,7 @@
 
 <script>
   import Emotion from '~/components/Emotion/index'
-  import { setComments } from '../../service/clientAPI'
+  import { setComments, setthumbsUp } from '../../service/clientAPI'
 
   export default {
     props: {
@@ -279,6 +291,18 @@
       handleClose() {
         this.pauseVideo();
         this.$emit('closeModal');
+      },
+
+      // 点赞评论
+      likeComment(index, flag) {
+        setthumbsUp({
+          ItemId: this.commentList[index].ItemId,
+          LikeType: 0,
+          CommentsId: this.commentList[index].CommentsId,
+          IsDelete: !flag
+        }).then(() => {
+          this.getComment(this.videoInfo.ItemId);
+        })
       },
 
       // 点击开始
@@ -714,11 +738,16 @@
                             .icon1 {
                                 position: relative;
                                 bottom: 2px;
+                                cursor: pointer;
                             }
 
                             .icon1-active {
                                 color: #FF3C00;
                                 font-size: 14px;
+                                cursor: pointer;
+                            }
+                            .reply-comment-icon {
+                                cursor: pointer;
                             }
                         }
                     }
