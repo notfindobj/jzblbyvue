@@ -59,8 +59,8 @@
         loginByQQ().then(res => {
           const qqWindow = this.loginAtQQ(res, 1);
           const interId = setInterval(() => {
-            const code = localStorage.getItem('code');
-            const state = localStorage.getItem('state');
+            const code = sessionStorage.getItem('code');
+            const state = sessionStorage.getItem('state');
             if (code && state) {
               qqWindow.close();
               getUserByQQ({
@@ -71,8 +71,8 @@
                   this.$store.dispatch('WXREGISTER', res);
                   this.goToRegister('register');
                 } else {
-                  localStorage.removeItem('code');
-                  localStorage.removeItem('state');
+                  sessionStorage.removeItem('code');
+                  sessionStorage.removeItem('state');
                   this.$store.dispatch('LOGININ', res);
                   localStorage.setItem('LOGININ', JSON.stringify(res))
                   this.$store.dispatch('SETUP', false)
@@ -89,8 +89,8 @@
         loginByWX().then(res => {
           const wxWindow = this.loginAtQQ(res, 2);
           const interId = setInterval(() => {
-            const code = localStorage.getItem('code');
-            const state = localStorage.getItem('state');
+            const code = sessionStorage.getItem('code');
+            const state = sessionStorage.getItem('state');
             if (code && state) {
               wxWindow.close();
               getUserByWX({
@@ -101,8 +101,8 @@
                   this.$store.dispatch('WXREGISTER', res);
                   this.goToRegister('register');
                 } else {
-                  localStorage.removeItem('code');
-                  localStorage.removeItem('state');
+                  sessionStorage.removeItem('code');
+                  sessionStorage.removeItem('state');
                   this.$store.dispatch('LOGININ', res);
                   localStorage.setItem('LOGININ', JSON.stringify(res))
                   this.$store.dispatch('SETUP', false)

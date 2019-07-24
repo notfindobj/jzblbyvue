@@ -61,21 +61,15 @@
                 </div>
             </div>
             <div class="content">
-                <Menu
-                    mode="horizontal"
-                    theme="light"
-                    :active-name="menuIndex"
-                    class="tabs"
-                    @on-select="selectMenu"
-                >
-                    <MenuItem name="0">
-                        最近回答
-                    </MenuItem>
+                <Menu mode="horizontal" theme="light" :active-name="menuIndex" class="tabs" @on-select="selectMenu">
                     <MenuItem name="1">
                         本周最热
                     </MenuItem>
                     <MenuItem name="2">
                         本月最热
+                    </MenuItem>
+                    <MenuItem name="0">
+                        最近回答
                     </MenuItem>
                     <MenuItem name="3">
                         等待回答
@@ -98,15 +92,13 @@
                         <div class="item-info">
                             <h3 class="item-question" @click="goDetail(item.QAId)">{{ item.QATitle }}</h3>
                             <div class="question-info">
-                                <div class="avatar">
-                                    <img :src="item.UserWebEntity.HeadIcon" alt="">
+                                <div @click="jumpRoute(item)">
+                                    <span class="avatar">
+                                        <img :src="item.UserWebEntity.HeadIcon" alt="头像">
+                                    </span>
+                                    <span class="author">{{ item.UserWebEntity.NickName }}</span>
                                 </div>
-                                <span class="author">{{ item.UserWebEntity.NickName }}</span>
-                                <span
-                                    class="tags"
-                                    v-for="labelItem in item.Labels"
-                                    :key="labelItem.ModuleId"
-                                >
+                                <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">
                                     {{ labelItem.FullName }}
                                 </span>
                             </div>
@@ -114,7 +106,7 @@
                         </div>
                         <div class="item-right">
                             <span>{{ item.LatestAnswerDate }}</span>
-                            <div class="img">
+                            <div class="img" @click="goDetail(item.QAId)">
                                 <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
                             </div>
                         </div>
@@ -201,7 +193,6 @@
           Page: this.pageNum,
           Rows: 8
         });
-
         this.QAList = data.QADatas;
         this.records = data.paginationData.records;
         this.spinShow = false;
@@ -212,9 +203,13 @@
         this.menuIndex = name;
         this.pageNum = 1;
         this.getQAData();
+      },
+      // HeAndITribal路由跳转
+      jumpRoute(items) {
+        console.log(items)
+        this.$router.push({name: "HeAndITribal-id", query: {id: items.UserId}});
       }
     },
-
     async asyncData({store}) {
       const queryParams = {
         KeyWord: '',
@@ -223,7 +218,6 @@
         Page: 1,
         Rows: 8
       };
-
       const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment'), store.dispatch('getQAData', queryParams)])
       // const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment')])
       return {
@@ -282,21 +276,17 @@
         padding-bottom: 25px;
         background-color: #fff;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);
-
         .right-top {
             padding: 20px;
             display: flex;
             justify-content: space-between;
-
             .swiper-box {
                 width: 520px;
                 height: 249px;
                 background-color: #ccc;
-
                 .swiper-wrapper {
                     width: 520px;
                     height: 249px;
-
                     .swiper-slide {
                         position: relative;
                         text-align: center;
@@ -323,23 +313,18 @@
                     }
                 }
             }
-
             .top-list {
                 width: 264px;
-
                 .list-title {
                     img {
                         vertical-align: middle;
                     }
-
                     font-size: 14px;
                     color: #333;
                     font-weight: 500;
                 }
-
                 ul {
                     list-style: none;
-
                     li {
                         font-size: 12px;
                         color: #666;
@@ -353,7 +338,6 @@
                         }
                     }
                 }
-
                 .bottom-link {
                     display: block;
                     margin-top: 10px;
@@ -362,41 +346,32 @@
             }
 
         }
-
         .content {
-
             .ivu-menu-item {
                 padding: 0;
                 margin: 0 20px;
             }
-
             .ivu-menu-item:hover {
                 color: #333;
             }
-
             .ivu-menu-item-active {
                 color: #333;
                 font-weight: 500;
             }
-
             .ivu-menu-horizontal.ivu-menu-light:after {
                 background: #f5f6f5;
             }
-
             .tabs {
                 margin-bottom: 25px;
             }
-
             .content-list {
                 position: relative;
             }
-
             .content-item {
                 width: 100%;
                 height: 130px;
                 border-bottom: 1px solid #d8d8d8;
                 padding: 15px 20px;
-
                 .item-left-box {
                     float: left;
                     display: flex;
@@ -408,21 +383,17 @@
                     border-radius: 4px;
                     background-image: linear-gradient(-135deg, #68B5F9 0%, #5488F8 100%);
                     color: #fff;
-
                     span {
                         font-size: 13px;
                     }
-
                     .num {
                         font-size: 16px;
                         line-height: 16px;
                     }
                 }
-
                 .no-answer {
                     background-image: linear-gradient(-135deg, #FAC270 0%, #F7AB3C 100%);
                 }
-
                 .item-info {
                     float: left;
                     display: flex;
@@ -431,36 +402,37 @@
                     align-items: flex-start;
                     height: 100%;
                     margin-left: 24px;
-
                     .item-question {
                         font-size: 16px;
                         color: #333;
                         line-height: 14px;
                         cursor: pointer;
                     }
-
                     .question-info {
                         display: flex;
                         align-items: center;
-
                         .avatar {
+                            cursor: pointer;
                             width: 24px;
                             height: 24px;
                             border-radius: 50%;
                             background-color: #ccc;
                             overflow: hidden;
+                            display: inline-block;
+                            vertical-align: middle;
                             img {
                                 width: 100%;
                                 height: 100%;
                             }
                         }
-
                         .author {
+                            cursor: pointer;
                             font-size: 12px;
                             color: #333;
                             margin: 0 30px 0 5px;
+                            display: inline-block;
+                            line-height: 24px;
                         }
-
                         .tags {
                             margin-right: 10px;
                             padding: 2px 10px;
@@ -469,13 +441,11 @@
                             background-color: #f5f6f5;
                         }
                     }
-
                     .item-answer {
                         font-size: 12px;
                         color: #666;
                     }
                 }
-
                 .item-right {
                     float: right;
                     display: flex;
@@ -485,8 +455,8 @@
                         font-size: 12px;
                         color: #999;
                     }
-
                     .img {
+                        cursor: pointer;
                         width: 150px;
                         height: 100px;
                         margin-left: 10px;
@@ -497,12 +467,10 @@
                     }
                 }
             }
-
             .content-item:last-child {
                 border-bottom: none;
             }
         }
-
         .page-box {
             display: flex;
             justify-content: center;

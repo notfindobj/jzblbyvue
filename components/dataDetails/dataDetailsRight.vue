@@ -4,7 +4,7 @@
             <div class="works-info">
                 <img @click="goPersonalCenter" :src="detaDetails.HeadIcon" alt="">
                 <p class="works-name">{{detaDetails.NickName}}</p>
-                <div class="focus-btn" @click="setFollow(detaDetails)">{{detaDetails.IsFollow? '+ 关注' : '取关'}}</div>
+                <div :class="detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
             <div class="data-info">
                 <p class="data-name">项目信息</p>
@@ -134,8 +134,19 @@
                     font-size: 14px;
                     color: #FFFFFF;
                 }
+                .focus-btn-gray {
+                    cursor: pointer;
+                    width: 84px;
+                    height: 26px;
+                    margin: 0 auto;
+                    background: #b0b0b0;
+                    border-radius: 4px;
+                    line-height: 26px;
+                    text-align: center;
+                    font-size: 14px;
+                    color: #FFFFFF;
+                }
             }
-
             .data-info {
                 width: 100%;
                 /*height: 178px;*/

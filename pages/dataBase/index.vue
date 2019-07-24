@@ -76,7 +76,7 @@
 
     async asyncData({ app, store, route }) {
       let queryData = JSON.parse(route.query.dataBase);
-      let showLayout = !(queryData.title === '建筑规范' || queryData.title === '文本');
+      let showLayout = queryData.title === '建筑规范' ? false : true;
       delete queryData.title;
       //  let [menuData, getBaseData] = Promise.all([store.dispatch('getMenu'), store.dispatch('getBaseData', queryData)])
       let menuData = await store.dispatch('getMenu');
@@ -96,7 +96,7 @@
     watch: {
       $route(to, from) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        let showLayout = !(queryData.title === '建筑规范' || queryData.title === '文本');
+        let showLayout = queryData.title === '建筑规范' ? false : true;
         delete queryData.title;
         this.queryData = queryData;
         this.getBaseDatas(queryData);
@@ -137,11 +137,10 @@
         this.queryData.Page = page;
         this.getBaseDatas(this.queryData, false)
       },
-
       //一级菜单
       getItemsBaseData(row) {
         let queryData = JSON.parse(this.$route.query.dataBase);
-        this.showLayout = (row.ItemAttributesFullName === '建筑规范' || row.ItemAttributesFullName === '文本') ? false : true;
+        this.showLayout = row.ItemAttributesFullName === '建筑规范' ? false : true;
         queryData.title = row.ItemAttributesFullName;
         queryData.ClassTypeId = `${ row.ItemSubAttributeCode }|${ row.ItemAttributesId }`;
         queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
@@ -248,7 +247,7 @@
       },
       // 路由跳转
       jumpRoute(items) {
-        this.$router.push({ name: "HeAndITribal", query: { id: JSON.stringify(items.UserId) } })
+        this.$router.push({name: "HeAndITribal-id", query: {id: items.UserId}});
       },
       tipClick() {
         this.$Message.info('This is a info tip');

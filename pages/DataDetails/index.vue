@@ -64,12 +64,9 @@
           @dataDetailsMaskClose="dataDetailsMaskClose"
           v-if="isShowDateDetailsDown"/>
           <weixinBox 
-          :modalConfig="modalConfig"
-          :paymentConfig="paymentConfig"
+            :modalConfig="modalConfig"
+            :paymentConfig="paymentConfig"
           />
-            :payInfos="detaDetails"
-            @dataDetailsMaskClose="dataDetailsMaskClose"
-            v-if="isShowDateDetailsDown"/>
         <ToTop></ToTop>
     </div>
 </template>

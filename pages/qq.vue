@@ -7,8 +7,8 @@
 <script>
   export default {
     mounted() {
-      localStorage.setItem('code', this.$route.query.code)
-      localStorage.setItem('state', this.$route.query.state)
+      sessionStorage.setItem('code', this.$route.query.code)
+      sessionStorage.setItem('state', this.$route.query.state)
     }
   }
 </script>

@@ -1,12 +1,7 @@
 <template>
     <div class="page" @click="isShowUpload = false">
         <div class="content">
-            <Form
-                ref="formValidate"
-                :model="formValidate"
-                :rules="ruleValidate"
-                class="form-box"
-            >
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="form-box">
                 <FormItem prop="title">
                     <p class="input-title">
                         <span class="red-dot"></span>
@@ -47,12 +42,7 @@
                         <h3>本地上传</h3>
                         <p class="sub-title">共0张，还能上传9张</p>
                         <div class="upload-main">
-                            <div
-                                class="img-item"
-                                v-for="(item, index) in imgList"
-                                :key="index"
-                                @click.stop="delImg(index)"
-                            >
+                            <div class="img-item" v-for="(item, index) in imgList" :key="index" @click.stop="delImg(index)" >
                                 <img :src="item.smallImgUrl" alt="">
                             </div>
                             <v-upload
@@ -75,19 +65,13 @@
                             {{ item.LabelName }}
                             <i class="icon iconfont" @click="deleteLabel(index)">&#xe6f1;</i>
                         </span>
-                        <input
-                            type="text"
-                            ref="input"
-                            v-model="labelInput"
-                            @keypress.enter="addLabel"
-                            @blur="addLabel"
-                            placeholder="点击空白处输入标签"
-                        >
+                        <input type="text" ref="input" v-model="labelInput" @keypress.enter="addLabel" @blur="addLabel" placeholder="点击空白处输入标签" >
                     </div>
                 </div>
                 <div class="recommend-tags">
                     <span class="recommend-title">推荐标签: </span>
-                    <span class="tag-item" v-for="(item, index) in labelList" :key="item.LabelId" @click="pushSelect(index)">
+                    <!-- include -->
+                    <span v-for="(item, index) in labelList" :key="item.LabelId" :class="!ruleLabel(item) ?'tag-item' : 'tag-item no-drop'" @click="pushSelect(index, ruleLabel(item))">
                         <i class="icon iconfont">&#xe61c;</i>
                         {{ item.LabelName }}
                     </span>
@@ -233,44 +217,50 @@
         this.labelList = data.labelData;
         this.labelInfo = data.paginationData;
       },
-
       // 添加标签
       async addLabel() {
         if (!this.labelInput.trim()) {
           this.$Message.warning('输入内容为空，不能添加');
           return;
         }
-        const data = await addLabel({
-          LabelName: this.labelInput,
-          BelongTypes: ''
-        });
+        const data = await addLabel({ LabelName: this.labelInput, BelongTypes: '' });
         this.selectLabelList.push(data);
         this.labelInput = '';
       },
 
       // 从获取的列表添加到选中的列表
-      pushSelect(index) {
-        this.selectLabelList.push(this.labelList[index]);
+      pushSelect(index, label) {
+        if (!label) {
+          this.selectLabelList.push(this.labelList[index]);
+        }
       },
-
       // 删除标签
       deleteLabel(index) {
         this.selectLabelList.splice(index, 1);
       },
-
+      // 判断有没有选中标签
+      ruleLabel (label) {
+        let isRule = false;
+        if ( !isRule && this.selectLabelList instanceof Array) {
+           this.selectLabelList.forEach(element => {
+            if (!isRule && element.LabelId === label.LabelId) {
+              isRule = true;
+            }
+           });
+        }
+        return isRule
+      },
       // 图片上传成功
       uploadSuccess(fileList) {
         for (let i of fileList) {
           this.imgList.push(i);
         }
       },
-
       // 点击删除图片
       delImg(index) {
         this.$delete(this.imgList, index);
       }
     },
-
     async asyncData() {
       const data = await getQALabel({
         BelongTypes: '',
@@ -287,40 +277,33 @@
 
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
-
     .editor-wrap {
         width: 900px;
     }
-
     .quill-editor {
         height: 318px;
         overflow-y: auto;
         border-radius: 0 0 4px 4px;
         border: 1px solid #d8d8d8;
     }
-
     .toolbar {
         position: relative;
         overflow: visible;
     }
-
     .toolbar:after {
         content: '';
         display: block;
         overflow: hidden;
         clear: both;
     }
-
     .upload-box {
         bottom: -253px;
         left: 8px;
     }
-
     .upload-box-top {
         bottom: -49px;
         left: 16px;
     }
-
     .tag-item {
         float: left;
         position: relative;
@@ -332,14 +315,12 @@
         border: 1px solid #D7D7D7;
         border-radius: 2px;
         cursor: pointer;
-
         i {
             position: relative;
             top: -1px;
             vertical-align: middle;
         }
     }
-
     .tag-item:after {
         content: '';
         display: block;
@@ -354,7 +335,6 @@
         border-left: 1px solid #D7D7D7;
         border-radius: 1px;
     }
-
     .tags-row {
         margin-top: 30px;
         overflow: hidden;
@@ -384,7 +364,6 @@
             }
         }
     }
-
     .recommend-tags {
         width: 900px;
         margin-top: 10px;
@@ -394,13 +373,11 @@
         .recommend-title {
             margin-right: 25px;
         }
-
         span {
             float: left;
             margin: 0 12px 10px 0;
             line-height: 25px;
         }
-
         .tag-item {
             i {
                 line-height: 13px;
@@ -409,7 +386,6 @@
             }
         }
     }
-
     .btn-change {
         width: 900px;
         text-align: right;
@@ -417,5 +393,8 @@
         color: #559BDC;
         cursor: pointer;
         margin-bottom: 20px;
+    }
+    .no-drop{
+       cursor: no-drop; 
     }
 </style>

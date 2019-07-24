@@ -33,8 +33,7 @@
                             <p>{{items.ItemName}}</p>
                             <div>
                                 <div class="avatar-wrap">
-                                    <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon"
-                                         alt="">
+                                    <img class="headPortrait" @click="jumpRoute(items)" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
                                 </div>
                                 <span class="headPortrait">{{items.NickName}}</span>
                             </div>
@@ -55,10 +54,9 @@
                                 </li>
                             </ul>
                             <div class="btn-group-box">
-                                <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
+                                <div @click="focus" :class="UserProAndFans.IsFollow ?'btn-unFollow': 'btn-follow'">{{UserProAndFans.IsFollow ? '已关注': '关注'}}</div>
                                 <div @click="direct()">私信</div>
                             </div>
-
                         </div>
                     </li>
                 </ul>
@@ -77,9 +75,7 @@
                                 <div class="works-list-con">
                                     <div class="works-name">
                                         <div class="avatar-wrap">
-                                            <img class="headPortrait" @mouseenter="showWorks(items)"
-                                                 :src="items.HeadIcon"
-                                                 alt="">
+                                            <img class="headPortrait" @click="jumpRoute(items)"  @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
                                         </div>
                                         <span>{{items.NickName}}</span>
                                     </div>
@@ -107,7 +103,7 @@
                                     </li>
                                 </ul>
                                 <div class="btn-group-box">
-                                    <div @click="focus">{{UserProAndFans.IsFollow ? '取关': '关注'}}</div>
+                                    <div @click="focus" :class="UserProAndFans.IsFollow ?'btn-unFollow': 'btn-follow'">{{UserProAndFans.IsFollow ? '已关注': '关注'}}</div>
                                     <div @click="direct()">私信</div>
                                 </div>
                             </div>
@@ -432,7 +428,6 @@
                         flex-direction: row;
                         align-items: center;
                         justify-content: space-between;
-
                         > div {
                             cursor: pointer;
                             width: 60px;
@@ -442,22 +437,17 @@
                             text-align: center;
                             line-height: 21px;
                             font-size: 12px;
-
-                            &:nth-child(1) {
-                                color: #ffffff;
-                                background: #FF3C00;
-                            }
-
-                            &:nth-child(1) {
-                                color: #ffffff;
-                                background: #FF3C00;
-                            }
-
+                            color: #ffffff;
                             &:nth-child(2) {
                                 border: 1px solid #D9D9D9;
-                                background: #ffffff;
                                 color: #666666;
                             }
+                        }
+                        .btn-follow {
+                            background: #FF3C00;
+                        }
+                        .btn-unFollow {
+                            background: #b0b0b0;
                         }
                     }
                 }
@@ -471,14 +461,12 @@
         .works-list-change {
             width: 100%;
             .clearfix();
-
             > li {
                 float: left;
                 width: 590px;
                 height: 200px;
                 padding: 20px;
                 background: #FFFFFF;
-                box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                 border-radius: 4px;
                 margin-right: 20px;
                 margin-bottom: 20px;
@@ -487,11 +475,9 @@
                 flex-direction: row;
                 align-items: center;
                 justify-content: center;
-
                 &:nth-child(2n) {
                     margin-right: 0;
                 }
-
                 .works-list-left {
                     width: 120px;
                     height: 160px;
@@ -507,16 +493,15 @@
                         height: auto;
                     }
                 }
-
                 .works-list-right {
                     flex: 1;
                     height: 160px;
-
                     > p {
                         width: 100%;
-                        font-size: 16px;
+                        font-size: 20px;
+                        font-weight: bold;
                         color: #333333;
-                        padding-bottom: 82px;
+                        padding-bottom: 90px;
                         margin-bottom: 14px;
                         border-bottom: 1px solid #D9D9D9;
                         cursor: pointer;
@@ -534,7 +519,6 @@
                             flex-direction: row;
                             align-items: center;
                             justify-content: center;
-
                             > img {
                                 display: inline-block;
                                 width: 20px;
@@ -543,10 +527,9 @@
                                 border-radius: 50%;
                                 background: red;
                             }
-
                             > span {
                                 font-size: 14px;
-                                color: #666666;
+                                color: #b0b0b0;
 
                             }
                         }
@@ -574,7 +557,6 @@
                         }
                     }
                 }
-
                 .works-con {
                     width: 150px;
                     height: 200px;
@@ -649,7 +631,6 @@
                         flex-direction: row;
                         align-items: center;
                         justify-content: space-between;
-
                         > div {
                             width: 60px;
                             height: 21px;
@@ -658,28 +639,25 @@
                             text-align: center;
                             line-height: 21px;
                             font-size: 12px;
-
-                            &:nth-child(1) {
-                                color: #ffffff;
-                                background: #FF3C00;
-                            }
-
-                            &:nth-child(1) {
-                                color: #ffffff;
-                                background: #FF3C00;
-                            }
-
+                            color: #ffffff;
                             &:nth-child(2) {
                                 border: 1px solid #D9D9D9;
-                                background: #ffffff;
                                 color: #666666;
                             }
                         }
+                        .btn-follow {
+                            background: #FF3C00;
+                        }
+                        .btn-unFollow {
+                            background: #b0b0b0;
+                        }
                     }
                 }
-
                 .works-active {
                     display: block;
+                }
+                &:hover {
+                    box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                 }
             }
         }

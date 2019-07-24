@@ -175,7 +175,7 @@
                 <FormItem label="项目描述" class="description">
                     <textarea v-model="formValidate.description" placeholder="请填写项目描述"></textarea>
                 </FormItem>
-                <FormItem label="项目内容" prop="content" v-show="typeName !== '文本' && typeName !== '建筑规范'">
+                <FormItem label="项目内容" prop="content" v-show="typeName !== '建筑规范'">
                     <div class="editor-wrap">
                         <div class="quill-editor"
                              :content="formValidate.content"
@@ -598,8 +598,7 @@
               return false;
             }
           }
-
-          if (this.typeName === '文本' || this.typeName === '建筑规范') {
+          if (this.typeName === '建筑规范') {
             this.$set(this.formValidate, 'content', this.typeName)
           } else {
             if (!this.formValidate.content) {
@@ -617,11 +616,11 @@
       // 发送请求
       sendPost(attributesList) {
         let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];
-        if (this.typeFile && this.typeName !== '文本' && this.typeName !== '建筑规范') {
+        if (this.typeFile && this.typeName !== '建筑规范') {
           this.showLayout = true
           ItemFilePath = this.typeFile.packageOrPdfUrl;
           ItemFileName = this.typeFile.fileName;
-        } else if (this.typeName === '文本' || this.typeName === '建筑规范') {
+        } else if (this.typeName === '建筑规范') {
           this.showLayout = false
           PdfModel = {
             ItemFileName: this.typeFile.fileName,
