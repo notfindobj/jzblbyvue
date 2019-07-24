@@ -8,6 +8,7 @@
             @choseSomeOne="choseSomeOne"
             @delItems="delItems"
         />
+        asd{{getSessionStorage}}asd
         <conten
             :RspItemDatas="RspItemDatas"
             :showLayout="showLayout"
@@ -34,7 +35,7 @@
   import Conten from '../../components/contenLayout/Content.vue'
   import ToTop from '../../components/toTop'
   import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
-
+  import {mapGetters } from 'vuex'
   export default {
     middleware: 'authenticated',
     head() {
@@ -67,6 +68,7 @@
       }
     },
     computed: {
+      ...mapGetters(['getSessionStorage']),
       // 判断是否是最后一页数据
       isLast() {
         return this.RspPaginationData.page === this.RspPaginationData.total;

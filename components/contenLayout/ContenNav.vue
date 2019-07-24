@@ -106,7 +106,6 @@
         this.$emit('delItems', item)
       },
       upAndDown(item) {
-        console.log(1)
         item.value = !item.value
       }
     },

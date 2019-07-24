@@ -11,5 +11,8 @@ export const overallGetters = {
     },
     getToken(state) {
         return state.auth
+    },
+    getSessionStorage (state) {
+        return state.sessionStorage
     }
 }

@@ -139,7 +139,6 @@
     },
     methods: {
       handleReachBottom() {
-        console.log(1222)
       },
       renderThisComponents (params) {
 

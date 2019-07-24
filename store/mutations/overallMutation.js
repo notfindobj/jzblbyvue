@@ -13,5 +13,9 @@ export const overallMutation = {
   },
   setWxRegister(state, param) {
     state.wxRegister = param
+  },
+  // 存储数据
+  setSessionStorage (state, row) {
+    state.sessionStorage[row.key] = row.value;
   }
 }

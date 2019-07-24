@@ -37,7 +37,6 @@
     },
     methods: {
       changeCon (data) {
-        console.log(data)
         this.currentComponents = data.type;
       }
     }

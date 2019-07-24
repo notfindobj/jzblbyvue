@@ -2,7 +2,6 @@
     <div>
         <!-- 广告 -->
         <div class="ad" v-show="!isAd">
-
         </div>
         <!-- 头部导航 -->
         <div class="home-bar">
@@ -77,7 +76,7 @@
                 <li @click="goBuilding">建筑圈</li>
                 <li @click="goHeAndI">建筑游学</li>
                 <li @click="goAboutUs">建筑书店</li>
-                <li  @click="goMytribe">我的部落</li>
+                <li @click="goMytribe">我的部落</li>
             </ul>
             <div class="main-nav-publish" @click="publish">发布</div>
         </div>
@@ -166,7 +165,7 @@
           Rows: 32,
           title: _this.searchTitle.split(',')[1],
         }
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId) } })
+        this.$router.push({name: "dataBase", query: { dataBase: JSON.stringify(baseDateId)}});
       },
       // 在线地图
       onlineMap() {

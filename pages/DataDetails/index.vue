@@ -296,7 +296,7 @@
           IsDelete: !item.IsCoutReply
         }
         let msg = await setthumbsUp(queryData);
-        console.log(item)
+        // console.log(item)
         if (msg) {
         }
       },

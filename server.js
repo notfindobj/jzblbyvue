@@ -3,13 +3,45 @@ const consola = require('consola')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const app = require('express')()
+const session = require('express-session');
 const axios = require('axios')
 const qs = require('qs')
+
 // Body parser，用来封装 req.body
 // app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
+
 axios.defaults.withCredentials = true;
+//  session 存储数据
+ 
+app.use(session({
+  secret: 'demo_test',
+  name: 'mydemo',                         //这里的name值得是cookie的name，默认cookie的name是：connect.sid
+  cookie: {  maxAge: 30 * 60 * 1000 },    //设置maxAge是30分钟，即30分钟后session和相应的cookie失效过期
+  resave: false,                         // 每次请求都重新设置session cookie
+  saveUninitialized: true
+}))
+
+app.post('/session/:name', function (req, res) {
+  let response = {
+    Success: true,
+    Data: {},
+    Msg: '存储成功',
+    Code: 200
+  }
+  try {
+    response.Msg = '存储成功'
+    req.session[req.params.name] = req.body
+  } catch (error) {
+    response.Msg = '存储失败'
+    response.Code= 400
+    return res.json(response)
+  }
+  return res.json(response)
+})
+
+
 // 通过手机号码登录 POST /api/
 app.post('/front/mobileLogin', function (req, res) {
   let config = {

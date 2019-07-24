@@ -31,5 +31,13 @@ export const overallActions ={
             }
         }
         commit('setAuth', auth);
+        if (req.session) {
+            let sessionName = Object.keys(req.session).filter(o => o !== 'cookie');
+            sessionName.forEach(ele => {
+                let value = req.session[ele];
+                console.log('nuxtServerInit', req.session[ele])
+                commit('setSessionStorage', req.session[ele], value);
+            })
+        }
     }
 }

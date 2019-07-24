@@ -53,7 +53,6 @@
         }
       }
     },
-
     methods: {
       // qq登录
       handleLoginByQQ() {

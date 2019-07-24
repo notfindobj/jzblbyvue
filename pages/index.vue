@@ -304,7 +304,7 @@
 <script>
   import LevelMenu from '~/components/home/LevelMenu'
   import ToTop from '~/components/toTop'
-
+  import {setDemo} from '../LocalAPI'
   export default {
     head: {
         title: '建筑部落',
@@ -370,7 +370,7 @@
       LevelMenu,
       ToTop
     },
-    computed: {},
+    
     watch: {},
     async asyncData({ app, store }) {
       let menuData = await store.dispatch('getMenu');
@@ -390,9 +390,18 @@
 
       }
     },
-    beforeCreate() {
-    },
-    created() {
+    async created() {
+         let aaaa= {
+            key: 'names',
+            value: '测试12'
+        }
+        let msgs = await setDemo('names', aaaa)
+        let aaa= {
+            key: 'name',
+            value: '测试'
+        }
+        let msg = await setDemo('name', aaa)
+        console.log(msg)  
     },
     methods: {
       viewItem(item, val) {
