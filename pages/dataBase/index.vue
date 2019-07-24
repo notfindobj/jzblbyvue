@@ -8,7 +8,6 @@
             @choseSomeOne="choseSomeOne"
             @delItems="delItems"
         />
-        asd{{getSessionStorage}}asd
         <conten
             :RspItemDatas="RspItemDatas"
             :showLayout="showLayout"
