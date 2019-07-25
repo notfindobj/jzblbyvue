@@ -10,7 +10,6 @@
           <span>类型：</span>
           <ul>
             <li class="li-active">{{itemCustomizes.customizedTypeName}}</li>
-            <!-- <li v-for="(item,index) in needType" :key="index" @click="choseNeedType(index)"  :class="currentNeedIndex == index ? 'li-active' : ''">{{item.typeName}}</li> -->
           </ul>
         </div>
         <div class="need-con">
@@ -33,16 +32,16 @@
         <div class="submit-budget">
           <span><i>*</i>预算金额</span>
           <div class="submit-budget-con">
-            <input type="text">
+            <input type="text" v-model="customized.customizedCount">
             <i>*</i>
-            <input type="text">
-            <span>总计12000元</span>
+            <input type="text" :value="itemCustomizes.customizedMoney" disabled> 
+            <span>总计{{itemCustomizes.customizedMoney * customized.customizedCount}}元</span>
           </div>
         </div>
         <div class="submit-phone">
           <span><i>*</i>手机号码</span>
           <div class="submit-phone-con">
-            <input type="text" v-model="customized.customizedMobile">
+            <input type="text" v-model="customized.customizedMobile" >
             <div>发送验证码</div>
           </div>
         </div>
@@ -54,14 +53,14 @@
         </div>
         <div class="window-btn">
           <div @click="closeMask()">取消</div>
-          <div @click="closeMask()">确定</div>
+          <div @click="customMove">确定</div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import {getCustomizeDataByItemId} from '../../service/clientAPI'
+import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientAPI'
   export default {
     name: 'detaDetailsCustom',
     props: {
@@ -78,27 +77,11 @@ import {getCustomizeDataByItemId} from '../../service/clientAPI'
           customizedCount: 0,
           itemId: "",
           customizedTypeId: "",
-          customizedMoney: "",
+          customizedMoney: 0,
           customizedMobile: "",
           customizedDescription: ""
-        },
-        needType:[
-          {
-            typeCode:'',
-            typeName:'平面填色'
-          },
-          {
-            typeCode:'',
-            typeName:'CAD'
-          },
-          {
-            typeCode:'',
-            typeName:'平面填色'
-          }
-        ]
+        }
       }
-    },
-    components: {
     },
     created() {
     },
@@ -109,10 +92,24 @@ import {getCustomizeDataByItemId} from '../../service/clientAPI'
       choseNeedType (inx) {
         this.currentNeedIndex = inx
       },
+      // 获取定制数据
       async getCustomize() {
         let msg = await getCustomizeDataByItemId(this.itemId);
         if (msg) {
           this.itemCustomizes = msg.itemCustomizes[0];
+        }
+      },
+      // 定制回复
+      async customMove () {
+        this.customized.itemId = this.itemId;
+        this.customized.customizedTypeId = this.itemCustomizes.customizedTypeId;
+        this.customized.customizedMoney = Number(this.customized.customizedCount) * Number(this.itemCustomizes.customizedMoney);
+        let msg = await setReplyCustomize(this.customized)
+        if (msg) {
+          this.$Message.success('提交成功！');
+          setTimeout(() => {
+            this.closeMask()
+          }, 300)
         }
       },
       closeMask () {

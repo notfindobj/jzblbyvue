@@ -82,6 +82,10 @@ export const uploadFile = async (params, uploadType) => {
 export const getQALabel = async data => {
   return await request.post(`Publish/GetQALabel`, data)
 }
+// 获取问答标签搜索
+export const getQADataBy = async data => {
+  return await request.post(`Talk/GetQADataBy`, data)
+}
 
 // 添加问答标签
 export const addLabel = async data => {

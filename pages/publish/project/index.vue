@@ -119,7 +119,7 @@
         </Spin>
         <Modal v-model="serviceModal" width="594" title="提供定制服务"  class-name="service-box" >
             <div class="service-box-content">
-                <Form ref="serviceValidate" :model="serviceValidate" :label-width="80" >
+                <Form ref="serviceValidate" :model="serviceValidate"  :label-width="80" >
                     <FormItem label="定制类型:">
                         <template v-if="!isUpdateService" v-for="item in serviceList" >
                             <Button class="service-btn" size="small" :key="item.ItemDetailId"
@@ -246,18 +246,15 @@
     },
 
     methods: {
-      // 
+      // 项目缩略图
       enteUpload (val) {
         if (val) {
           this.isMove = true;
-          console.log('进入', this.isMove)
         }
-        
       },
       leaveUpload (val) {
         if (val) {
           this.isMove = false;
-          console.log('离开', this.isMove)
         }
       },
       // 选择文件

@@ -1,28 +1,13 @@
 <template>
     <div class="container">
         <div class="main-left">
-            <Input
-                search
-                enter-button
-                v-model="keyword"
-                @on-search="searchQA"
-                placeholder="请输入要搜索内容"
-            />
-            <div
-                class="select-block"
-                v-for="item in labelList"
-                :key="item.ModuleId"
-            >
+            <Input search enter-button v-model="keyword" @on-search="searchQA" placeholder="请输入要搜索内容" />
+            <div class="select-block" v-for="item in labelList" :key="item.ModuleId" >
                 <p class="select-title">{{ item.FullName }}</p>
                 <div class="select-list">
-                    <Button
-                        shape="circle"
-                        size="small"
-                        v-for="subItem in item.Labels"
-                        :key="subItem.ModuleId"
+                    <Button shape="circle" size="small" v-for="subItem in item.Labels" :key="subItem.ModuleId"
                         :class="{selected: labelId === subItem.ModuleId}"
-                        @click="clickLabel(subItem.ModuleId)"
-                    >
+                        @click="clickLabel(subItem.ModuleId)" >
                         {{ subItem.FullName }}
                     </Button>
                 </div>
@@ -33,11 +18,7 @@
                 <div class='swiper-box'>
                     <div v-swiper:mySwiper="swiperOption">
                         <div class="swiper-wrapper">
-                            <div
-                                class="swiper-slide"
-                                v-for="item in slideList"
-                                :key="item.Id"
-                            >
+                            <div class="swiper-slide" v-for="item in slideList" :key="item.Id" >
                                 <img :src="item.CoverImgUrl" alt="">
                             </div>
                         </div>
@@ -50,10 +31,7 @@
                         <span>有趣话题等您参与</span>
                     </p>
                     <ul>
-                        <li
-                            v-for="item in recommentList"
-                            :key="item.QAId"
-                        >
+                        <li v-for="item in recommentList" :key="item.QAId" >
                             <nuxt-link :to="{name: 'QuestionsAndAnswers-id', params: {id: item.QAId}}">{{ item.QATitle }}</nuxt-link>
                         </li>
                     </ul>
@@ -62,29 +40,15 @@
             </div>
             <div class="content">
                 <Menu mode="horizontal" theme="light" :active-name="menuIndex" class="tabs" @on-select="selectMenu">
-                    <MenuItem name="1">
-                        本周最热
-                    </MenuItem>
-                    <MenuItem name="2">
-                        本月最热
-                    </MenuItem>
-                    <MenuItem name="0">
-                        最近回答
-                    </MenuItem>
-                    <MenuItem name="3">
-                        等待回答
-                    </MenuItem>
-                    <MenuItem name="4" v-show="isSearch">
-                        搜索
-                    </MenuItem>
+                    <MenuItem name="1"> 本周最热 </MenuItem>
+                    <MenuItem name="2"> 本月最热 </MenuItem>
+                    <MenuItem name="0"> 最近回答 </MenuItem>
+                    <MenuItem name="3"> 等待回答 </MenuItem>
+                    <MenuItem name="4" v-show="isSearch"> 搜索 </MenuItem>
                 </Menu>
                 <div class="content-list">
                     <Spin size="large" fix v-if="spinShow"></Spin>
-                    <div
-                        class="content-item"
-                        v-for="item in QAList"
-                        :key="item.QAId"
-                    >
+                    <div class="content-item" v-for="item in QAList" :key="item.QAId" >
                         <div class="item-left-box">
                             <span class="num">{{ item.ReplyCount }}</span>
                             <span>回答</span>
@@ -113,11 +77,7 @@
                     </div>
                 </div>
                 <div class="page-box" v-if="records > 5">
-                    <Page
-                        :total="records"
-                        :page-size="pageSize"
-                        @on-change="handlePageChange"
-                    />
+                    <Page :total="records" :page-size="pageSize" @on-change="handlePageChange" />
                 </div>
             </div>
         </div>
@@ -125,6 +85,7 @@
 </template>
 
 <script>
+import {getQADataBy} from '../../service/clientAPI'
   export default {
     layout: 'main',
     data() {
@@ -159,56 +120,69 @@
     methods: {
       goDetail(id) {
         this.$router.push({
-          name: 'QuestionsAndAnswers-id',
-          params: { id }
-        })
-      },
+            name: 'QuestionsAndAnswers-id',
+            params: { id }
+            })
+        },
 
-      // 分页切换
-      handlePageChange(num) {
-        this.pageNum = num;
-        this.getQAData();
-      },
+        // 分页切换
+        handlePageChange(num) {
+            this.pageNum = num;
+            this.getQAData();
+        },
 
-      // 搜索
-      searchQA() {
-        this.pageNum = 1;
-        this.menuIndex = '4';
-        this.isSearch = true;
-        this.getQAData();
-      },
-
-      // 点击标签
-      clickLabel(id) {
-        this.labelId = id !== this.labelId ? id : '';
-      },
-
-      // 获取问答数据
-      async getQAData() {
-        this.spinShow = true;
-        const data = await this.$store.dispatch('getQAData', {
-          KeyWord: this.keyword,
-          LabelID: this.labelId,
-          TalkType: this.menuIndex,
-          Page: this.pageNum,
-          Rows: 8
-        });
-        this.QAList = data.QADatas;
-        this.records = data.paginationData.records;
-        this.spinShow = false;
-      },
-
-      // 切换菜单
-      selectMenu(name) {
-        this.menuIndex = name;
-        this.pageNum = 1;
-        this.getQAData();
-      },
-      // HeAndITribal路由跳转
-      jumpRoute(items) {
-        console.log(items)
-        this.$router.push({name: "HeAndITribal-id", query: {id: items.UserId}});
-      }
+        // 搜索
+        searchQA() {
+            this.getQADataByList()
+        },
+        // 点击标签
+        clickLabel(id) {
+            this.labelId = id !== this.labelId ? id : '';
+            this.getQADataByList()
+        },
+        //  点击标签查询 
+        async getQADataByList () {
+            let queryData =  {
+                KeyWord: this.keyword,
+                LabelID: this.labelId,
+                TalkType: 4,
+                Page: 1,
+                Rows: 8
+            }
+            this.menuIndex = '4';
+            let msg = await getQADataBy(queryData);
+            if (msg) {
+                this.isSearch = true;
+                this.QAList = msg.QADatas;
+                this.records = msg.paginationData.records;
+                this.spinShow = false;
+            }
+        },
+        // 获取问答数据
+        async getQAData() {
+            this.spinShow = true;
+            const data = await this.$store.dispatch('getQAData', {
+                KeyWord: '',
+                LabelID: this.labelId,
+                TalkType: this.menuIndex,
+                Page: this.pageNum,
+                Rows: 8
+            });
+            this.QAList = data.QADatas;
+            this.records = data.paginationData.records;
+            this.spinShow = false;
+        },
+        // 切换菜单
+        selectMenu(name) {
+            this.menuIndex = name;
+            this.isSearch = false;
+            this.pageNum = 1;
+            this.getQAData();
+        },
+        // HeAndITribal路由跳转
+        jumpRoute(items) {
+            this.$router.push({name: "HeAndITribal-id", query: {id: items.UserId}});
+        }
     },
     async asyncData({store}) {
       const queryParams = {
