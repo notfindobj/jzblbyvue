@@ -20,9 +20,9 @@
                 </BreadcrumbItem>
             </Breadcrumb>
             <div class="itemAttribute">
-                <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index">
+                <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index"  @click="delItems(items)">
                     <span>{{items.ClassTypeName}}:{{items.ArrName}}</span>
-                    <i class="iconfont icon-chahao2" @click="delItems(items)"></i>
+                    <i class="iconfont icon-chahao2"></i>
                 </div>
             </div>
             <ul class="screening-nav-list">
@@ -274,25 +274,23 @@
     .itemAttribute {
         display: inline-block;
         margin-left: 10px;
-
         &-items {
             display: inline-block;
+            cursor: pointer;
             margin-right: 10px;
             border: .5px solid #999999;
             border-radius: 3px;
             padding: 0 4px;
-
+            color: #333333;
             span {
-                color: #333333;
                 line-height: 29px;
             }
-
             i {
-                cursor: pointer;
-
-                &:hover {
-                    color: #FF3C00;
-                }
+                position: relative;
+                top: 2px;
+            }
+            &:hover {
+                color: #FF3C00;
             }
         }
     }

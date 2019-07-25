@@ -1,102 +1,46 @@
 <template>
     <div class="page" @click="isShowUpload = false">
         <div class="content">
-            <Form
-                ref="formValidate"
-                :model="formValidate"
-                :rules="ruleValidate"
-                class="form-box publish-project-form"
-                :label-width="110"
-            >
+            <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="form-box publish-project-form" :label-width="110" >
                 <FormItem label="项目图片" prop="img">
-                    <div class="upload-img-wrap" v-if="formValidate.img">
-                        <img class="title-img" :src="formValidate.img" alt="">
-                    </div>
-                    <div class="upload-img-wrap">
+                    <div class="upload-img-box" :style="`background-image:url(${formValidate.img});`" @mouseenter="enteUpload(formValidate.img)" @mouseleave="leaveUpload(formValidate.img)">
+                    <div :class="!isMove ? 'upload-img-wrap upload-img-ente' : 'upload-img-wrap upload-img-leave'" 
+                      :style="`display: ${!formValidate.img || isMove? 'inline-block;' : 'none;'} `" @click="uploadJeck">
                         <div class="upload-component">
-                            <a href="javascript:">
-                                <input
-                                    type="file"
-                                    @change="fileSelected($event)"
-                                    accept="image/gif,image/jpeg,image/jpg,image/png"
-                                >
+                            <a href="javascript:" style="display:none;">
+                                <input ref="imgFile" type="file" @change="fileSelected($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
                             </a>
                             <Icon type="ios-add-circle" size="35" color="#ff3c00"/>
                         </div>
                         <p>图片将会自动压缩</p>
                         <p>图片建议不要超过20M</p>
                     </div>
+                    </div>
                 </FormItem>
                 <FormItem label="项目名称" prop="name">
-                    <Input
-                        v-model="formValidate.name"
-                        placeholder="请填写项目名称（举例；新中式su模型）"
-                        class="publish-input"
-                        size="large"
-                    ></Input>
+                    <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input" size="large" ></Input>
                 </FormItem>
                 <FormItem label="类型选择" class="type-select" prop="typeId">
-                    <i
-                        v-for="item in menu.RetMenuData"
-                        :key="item.ItemAttributesId"
-                    >
-                        <Button
-                            size="large"
-                            v-if="formValidate.typeId === item.ItemAttributesId"
-                            type="primary"
-                        >{{ item.ItemAttributesFullName }}
-                        </Button>
-                        <Button
-                            size="large"
-                            v-else
-                            @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName)"
-                        >{{ item.ItemAttributesFullName }}
-                        </Button>
+                    <i v-for="item in menu.RetMenuData" :key="item.ItemAttributesId" >
+                        <Button size="large" v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
+                        <Button size="large" v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName)" >{{ item.ItemAttributesFullName }} </Button>
                     </i>
-
                     <div class="attr-box" v-show="attrList">
-                        <div
-                            class="attr-select-item"
-                            v-for="(item, index) in queryAttrList"
-                            v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
-                            :key="item.id"
-                        >
-                            <span
-                                v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
-                            >
+                        <div class="attr-select-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" :key="item.id" >
+                            <span v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" >
                                 {{ item.ItemValue }}
                             </span>
-                            <Select
-                                v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'"
-                                v-model="item.ItemSubAttributeId"
-                                style="width:220px"
-                                size="large"
-                            >
-                                <Option
-                                    v-for="subItem in attrList[index].ChildNode"
-                                    :value="subItem.ItemAttributesId"
-                                    :key="subItem.ItemAttributesId"
-                                >
+                            <Select v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" v-model="item.ItemSubAttributeId" style="width:220px" size="large" >
+                                <Option v-for="subItem in attrList[index].ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId" >
                                     {{ subItem.ItemAttributesFullName }}
                                 </Option>
                             </Select>
                         </div>
-                        <div
-                            class="attr-select-item attr-upload-item"
-                            v-for="item in queryAttrList"
-                            v-if="item.EnCode === '[wjsc]' || item.EnCode === '[pdfwjsc]'"
-                            :key="item.id"
-                        >
-                            <span
-                                v-if="item.EnCode === '[wjsc]'"
-                                style="vertical-align: top;"
-                            >
+                        <div class="attr-select-item attr-upload-item" v-for="item in queryAttrList" v-if="item.EnCode === '[wjsc]' || item.EnCode === '[pdfwjsc]'" :key="item.id" >
+                            <span v-if="item.EnCode === '[wjsc]'" style="vertical-align: top;" >
                                 文件上传
                             </span>
-                            <span
-                                v-if="item.EnCode === '[pdfwjsc]'"
-                                style="vertical-align: top;"
-                            >
+                            <span v-if="item.EnCode === '[pdfwjsc]'" style="vertical-align: top;" >
                                 PDF上传
                             </span>
                             <Upload
@@ -119,9 +63,7 @@
                                 ref="uploadFile"
                                 v-if="item.EnCode === '[pdfwjsc]'"
                                 :action="baseUrl + 'Upload/DataUpload?uploadType=4'"
-                                :headers="{
-                                    Authorization: token
-                                }"
+                                :headers="{ Authorization: token }"
                                 accept=".pdf"
                                 :before-upload="clearUpload"
                                 :on-success="uploadSuccess"
@@ -131,40 +73,20 @@
                                 <Button icon="ios-cloud-upload-outline" size="large">上传PDF文件</Button>
                             </Upload>
                         </div>
-                        <div
-                            class="attr-select-item attr-upload-item"
-                            v-for="(item, index) in queryAttrList"
-                            v-if="item.EnCode === '[wjsc]'"
-                            :key="index"
-                        >
+                        <div class="attr-select-item attr-upload-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode === '[wjsc]'" :key="index" >
                              <span style="vertical-align: top;">
                                 收取费用
                             </span>
-                            <Input
-                                v-model="price"
-                                size="large"
-                                :disabled="!typeFile"
-                                placeholder="请上传文件后输入价格"
-                                style="width: 300px;"
-                            />
+                            <Input v-model="price" size="large" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 300px;" />
                             <span style="width: 20px;">元</span>
                         </div>
                     </div>
-
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
-                    <Button
-                        type="primary"
-                        v-for="(item, index) in serviceSelectList"
-                        :key="item.serviceId"
-                        size="small"
-                        style="margin-right: 10px;"
-                        @click="updateService(index)"
-                    >
+                    <Button type="primary" v-for="(item, index) in serviceSelectList" :key="item.serviceId" size="small" style="margin-right: 10px;" @click="updateService(index)" >
                         {{ item.name }}
                     </Button>
-                    <span class="add-service-btn" @click="addService"
-                          v-show="this.serviceList.length > 0">
+                    <span class="add-service-btn" @click="addService" v-show="this.serviceList.length > 0">
                         <Icon type="md-add" size="12"/>
                         添加定制服务
                     </span>
@@ -177,23 +99,11 @@
                 </FormItem>
                 <FormItem label="项目内容" prop="content" v-show="typeName !== '建筑规范'">
                     <div class="editor-wrap">
-                        <div class="quill-editor"
-                             :content="formValidate.content"
-                             @change="onEditorChange($event)"
-                             v-quill:myQuillEditor="editorOption"
-                        >
+                        <div class="quill-editor" :content="formValidate.content" @change="onEditorChange($event)" v-quill:myQuillEditor="editorOption" >
                         </div>
                     </div>
-
                 </FormItem>
-                <input
-                    type="file"
-                    style="display: none;"
-                    id="getFile"
-                    @change="selectContentImg($event)"
-                    multiple
-                    accept="image/gif,image/jpeg,image/jpg,image/png"
-                >
+                <input type="file" style="display: none;" id="getFile"  @change="selectContentImg($event)" multiple accept="image/gif,image/jpeg,image/jpg,image/png" >
             </Form>
         </div>
         <div class="submit-box">
@@ -207,52 +117,20 @@
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
             <div>Loading</div>
         </Spin>
-
-        <Modal
-            v-model="serviceModal"
-            width="594"
-            title="提供定制服务"
-            class-name="service-box"
-        >
-
+        <Modal v-model="serviceModal" width="594" title="提供定制服务"  class-name="service-box" >
             <div class="service-box-content">
-                <Form
-                    ref="serviceValidate"
-                    :model="serviceValidate"
-                    :label-width="80"
-                >
+                <Form ref="serviceValidate" :model="serviceValidate" :label-width="80" >
                     <FormItem label="定制类型:">
-                        <template
-                            v-if="!isUpdateService"
-                            v-for="item in serviceList"
-                        >
-                            <Button
-                                class="service-btn"
-                                size="small"
-                                :key="item.ItemDetailId"
+                        <template v-if="!isUpdateService" v-for="item in serviceList" >
+                            <Button class="service-btn" size="small" :key="item.ItemDetailId"
                                 v-if="item.ItemDetailId !== serviceValidate.serviceId"
-                                @click="selectSerice(item.ItemDetailId, item.ItemValue)"
-                            >
+                                @click="selectSerice(item.ItemDetailId, item.ItemValue)" >
                                 {{ item.ItemValue }}
                             </Button>
-                            <Button
-                                class="service-btn"
-                                size="small"
-                                :key="item.ItemDetailId"
-                                v-else
-                                type="primary"
-                            >
-                                {{ item.ItemValue }}
-                            </Button>
+                            <Button class="service-btn" size="small" :key="item.ItemDetailId" v-else type="primary" > {{item.ItemValue }} </Button>
                         </template>
                         <template v-if="isUpdateService">
-                            <Button
-                                class="service-btn"
-                                size="small"
-                                type="primary"
-                            >
-                                {{ serviceName }}
-                            </Button>
+                            <Button class="service-btn" size="small" type="primary" > {{ serviceName }} </Button>
                         </template>
                     </FormItem>
                     <FormItem label="定制金额:">
@@ -262,13 +140,7 @@
                         <Input type="tel" v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
                     </FormItem>
                     <FormItem label="定制描述:">
-                        <Input
-                            v-model="serviceValidate.desc"
-                            type="textarea"
-                            :maxlength="500"
-                            :autosize="{minRows: 5,maxRows: 5}"
-                            placeholder="请填写0-500字定制描述"
-                        ></Input>
+                        <Input v-model="serviceValidate.desc" type="textarea" :maxlength="500" :autosize="{minRows: 5,maxRows: 5}" placeholder="请填写0-500字定制描述"></Input>
                     </FormItem>
                 </Form>
             </div>
@@ -279,7 +151,6 @@
         </Modal>
     </div>
 </template>
-
 <script>
   import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
 
@@ -287,6 +158,7 @@
     data() {
       return {
         baseUrl: process.env.baseUrl,
+        isMove: false,
         token: '',
         typeFile: null,  // 选择类型需要上传文件时的，文件信息
         price: '',  // 上传文件时所填的价格
@@ -374,7 +246,24 @@
     },
 
     methods: {
-
+      // 
+      enteUpload (val) {
+        if (val) {
+          this.isMove = true;
+          console.log('进入', this.isMove)
+        }
+        
+      },
+      leaveUpload (val) {
+        if (val) {
+          this.isMove = false;
+          console.log('离开', this.isMove)
+        }
+      },
+      // 选择文件
+      uploadJeck () {
+        this.$refs.imgFile.click()
+      },
       // 选择文件格式错误回调
       handleFormatError(file) {
         this.$Notice.warning({
@@ -544,7 +433,6 @@
             this.serviceList = arr;
           }
         }
-        console.log(this.serviceList)
         this.serviceValidate = {
           serviceId: '',
           money: '',
@@ -554,7 +442,6 @@
         this.serviceName = '';
         this.serviceModal = false;
       },
-
       // 点击完成上传
       clickSubmit() {
         this.$refs['formValidate'].validate(valid => {
@@ -707,42 +594,37 @@
 
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
-
     .content {
         padding-left: 10px;
     }
-
     .form-box {
         padding: 0;
-
         .publish-input {
             width: 770px;
             margin-left: 4px;
         }
-
-        .upload-img-wrap {
+        .upload-img-box {
+          height: 196px;
+          position: relative;
+          width: 260px;
+          background-size: cover;
+          .upload-img-wrap {
             float: left;
             width: 260px;
             height: 196px;
-            background-color: #f5f5f5;
             text-align: center;
             margin-right: 20px;
-
+            cursor: pointer;
             .title-img {
                 width: 100%;
                 height: 100%;
             }
-
             p {
                 font-size: 12px;
-                color: #999;
             }
-
             .upload-component {
                 position: relative;
                 height: 88px;
-                cursor: pointer;
-
                 a {
                     position: absolute;
                     top: 40px;
@@ -752,7 +634,6 @@
                     z-index: 2;
                     cursor: pointer;
                 }
-
                 i {
                     position: absolute;
                     top: 40px;
@@ -761,7 +642,6 @@
                     margin: 0 auto;
                     z-index: 1;
                 }
-
                 input[type="file"] {
                     width: 35px;
                     height: 35px;
@@ -770,14 +650,22 @@
                     cursor: pointer;
                 }
             }
+          }
+          .upload-img-ente {
+            background-color: #f5f5f5;
+            color: #999;
+          }
+          .upload-img-leave {
+            background-color: rgba(0,0,0,.5);
+             color: #ffffff;
+          }
         }
-
+        
         .type-select {
             button {
                 margin-right: 13px;
             }
         }
-
         .add-service-btn {
             display: inline-block;
             width: 120px;
@@ -790,7 +678,6 @@
             border-radius: 2px;
             cursor: pointer;
         }
-
         .description {
             textarea {
                 width: 770px;
@@ -801,16 +688,13 @@
                 outline: none;
                 resize: none;
             }
-
             textarea::placeholder {
                 color: #999;
             }
         }
-
         .editor-wrap {
             width: 770px;
         }
-
         .quill-editor {
             height: 318px;
             overflow-y: auto;
@@ -818,18 +702,15 @@
             border: 1px solid #d8d8d8;
         }
     }
-
     .service-type-name {
         font-size: 12px;
         color: #666;
         margin-right: 20px;
         cursor: pointer;
     }
-
     .service-active {
         color: #ff3c00;
     }
-
     .attr-box {
         width: 770px;
         display: flex;
@@ -840,11 +721,9 @@
         margin-top: 20px;
         padding: 20px;
         background-color: #FEF9F7;
-
         .attr-select-item {
             width: 50%;
             padding: 15px;
-
             span {
                 display: inline-block;
                 width: 100px;
@@ -854,19 +733,16 @@
                 vertical-align: middle;
             }
         }
-
         .attr-upload-item {
             width: 100%;
         }
     }
-
     .service-item {
-        font-size: 14px;
-        margin-right: 5px;
+      font-size: 14px;
+      margin-right: 5px;
     }
-
     .service-btn {
-        margin-right: 10px;
+      margin-right: 10px;
     }
 </style>
 
@@ -882,7 +758,6 @@
             transform: rotate(360deg);
         }
     }
-
     .demo-spin-icon-load {
         animation: ani-demo-spin 1s linear infinite;
     }
