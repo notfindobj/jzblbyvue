@@ -22,7 +22,7 @@
                 </div>
                 <div class="user">
                     <div class="avatar">
-                        <!-- <img :src="auth ? auth.HeadIcon : ''" alt=""> -->
+                         <img :src="auth ? auth.HeadIcon : ''" alt="">
                     </div>
                     <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
                     <div class="user-name" v-else>

@@ -182,6 +182,18 @@
                                         <span>评论</span>
                                     </p>
                                 </div>
+                                <div class="reply-comment-box">
+                                    <div class="reply-avatar-wrap">
+                                        <img :src="$store.state.overas.auth.HeadIcon" alt="">
+                                    </div>
+                                    <div class="reply-input-box">
+                                        <Input size="small" style="width: 240px;" />
+                                        <div class="comment-bottom">
+                                            <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>
+                                            <Button type="primary" size="small" @click="handleSubmit">评论</Button>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="show-more-box" v-if="commentList.length > 3">
@@ -621,23 +633,6 @@
                             color: #333;
                         }
                     }
-
-                    .comment-bottom {
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: center;
-
-                        .select-icon {
-                            font-size: 15px;
-                            color: #ff3c00;
-                            cursor: pointer;
-                        }
-
-                        button {
-                            height: 21px;
-                            line-height: 19px;
-                        }
-                    }
                 }
 
                 .comment-box:after {
@@ -753,6 +748,45 @@
                     }
 
                 }
+            }
+        }
+
+        .reply-comment-box {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px 0;
+            .reply-avatar-wrap {
+                width: 30px;
+                height: 30px;
+                border-radius: 2px;
+                overflow: hidden;
+                img {
+                    width: 100%;
+                    height: 100%;
+                }
+            }
+            .reply-input-box {
+                margin-left: 10px;
+                .comment-bottom {
+                    margin-top: 5px;
+                }
+            }
+        }
+        .comment-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            .select-icon {
+                font-size: 15px;
+                color: #ff3c00;
+                cursor: pointer;
+            }
+
+            button {
+                height: 21px;
+                line-height: 19px;
             }
         }
     }
