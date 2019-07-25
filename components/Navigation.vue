@@ -53,15 +53,12 @@
                                         :key="indexs">{{items.ItemAttributesFullName}}
                                 </Option>
                             </Select>
-                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">
-                                搜索
-                            </Button>
+                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData"> 搜索 </Button>
                         </Input>
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder=""
-                           @on-search="onSearch"/>
+                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder="" @on-search="onSearch"/>
                 </div>
             </div>
             <ul class="main-nav-tab">
