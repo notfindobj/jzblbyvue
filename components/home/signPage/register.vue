@@ -62,8 +62,8 @@
         this.$set(this.registeredItem, 'name', this.$store.state.overas.wxRegister.Name);
         this.$set(this.registeredItem, 'singuptype', this.$store.state.overas.wxRegister.OpCode);
         this.$set(this.registeredItem, 'state', this.$store.state.overas.wxRegister.State);
-        sessionStorage.removeItem('code');
-        sessionStorage.removeItem('state');
+        localStorage.removeItem('code');
+        localStorage.removeItem('state');
       }
     },
 
