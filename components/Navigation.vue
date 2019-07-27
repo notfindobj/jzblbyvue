@@ -85,8 +85,7 @@
   import LevelMenu from '~/components/home/LevelMenu'
   import { getMenu } from '../service/clientAPI'
   import { mapState, mapGetters } from 'vuex'
-  import axios from 'axios'
-
+  import {logout} from '../LocalAPI'
   export default {
     data() {
       return {
@@ -110,17 +109,14 @@
       signPage,
       LevelMenu
     },
-
     mounted() {
       this.isIndex = this.$route.name === 'index';
     },
-
     watch: {
       $route(to, from) {
         this.isIndex = this.$route.name === 'index';
       }
     },
-
     async created() {
       let menuDatas = await getMenu();
       this.menuData = menuDatas.RetMenuData || [];
@@ -130,21 +126,12 @@
         this.$store.dispatch('SETUP', true)
       },
       async signOut() {
-        let config = {
-          url: process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/api/logout' : 'http://127.0.0.1:8889/api/logout',
-          withCredentials: true,
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
+        let msg = await logout();
+        if (msg) {
+          this.$store.dispatch('LOGININ', null);
+          localStorage.removeItem('LOGININ')
+          this.$Message.success('退出成功！');
         }
-        axios(config)
-          .then(res => {
-            this.$store.dispatch('LOGININ', null);
-            localStorage.removeItem('LOGININ')
-            this.$Message.success(res.data.Msg);
-
-          })
       },
       searchBaseData() {
         let _this = this;

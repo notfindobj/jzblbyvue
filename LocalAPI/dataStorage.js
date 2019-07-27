@@ -8,7 +8,10 @@ LocalAPI.interceptors.request.use(
     config => {
       config.baseURL = url
       if (config.method === 'post') {
-        config.data = qs.stringify(config.data)
+        config.data = qs.stringify(config.data);
+        config.headers = {
+          'Content-Type':'application/x-www-form-urlencoded'
+        }
       }
       return config
     },

@@ -29,10 +29,8 @@
     </div>
 </template>
 <script>
-  import axios from 'axios'
-  import qs from 'qs'
   import { lognIn, loginByQQ, loginByWX, getUserByWX, getUserByQQ } from '../../../service/clientAPI'
-
+  import {login} from '../../../LocalAPI'
   export default {
     data() {
       return {
@@ -131,22 +129,13 @@
           mobile: this.userItem.mobile,
           password: this.userItem.password
         }
-        let config = {
-          url: process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/front/mobileLogin' : 'http://127.0.0.1:8889/front/mobileLogin',
-          withCredentials: true,
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          data: qs.stringify(postData)
+        let msg = await login(postData);
+        if (msg) {
+          this.$store.dispatch('LOGININ', msg);
+          localStorage.setItem('LOGININ', JSON.stringify(msg))
+          this.$store.dispatch('SETUP', false)
+          this.$Message.success('登录成功！');
         }
-        axios(config)
-          .then(res => {
-            this.$store.dispatch('LOGININ', res.data.Data);
-            localStorage.setItem('LOGININ', JSON.stringify(res.data.Data))
-            this.$store.dispatch('SETUP', false)
-            this.$Message.success(res.data.Msg);
-          })
       }
     }
   }
