@@ -130,7 +130,7 @@
                                 </span>
                             </div>
                             <div class="comment-bottom">
-                                <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>
+                                <i class="icon iconfont select-icon" @click.stop="isShowEmotion = !isShowEmotion">&#xe64e;</i>
                                 <Button type="primary" size="small" @click="handleSubmit">发表评论</Button>
                             </div>
                             <emotion
@@ -143,59 +143,67 @@
                     </div>
                     <div class="comment-list" v-if="commentList.length > 0">
                         <Spin size="large" fix v-if="isLoadingComment"></Spin>
-                        <div
-                            class="comment-item"
+                        <ModalComment
                             v-for="(item, index) in commentList"
                             :key="item.CommentsId"
                             v-show="index < showCount"
-                        >
-                            <div class="commenter-avatar">
-                                <img :src="item.HeadIcon" alt="">
-                            </div>
-                            <div class="comment-info">
-                                <p class="comment-nickname">{{ item.NickName }}</p>
-                                <p class="comment-time">{{ item.CreateDate }}</p>
-                                <p class="comment-con">
-                                    {{ item.Message }}
-                                </p>
-                                <div class="comment-operation">
-                                    <p>
-                                        <i
-                                            class="icon iconfont icon1"
-                                            v-if="!item.islikes"
-                                            @click="likeComment(index, true)"
-                                        >
-                                            &#xe643;
-                                        </i>
-                                        <i
-                                            class="icon iconfont icon1-active"
-                                            v-if="item.islikes"
-                                            @click="likeComment(index, false)"
-                                        >
-                                            &#xe621;
-                                        </i>
-                                        <span>点赞</span>
-                                    </p>
-                                    <Divider type="vertical" style="margin: 0 10px;"/>
-                                    <p>
-                                        <i class="icon iconfont reply-comment-icon">&#xe664;</i>
-                                        <span>评论</span>
-                                    </p>
-                                </div>
-                                <div class="reply-comment-box">
-                                    <div class="reply-avatar-wrap">
-                                        <img :src="$store.state.overas.auth.HeadIcon" alt="">
-                                    </div>
-                                    <div class="reply-input-box">
-                                        <Input size="small" style="width: 240px;" />
-                                        <div class="comment-bottom">
-                                            <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>
-                                            <Button type="primary" size="small" @click="handleSubmit">评论</Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                            :commentInfo="item"
+                            :index="index"
+                            @getCommentList="getCommentList"
+                        />
+<!--                        <div-->
+<!--                            class="comment-item"-->
+<!--                            v-for="(item, index) in commentList"-->
+<!--                            :key="item.CommentsId"-->
+<!--                            v-show="index < showCount"-->
+<!--                        >-->
+<!--                            <div class="commenter-avatar">-->
+<!--                                <img :src="item.HeadIcon" alt="">-->
+<!--                            </div>-->
+<!--                            <div class="comment-info">-->
+<!--                                <p class="comment-nickname">{{ item.NickName }}</p>-->
+<!--                                <p class="comment-time">{{ item.CreateDate }}</p>-->
+<!--                                <p class="comment-con">-->
+<!--                                    {{ item.Message }}-->
+<!--                                </p>-->
+<!--                                <div class="comment-operation">-->
+<!--                                    <p>-->
+<!--                                        <i-->
+<!--                                            class="icon iconfont icon1"-->
+<!--                                            v-if="!item.islikes"-->
+<!--                                            @click="likeComment(index, true)"-->
+<!--                                        >-->
+<!--                                            &#xe643;-->
+<!--                                        </i>-->
+<!--                                        <i-->
+<!--                                            class="icon iconfont icon1-active"-->
+<!--                                            v-if="item.islikes"-->
+<!--                                            @click="likeComment(index, false)"-->
+<!--                                        >-->
+<!--                                            &#xe621;-->
+<!--                                        </i>-->
+<!--                                        <span>点赞</span>-->
+<!--                                    </p>-->
+<!--                                    <Divider type="vertical" style="margin: 0 10px;"/>-->
+<!--                                    <p>-->
+<!--                                        <i class="icon iconfont reply-comment-icon">&#xe664;</i>-->
+<!--                                        <span>评论</span>-->
+<!--                                    </p>-->
+<!--                                </div>-->
+<!--                                <div class="reply-comment-box">-->
+<!--                                    <div class="reply-avatar-wrap">-->
+<!--                                        <img :src="$store.state.overas.auth.HeadIcon" alt="">-->
+<!--                                    </div>-->
+<!--                                    <div class="reply-input-box">-->
+<!--                                        <Input size="small" style="width: 240px;"/>-->
+<!--                                        <div class="comment-bottom">-->
+<!--                                            <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>-->
+<!--                                            <Button type="primary" size="small" @click="handleSubmit">评论</Button>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="show-more-box" v-if="commentList.length > 3">
                             <span>{{ commentList[0].NickName }}</span>等人<span>共{{ commentList.length }}条回复</span> <i
                             class="icon iconfont" @click="showAllComment">&#xe64a;</i>
@@ -208,173 +216,169 @@
 </template>
 
 <script>
-  import Emotion from '~/components/Emotion/index'
-  import { setComments, setthumbsUp } from '../../service/clientAPI'
+    import Emotion from '~/components/Emotion/index'
+    import ModalComment from './modalCommentItem'
+    import { setComments, setthumbsUp } from '../../service/clientAPI'
 
-  export default {
-    props: {
-      isShowModal: {
-        type: Boolean,
-        default: false
-      },
-      videoInfo: {
-        type: Object,
-        default: function () {
-          return {}
+    export default {
+        props: {
+            isShowModal: {
+                type: Boolean,
+                default: false
+            },
+            videoInfo: {
+                type: Object,
+                default: function () {
+                    return {}
+                }
+            }
+        },
+
+        data() {
+            return {
+                fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
+                isEnd: false,   // 是否结束状态
+                isPause: true,  // 是否暂停状态
+                progressWidth: 0,   // 播放进度百分比
+                currentTime: '0:00',    // 视频当前播放时长
+                duration: '',   // 视频总时长
+                isLoadingComment: true, // 是否正在加载评论
+                commentList: [],    // 评论列表
+                commentContent: '', // 评论的内容
+                isShowEmotion: false,   // 是否显示表情选择
+                showCount: 3,   // 显示评论的数量
+            }
+        },
+
+        components: {
+            Emotion,
+            ModalComment
+        },
+
+        watch: {
+            videoInfo(val, oldVal) {
+                // 获取视频总时长
+                setTimeout(() => {
+                    this.duration = this.formatTime(this.$refs.video.duration);
+                    // 监听开始事件
+                    this.$refs.video.addEventListener('play', () => {
+                        this.isPause = false;
+                    });
+
+                    // 监听暂停事件
+                    this.$refs.video.addEventListener('pause', () => {
+                        this.isPause = true;
+                    });
+
+                    // 监听视频播放事件
+                    this.$refs.video.addEventListener('timeupdate', () => {
+                        this.progressWidth = (this.$refs.video.currentTime / this.$refs.video.duration) * 100 + '%';
+                        this.currentTime = this.formatTime(this.$refs.video.currentTime);
+                    });
+
+                    // 获取评论
+                    this.isLoadingComment = true;
+                    this.getComment(val.ItemId);
+                }, 200);
+            }
+        },
+
+        methods: {
+
+            // 展示全部评论
+            showAllComment() {
+                this.showCount = this.commentList.length + 10;  // 不一定加10 比数组长度长就可以
+            },
+
+            // 格式化时间 params: timeStr 视频的秒数，有小数
+            formatTime(timeStr) {
+                let [hours, mins, seconds] = ['', '', ''];
+                if (timeStr >= 36000) {
+                    hours = Math.floor(timeStr / 3600);
+                    mins = Math.floor(timeStr % 3600 / 60);
+                    seconds = Math.floor(timeStr % 3600 / 60 % 60) >= 10 ? Math.floor(timeStr % 3600 / 60 % 60) : '0' + Math.floor(timeStr % 3600 / 60 % 60);
+                    return hours + ":" + mins + ':' + seconds
+                } else if (timeStr >= 3600) {
+                    hours = '0' + Math.floor(timeStr / 3600);
+                    mins = Math.floor(timeStr % 3600 / 60);
+                    seconds = Math.floor(timeStr % 3600 / 60 % 60) >= 10 ? Math.floor(timeStr % 3600 / 60 % 60) : '0' + Math.floor(timeStr % 3600 / 60 % 60);
+                    return hours + ":" + mins + ':' + seconds
+                } else {
+                    mins = Math.floor(timeStr / 60);
+                    seconds = Math.floor(timeStr % 60) >= 10 ? Math.floor(timeStr % 60) : '0' + Math.floor(timeStr % 60);
+                    return mins + ':' + seconds
+                }
+            },
+
+            // 关闭窗口
+            handleClose() {
+                this.pauseVideo();
+                this.$emit('closeModal');
+            },
+
+            // 点赞评论
+            getCommentList() {
+                this.getComment(this.videoInfo.ItemId);
+            },
+
+            // 点击开始
+            playVideo() {
+                this.$refs.video.play();
+            },
+
+            // 暂停播放
+            pauseVideo() {
+                this.$refs.video.pause();
+            },
+
+            // 获取评论
+            getComment(id) {
+                this.$store.dispatch('getGetComments', {
+                    ItemId: id,
+                    ScopeType: 2
+                }).then(res => {
+                    this.isLoadingComment = false;
+                    this.commentList = res;
+                })
+            },
+
+            // 选择表情
+            handleEmotion(item) {
+                this.commentContent += `[${ item.content }]`
+            },
+
+            // 发表评论
+            handleSubmit() {
+                if (this.commentContent.length === 0) {
+                    this.$Message.warning('请填写评论内容！');
+                    return false;
+                }
+                setComments({
+                    ItemId: this.videoInfo.ItemId,
+                    ReplyId: '',
+                    ReplyUserId: '',
+                    IsReply: false,
+                    Message: this.commentContent,
+                    ItemImgSrc: '',
+                    ScopeType: 2
+                }).then(res => {
+                    this.$Message.success('评论成功');
+                    this.commentContent = '';
+                    this.getComment(this.videoInfo.ItemId);
+                })
+            },
+
+            // 点赞 flag 点赞/取消点赞
+            clickLike(flag) {
+                this.$emit('likeSuccess', flag)
+            },
+
+            // 收藏
+            clickCollection(flag) {
+                this.$emit('collectionSuccess', flag)
+            }
         }
-      }
-    },
-    data() {
-      return {
-        fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
-        isEnd: false,   // 是否结束状态
-        isPause: true,  // 是否暂停状态
-        progressWidth: 0,   // 播放进度百分比
-        currentTime: '0:00',    // 视频当前播放时长
-        duration: '',   // 视频总时长
-        isLoadingComment: true, // 是否正在加载评论
-        commentList: [],    // 评论列表
-        commentContent: '', // 评论的内容
-        isShowEmotion: false,   // 是否显示表情选择
-        showCount: 3,   // 显示评论的数量
-      }
-    },
-
-    components: {
-      Emotion
-    },
-
-    watch: {
-      videoInfo(val, oldVal) {
-        // 获取视频总时长
-        setTimeout(() => {
-          this.duration = this.formatTime(this.$refs.video.duration);
-          // 监听开始事件
-          this.$refs.video.addEventListener('play', () => {
-            this.isPause = false;
-          });
-
-          // 监听暂停事件
-          this.$refs.video.addEventListener('pause', () => {
-            this.isPause = true;
-          });
-
-          // 监听视频播放事件
-          this.$refs.video.addEventListener('timeupdate', () => {
-            this.progressWidth = (this.$refs.video.currentTime / this.$refs.video.duration) * 100 + '%';
-            this.currentTime = this.formatTime(this.$refs.video.currentTime);
-          });
-
-          // 获取评论
-          this.isLoadingComment = true;
-          this.getComment(val.ItemId);
-        }, 200);
-      }
-    },
-
-    methods: {
-
-      // 展示全部评论
-      showAllComment() {
-        this.showCount = this.commentList.length + 10;  // 不一定加10 比数组长度长就可以
-      },
-
-      // 格式化时间 params: timeStr 视频的秒数，有小数
-      formatTime(timeStr) {
-        let [hours, mins, seconds] = ['', '', ''];
-        if (timeStr >= 36000) {
-          hours = Math.floor(timeStr / 3600);
-          mins = Math.floor(timeStr % 3600 / 60);
-          seconds = Math.floor(timeStr % 3600 / 60 % 60) >= 10 ? Math.floor(timeStr % 3600 / 60 % 60) : '0' + Math.floor(timeStr % 3600 / 60 % 60);
-          return hours + ":" + mins + ':' + seconds
-        } else if (timeStr >= 3600) {
-          hours = '0' + Math.floor(timeStr / 3600);
-          mins = Math.floor(timeStr % 3600 / 60);
-          seconds = Math.floor(timeStr % 3600 / 60 % 60) >= 10 ? Math.floor(timeStr % 3600 / 60 % 60) : '0' + Math.floor(timeStr % 3600 / 60 % 60);
-          return hours + ":" + mins + ':' + seconds
-        } else {
-          mins = Math.floor(timeStr / 60);
-          seconds = Math.floor(timeStr % 60) >= 10 ? Math.floor(timeStr % 60) : '0' + Math.floor(timeStr % 60);
-          return mins + ':' + seconds
-        }
-      },
-
-      // 关闭窗口
-      handleClose() {
-        this.pauseVideo();
-        this.$emit('closeModal');
-      },
-
-      // 点赞评论
-      likeComment(index, flag) {
-        setthumbsUp({
-          ItemId: this.commentList[index].ItemId,
-          LikeType: 0,
-          CommentsId: this.commentList[index].CommentsId,
-          IsDelete: !flag
-        }).then(() => {
-          this.getComment(this.videoInfo.ItemId);
-        })
-      },
-
-      // 点击开始
-      playVideo() {
-        this.$refs.video.play();
-      },
-
-      // 暂停播放
-      pauseVideo() {
-        this.$refs.video.pause();
-      },
-
-      // 获取评论
-      getComment(id) {
-        this.$store.dispatch('getGetComments', {
-          ItemId: id,
-          ScopeType: 2
-        }).then(res => {
-          this.isLoadingComment = false;
-          this.commentList = res;
-        })
-      },
-
-      // 选择表情
-      handleEmotion(item) {
-        this.commentContent += `[${ item.content }]`
-      },
-
-      // 发表评论
-      handleSubmit() {
-        if (this.commentContent.length === 0) {
-          this.$Message.warning('请填写评论内容！');
-          return false;
-        }
-        setComments({
-          ItemId: this.videoInfo.ItemId,
-          ReplyId: '',
-          ReplyUserId: '',
-          IsReply: false,
-          Message: this.commentContent,
-          ItemImgSrc: '',
-          ScopeType: 2
-        }).then(res => {
-          this.$Message.success('评论成功');
-          this.commentContent = '';
-          this.getComment(this.videoInfo.ItemId);
-        })
-      },
-
-      // 点赞 flag 点赞/取消点赞
-      clickLike(flag) {
-        this.$emit('likeSuccess', flag)
-      },
-
-      // 收藏
-      clickCollection(flag) {
-        this.$emit('collectionSuccess', flag)
-      }
     }
-  }
 </script>
 
 <style lang="less" scoped>
@@ -678,101 +682,10 @@
                     }
                 }
 
-                .comment-item {
-                    display: flex;
-                    justify-content: flex-start;
-                    align-items: flex-start;
-                }
 
-                .commenter-avatar {
-                    width: 30px;
-                    height: 30px;
-                    background-color: #ccc;
-                    border-radius: 50%;
-                    margin-right: 10px;
-                    overflow: hidden;
-
-                    img {
-                        width: 100%;
-                        height: 100%;
-                    }
-                }
-
-                .comment-info {
-                    width: 88%;
-
-                    .comment-nickname {
-                        font-size: 12px;
-                        color: #333;
-                    }
-
-                    .comment-time {
-                        font-size: 12px;
-                        color: #999;
-                    }
-
-                    .comment-con {
-                        margin-top: 5px;
-                        font-size: 12px;
-                        color: #000;
-                    }
-
-                    .comment-operation {
-                        display: flex;
-                        justify-content: flex-end;
-                        align-items: center;
-
-                        p {
-                            display: flex;
-                            align-items: center;
-
-                            span {
-                                margin-left: 2px;
-                            }
-
-                            .icon1 {
-                                position: relative;
-                                bottom: 2px;
-                                cursor: pointer;
-                            }
-
-                            .icon1-active {
-                                color: #FF3C00;
-                                font-size: 14px;
-                                cursor: pointer;
-                            }
-                            .reply-comment-icon {
-                                cursor: pointer;
-                            }
-                        }
-                    }
-
-                }
             }
         }
 
-        .reply-comment-box {
-            display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
-            padding: 20px 0;
-            .reply-avatar-wrap {
-                width: 30px;
-                height: 30px;
-                border-radius: 2px;
-                overflow: hidden;
-                img {
-                    width: 100%;
-                    height: 100%;
-                }
-            }
-            .reply-input-box {
-                margin-left: 10px;
-                .comment-bottom {
-                    margin-top: 5px;
-                }
-            }
-        }
         .comment-bottom {
             display: flex;
             justify-content: space-between;
