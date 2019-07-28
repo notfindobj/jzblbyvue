@@ -1,10 +1,10 @@
 <template>
     <div class="content-box">
         <ul class="content-screening-list">
-            <li :class="sortAction === 0 ?'li-active' : ''" @click="entrySorting(0)">最新上传</li>
-            <li :class="sortAction === 1 ?'li-active' : ''" @click="entrySorting(1)">人气</li>
-            <li :class="sortAction === 2 ?'li-active' : ''" @click="entrySorting(2)">下载</li>
-            <li :class="sortAction === 3 ?'li-active' : ''" @click="entrySorting(3)">收藏</li>
+            <li :class="getSessionStorage.dataBase.SortType === '0' ?'li-active' : ''" @click="entrySorting('0')">最新上传</li>
+            <li :class="getSessionStorage.dataBase.SortType === '1' ?'li-active' : ''" @click="entrySorting('1')">人气</li>
+            <li :class="getSessionStorage.dataBase.SortType === '2' ?'li-active' : ''" @click="entrySorting('2')">下载</li>
+            <li :class="getSessionStorage.dataBase.SortType === '3' ?'li-active' : ''" @click="entrySorting('3')">收藏</li>
         </ul>
         <!--建筑规范之外的布局 四列-->
         <div v-if="showLayout" class="works-list_box">
@@ -117,7 +117,7 @@
 
 <script>
   import ScrollBox from '~/components/crollBox'
-
+  import {mapGetters } from 'vuex'
   export default {
     name: 'conten',
     props: {
@@ -155,9 +155,8 @@
         sortAction: 0
       }
     },
-    updated() {
-      let queryData = JSON.parse(this.$route.query.dataBase)
-      this.sortAction = parseInt(queryData.SortType);
+    computed: {
+        ...mapGetters(['getSessionStorage']),
     },
     mounted() {
     },
@@ -207,7 +206,6 @@
             clear: both;
         }
     }
-
     .content-box {
         width: 100%;
         height: auto;

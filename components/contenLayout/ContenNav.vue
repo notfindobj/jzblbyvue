@@ -3,14 +3,10 @@
         <div class="nav-list">
             <p>在以下分类中找：</p>
             <ul>
-                <li
-                    v-for="(item, index) in listInfo"
-                    :class="item.ItemAttributesId === currentInex ? 'li-active' : ''"
-                    :key="index"
-                    @click="choseSome(index,item)"
-                >
+                <li v-for="(item, index) in listInfo" :class="item.ItemAttributesId === currentInex ? 'li-active' : ''" :key="index" @click="choseSome(index,item)">
                     {{item.ItemAttributesFullName}}
-                    <img src="../../assets/images/sanjiao.png"/></li>
+                    <img src="../../assets/images/sanjiao.png"/>
+                </li>
             </ul>
         </div>
         <div class="screening-nav">
@@ -51,65 +47,68 @@
         <!--    </div>-->
     </div>
 </template>
-
 <script>
-  export default {
+import {mapGetters } from 'vuex'
+export default {
     name: 'contenNav',
     props: {
       itemAttribute: {
-        type: Array,
-        required: true,
-        default: function () {
-          return []
+            type: Array,
+            required: true,
+            default: function () {
+            return []
+            }
+        },
+        queryConditions: {
+            type: Array,
+            required: true,
+            default: function () {
+            return []
+            }
+        },
+        listInfo: {
+            type: Array,
+            required: true,
+            default: function () {
+            return []
+            }
         }
-      },
-      queryConditions: {
-        type: Array,
-        required: true,
-        default: function () {
-          return []
-        }
-      },
-      listInfo: {
-        type: Array,
-        required: true,
-        default: function () {
-          return []
-        }
-      }
     },
     data() {
-      return {
-        currentInex: '',
-        currentName: '',
-        clicked: -1,
-        asd: {}
-      }
+        return {
+            currentInex: '',
+            currentName: '',
+            clicked: -1
+        }
+    },
+    computed: {
+        ...mapGetters(['getSessionStorage']),
     },
     created() {
-      let queryData = JSON.parse(this.$route.query.dataBase);
-      this.currentName = queryData.title;
-      this.currentInex = queryData.ClassTypeId.split('|')[1];
-    },
-    mounted() {
+        let queryData = this.getSessionStorage.dataBase;
+        this.currentName = queryData.title;
+        this.currentInex = queryData.ClassTypeId.split('|')[1];
+        },
+        mounted() {
     },
     methods: {
-      choseSome(index, item) {
-        this.currentInex = item.ItemAttributesId;
-        this.currentName = item.ItemAttributesFullName;
-        this.$emit('choseSome', item)
-      },
-      choseSomeOne(item, inx) {
-        this.$emit('choseSomeOne', item, inx)
-      },
-      delItems(item) {
-        this.$emit('delItems', item)
-      },
-      upAndDown(item) {
-        item.value = !item.value
-      }
+        // 一级
+        choseSome(index, item) {
+            this.currentInex = item.ItemAttributesId;
+            this.currentName = item.ItemAttributesFullName;
+            this.$emit('choseSome', item)
+        },
+        choseSomeOne(item, inx) {
+            this.$emit('choseSomeOne', item, inx)
+        },
+        delItems(item) {
+            this.$emit('delItems', item)
+        },
+        upAndDown(item) {
+            item.value = !item.value
+        }
     },
-  }
+}
 </script>
 <style lang="less" scoped>
     .nav-box {

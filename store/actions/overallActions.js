@@ -18,7 +18,11 @@ export const overallActions ={
     },
     // 设置微信注册时的信息
     WXREGISTER ({ commit, state }, params) {
-      commit("setWxRegister", params)
+        commit("setWxRegister", params)
+    },
+    // 设置服务端存储
+    Serverstorage ({ commit, state }, params) {
+        commit("setSessionStorage", params)
     },
     nuxtServerInit({ commit, state }, { req }) {
         let auth = null
@@ -35,7 +39,6 @@ export const overallActions ={
             let sessionName = Object.keys(req.session).filter(o => o !== 'cookie');
             sessionName.forEach(ele => {
                 let value = req.session[ele];
-                console.log('nuxtServerInit', req.session[ele])
                 commit('setSessionStorage', req.session[ele], value);
             })
         }

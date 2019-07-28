@@ -14,7 +14,6 @@
             </div>
             <div class="data-details-con">
                 <template v-if="isLayout">
-                    <!--  :discussData="getGetCommentsData" -->
                     <data-details-left
                         id="container"
                         :detaDetails="detaDetails"
@@ -82,7 +81,7 @@
   import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
   import weixinBox from '../../components/weixin'
   import { mapGetters } from 'vuex'
-
+  import {setDemo} from '../../LocalAPI'
   export default {
     name: 'datadetail',
     middleware: 'authenticated',
@@ -124,6 +123,7 @@
     },
     computed: {
       ...mapGetters(['isLogin']),
+      ...mapGetters(['getSessionStorage']),
       rightPx() {
         if (this.clientWidth >= 1200) {
           if (this.distanceBottom < 470) {
@@ -176,8 +176,7 @@
       }
     },
     async asyncData({ app, store, route }) {
-      let queryData = JSON.parse(route.query.dataBase);
-      delete queryData.title;
+      let queryData = store.state.overas.sessionStorage.dataBase;
       let reqItemList = JSON.parse(JSON.stringify(queryData));
       delete reqItemList.Id;
       let getBaseDataDetail = await store.dispatch('getBaseDataDetails', {
@@ -206,10 +205,9 @@
     },
     created() {
       try {
-        let showLayout = JSON.parse(this.$route.query.dataBase);
+        let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         this.isLayout = showLayout.showLayout;
-      } catch (error) {
-      }
+      } catch (error) {}
     },
     mounted() {
       let _this = this
@@ -234,22 +232,28 @@
       })
     },
     methods: {
-      // 上写翻页，项目详情
-      PNpage(val) {
+      // 上下翻页，项目详情
+      async PNpage(val) {
         if (!val) {
           this.$Message.warning('没有项目');
           return false
         }
         try {
-          let dataBase = JSON.parse(this.$route.query.dataBase);
+          let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
           dataBase.Id = val
-          window.location.href = 'DataDetails?dataBase=' + JSON.stringify(dataBase);
-        } catch (error) {
-        }
+          let serverBataBase = {
+            key: 'dataBase',
+            value: dataBase
+          }
+          this.$store.dispatch('Serverstorage', serverBataBase);
+          let msgs = await setDemo('dataBase', serverBataBase);
+          this.$router.push({name: "DataDetails-id", query: {id: val}})
+          location.reload()
+        } catch (error) {}  
       },
-      clickCate(index) {
+      async clickCate(index) {
         let attrList = [];
-        let dataBase = JSON.parse(this.$route.query.dataBase);
+        let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         this.ItemAttributesEntities.forEach((item, attrIndex) => {
           if (index >= attrIndex) {
             attrList.push({
@@ -259,13 +263,14 @@
           }
         });
         dataBase.ClassTypeArrList = attrList;
-        delete dataBase.title;
-        this.$router.push({
-          name: 'dataBase',
-          query: {
-            dataBase: JSON.stringify(dataBase)
+         let serverBataBase = {
+            key: 'dataBase',
+            value: dataBase
           }
-        })
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        this.$router.push({name: "DataDetails-id", query: {id: val}})
+        location.reload()
       },
       initLazy() {
         $("img[data-original]").lazyload()

@@ -304,7 +304,6 @@
 <script>
   import LevelMenu from '~/components/home/LevelMenu'
   import ToTop from '~/components/toTop'
-  import {setDemo} from '../LocalAPI'
   export default {
     head: {
         title: '建筑部落',
@@ -389,19 +388,6 @@
         snList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
 
       }
-    },
-    async created() {
-         let aaaa= {
-            key: 'names',
-            value: '测试12'
-        }
-        let msgs = await setDemo('names', aaaa)
-        let aaa= {
-            key: 'name',
-            value: '测试'
-        }
-        let msg = await setDemo('name', aaa)
-        console.log(msg)  
     },
     methods: {
       viewItem(item, val) {

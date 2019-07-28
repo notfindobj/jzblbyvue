@@ -35,6 +35,7 @@
   import ToTop from '../../components/toTop'
   import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
   import {mapGetters } from 'vuex'
+  import {setDemo} from '../../LocalAPI'
   export default {
     middleware: 'authenticated',
     head() {
@@ -53,11 +54,11 @@
     },
     data() {
       return {
-        queryData: {},
+        pagesNum: {},
         listInfo: {},
         RspSelectMenuDatas: [],
         RspItemDatas: [],
-        RspQueryClassify: {},
+        RspQueryClassify: [],
         RspPaginationData: {},
         UserProAndFans: {},
         showLayout: true,
@@ -73,16 +74,13 @@
         return this.RspPaginationData.page === this.RspPaginationData.total;
       }
     },
-
     async asyncData({ app, store, route }) {
-      let queryData = JSON.parse(route.query.dataBase);
+      let queryData = store.state.overas.sessionStorage.dataBase;
       let showLayout = queryData.title === '建筑规范' ? false : true;
-      delete queryData.title;
-      //  let [menuData, getBaseData] = Promise.all([store.dispatch('getMenu'), store.dispatch('getBaseData', queryData)])
       let menuData = await store.dispatch('getMenu');
       let getBaseData = await store.dispatch('getBaseData', queryData);
       return {
-        queryData: queryData,
+        pagesNum: queryData,
         showLayout: showLayout,
         listInfo: menuData.RetMenuData || [], // 导肮
         getBaseData: getBaseData,
@@ -92,17 +90,6 @@
         RspPaginationData: getBaseData.RspPaginationData, //翻页数据
       }
     },
-
-    watch: {
-      $route(to, from) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
-        let showLayout = queryData.title === '建筑规范' ? false : true;
-        delete queryData.title;
-        this.queryData = queryData;
-        this.getBaseDatas(queryData);
-      }
-    },
-
     methods: {
       // 点击收藏
       handleCollections(flag, index) {
@@ -120,38 +107,50 @@
       // 加载数据
       loadData() {
         if (this.isFinished && this.RspPaginationData.page < this.RspPaginationData.total) {
+          let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
           this.isFinished = false;
-          this.queryData.Page = this.queryData.Page === 0 ? 2 : this.queryData.Page + 1;
-          this.getBaseDatas(this.queryData, true)
+          queryData.Page = queryData.Page === 0 ? 2 : queryData.Page + 1;
+          this.getBaseDatas(queryData, true)
         }
       },
-
       // 点击分页
-      changePage(page) {
+      async changePage(page) {
         this.pageNum = page;
         if (document.documentElement.scrollTop) {
           document.documentElement.scrollTop = 0;
         } else {
           document.body.scrollTop = 0;
         }
-        this.queryData.Page = page;
-        this.getBaseDatas(this.queryData, false)
+        let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+        queryData.Page = page;
+        let serverBataBase = {
+          key: 'dataBase',
+          value: queryData
+        }
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        this.getBaseDatas(queryData, false)
       },
       //一级菜单
-      getItemsBaseData(row) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
+      async getItemsBaseData(row) {
+        let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         this.showLayout = row.ItemAttributesFullName === '建筑规范' ? false : true;
         queryData.title = row.ItemAttributesFullName;
         queryData.ClassTypeId = `${ row.ItemSubAttributeCode }|${ row.ItemAttributesId }`;
         queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
-        delete queryData.title;
-        this.queryData = queryData;
-        // this.getBaseDatas(queryData)
+        let serverBataBase = {
+          key: 'dataBase',
+          value: queryData
+        }
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        this.getBaseDatas(queryData)
+        this.$router.push({name: "dataBase-id", query: {id: row.ItemAttributesId}})
+        
       },
       //二级菜单
-      choseSomeOne(row, rows) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
+      async choseSomeOne(row, rows) {
+        let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         if (queryData.ClassTypeArrList === '') {
           queryData.ClassTypeArrList = [];
         }
@@ -175,14 +174,20 @@
           };
           ClassTypeArrList.push(optionObg)
           queryData.ClassTypeArrList = ClassTypeArrList;
-          this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } })
+
+          let serverBataBase = {
+            key: 'dataBase',
+            value: queryData
+          }
+          this.$store.dispatch('Serverstorage', serverBataBase);
+          let msgs = await setDemo('dataBase', serverBataBase);
+          this.getBaseDatas(queryData)
+          this.$router.push({name: "dataBase-id", query: {id: row.ItemAttributesId}})
         }
-        delete queryData.title;
-        // this.getBaseDatas(queryData)
       },
       // 删除选项
-      delItems(items) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
+      async delItems(items) {
+        let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         let TypeArrList = queryData.ClassTypeArrList || [];
         let ClassTypeArrList = [];
         ClassTypeArrList = TypeArrList.filter(o => o.ArrEnCode !== items.ArrEnCode);
@@ -190,37 +195,58 @@
           ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }]
         }
         queryData.ClassTypeArrList = ClassTypeArrList;
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } })
-        delete queryData.title;
-        // this.getBaseDatas(queryData)
+        let serverBataBase = {
+            key: 'dataBase',
+            value: queryData
+          }
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        this.getBaseDatas(queryData)
       },
       async getBaseDatas(queryData, isAutoLoading = false) {
+        let showLayout = queryData.title === '建筑规范' ? false : true;
+        let pageCon = JSON.parse(JSON.stringify(queryData))
         let BaseData = await getBaseData(queryData);
         if (BaseData) {
+          this.RspQueryClassify = []
           this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
           this.RspItemDatas = !isAutoLoading ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
           this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
-          this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
-          this.pageNum = queryData.Page;
-          this.isFinished = true;
+          this.RspPaginationData = BaseData.RspPaginationData; //翻页数据 
+          pageCon.Page = BaseData.RspPaginationData.page;
+          let serverBataBase = {
+              key: 'dataBase',
+              value: pageCon
+          }
+          this.$store.dispatch('Serverstorage', serverBataBase);
+          let msgs = await setDemo('dataBase', serverBataBase);
+          // 只留了第几页
         }
       },
       // 排序
-      entrySorting(val) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
+      async entrySorting(val) {
+        let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         queryData.SortType = val;
-        this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(queryData) } });
-        delete queryData.title;
+        let serverBataBase = {
+            key: 'dataBase',
+            value: queryData
+          }
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        this.getBaseDatas(queryData)
       },
       // 查看详情
-      viewItem(item) {
-        let queryData = JSON.parse(this.$route.query.dataBase);
+      async viewItem(item) {
+        let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
         queryData.Id = item.ItemId;
         queryData.showLayout = this.showLayout;
-        let routeData = this.$router.resolve({
-          name: "DataDetails",
-          query: { dataBase: JSON.stringify(queryData) }
-        });
+        let serverBataBase = {
+          key: 'dataBase',
+          value: queryData
+        }
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
         window.open(routeData.href, '_blank');
       },
       // 获取项目和粉丝量

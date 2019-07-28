@@ -1,13 +1,18 @@
 const axios = require('axios')
 const qs = require('qs')
-axios.defaults.withCredentials = true;
 const url = process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/' : 'http://127.0.0.1:8889/';
 const LocalAPI = axios.create();
+import createStore from '../store'
+const $store = createStore();
 // POST 传参序列化
 LocalAPI.interceptors.request.use(
     config => {
-      config.baseURL = url
+      config.baseURL = url;
       if (config.method === 'post') {
+        let isSossion = config.data
+        if (isSossion.key) {
+          $store.dispatch('Serverstorage', isSossion)
+        }
         config.data = qs.stringify(config.data);
         config.headers = {
           'Content-Type':'application/x-www-form-urlencoded'
@@ -33,6 +38,7 @@ LocalAPI.interceptors.response.use(
       return Promise.reject(error)
     }
   )
+LocalAPI.defaults.withCredentials = true;
 export default {
     post (url, data) {
       return LocalAPI({

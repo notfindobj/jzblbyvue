@@ -8,8 +8,7 @@
                     :data-id="items.ItemAttributesId"
                     :class="items.ItemAttributesId === id ?  'banner-nav-items cursorHover': 'banner-nav-items'"
                     @mouseenter="mouseenter(items.ItemAttributesId)"
-                    @click="goList(items)"
-                >
+                    @click="goList(items)">
                     {{items.ItemAttributesFullName}}
                     <div>
                         <div class="sub-banner-nav" :class="items.ItemAttributesId === id ?  'show': 'hide'">
@@ -36,7 +35,8 @@
 </template>
 <script>
   import { _debounce } from '../../plugins/untils/public'
-
+  import {mapGetters, mapState} from 'vuex'
+  import {setDemo} from '../../LocalAPI'
   export default {
     data() {
       return {
@@ -44,7 +44,13 @@
         oneMeun: []
       }
     },
-    created() {
+    computed: {
+      ...mapState({
+        sessionStorages: state => state.overas.sessionStorage,
+        showSign: state => state.overas.showSign
+      }),
+      ...mapGetters(['getSessionStorage']),
+      // 判断是否是最后一页数据
     },
     mounted() {
       this.$store.dispatch('getMenu').then(res => {
@@ -58,46 +64,59 @@
       mouseleave: _debounce(function (id) {
         this.id = id
       }, 100),
-      clickFullName(pre, type, ch) {
+      async clickFullName(pre, type, ch) {
         let baseDateId = {
-          ClassTypeId: `${ pre.ItemSubAttributeCode }|${ pre.ItemAttributesId }`,
-          ClassTypeArrList: [
-            {
-              ArrId: type.ItemAttributesId,
-              ArrEnCode: ch.ItemSubAttributeCode
-            }
-          ],
-          SortType: 0,
-          KeyWords: "",
-          Order: true,
-          Page: 0,
-          Rows: 32,
-          title: pre.ItemAttributesFullName,
+          key: 'dataBase',
+          value: {
+            ClassTypeId: `${ pre.ItemSubAttributeCode }|${ pre.ItemAttributesId }`,
+            ClassTypeArrList: [
+              {
+                ArrId: type.ItemAttributesId,
+                ArrEnCode: ch.ItemSubAttributeCode
+              }
+            ],
+            SortType: '0',
+            KeyWords: "",
+            Order: true,
+            Page: 0,
+            classify: 1,
+            Rows: 32,
+            title: pre.ItemAttributesFullName,
+          }
         }
-        this.$store.dispatch('BASEDATA', baseDateId);
-        if (this.$route.name === "dataBase") {
-          window.location.href = 'dataBase?dataBase='+JSON.stringify(baseDateId);
+        this.$store.dispatch('Serverstorage', baseDateId);
+        let msgs = await setDemo('dataBase', baseDateId);
+         if (this.$route.name === "dataBase-id") {
+          let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id:type.ItemAttributesId}});
+          window.open(routeData.href, '_blank');
         } else {
-          this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId)}})
+          this.$router.push({name: "dataBase-id", query: {id:type.ItemAttributesId}})
         }
       },
       // 点击一级分类
-      goList(cate) {
+      async goList(cate) {
+        // classify 0 以及菜单 1 二级菜单 2 进入详情
         let baseDateId = {
-          ClassTypeId: `${ cate.ItemSubAttributeCode }|${ cate.ItemAttributesId }`,
-          ClassTypeArrList: '',
-          SortType: 0,
-          KeyWords: "",
-          Order: true,
-          Page: 0,
-          Rows: 32,
-          title: cate.ItemAttributesFullName,
+            key: 'dataBase',
+            value: {
+              ClassTypeId: `${ cate.ItemSubAttributeCode }|${ cate.ItemAttributesId }`,
+              ClassTypeArrList: '',
+              SortType: '0',
+              KeyWords: "",
+              Order: true,
+              Page: 0,
+              Rows: 32,
+              classify: 0,
+              title: cate.ItemAttributesFullName,
+          }
         }
-        this.$store.dispatch('BASEDATA', baseDateId);
-        if (this.$route.name === "dataBase") {
-          window.location.href = 'dataBase?dataBase='+JSON.stringify(baseDateId);
+        this.$store.dispatch('Serverstorage', baseDateId);
+        let msgs = await setDemo('dataBase', baseDateId);
+        if (this.$route.name === "dataBase-id") {
+          let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id:cate.ItemAttributesId}});
+          window.open(routeData.href, '_blank');
         } else {
-          this.$router.push({ name: "dataBase", query: { dataBase: JSON.stringify(baseDateId)}})
+          this.$router.push({name: "dataBase-id", query: {id:cate.ItemAttributesId}})
         }
       }
     }

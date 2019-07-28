@@ -153,7 +153,9 @@
 </template>
 <script>
   import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
-
+  import { mapGetters } from 'vuex'
+  import {setDemo} from '../../../LocalAPI'
+import { async } from 'q';
   export default {
     data() {
       return {
@@ -231,6 +233,7 @@
       }
     },
     computed: {
+      ...mapGetters(['getSessionStorage']),
       // 查询所有菜单数据，根据id找出的属性列表
       attrList() {
         for (let i of this.menu.RetMenuData) {
@@ -556,7 +559,7 @@
             ])
           }
         });
-        publishProject(postData).then(res => {
+        publishProject(postData).then(async (res) => {
           this.$Spin.hide();
           if (res) {
             const queryData = {
@@ -570,10 +573,13 @@
                 Rows: 32
               }
             };
-            this.$router.push({
-              name: "DataDetails",
-              query: { dataBase: JSON.stringify(queryData) }
-            });
+            let serverBataBase = {
+              key: 'dataBase',
+              value: queryData
+            }
+            this.$store.dispatch('Serverstorage', serverBataBase);
+            let msgs = await setDemo('dataBase', serverBataBase);
+            this.$router.push({name: "DataDetails-id", query: {id: val}})
           }
         })
       }
