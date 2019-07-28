@@ -42,7 +42,7 @@
                             <i class="icon iconfont zan">&#xe67e;</i>
                             <span>{{ videoInfo.itemOperateData.LikeCount }}</span>
                         </div>
-                        <Icon class="contract" type="md-contract" size="20" color="#fff"/>
+                        <Icon class="contract" type="md-contract" @click="handleClose" size="20" color="#fff"/>
                     </div>
                 </div>
                 <div class="info-wrap" v-if="isShowModal">

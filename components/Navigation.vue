@@ -1,8 +1,5 @@
 <template>
     <div>
-        <!-- 广告 -->
-        <div class="ad" v-show="!isAd">
-        </div>
         <!-- 头部导航 -->
         <div class="home-bar">
             <div class="home-bar-content">
@@ -17,8 +14,8 @@
                     <li>
                         <span v-if="!auth" @click="SignIn">登录</span>
                         <div v-else>
-                          <span>{{auth.NickName}}</span>
-                          <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                            <span>{{auth.NickName}}</span>
+                            <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                         </div>
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
@@ -53,12 +50,15 @@
                                         :key="indexs">{{items.ItemAttributesFullName}}
                                 </Option>
                             </Select>
-                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData"> 搜索 </Button>
+                            <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">
+                                搜索
+                            </Button>
                         </Input>
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder="" @on-search="onSearch"/>
+                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder=""
+                           @on-search="onSearch"/>
                 </div>
             </div>
             <ul class="main-nav-tab">
@@ -81,119 +81,121 @@
     </div>
 </template>
 <script>
-  import signPage from '../components/home/signPage'
-  import LevelMenu from '~/components/home/LevelMenu'
-  import { getMenu } from '../service/clientAPI'
-  import { mapState, mapGetters } from 'vuex'
-  import {logout} from '../LocalAPI'
-  export default {
-    data() {
-      return {
-        isAd: false,
-        seatchData: '',
-        searchTitle: '',
-        baiduData: '',
-        loginIng: require('../assets/images/top_logo.png'),
-        menuData: [],
-        isIndex: true,  // 是否是首页
-        isShowCate: false,  // 是否显示分类
-      }
-    },
-    computed: {
-      ...mapState({
-        auth: state => state.overas.auth
-      }),
-      ...mapGetters(['isLogin'])
-    },
-    components: {
-      signPage,
-      LevelMenu
-    },
-    mounted() {
-      this.isIndex = this.$route.name === 'index';
-    },
-    watch: {
-      $route(to, from) {
-        this.isIndex = this.$route.name === 'index';
-      }
-    },
-    async created() {
-      let menuDatas = await getMenu();
-      this.menuData = menuDatas.RetMenuData || [];
-    },
-    methods: {
-      SignIn() {
-        this.$store.dispatch('SETUP', true)
-      },
-      async signOut() {
-        let msg = await logout();
-        if (msg) {
-          this.$store.dispatch('LOGININ', null);
-          localStorage.removeItem('LOGININ')
-          this.$Message.success('退出成功！');
-        }
-      },
-      searchBaseData() {
-        let _this = this;
-        if (!this.searchTitle) {
-          this.$Message.warning('请先选择资源库类型~');
-          return false;
-        }
-        let baseDateId = {
-          ClassTypeId: _this.searchTitle.split(',')[0],
-          ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-          SortType: 0,
-          KeyWords: this.seatchData,
-          Order: true,
-          Page: 0,
-          Rows: 32,
-          title: _this.searchTitle.split(',')[1],
-        }
-        this.$router.push({name: "dataBase", query: { dataBase: JSON.stringify(baseDateId)}});
-      },
-      // 在线地图
-      onlineMap() {
-        window.open('https://map.51240.com/zhongguo__map/')
-      },
-      // 百度搜索
-      onSearch() {
-        if (!this.baiduData) return false
-        window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${ this.baiduData }`)
-      },
-      publish() {
-        if (this.isLogin) {
-          this.$router.push({ name: "publish-imageText" })
-        }
-      },
-      goAttention() {
-        this.$router.push({ path: "/attention" })
-      },
-      goRecommend() {
-        this.$router.push({ path: "/recommend" })
-      },
+    import signPage from '../components/home/signPage'
+    import LevelMenu from '~/components/home/LevelMenu'
+    import { getMenu } from '../service/clientAPI'
+    import { mapState, mapGetters } from 'vuex'
+    import { logout } from '../LocalAPI'
 
-      goVideo() {
-        this.$router.push({ path: "/videos" })
-      },
+    export default {
+        data() {
+            return {
+                isAd: false,
+                seatchData: '',
+                searchTitle: '',
+                baiduData: '',
+                loginIng: require('../assets/images/top_logo.png'),
+                menuData: [],
+                isIndex: true,  // 是否是首页
+                isShowCate: false,  // 是否显示分类
+            }
+        },
+        computed: {
+            ...mapState({
+                auth: state => state.overas.auth
+            }),
+            ...mapGetters(['isLogin'])
+        },
+        components: {
+            signPage,
+            LevelMenu
+        },
+        mounted() {
+            this.isIndex = this.$route.name === 'index';
+        },
+        watch: {
+            $route(to, from) {
+                this.isIndex = this.$route.name === 'index';
+            }
+        },
+        async created() {
+            let menuDatas = await getMenu();
+            this.menuData = menuDatas.RetMenuData || [];
+        },
+        methods: {
+            SignIn() {
+                this.$store.dispatch('SETUP', true)
+            },
+            async signOut() {
+                let msg = await logout();
+                if (msg) {
+                    this.$store.dispatch('LOGININ', null);
+                    localStorage.removeItem('LOGININ')
+                    this.$Message.success('退出成功！');
+                }
+            },
+            searchBaseData() {
+                let _this = this;
+                if (!this.searchTitle) {
+                    this.$Message.warning('请先选择资源库类型~');
+                    return false;
+                }
+                let baseDateId = {
+                    ClassTypeId: _this.searchTitle.split(',')[0],
+                    ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
+                    SortType: 0,
+                    KeyWords: this.seatchData,
+                    Order: true,
+                    Page: 0,
+                    Rows: 32,
+                    title: _this.searchTitle.split(',')[1],
+                }
+                this.$router.push({ name: "dataBase-id", query: { dataBase: JSON.stringify(baseDateId) } });
+            },
+            // 在线地图
+            onlineMap() {
+                window.open('https://map.51240.com/zhongguo__map/')
+            },
+            // 百度搜索
+            onSearch() {
+                if (!this.baiduData) return false
+                window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${ this.baiduData }`)
+            },
+            publish() {
+                if (this.isLogin) {
+                    let routeData = this.$router.resolve({ name: "publish-imageText" });
+                    window.open(routeData.href, '_blank');
+                }
+            },
+            goAttention() {
+                this.$router.push({ path: "/attention" })
+            },
+            goRecommend() {
+                this.$router.push({ path: "/recommend" })
+            },
 
-      goQuestion() {
-        this.$router.push({ path: "/QuestionsAndAnswers" })
-      },
+            goVideo() {
+                this.$router.push({ path: "/videos" })
+            },
 
-      goBuilding() {
-        this.$router.push({ path: "/BuildingCircle" })
-      },
-      goHeAndI() {
-        this.$router.push({ path: "/PersonalCenter" })
-      },
-      goAboutUs() {
-        this.$router.push({ path: "/aboutUS" })
-      },
-      goMytribe () {
-        this.$router.push({ path: "/HeAndITribal" })
-      }
+            goQuestion() {
+                this.$router.push({ path: "/QuestionsAndAnswers" })
+            },
+
+            goBuilding() {
+                this.$router.push({ path: "/BuildingCircle" })
+            },
+            goHeAndI() {
+                this.$router.push({ path: "/PersonalCenter" })
+            },
+            goAboutUs() {
+                this.$router.push({ path: "/aboutUS" })
+            },
+            goMytribe() {
+                this.$router.push({ path: "/HeAndITribal" })
+            }
+        }
     }
-  }
 </script>
 <style lang="less" scoped>
     .btn-bg {
@@ -201,10 +203,6 @@
         color: #ffffff !important;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
-    }
-    .ad {
-        height: 60px;
-        background: #bbbbbb;
     }
 
     .home-bar {
@@ -230,22 +228,27 @@
                 width: 50%;
                 display: flex;
                 justify-content: flex-end;
+
                 &-out {
-                  cursor: pointer;
+                    cursor: pointer;
                 }
+
                 > li.content {
                     padding: 0 30px;
                     cursor: pointer;
+
                     &:hover {
                         color: #FF3C00;
                     }
                 }
+
                 .app-down {
                     color: #999999;
                 }
             }
+
             &:last-child {
-              cursor: pointer;
+                cursor: pointer;
             }
         }
     }
@@ -261,10 +264,11 @@
             display: flex;
             width: 1200px;
             margin: 0 auto;
+
             > li {
-              padding: 8px 30px;
-              cursor: pointer;
-              font-size: 20px;
+                padding: 8px 30px;
+                cursor: pointer;
+                font-size: 20px;
             }
         }
 
@@ -310,6 +314,7 @@
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
         width: 143px;
+
         .banner-nav {
             position: absolute;
             top: 43px;

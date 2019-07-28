@@ -1,6 +1,5 @@
 <template>
     <div>
-        <div class="top"></div>
         <div class="header">
             <div class="container">
                 <img class="logo-img" @click="goHome" :src="loginImg" alt="建筑部落">
@@ -97,10 +96,6 @@
 </script>
 
 <style lang="less" scoped>
-    .top {
-        height: 60px;
-        background-color: #ccc;
-    }
 
     .header {
         height: 60px;

@@ -1,5 +1,6 @@
 <template>
     <div>
+        <TopAd></TopAd>
         <Header/>
         <nuxt/>
         <Foot/>
@@ -7,14 +8,17 @@
 </template>
 
 <script>
-  import Foot from '../components/Foot';
-  import Header from '../components/Header';
-  export default {
-    components: {
-      Foot,
-      Header
+    import Foot from '../components/Foot';
+    import Header from '../components/Header';
+    import TopAd from '../components/TopAd';
+
+    export default {
+        components: {
+            Foot,
+            Header,
+            TopAd
+        }
     }
-  }
 </script>
 
 <style scoped>
