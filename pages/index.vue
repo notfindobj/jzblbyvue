@@ -304,6 +304,7 @@
 <script>
   import LevelMenu from '~/components/home/LevelMenu'
   import ToTop from '~/components/toTop'
+  import {setDemo} from '../LocalAPI'
   export default {
     head: {
         title: '建筑部落',
@@ -390,7 +391,7 @@
       }
     },
     methods: {
-      viewItem(item, val) {
+      async viewItem(item, val) {
         let baseDateId = {
           Id: item.ItemId,
           reqItemList: {
@@ -404,11 +405,20 @@
           },
           showLayout: val === 'jzList' || val === 'wbList' ? false: true
         }
-        let routeData = this.$router.resolve({
-          name: "DataDetails",
-          query: { dataBase: JSON.stringify(baseDateId) }
-        });
+        let serverBataBase = {
+            key: 'dataBase',
+            value: baseDateId
+        }
+        this.$store.dispatch('Serverstorage', serverBataBase);
+        let msgs = await setDemo('dataBase', serverBataBase);
+        let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
         window.open(routeData.href, '_blank');
+
+        // let routeData = this.$router.resolve({
+        //   name: "DataDetails",
+        //   query: { dataBase: JSON.stringify(baseDateId) }
+        // });
+        // window.open(routeData.href, '_blank');
       }
     }
   }
