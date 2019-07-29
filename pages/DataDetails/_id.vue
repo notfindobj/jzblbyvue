@@ -30,7 +30,7 @@
                 </template>
                 <div>
                     <data-details-right
-                        :class="{'fix-top': scrollTop > 312 && distanceBottom > 362, 'fix-bottom': distanceBottom < 362}"
+                        :class="{'fix-top': scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900, 'fix-bottom': distanceBottom < 362 && bodyHeight > 1900}"
                         :style="rightPx"
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
@@ -38,7 +38,7 @@
                         @setFollow="setFollow"
                     />
                     <commentsCon
-                        :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362}"
+                        :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362 && bodyHeight > 1900}"
                         :style="rightPx1"
                         :width="'340px'"
                         :publish="detaDetails"
@@ -58,329 +58,336 @@
             @dataDetailsMaskClose="dataDetailsMaskClose"
             v-if="isShowDataDetailsCustom"/>
         <date-details-down
-          :payInfos="detaDetails"
-          @payment="payment"
-          @dataDetailsMaskClose="dataDetailsMaskClose"
-          v-if="isShowDateDetailsDown"/>
-          <weixinBox 
+            :payInfos="detaDetails"
+            @payment="payment"
+            @dataDetailsMaskClose="dataDetailsMaskClose"
+            v-if="isShowDateDetailsDown"/>
+        <weixinBox
             :modalConfig="modalConfig"
             :paymentConfig="paymentConfig"
-          />
+        />
         <ToTop></ToTop>
     </div>
 </template>
 <script>
-  import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
-  import dataDetailsPDFLeft from '../../components/dataDetails/dataDetailsPDFLeft'
-  import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
-  import commentsCon from '../../components/comments/commentsCon.vue'
-  import viewPicture from '../../components/comments/viewPicture.vue'
-  import ToTop from '../../components/toTop'
-  import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency } from '../../service/clientAPI'
-  import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
-  import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
-  import weixinBox from '../../components/weixin'
-  import { mapGetters } from 'vuex'
-  import {setDemo} from '../../LocalAPI'
-  export default {
-    name: 'datadetail',
-    middleware: 'authenticated',
-    head() {
-      return {
-        title: `资料库详情`,
-        meta: [
-          { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-          { hid: 'about', name: 'about', content: "资料库详情" }
-        ],
-      }
-    },
-    data() {
-      return {
-        isShowDataDetailsCustom: false,
-        isShowDateDetailsDown: false,
-        ItemAttributesEntities: {},
-        scrollTop: '',
-        clientWidth: '',
-        isLayout: true,
-        distanceBottom: 1000,
-        contentHeight: '',   // 评论列表的高度
-        modalConfig: {
-          isWxConfig: false
-        },
-        paymentConfig: {}
-      }
-    },
-    components: {
-      weixinBox,
-      dataDetailsLeft,
-      dataDetailsRight,
-      commentsCon,
-      viewPicture,
-      dateDetailsDown,
-      dataDetailsCustom,
-      dataDetailsPDFLeft,
-      ToTop
-    },
-    computed: {
-      ...mapGetters(['isLogin']),
-      ...mapGetters(['getSessionStorage']),
-      rightPx() {
-        if (this.clientWidth >= 1200) {
-          if (this.distanceBottom < 470) {
-            return {
-              right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
-            };
-          } else {
-            return {
-              right: (this.clientWidth - 1200) / 2 + 'px',
-            };
-          }
-        } else {
-          if (this.distanceBottom < 470) {
-            return {
-              right: this.clientWidth - 1200 + 'px',
-              bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
-            };
-          } else {
-            return {
-              right: this.clientWidth - 1200 + 'px'
-            };
-          }
-        }
-      },
-      rightPx1() {
-        if (this.clientWidth >= 1200) {
-          if (this.distanceBottom < 470) {
-            return {
-              right: (this.clientWidth - 1200) / 2 + 'px',
-              bottom: 470 - this.distanceBottom + 'px'
-            };
-          } else {
-            return {
-              right: (this.clientWidth - 1200) / 2 + 'px',
-            };
-          }
-        } else {
-          if (this.distanceBottom < 470) {
-            return {
-              right: this.clientWidth - 1200 + 'px',
-              bottom: 470 - this.distanceBottom + 'px'
-            };
-          } else {
-            return {
-              right: this.clientWidth - 1200 + 'px'
-            };
-          }
-        }
-      }
-    },
-    async asyncData({ app, store, route }) {
-      let queryData = store.state.overas.sessionStorage.dataBase;
-      let reqItemList = JSON.parse(JSON.stringify(queryData));
-      delete reqItemList.Id;
-      let getBaseDataDetail = await store.dispatch('getBaseDataDetails', {
-        Id: queryData.Id,
-        reqItemList
-      });
-      // 根据项目详情请求评论信息
-      let Comment = {
-        itemId: getBaseDataDetail.ItemEntity.ItemId,
-        ScopeType: 0
-      }
-      let getGetCommentsData = await store.dispatch('getGetComments', Comment);
-      let pageTurning = {
-        PrevItemId: getBaseDataDetail.PrevItemId,
-        NextItemId: getBaseDataDetail.NextItemId,
-      }
-      return {
-        getBaseDataDetail,
-        PdfInfo: getBaseDataDetail.PdfInfo,
-        detaDetails: getBaseDataDetail.ItemEntity,
-        ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
-        getGetCommentsData: getGetCommentsData,
-        pageTurning,
-        id: getBaseDataDetail.ItemEntity.ItemId
-      }
-    },
-    created() {
-      try {
-        let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-        this.isLayout = showLayout.showLayout;
-      } catch (error) {}
-    },
-    mounted() {
-      let _this = this
-      $(document).ready(function () {
-        _this.initLazy()
-      });
-      this.clientWidth = document.body.clientWidth;
-      this.contentHeight = document.documentElement.clientHeight - 460;
-      window.addEventListener('scroll', () => {
+    import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
+    import dataDetailsPDFLeft from '../../components/dataDetails/dataDetailsPDFLeft'
+    import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
+    import commentsCon from '../../components/comments/commentsCon.vue'
+    import viewPicture from '../../components/comments/viewPicture.vue'
+    import ToTop from '../../components/toTop'
+    import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency } from '../../service/clientAPI'
+    import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
+    import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
+    import weixinBox from '../../components/weixin'
+    import { mapGetters } from 'vuex'
+    import { setDemo } from '../../LocalAPI'
 
-        this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-        this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
-      })
-      window.onresize = () => {
-        this.clientWidth = document.body.clientWidth;
-        this.contentHeight = document.documentElement.clientHeight - 460;
-      }
-      // 记录用户访问
-      recordFrequency({
-        ItemId: this.detaDetails.ItemId,
-        DomainType: 0
-      })
-    },
-    methods: {
-      // 上下翻页，项目详情
-      async PNpage(val) {
-        if (!val) {
-          this.$Message.warning('没有项目');
-          return false
-        }
-        try {
-          let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-          dataBase.Id = val
-          let serverBataBase = {
-            key: 'dataBase',
-            value: dataBase
-          }
-          this.$store.dispatch('Serverstorage', serverBataBase);
-          let msgs = await setDemo('dataBase', serverBataBase);
-          this.$router.push({name: "DataDetails-id", query: {id: val}})
-          location.reload()
-        } catch (error) {}  
-      },
-      async clickCate(index) {
-        let attrList = [];
-        let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-        this.ItemAttributesEntities.forEach((item, attrIndex) => {
-          if (index >= attrIndex) {
-            attrList.push({
-              ArrEnCode: item.ItemSubAttributeCode,
-              ArrId: item.ItemAttributesId
+    export default {
+        name: 'datadetail',
+        middleware: 'authenticated',
+        head() {
+            return {
+                title: `资料库详情`,
+                meta: [
+                    { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                    { hid: 'about', name: 'about', content: "资料库详情" }
+                ],
+            }
+        },
+        data() {
+            return {
+                isShowDataDetailsCustom: false,
+                isShowDateDetailsDown: false,
+                ItemAttributesEntities: {},
+                scrollTop: '',
+                clientWidth: '',
+                isLayout: true,
+                distanceBottom: 1000,
+                contentHeight: '',   // 评论列表的高度
+                modalConfig: {
+                    isWxConfig: false
+                },
+                paymentConfig: {}
+            }
+        },
+        components: {
+            weixinBox,
+            dataDetailsLeft,
+            dataDetailsRight,
+            commentsCon,
+            viewPicture,
+            dateDetailsDown,
+            dataDetailsCustom,
+            dataDetailsPDFLeft,
+            ToTop
+        },
+        computed: {
+            ...mapGetters(['isLogin']),
+            ...mapGetters(['getSessionStorage']),
+            bodyHeight() {
+                return  document.body.scrollHeight;
+            },
+
+            rightPx() {
+                if (this.clientWidth >= 1200) {
+                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
+                        return {
+                            right: (this.clientWidth - 1200) / 2 + 'px',
+                            bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
+                        };
+                    } else {
+                        return {
+                            right: (this.clientWidth - 1200) / 2 + 'px',
+                        };
+                    }
+                } else {
+                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
+                        return {
+                            right: this.clientWidth - 1200 + 'px',
+                            bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
+                        };
+                    } else {
+                        return {
+                            right: this.clientWidth - 1200 + 'px'
+                        };
+                    }
+                }
+            },
+            rightPx1() {
+                if (this.clientWidth >= 1200) {
+                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
+                        return {
+                            right: (this.clientWidth - 1200) / 2 + 'px',
+                            bottom: 470 - this.distanceBottom + 'px'
+                        };
+                    } else {
+                        return {
+                            right: (this.clientWidth - 1200) / 2 + 'px',
+                        };
+                    }
+                } else {
+                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
+                        return {
+                            right: this.clientWidth - 1200 + 'px',
+                            bottom: 470 - this.distanceBottom + 'px'
+                        };
+                    } else {
+                        return {
+                            right: this.clientWidth - 1200 + 'px'
+                        };
+                    }
+                }
+            }
+        },
+        async asyncData({ app, store, route }) {
+            let queryData = store.state.overas.sessionStorage.dataBase;
+            let reqItemList = JSON.parse(JSON.stringify(queryData));
+            delete reqItemList.Id;
+            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', {
+                Id: queryData.Id,
+                reqItemList
+            });
+            // 根据项目详情请求评论信息
+            let Comment = {
+                itemId: getBaseDataDetail.ItemEntity.ItemId,
+                ScopeType: 0
+            }
+            let getGetCommentsData = await store.dispatch('getGetComments', Comment);
+            let pageTurning = {
+                PrevItemId: getBaseDataDetail.PrevItemId,
+                NextItemId: getBaseDataDetail.NextItemId,
+            }
+            return {
+                getBaseDataDetail,
+                PdfInfo: getBaseDataDetail.PdfInfo,
+                detaDetails: getBaseDataDetail.ItemEntity,
+                ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
+                getGetCommentsData: getGetCommentsData,
+                pageTurning,
+                id: getBaseDataDetail.ItemEntity.ItemId
+            }
+        },
+        created() {
+            try {
+                let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                this.isLayout = showLayout.showLayout;
+            } catch (error) {
+            }
+        },
+        mounted() {
+            let _this = this
+            $(document).ready(function () {
+                _this.initLazy()
+            });
+            this.clientWidth = document.body.clientWidth;
+            this.contentHeight = document.documentElement.clientHeight - 460;
+            window.addEventListener('scroll', () => {
+
+                this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+                this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
             })
-          }
-        });
-        dataBase.ClassTypeArrList = attrList;
-         let serverBataBase = {
-            key: 'dataBase',
-            value: dataBase
-          }
-        this.$store.dispatch('Serverstorage', serverBataBase);
-        let msgs = await setDemo('dataBase', serverBataBase);
-        this.$router.push({name: "DataDetails-id", query: {id: val}})
-        location.reload()
-      },
-      initLazy() {
-        $("img[data-original]").lazyload()
-      },
-      // 项目点赞
-      async thumbsUp(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          LikeType: 1,
-          IsDelete: item.islikes
+            window.onresize = () => {
+                this.clientWidth = document.body.clientWidth;
+                this.contentHeight = document.documentElement.clientHeight - 460;
+            }
+            // 记录用户访问
+            recordFrequency({
+                ItemId: this.detaDetails.ItemId,
+                DomainType: 0
+            })
+        },
+        methods: {
+            // 上下翻页，项目详情
+            async PNpage(val) {
+                if (!val) {
+                    this.$Message.warning('没有项目');
+                    return false
+                }
+                try {
+                    let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                    dataBase.Id = val
+                    let serverBataBase = {
+                        key: 'dataBase',
+                        value: dataBase
+                    }
+                    this.$store.dispatch('Serverstorage', serverBataBase);
+                    let msgs = await setDemo('dataBase', serverBataBase);
+                    this.$router.push({ name: "DataDetails-id", query: { id: val } })
+                    location.reload()
+                } catch (error) {
+                }
+            },
+            async clickCate(index) {
+                let attrList = [];
+                let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                this.ItemAttributesEntities.forEach((item, attrIndex) => {
+                    if (index >= attrIndex) {
+                        attrList.push({
+                            ArrEnCode: item.ItemSubAttributeCode,
+                            ArrId: item.ItemAttributesId
+                        })
+                    }
+                });
+                dataBase.ClassTypeArrList = attrList;
+                let serverBataBase = {
+                    key: 'dataBase',
+                    value: dataBase
+                }
+                this.$store.dispatch('Serverstorage', serverBataBase);
+                let msgs = await setDemo('dataBase', serverBataBase);
+                this.$router.push({ name: "DataDetails-id", query: { id: val } })
+                location.reload()
+            },
+            initLazy() {
+                $("img[data-original]").lazyload()
+            },
+            // 项目点赞
+            async thumbsUp(item) {
+                let queryData = {
+                    ItemId: item.ItemId,
+                    LikeType: 1,
+                    IsDelete: item.islikes
+                }
+                let thumbsUpMsg = await setthumbsUp(queryData);
+                if (item.islikes) {
+                    this.$set(item, 'likes', item.likes - 1)
+                } else {
+                    this.$set(item, 'likes', item.likes + 1)
+                }
+                this.$set(item, 'islikes', !item.islikes)
+            },
+            async somePraise(item) {
+                let queryData = {
+                    ItemId: item.ItemId,
+                    CommentsId: item.CommentsId,
+                    LikeType: 0,
+                    IsDelete: !item.IsCoutReply
+                }
+                let msg = await setthumbsUp(queryData);
+                // console.log(item)
+                if (msg) {
+                }
+            },
+            // 收藏
+            async Collection(item) {
+                let queryData = {
+                    ItemId: item.ItemId,
+                    TalkType: 4,
+                    IsDelete: item.iscollections
+                }
+                let collectionMsg = await setCollection(queryData)
+                if (item.iscollections) {
+                    this.$set(item, 'collections', item.collections - 1)
+                } else {
+                    this.$set(item, 'collections', item.collections + 1)
+                }
+                this.$set(item, 'iscollections', !item.iscollections)
+            },
+            //评论
+            async commentValue(row, val) {
+                let queryData = {
+                    ItemId: row.ItemId,
+                    IsReply: false,
+                    Message: val,
+                    ScopeType: 0
+                }
+                let commentMsg = await setComments(queryData)
+                await window.location.reload();
+                if (!commentMsg) {
+                    this.$set(row, 'commentss', row.commentss + 1)
+                }
+            },
+            // 评论回复
+            async discussValue(row, val) {
+                let queryData = {
+                    ItemId: row.ItemId, // 项目ID
+                    IsReply: true, // 回复
+                    ReplyId: row.CommentsId, // 被回复说说的Id  是取CommentsId 还是ReplyId
+                    ReplyUserId: row.UserId,// 被回复说说发布的ID ReplyUserId
+                    Message: val,
+                    ScopeType: 0 // 项目评论
+                }
+                let commentMsg = await setComments(queryData)
+                if (commentMsg) {
+                    this.$Message.success('回复成功！')
+                }
+            },
+            // 关注
+            async setFollow(item) {
+                let queryData = {
+                    UserId: item.UserId,
+                    IsDelete: item.iscollections
+                }
+                let collectionMsg = await setCollection(queryData)
+                this.$set(item, 'IsFollow', !item.iscollections)
+            },
+            dataDetailsMaskShow(obj) {
+                this.paymentConfig.url = '';
+                this.modalConfig.isWxConfig = false;
+                if (obj.type == 'Down') {
+                    this.isShowDateDetailsDown = true;
+                } else {
+                    this.isShowDataDetailsCustom = true;
+                }
+            },
+            // 支付接口调用成功的回调
+            payment(config, type) {
+                if (type === 0) {
+                    this.modalConfig.isWxConfig = true;
+                    this.paymentConfig = config;
+                } else {
+                    window.location.href = config.data
+                }
+                this.isShowDateDetailsDown = false;
+                this.isShowDataDetailsCustom = false;
+            },
+            dataDetailsMaskClose(obj) {
+                this.isShowDateDetailsDown = false;
+                this.isShowDataDetailsCustom = false;
+            }
         }
-        let thumbsUpMsg = await setthumbsUp(queryData);
-        if (item.islikes) {
-          this.$set(item, 'likes', item.likes - 1)
-        } else {
-          this.$set(item, 'likes', item.likes + 1)
-        }
-        this.$set(item, 'islikes', !item.islikes)
-      },
-      async somePraise(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          CommentsId: item.CommentsId,
-          LikeType: 0,
-          IsDelete: !item.IsCoutReply
-        }
-        let msg = await setthumbsUp(queryData);
-        // console.log(item)
-        if (msg) {
-        }
-      },
-      // 收藏
-      async Collection(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          TalkType: 4,
-          IsDelete: item.iscollections
-        }
-        let collectionMsg = await setCollection(queryData)
-        if (item.iscollections) {
-          this.$set(item, 'collections', item.collections - 1)
-        } else {
-          this.$set(item, 'collections', item.collections + 1)
-        }
-        this.$set(item, 'iscollections', !item.iscollections)
-      },
-      //评论
-      async commentValue(row, val) {
-        let queryData = {
-          ItemId: row.ItemId,
-          IsReply: false,
-          Message: val,
-          ScopeType: 0
-        }
-        let commentMsg = await setComments(queryData)
-        await window.location.reload();
-        if (!commentMsg) {
-          this.$set(row, 'commentss', row.commentss + 1)
-        }
-      },
-      // 评论回复
-      async discussValue(row, val) {
-        let queryData = {
-          ItemId: row.ItemId, // 项目ID
-          IsReply: true, // 回复
-          ReplyId: row.CommentsId, // 被回复说说的Id  是取CommentsId 还是ReplyId
-          ReplyUserId: row.UserId,// 被回复说说发布的ID ReplyUserId
-          Message: val,
-          ScopeType: 0 // 项目评论
-        }
-        let commentMsg = await setComments(queryData)
-        if (commentMsg) {
-          this.$Message.success('回复成功！')
-        }
-      },
-      // 关注
-      async setFollow(item) {
-        let queryData = {
-          UserId: item.UserId,
-          IsDelete: item.iscollections
-        }
-        let collectionMsg = await setCollection(queryData)
-        this.$set(item, 'IsFollow', !item.iscollections)
-      },
-      dataDetailsMaskShow(obj) {
-        this.paymentConfig.url = '';
-        this.modalConfig.isWxConfig = false;
-        if (obj.type == 'Down') {
-          this.isShowDateDetailsDown = true;
-        } else {
-          this.isShowDataDetailsCustom = true;
-        }
-      },
-      // 支付接口调用成功的回调
-      payment (config, type) {
-        if (type === 0) {
-          this.modalConfig.isWxConfig = true;
-          this.paymentConfig = config;
-        } else {
-          window.location.href = config.data
-        }
-        this.isShowDateDetailsDown = false;
-        this.isShowDataDetailsCustom = false;
-      },
-      dataDetailsMaskClose(obj) {
-        this.isShowDateDetailsDown = false;
-        this.isShowDataDetailsCustom = false;
-      }
     }
-  }
 </script>
 <style lang="less" scoped>
     .data-details-box {

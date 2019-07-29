@@ -9,11 +9,13 @@ LocalAPI.interceptors.request.use(
     config => {
       config.baseURL = url;
       if (config.method === 'post') {
-        let isSossion = config.data
-        if (isSossion.key) {
-          $store.dispatch('Serverstorage', isSossion)
+        let isSossion = config.data;
+        if (isSossion) {
+            if (isSossion.key) {
+                $store.dispatch('Serverstorage', isSossion)
+            }
+            config.data = qs.stringify(config.data);
         }
-        config.data = qs.stringify(config.data);
         config.headers = {
           'Content-Type':'application/x-www-form-urlencoded'
         }

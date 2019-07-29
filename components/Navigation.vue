@@ -43,10 +43,10 @@
                         </nuxt-link>
                     </div>
                     <div class="main-content-left-search">
-                        <Input v-model="seatchData" style="width:450px;" size="large">
+                        <Input v-model="searchData" style="width:450px;" size="large">
                             <Select slot="prepend" v-model="searchTitle" style="width:100px">
                                 <Option v-for="(items, indexs) in menuData"
-                                        :value="`${items.ItemSubAttributeCode}|${items.ItemAttributesId},${items.ItemAttributesFullName}`"
+                                        :value="indexs"
                                         :key="indexs">{{items.ItemAttributesFullName}}
                                 </Option>
                             </Select>
@@ -85,13 +85,13 @@
     import LevelMenu from '~/components/home/LevelMenu'
     import { getMenu } from '../service/clientAPI'
     import { mapState, mapGetters } from 'vuex'
-    import { logout } from '../LocalAPI'
+    import { logout, setDemo} from '../LocalAPI'
 
     export default {
         data() {
             return {
                 isAd: false,
-                seatchData: '',
+                searchData: '',
                 searchTitle: '',
                 baiduData: '',
                 loginIng: require('../assets/images/top_logo.png'),
@@ -111,6 +111,10 @@
             LevelMenu
         },
         mounted() {
+            if (sessionStorage.getItem('searchIndex')) {
+                this.searchTitle = sessionStorage.getItem('searchIndex') * 1;
+                this.searchData = sessionStorage.getItem('searchKeyWords');
+            }
             this.isIndex = this.$route.name === 'index';
         },
         watch: {
@@ -123,6 +127,7 @@
             this.menuData = menuDatas.RetMenuData || [];
         },
         methods: {
+
             SignIn() {
                 this.$store.dispatch('SETUP', true)
             },
@@ -130,27 +135,41 @@
                 let msg = await logout();
                 if (msg) {
                     this.$store.dispatch('LOGININ', null);
-                    localStorage.removeItem('LOGININ')
+                    localStorage.removeItem('LOGININ');
                     this.$Message.success('退出成功！');
                 }
             },
-            searchBaseData() {
-                let _this = this;
-                if (!this.searchTitle) {
+            async searchBaseData() {
+                if (!this.searchTitle && this.searchTitle !== 0) {
                     this.$Message.warning('请先选择资源库类型~');
                     return false;
                 }
                 let baseDateId = {
-                    ClassTypeId: _this.searchTitle.split(',')[0],
-                    ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-                    SortType: 0,
-                    KeyWords: this.seatchData,
-                    Order: true,
-                    Page: 0,
-                    Rows: 32,
-                    title: _this.searchTitle.split(',')[1],
+                    key: 'dataBase',
+                    value: {
+                        ClassTypeId: `${ this.menuData[this.searchTitle].ItemSubAttributeCode }|${ this.menuData[this.searchTitle].ItemAttributesId }`,
+                        ClassTypeArrList: '',
+                        SortType: '0',
+                        KeyWords: this.searchData,
+                        Order: true,
+                        Page: 0,
+                        Rows: 32,
+                        classify: 0,
+                        title: this.menuData[this.searchTitle].ItemAttributesFullName,
+                    }
                 }
-                this.$router.push({ name: "dataBase-id", query: { dataBase: JSON.stringify(baseDateId) } });
+                this.$store.dispatch('Serverstorage', baseDateId);
+                let msgs = await setDemo('dataBase', baseDateId);
+                if (this.$route.name === "dataBase-id") {
+                    // let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: this.menuData[this.searchTitle].ItemAttributesId } });
+                    // window.open(routeData.href, '_blank');
+                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId } });
+                    sessionStorage.setItem('searchIndex', this.searchTitle);
+                    sessionStorage.setItem('searchKeyWords', this.searchData);
+                    window.location.reload();
+                } else {
+                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId } })
+                }
             },
             // 在线地图
             onlineMap() {

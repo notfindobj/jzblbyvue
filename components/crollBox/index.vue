@@ -24,18 +24,24 @@
             }
         },
 
+
         mounted() {
-            window.onscroll = function () {
+            window.onscroll = () => {
                 //变量t是滚动条滚动时，距离顶部的距离
                 const h = document.documentElement.clientHeight;
                 const t = document.documentElement.scrollTop || document.body.scrollTop;
                 const sh = document.documentElement.scrollHeight || document.body.scrollHeight;
                 let bt = parseInt(sh - (h + t));
-                if (bt <= 0) {
-                    this.isShowLoadingIcon = !this.isLast;
+                if (this.isShowLoadingIcon) {
+                    this.isShowLoadingIcon = false;
+                }
+                if (bt <= 10) {
+                    if (!this.isLast) {
+                        this.isShowLoadingIcon = true;
+                    }
                     this.$emit('willReachBottom')
                 }
-            }.bind(this)
+            }
         },
         methods: {}
     }

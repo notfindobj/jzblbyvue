@@ -148,7 +148,14 @@
                 this.$store.dispatch('Serverstorage', serverBataBase);
                 let msgs = await setDemo('dataBase', serverBataBase);
                 this.getBaseDatas(queryData)
-                this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } })
+                this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } });
+
+                // 去除搜索框内容
+                if (sessionStorage.getItem('searchIndex') && sessionStorage.getItem('searchKeyWords')) {
+                    sessionStorage.removeItem('searchIndex');
+                    sessionStorage.removeItem('searchKeyWords');
+                    window.location.reload();
+                }
 
             },
             //二级菜单
@@ -210,8 +217,9 @@
                 let showLayout = queryData.title !== '建筑规范';
                 let pageCon = JSON.parse(JSON.stringify(queryData))
                 let BaseData = await getBaseData(queryData);
+                this.isFinished = true;
                 if (BaseData) {
-                    this.RspQueryClassify = []
+                    this.RspQueryClassify = [];
                     this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
                     this.RspItemDatas = !isAutoLoading ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
                     this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
