@@ -139,6 +139,7 @@
                 let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
                 this.showLayout = row.ItemAttributesFullName !== '建筑规范';
                 queryData.title = row.ItemAttributesFullName;
+                queryData.KeyWords = ''
                 queryData.ClassTypeId = `${ row.ItemSubAttributeCode }|${ row.ItemAttributesId }`;
                 queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
                 let serverBataBase = {

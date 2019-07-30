@@ -128,7 +128,6 @@
             bodyHeight() {
                 return  document.body.scrollHeight;
             },
-
             rightPx() {
                 if (this.clientWidth >= 1200) {
                     if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
@@ -211,9 +210,14 @@
         created() {
             try {
                 let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                this.isLayout = showLayout.showLayout;
-            } catch (error) {
-            }
+                console.log()
+                if (showLayout.title === '文本') {
+                    this.isLayout = false
+                } else {
+                    this.isLayout = showLayout.showLayout;
+                }
+                
+            } catch (error) {}
         },
         mounted() {
             let _this = this
@@ -276,8 +280,7 @@
                 }
                 this.$store.dispatch('Serverstorage', serverBataBase);
                 let msgs = await setDemo('dataBase', serverBataBase);
-                this.$router.push({ name: "DataDetails-id", query: { id: val } })
-                location.reload()
+                this.$router.push({name: "dataBase-id", query: {id: dataBase.Id }})
             },
             initLazy() {
                 $("img[data-original]").lazyload()

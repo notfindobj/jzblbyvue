@@ -45,10 +45,7 @@
                     <div class="main-content-left-search">
                         <Input v-model="searchData" style="width:450px;" size="large">
                             <Select slot="prepend" v-model="searchTitle" style="width:100px">
-                                <Option v-for="(items, indexs) in menuData"
-                                        :value="indexs"
-                                        :key="indexs">{{items.ItemAttributesFullName}}
-                                </Option>
+                                <Option v-for="(items, indexs) in menuData" :value="indexs" :key="indexs">{{items.ItemAttributesFullName}} </Option>
                             </Select>
                             <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">
                                 搜索
@@ -57,8 +54,7 @@
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder=""
-                           @on-search="onSearch"/>
+                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder="" @on-search="onSearch"/>
                 </div>
             </div>
             <ul class="main-nav-tab">
@@ -148,7 +144,7 @@
                     key: 'dataBase',
                     value: {
                         ClassTypeId: `${ this.menuData[this.searchTitle].ItemSubAttributeCode }|${ this.menuData[this.searchTitle].ItemAttributesId }`,
-                        ClassTypeArrList: '',
+                        ClassTypeArrList: [{ArrId: '',ArrEnCode: ''}],
                         SortType: '0',
                         KeyWords: this.searchData,
                         Order: true,
@@ -161,14 +157,12 @@
                 this.$store.dispatch('Serverstorage', baseDateId);
                 let msgs = await setDemo('dataBase', baseDateId);
                 if (this.$route.name === "dataBase-id") {
-                    // let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: this.menuData[this.searchTitle].ItemAttributesId } });
-                    // window.open(routeData.href, '_blank');
-                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId } });
+                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId}});
                     sessionStorage.setItem('searchIndex', this.searchTitle);
                     sessionStorage.setItem('searchKeyWords', this.searchData);
                     window.location.reload();
                 } else {
-                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId } })
+                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId}})
                 }
             },
             // 在线地图

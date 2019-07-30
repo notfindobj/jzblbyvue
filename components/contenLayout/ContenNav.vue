@@ -88,8 +88,6 @@ export default {
         let queryData = this.getSessionStorage.dataBase;
         this.currentName = queryData.title;
         this.currentInex = queryData.ClassTypeId.split('|')[1];
-        },
-        mounted() {
     },
     methods: {
         // 一级
