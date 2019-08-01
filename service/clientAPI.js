@@ -120,6 +120,10 @@ export const getTypeMeun = async params => {
 export const getUserData = async params => {
   return await request.get(`UserInfo/GetUserData`, params)
 }
+// 修改所有个人信息
+export const setUserData = async params => {
+  return await request.post(`UserInfo/SetUserData`, params)
+}
 // 获取收货地址
 export const getAddressData = async params => {
   return await request.get(`UserInfo/GetThisALLUserShippingAddress`, params)
@@ -153,8 +157,31 @@ export const setAiliPay = async params => {
 export const setWechatPay = async params => {
   return await request.post(`AllPay/WechatPay`, params)
 }
-
+// 支付下载接口
+export const downloadFile = async params => {
+  return await request.downFile(`AllPay/DownloadFile?itemId=${params}`)
+}
 // 绑定微信登录
-export const bindingByWX = async () => {
-  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.api.jzbl.com/api/UserInfo/BindWx')
+export const bindingByWX = async params => {
+  return await request.post('UserInfo/BindWx', params)
+}
+// 获取用户信息 【操作权限 / 感情状况】数据接口 操作权限；code 2：感情状况 ,默认是1
+export const GetOperatPrivacy = async params => {
+  return await request.post(`UserInfo/GetOperatPrivacy?code=${params}`)
+}
+// 修改昵称
+export const SetUserNickNameData = async params => {
+  return await request.post(`UserInfo/SetUserNickNameData?Nickname=${params}`)
+}
+// 获取个人擅长标签接口
+export const GetUserExpertise = async params => {
+  return await request.get(`UserInfo/GetUserExpertise`, params)
+}
+//获取当前用户所有职业信息接口
+export const GetThisUserJobInfo = async params => {
+  return await request.get(`UserInfo/GetThisUserJobInfo`, params)
+}
+//获取当前用户所有职业信息接口
+export const SetOrAddThisUserJobInfo = async params => {
+  return await request.post(`UserInfo/SetOrAddThisUserJobInfo`, params)
 }

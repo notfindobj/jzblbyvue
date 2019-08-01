@@ -108,7 +108,8 @@
     </div>
 </template>
 <script>
-import {bindingByWX} from '../../../service/clientAPI'
+import {loginByWX, bindingByWX} from '../../../service/clientAPI'
+import { mapState } from 'vuex'
 export default {
     data () {
         return {
@@ -116,12 +117,46 @@ export default {
             mailbox: true
         }
     },
+    computed: {
+        ...mapState({
+            userInfo: state => state.overas.auth
+        }),
+    },
     methods: {
         async bindingWX () {
-            let msg = await bindingByWX()
-            if (msg) {
-                window.open(msg)
-            }
+            loginByWX().then(res => {
+            const wxWindow = this.loginAtQQ(res, 2);
+            const interId = setInterval(() => {
+                const code = localStorage.getItem('code');
+                const state = localStorage.getItem('state');
+                if (code && state) {
+                wxWindow.close();
+                bindingByWX({
+                    code,
+                    state
+                }).then(res => {
+                    // if (!res.token) {
+                    //         this.$store.dispatch('WXREGISTER', res);
+                    //         this.goToRegister('register');
+                    // } else {
+                    //     localStorage.removeItem('code');
+                    //     localStorage.removeItem('state');
+                    //     this.$store.dispatch('LOGININ', res);
+                    //     localStorage.setItem('LOGININ', JSON.stringify(res))
+                    //     this.$store.dispatch('SETUP', false)
+                    //     this.$Message.success('登录成功');
+                    // }
+                });
+                clearInterval(interId);
+                }
+            }, 2000)
+            })
+        },
+        // 打开登录窗口 type 1 qq登录 2 微信登录
+        loginAtQQ(url, type) {
+            const LEFT = (window.screen.width - 685) / 2;
+            const TOP = (window.screen.height - 555) / 2;
+            return window.open(url,'oauth2Login_qq','height=555,width=685, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes, top=' + TOP + ', left=' + LEFT);
         }
     }
 }
@@ -226,3 +261,4 @@ export default {
         margin-top: 10px;
     }
 </style>
+``

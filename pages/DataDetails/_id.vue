@@ -76,12 +76,15 @@
     import commentsCon from '../../components/comments/commentsCon.vue'
     import viewPicture from '../../components/comments/viewPicture.vue'
     import ToTop from '../../components/toTop'
-    import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency } from '../../service/clientAPI'
+    import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile} from '../../service/clientAPI'
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
     import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
     import weixinBox from '../../components/weixin'
     import { mapGetters } from 'vuex'
     import { setDemo } from '../../LocalAPI'
+    import axios from 'axios'
+    import qs from 'qs'
+    import { async } from 'q';
 
     export default {
         name: 'datadetail',
@@ -108,7 +111,8 @@
                 modalConfig: {
                     isWxConfig: false
                 },
-                paymentConfig: {}
+                paymentConfig: {},
+                downloadTime: null
             }
         },
         components: {
@@ -210,7 +214,6 @@
         created() {
             try {
                 let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                console.log()
                 if (showLayout.title === '文本') {
                     this.isLayout = false
                 } else {
@@ -227,7 +230,6 @@
             this.clientWidth = document.body.clientWidth;
             this.contentHeight = document.documentElement.clientHeight - 460;
             window.addEventListener('scroll', () => {
-
                 this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
                 this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
             })
@@ -259,8 +261,7 @@
                     let msgs = await setDemo('dataBase', serverBataBase);
                     this.$router.push({ name: "DataDetails-id", query: { id: val } })
                     location.reload()
-                } catch (error) {
-                }
+                } catch (error) {}
             },
             async clickCate(index) {
                 let attrList = [];
@@ -375,10 +376,25 @@
                 }
             },
             // 支付接口调用成功的回调
-            payment(config, type) {
+            async payment(config, type, id) {
                 if (type === 0) {
                     this.modalConfig.isWxConfig = true;
                     this.paymentConfig = config;
+                    // this.downloadTime = setInterval(async () => {
+                        let msg = await downloadFile(id);
+                        if (msg) {
+                            let name = msg.split('&')[1]
+                            var eleLink = document.createElement('a');
+                            eleLink.download = msg.split('&')[1];
+                            eleLink.style.display = 'none';
+                            eleLink.href = msg.split('&')[0];
+                            // 触发点击
+                            document.body.appendChild(eleLink);
+                            eleLink.click();
+                            // 然后移除
+                            document.body.removeChild(eleLink);
+                        }
+                    // }, 2000)
                 } else {
                     window.location.href = config.data
                 }

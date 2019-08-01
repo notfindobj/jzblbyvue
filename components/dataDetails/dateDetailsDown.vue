@@ -85,7 +85,7 @@
             data: msg,
             Price: this.payInfos.Price
           }
-          this.$emit('payment', pay, this.currentIndex)
+          this.$emit('payment', pay, this.currentIndex, value.ItemId)
         }
       }
     }

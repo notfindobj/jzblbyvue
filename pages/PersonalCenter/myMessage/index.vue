@@ -17,14 +17,15 @@
                 <span class="message-items-left-label">昵称</span>
             </div>
             <div class="message-items-right">
-                <span v-if="nickname">尼古拉斯·赵四</span>
+                <span v-if="nickname">{{userInfo.Nickname}}</span>
                 <div v-if="!nickname" class="message-items-right-edit">
                     <div>
-                        <Input type="text" size="small" style="width: 160px;" />
-                        <span class="message-items-right-edit-lable">用户您好，建筑部落允许用户一年修改一次昵称，请谨慎提交</span>
+                        <span>昵称：</span>
+                        <Input type="text" size="small" v-model="GetUserData.Nickname" style="width: 160px;" />
+                        <!-- <span class="message-items-right-edit-lable">用户您好，建筑部落允许用户一年修改一次昵称，请谨慎提交</span> -->
                     </div>
                     <div class="message-items-right-save">
-                        <div class="modifying-head">保存</div>
+                        <div class="modifying-head" @click="setNickName">保存</div>
                         <div class="modifying-cancel">取消</div>
                     </div>
                 </div>
@@ -37,65 +38,71 @@
                 <span class="message-items-left-label">个人资料</span>
             </div>
             <div class="message-items-right">
-                <span v-if="means">未完善完全</span>
-                <div v-if="!means" class="message-items-right-edit">
+                <!-- <span v-if="means">未完善完全</span> -->
+                <div  class="message-items-right-edit">
                     <div class="means">
                         <div class="means-left">
                                 <span class="means-left-label">真实姓名：</span>
-                                <Input type="text" style="width: 160px;" size="small" />
+                                <span v-if="means">{{userInfo.RealName}}</span>
+                                <Input v-else type="text" style="width: 160px;" v-model="GetUserData.RealName" size="small" />
                         </div>
                         <div class="means-right">
                                 <span class="means-left-label">所在地：</span>
-                                <Select size="small" style="width:160px">
-                                    <Option value="New York" >New York</Option>
-                                </Select>
-                                <Select size="small" style="width:160px">
-                                    <Option value="New York" >New York</Option>
-                                </Select>
+                                <span v-if="means">{{userInfo.CityName}}/{{userInfo.CountyName}}/{{userInfo.ProvinceName}}</span>
+                                <span v-else>
+                                    <Select size="small" v-model="GetUserData.CityArea" style="width:95px" @on-change="onChange">
+                                    <Option v-for="(items, index) in city" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                                    </Select>
+                                    <Select size="small" v-model="GetUserData.CountyArea" @on-change="onTwoChange" style="width:95px">
+                                        <Option v-for="(items, index) in count" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                                    </Select>
+                                    <Select size="small" v-model="GetUserData.ProvinceArea"  style="width:95px">
+                                        <Option v-for="(items, index) in province" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                                    </Select>
+                                </span>
                         </div>
                     </div>
                     <div class="means">
                         <div class="means-left">
                             <span class="means-left-label">性别：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
+                            <span v-if="means">{{userInfo.Gender === 1 ? '男' : '女'}}</span>
+                            <Select v-else size="small" v-model="GetUserData.Gender" style="width:160px">
+                                <Option :value="1" >男</Option>
+                                <Option :value="0" >女</Option>
+                            </Select>
                         </div>
                         <div class="means-right">
                             <span class="means-left-label">感情状况：</span>
-                            <Select size="small" style="width:160px">
-                                <Option value="New York" >New York</Option>
+                            <span v-if="means">{{userInfo.EmotionalState}}</span>
+                            <Select v-else size="small" v-model="GetUserData.Emotional" style="width:160px">
+                                <Option v-for="(items, index) in Privacy" :key="index" :value="items.Id+'|'+items.Name">{{items.Name}}</Option>
                             </Select>
                         </div>
                     </div>
                     <div class="means">
                         <div>
-                                <span class="means-left-label">生日：</span>
-                                <Select size="small" style="width:160px">
-                                    <Option value="New York" >New York</Option>
-                                </Select>
-                                <Select size="small" style="width:160px">
-                                    <Option value="New York" >New York</Option>
-                                </Select>
-                                <Select size="small" style="width:160px">
-                                    <Option value="New York" >New York</Option>
-                                </Select>
+                            <span class="means-left-label">生日：</span>
+                            <span v-if="means">{{userInfo.Birthday}}</span>
+                            <DatePicker v-else style="width:160px" v-model="GetUserData.Birthday" format="yyyy/MM/dd" type="date" placeholder="Select date"></DatePicker>
                         </div>
                     </div>
                     <div class="means">
                         <div class="means-textarea">
-                                <span class="means-left-label">个人简介：</span>
-                                <Input  type="textarea" :rows="4" placeholder="Enter something..." />
+                            <span class="means-left-label">个人简介：</span>
+                            <span v-if="means">{{userInfo.Description}}</span>
+                            <Input v-else type="textarea" :rows="4" v-model="GetUserData.Description" placeholder="Enter something..." />
                         </div>
                     </div>
-                    <div class="message-items-right-save">
-                        <div class="modifying-head">保存</div>
-                        <div class="modifying-cancel">取消</div>
+                    <div v-if="!means" class="message-items-right-save">
+                        <div class="modifying-head" @click="userInfoDatas">保存</div>
+                        <div class="modifying-cancel" @click="means = !means">取消</div>
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="means = !means">{{means ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" @click="meansClick">{{means ?"编辑" : "收起"}}</div>
         </div>
         <!-- 教育信息 -->
-        <div class="message-items message-items-text">
+        <!-- <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">教育信息</span>
             </div>
@@ -149,7 +156,7 @@
                 </div>
             </div>
             <div class="message-items-operation" @click="educational = !educational">{{educational ?"编辑" : "收起"}}</div>
-        </div>
+        </div> -->
         <!-- 个人擅长 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
@@ -167,20 +174,22 @@
                 <span class="message-items-left-label">职业信息</span>
             </div>
             <div class="message-items-right">
-                <div v-if="career">
+                <div v-if="!JurisdiInfo.CompanyName">
                     <span class="message-items-right-fill">马上填写</span>
                     <span>你的职业信息，让他人更好的了解你，与更多的同事在建筑部落相遇！</span>
                 </div>
-                <div v-if="!career" class="message-items-right-edit">
+                <div  class="message-items-right-edit">
                     <div class="means">
                         <div>
                             <span class="means-left-label">单位名称：</span>
-                            <Input type="text" style="width: 340px;" size="small" />
+                            <span v-if="career">{{JurisdiInfo.CompanyName}}</span>
+                            <Input v-else type="text" v-model="ModelJurisdiInfo.CompanyName" style="width: 340px;" size="small" />
                         </div>
                         <div class="means-right content-right">
                             <div class="means-right-option">
-                                <Select size="small" style="width:160px">
-                                    <Option value="New York" >New York</Option>
+                                <span v-if="career">{{JurisdiInfo.PrivacyName}}</span>
+                                <Select v-else v-model="ModelJurisdiInfo.Privacy" size="small" style="width:160px">
+                                    <Option v-for="(items, index) in Jurisdi" :key="index" :value="items.Id+'|'+items.Name">{{items.Name}}</Option>
                                 </Select>
                             </div>
                         </div>
@@ -188,33 +197,46 @@
                     <div class="means">
                         <div>
                             <span class="means-left-label">部门/职业：</span>
-                            <Input type="text" style="width: 340px;" size="small" />
+                            <span v-if="career">{{JurisdiInfo.DepaOrPosi}}</span>
+                            <Input  v-else type="text" v-model="ModelJurisdiInfo.DepaOrPosi" style="width: 340px;" size="small" />
                         </div>
                     </div>
                     <div class="means">
                         <div>
                             <span class="means-left-label">工作时间：</span>
-                            <DatePicker type="date" placeholder="Select date" style="width: 340px"></DatePicker>
+                            <span v-if="career">{{JurisdiInfo.OperatHoursStart}}-{{JurisdiInfo.OperatHoursEnd}}</span>
+                            <DatePicker v-else type="daterange" format="yyyy/MM/dd" v-model="ModelJurisdiInfo.OperatHours" placeholder="Select date" style="width: 340px"></DatePicker>
                         </div>
                     </div>
                     <div class="means">
                         <div>
                             <span class="means-left-label">所在地：</span>
-                            <Cascader :data="data" style="width: 340px"></Cascader>
+                            <span v-if="career">{{JurisdiInfo.CityName}}/{{JurisdiInfo.CountyName}}/{{JurisdiInfo.ProvinceName}}</span>
+                            <span v-else>
+                                <Select size="small" v-model="ModelJurisdiInfo.CityArea" style="width:110px" @on-change="onChange">
+                                    <Option v-for="(items, index) in city" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                                </Select>
+                                <Select size="small" v-model="ModelJurisdiInfo.CountyArea" @on-change="onTwoChange" style="width:110px">
+                                    <Option v-for="(items, index) in count" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                                </Select>
+                                <Select size="small" v-model="ModelJurisdiInfo.ProvinceArea"  style="width:110px">
+                                    <Option v-for="(items, index) in province" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                                </Select>
+                            </span>
                         </div>
                     </div>
-                     <div class="message-items-right-save">
-                        <div class="modifying-head">保存</div>
+                     <div v-if="!career" class="message-items-right-save">
+                        <div class="modifying-head" @click="setJob(JurisdiInfo.Id)">保存</div>
                         <div class="modifying-cancel">取消</div>
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="career = !career">{{career ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" @click="clickCareer">{{career ?"编辑" : "收起"}}</div>
         </div>
     </div>
 </template>
 <script>
-import {getUserData} from '../../../service/clientAPI'
+import {getUserData, GetOperatPrivacy, getProvinceList, setUserData, SetUserNickNameData, GetUserExpertise, GetThisUserJobInfo, SetOrAddThisUserJobInfo} from '../../../service/clientAPI'
 export default {
     data () {
         return {
@@ -270,25 +292,218 @@ export default {
                         ]
                     }
                 ],
-            }]
+            }],
+            Privacy: [],
+            city: [],
+            count: [],
+            province: [],
+            GetUserData: {
+                RealName: "",
+                Gender: '0',
+                Birthday: "",
+                Description: "",
+                Emotional: "",
+                ProvinceArea: "",
+                CityArea: "",
+                CountyArea: "",
+                Nickname: ''
+            },
+            userInfo: {},
+            expertiseList: [],
+            UserJob: {},
+            Jurisdi: [],
+            ModelJurisdiInfo: {
+                CompanyName: '公司名字八零八零修改公司名字',
+                CompanyId: '',
+                DepaOrPosi: '工程师',
+                OperatHours: [],
+                Privacy: "",
+                ProvinceArea: "",
+                CityArea: "",
+                CountyArea: "",
+            },
+            JurisdiInfo: {} 
         }
     },
     created () {
-        this.getUserInfo()
+        this.getUserInfo();
+        this.getUserExpertiseList();
+        this.getThisUserJobInfoList();
     },
     methods: {
+        // 个人资料 
         async getUserInfo () {
             let msg =await getUserData();
-            // console.log(msg)
+            if (msg) {
+                this.userInfo = msg;
+                this.GetUserData = {
+                    Nickname: msg.Nickname,
+                    RealName: msg.RealName,
+                    Gender: msg.Gender,
+                    Birthday: msg.Birthday,
+                    Description: msg.Description,
+                    Emotional: msg.EmotionalStateId+'|'+msg.EmotionalState,
+                    ProvinceArea: msg.ProvinceAreaId+'|'+ msg.ProvinceName,
+                    CityArea: msg.CityAreaId+'|'+msg.CityName,
+                    CountyArea: msg.CountyAreaId+'|'+msg.CountyName,
+                }
+            }
+        },
+        async getCityList (id = '', index) {
+            let queryData = {
+                ProvinceCode: id
+            }
+            let msg = await getProvinceList(queryData);
+            if (msg) {
+                if (id) {
+                    this.count = msg.respProvince;
+                } else {
+                    if (index === 1) {
+                        this.province = msg.respProvince;
+                    } else {
+                        this.city = msg.respProvince;
+                    }
+                }
+            }
+        },
+        async userInfoDatas () {
+            let queryData = {}
+            try {
+                queryData = {
+                    RealName: this.GetUserData.RealName,
+                    Gender: this.GetUserData.Gender,
+                    Birthday: this.GetUserData.Birthday,
+                    Description: this.GetUserData.Description,
+                    EmotionalStateId: this.GetUserData.Emotional.split('|')[0],
+                    EmotionalState: this.GetUserData.Emotional.split('|')[1],
+                    ProvinceAreaId: this.GetUserData.ProvinceArea.split('|')[0],
+                    ProvinceName: this.GetUserData.ProvinceArea.split('|')[1],
+                    CityAreaId: this.GetUserData.CityArea.split('|')[0],
+                    CityName: this.GetUserData.CityArea.split('|')[1],
+                    CountyAreaId: this.GetUserData.CountyArea.split('|')[0],
+                    CountyName: this.GetUserData.CountyArea.split('|')[1],
+                }
+            } catch (error) {
+                
+            }
+            let msg = await setUserData(queryData);
+            if (msg) {
+                this.$Message.success('添加成功');
+                this.getUserInfo();
+            }
+        },
+        onChange (value) {
+            let val = value.split('|')[0];
+            this.getCityList(val)
+        },
+        async onTwoChange (value) {
+            if (value) {
+                let val = value.split('|')[0];
+                let queryData = {
+                    ProvinceCode: val
+                }
+                let msg = await getProvinceList(queryData);
+                if (msg) {
+                    this.province = msg.respProvince;
+                }
+            }
+        },
+        // 感情状况：
+        async getOperaList () {
+            let msg = await GetOperatPrivacy(2)
+            if (msg) {
+                this.Privacy = msg.respOperatPrivacy;
+            }
+        },
+        meansClick () {
+            this.means = !this.means;
+            this.getOperaList();
+            this.getCityList();
+            if (this.userInfo.CountyAreaId) {
+                this.getCityList(this.userInfo.CityAreaId)
+            }
+            if (this.userInfo.ProvinceAreaId) {
+                this.onTwoChange(this.userInfo.CountyAreaId+'|'+this.userInfo.CountyName)
+            }
+        },
+        clickCareer () {
+            this.career = !this.career;
+            this.getJurisdiList();
+            this.getCityList()
+            if (this.JurisdiInfo.CountyAreaId) {
+                this.getCityList(this.JurisdiInfo.CityAreaId);
+            }
+            if (this.JurisdiInfo.ProvinceAreaId) {
+                this.onTwoChange(this.JurisdiInfo.CountyAreaId+'|'+this.JurisdiInfo.CountyName);
+            }
+        },
+        // 个人资料  END
+        async setNickName () {
+            let msg = SetUserNickNameData(this.GetUserData.Nickname);
+            if (msg) {
+                this.$Message.success('昵称修改成功');
+                this.getUserInfo();
+            }
+        },
+        // 个人擅长 GetUserExpertise
+        async getUserExpertiseList () {
+            let msg = await GetUserExpertise();
+            if (msg) {
+                // console.log(msg)
+            }
+        },
+        // 获取当前用户所有职业信息接口 GetThisUserJobInfo
+        async getThisUserJobInfoList () {
+            let msg = await GetThisUserJobInfo();
+            if (msg) {
+                let val = msg.jobInfos[0]
+                this.JurisdiInfo = val
+                this.ModelJurisdiInfo = {
+                    CompanyName: val.CompanyName,
+                    CompanyId: val.CompanyName,
+                    DepaOrPosi: val.DepaOrPosi,
+                    OperatHours: [val.OperatHoursStart, val.OperatHoursEnd],
+                    Privacy: val.Id+'|'+val.PrivacyName,
+                    ProvinceArea: val.ProvinceAreaId+'|'+ val.ProvinceName,
+                    CityArea: val.CityAreaId+'|'+val.CityName,
+                    CountyArea: val.CountyAreaId+'|'+val.CountyName,
+                }
+            }
+        },
+        async setJob (id) {
+            let queryData = {}
+            try {
+                queryData = {
+                    CompanyName: this.ModelJurisdiInfo.CompanyName,
+                    "CompanyId": "",
+                    DepaOrPosi: this.ModelJurisdiInfo.DepaOrPosi,
+                    OperatHoursStart: this.ModelJurisdiInfo.OperatHours[0],
+                    OperatHoursEnd:  this.ModelJurisdiInfo.OperatHours[1],
+                    PrivacyId: this.ModelJurisdiInfo.Privacy.split('|')[0],
+                    ProvinceAreaId: this.ModelJurisdiInfo.ProvinceArea.split('|')[0],
+                    ProvinceName: this.ModelJurisdiInfo.ProvinceArea.split('|')[1],
+                    CityAreaId: this.ModelJurisdiInfo.CityArea.split('|')[0],
+                    CityName: this.ModelJurisdiInfo.CityArea.split('|')[1],
+                    CountyAreaId: this.ModelJurisdiInfo.CountyArea.split('|')[0],
+                    CountName: this.ModelJurisdiInfo.CountyArea.split('|')[1],
+                    Id: id
+                }
+            } catch (error) {}
+            let msg = await SetOrAddThisUserJobInfo(queryData)
+            if (msg) {
+                this.$Message.success('修改成功');
+                this.career = !this.career;
+                this.getThisUserJobInfoList();
+            }
+        },
+        // 操作权限
+        async getJurisdiList () {
+            let msg = await GetOperatPrivacy(1)
+            if (msg) {
+                this.Jurisdi = msg.respOperatPrivacy;
+            }
         }
-    },
-    async asyncData({store}) {
-        let msg = store.dispatch('getUserData');
-        // console.log('>>1111111111111111111>>', msg)
-        return {
-            userInfo: msg
-        }
-    },
+    }
 }
 </script>
 <style lang="less" scoped>

@@ -44,7 +44,7 @@ import myMessage from './myMessage'
 import accountSecurity from './accountSecurity'
 import accountBinding from './accountBinding'
 import receivingAddress from './receivingAddress'
-  import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'PersonalCenter',
     components: {
@@ -55,8 +55,8 @@ export default {
     },
     computed: {
         ...mapState({
-        userInfo: state => state.overas.auth
-      }),
+            userInfo: state => state.overas.auth
+        }),
     },
     data () {
         return {

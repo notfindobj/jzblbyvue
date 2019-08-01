@@ -17,7 +17,7 @@
             <div class="message-adders-card">
                 <div class="message-adders-card-title">
                     <span class="message-adders-card-title-name">{{items.Receiver}}</span>
-                    <span class="default-address" v-if="!items.IsDetail">默认地址</span>
+                    <span class="default-address" v-if="items.IsDetail">默认地址</span>
                      <span class="message-adders-card-fork">
                         <i class="icon iconfont icon-chahao2" @click="delAddres(items.Id)"></i>
                     </span>

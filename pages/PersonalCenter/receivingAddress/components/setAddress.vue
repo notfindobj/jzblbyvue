@@ -39,6 +39,7 @@
 </template>
 <script>
 import {setAddressData} from '../../../../service/clientAPI'
+// import {city} from '../../../../static/city'
 export default {
     name: 'setAddress',
     props: {
@@ -112,7 +113,7 @@ export default {
         async saveAddres () {
             let queryData = {
                 "Id": "",
-                "Receiver": "张先生ceshi",
+                "Receiver": "ceshiasdasdd",
                 "ProvinceAreaId": "110000",
                 "ProvinceName": "北京",
                 "CityAreaId": "110100",
@@ -124,7 +125,7 @@ export default {
                 "FixedTelephone": "0370-7766589",
                 "Email": "sqliuen@163.com",
                 "AddressAlias": "家",
-                // "IsDetail": true
+                "IsDetail": true
             }
             let msg  = await setAddressData(queryData);
             if (msg) {

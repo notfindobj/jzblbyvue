@@ -21,14 +21,14 @@
                     <div class="means">
                         <div>
                             <span class="means-left-label">验证码：</span>
-                            <Input type="text" style="width: 160px;" size="small" v-model="userMobile.mobileVerifyCode" />
-                            <span class="cerificationCode">获取验证码</span>
+                            <Input type="text" style="width: 160px;" size="small" v-model="userMobile.MobileVerifyCode" />
+                            <span class="cerificationCode" @click="getMobileCodeData">{{bindingText}}</span>
                         </div>
                     </div>
                     <div  class="means">
                         <div >
                             <span class="means-left-label">新密码：</span>
-                            <Input type="text" style="width: 160px;" size="small" v-model="userMobile.newPwd" />
+                            <Input type="text" style="width: 160px;" size="small" v-model="userMobile.NewPwd" />
                         </div>
                     </div>
                     <div class="message-items-right-save">
@@ -42,16 +42,44 @@
     </div>
 </template>
 <script>
+import {ResetPwd, getMobileCode} from '../../../service/clientAPI'
 export default {
     data () {
         return {
             account: true,
             userMobile:{
                 mobile: "",
-                mobileVerifyCode: "",
-                newPwd: ""
-            }
+                MobileVerifyCode: "",
+                NewPwd: ""
+            },
+            bindingText: '获取验证码',
+            textType: true,
         }
+    },
+    methods: {
+        getMobileCodeData () {
+            let queryData  = {
+                MobileNumber: this.userMobile.mobile,
+                SendType: 0,
+                OperationType: 1
+            }
+            let msg = getMobileCode(queryData);
+            if (msg) {
+                // this.$Message.success("验证码已发送！");
+                this.setTiming()
+            }
+        },
+        setTiming () {
+            let bingTime = 60
+            this.textType = false;
+            this.initInterval = setInterval (() => {
+                this.bindingText =  bingTime-- + 's'
+                if (bingTime < 1) {
+                    clearInterval(this.initInterval)
+                    this.bindingText = '获取验证码'
+                }
+            }, 1000) 
+        },
     }
 }
 </script>
@@ -62,7 +90,6 @@ export default {
             border-bottom: 1px solid #EEEEEE;
             display: flex;
             justify-content: space-between;
-            // align-items: center;
             font-size: 16px;
             &-left {
                 width: 110px;

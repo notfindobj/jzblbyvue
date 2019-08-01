@@ -131,5 +131,27 @@ export default {
       url,
       params: data
     })
+  },
+  downFile (url, data ) {
+    let tooken = '';
+    if (process.server) {
+      if ($store.state.overas.auth) {
+        tooken = $store.state.overas.auth.token
+      }
+    }
+    if (process.client) {
+      if (JSON.parse(localStorage.getItem('LOGININ'))) {
+        tooken = JSON.parse(localStorage.getItem('LOGININ')).token
+      }
+    }
+    return service({
+      headers: {
+        Authorization : "Bearer "+ tooken
+      },
+      methods: 'post',
+      responseType: 'blob',
+      url,
+      params: data
+    })
   }
 }
