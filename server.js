@@ -22,7 +22,7 @@ app.use(session({
   resave: false,                         // 每次请求都重新设置session cookie
   saveUninitialized: true
 }))
-
+// 存储数据
 app.post('/session/:name', function (req, res) {
   let response = {
     Success: true,
@@ -40,7 +40,30 @@ app.post('/session/:name', function (req, res) {
   }
   return res.json(response)
 })
-
+// 更改头像和昵称
+/**
+ * name: 昵称
+ * headIcon: 用户头像
+ * 
+ */
+app.use('/user/setUserInfo', function(req, res) {
+  let response = {
+    Success: true,
+    Data: {},
+    Msg: '存储成功',
+    Code: 200
+  }
+  let user = req.cookies.adminToken;
+  if (req.body.name) {
+    user.NickName = req.body.name
+  }
+  if (req.body.headIcon) {
+    user.HeadIcon = req.body.headIcon
+  }
+  response.Data = user;
+  consola.log(response.Data);
+  return res.json(response);
+})
 
 // 通过手机号码登录 POST /api/
 app.post('/front/mobileLogin', function (req, res) {

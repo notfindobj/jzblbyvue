@@ -6,8 +6,11 @@
                <span class="message-items-left-label left-label">头像</span>
            </div>
            <div class="message-items-right">
-               <div class="message-items-right-header"></div>
-               <div v-if="!modifying" class="modifying-head">修改头像</div>
+               <div class="message-items-right-header">
+                   <img :src="Identity.HeadIcon" alt="" width="100px;">
+               </div>
+               <div v-if="!modifying" class="modifying-head" @click="$refs.uploadType.click()">修改头像</div>
+               <input type="file" style="display:none;" ref="uploadType" @change="upHeaderImg"> 
            </div>
            <div class="message-items-operation operation-label" @click="modifying = !modifying">{{modifying ?"编辑" : "收起"}}</div>
         </div>
@@ -211,7 +214,7 @@
                     <div class="means">
                         <div>
                             <span class="means-left-label">所在地：</span>
-                            <span v-if="career">{{JurisdiInfo.CityName}}/{{JurisdiInfo.CountyName}}/{{JurisdiInfo.ProvinceName}}</span>
+                            <span v-if="career">{{JurisdiInfo.CityName}}/{{JurisdiInfo.CountName}}/{{JurisdiInfo.ProvinceName}}</span>
                             <span v-else>
                                 <Select size="small" v-model="ModelJurisdiInfo.CityArea" style="width:110px" @on-change="onChange">
                                     <Option v-for="(items, index) in city" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
@@ -227,7 +230,7 @@
                     </div>
                      <div v-if="!career" class="message-items-right-save">
                         <div class="modifying-head" @click="setJob(JurisdiInfo.Id)">保存</div>
-                        <div class="modifying-cancel">取消</div>
+                        <div class="modifying-cancel" @click="career = !career">取消</div>
                     </div>
                 </div>
             </div>
@@ -236,7 +239,9 @@
     </div>
 </template>
 <script>
-import {getUserData, GetOperatPrivacy, getProvinceList, setUserData, SetUserNickNameData, GetUserExpertise, GetThisUserJobInfo, SetOrAddThisUserJobInfo} from '../../../service/clientAPI'
+import {uploadFile, getUserData, GetOperatPrivacy, getProvinceList, setUserData, SetUserNickNameData, GetUserExpertise, GetThisUserJobInfo, SetOrAddThisUserJobInfo} from '../../../service/clientAPI'
+import {setHearImg} from '../../../LocalAPI'
+import { mapState, mapGetters } from 'vuex'
 export default {
     data () {
         return {
@@ -313,9 +318,9 @@ export default {
             UserJob: {},
             Jurisdi: [],
             ModelJurisdiInfo: {
-                CompanyName: '公司名字八零八零修改公司名字',
+                CompanyName: '',
                 CompanyId: '',
-                DepaOrPosi: '工程师',
+                DepaOrPosi: '',
                 OperatHours: [],
                 Privacy: "",
                 ProvinceArea: "",
@@ -325,12 +330,36 @@ export default {
             JurisdiInfo: {} 
         }
     },
+    computed: {
+        ...mapState({
+            Identity: state => state.overas.auth
+        }),
+    },
     created () {
         this.getUserInfo();
         this.getUserExpertiseList();
         this.getThisUserJobInfoList();
     },
     methods: {
+        // 上传头像
+        async upHeaderImg (event) {
+            let file = event.target.files;
+            if (file.length > 0) {
+                let data = new FormData();
+                for (let item of file) {
+                    data.append('files', item)
+                }
+                let msg = await uploadFile(data, 8);
+                if (msg) {
+                    let user = {
+                        headIcon: msg.smallImgUrl
+                    }
+                    let info = await setHearImg(user);
+                    this.$store.dispatch('LOGININ', info);
+                    localStorage.setItem('LOGININ', JSON.stringify(info))
+                }
+            }
+        },
         // 个人资料 
         async getUserInfo () {
             let msg =await getUserData();
@@ -442,6 +471,13 @@ export default {
             let msg = SetUserNickNameData(this.GetUserData.Nickname);
             if (msg) {
                 this.$Message.success('昵称修改成功');
+                let user = {
+                    name: this.GetUserData.Nickname
+                }
+                let info = await setHearImg(user);
+                this.$store.dispatch('LOGININ', info);
+                localStorage.setItem('LOGININ', JSON.stringify(info))
+                this.nickname = !this.nickname
                 this.getUserInfo();
             }
         },
@@ -463,10 +499,10 @@ export default {
                     CompanyId: val.CompanyName,
                     DepaOrPosi: val.DepaOrPosi,
                     OperatHours: [val.OperatHoursStart, val.OperatHoursEnd],
-                    Privacy: val.Id+'|'+val.PrivacyName,
+                    Privacy: val.PrivacyId+'|'+val.PrivacyName,
                     ProvinceArea: val.ProvinceAreaId+'|'+ val.ProvinceName,
                     CityArea: val.CityAreaId+'|'+val.CityName,
-                    CountyArea: val.CountyAreaId+'|'+val.CountyName,
+                    CountyArea: val.CountyAreaId+'|'+val.CountName,
                 }
             }
         },
@@ -475,11 +511,12 @@ export default {
             try {
                 queryData = {
                     CompanyName: this.ModelJurisdiInfo.CompanyName,
-                    "CompanyId": "",
+                    CompanyId: "",
                     DepaOrPosi: this.ModelJurisdiInfo.DepaOrPosi,
                     OperatHoursStart: this.ModelJurisdiInfo.OperatHours[0],
                     OperatHoursEnd:  this.ModelJurisdiInfo.OperatHours[1],
                     PrivacyId: this.ModelJurisdiInfo.Privacy.split('|')[0],
+                    PrivacyName: this.ModelJurisdiInfo.Privacy.split('|')[1],
                     ProvinceAreaId: this.ModelJurisdiInfo.ProvinceArea.split('|')[0],
                     ProvinceName: this.ModelJurisdiInfo.ProvinceArea.split('|')[1],
                     CityAreaId: this.ModelJurisdiInfo.CityArea.split('|')[0],
@@ -531,6 +568,7 @@ export default {
                     height: 100px;
                     border-radius: 50%;
                     background: #999999;
+                    overflow: hidden;
                 }
                 &-fill {
                     color: #FF3C00;

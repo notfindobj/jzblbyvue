@@ -217,9 +217,8 @@
                 if (showLayout.title === '文本') {
                     this.isLayout = false
                 } else {
-                    this.isLayout = showLayout.showLayout;
+                    this.isLayout = showLayout.showLayout === 'true' ? true : false;
                 }
-                
             } catch (error) {}
         },
         mounted() {

@@ -11,3 +11,7 @@ export const login = async (params) => {
 export const logout = async (params) => {
     return await request.post('api/logout', params);
 }
+// 本地代理修改昵称头像
+export const setHearImg = async (params) => {
+    return await request.post('user/setUserInfo', params);
+}

@@ -62,7 +62,7 @@
             <div class="message-items-operation" @click="bindingWX">绑定</div>
         </div>
         <!-- 邮箱绑定 -->
-        <div class="message-items message-items-text">
+        <!-- <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">邮箱绑定</span>
             </div>
@@ -94,9 +94,9 @@
                 </div>
             </div>
             <div class="message-items-operation" @click="mailbox = !mailbox">{{mailbox ?"编辑" : "收起"}}</div>
-        </div>
+        </div> -->
         <!-- 支付宝 -->
-        <div class="message-items message-items-text">
+        <!-- <div class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">支付宝</span>
             </div>
@@ -104,7 +104,7 @@
                 <span>未绑定</span>
             </div>
             <div class="message-items-operation">编辑</div>
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

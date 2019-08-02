@@ -8,8 +8,7 @@
                     :data-id="items.ItemAttributesId"
                     :class="items.ItemAttributesId === id ?  'banner-nav-items cursorHover': 'banner-nav-items'"
                     @mouseenter="mouseenter(items.ItemAttributesId)"
-                    @click="goList(items)"
-                >
+                    @click="goList(items)">
                     {{items.ItemAttributesFullName}}
                     <div>
                         <div class="sub-banner-nav" :class="items.ItemAttributesId === id ?  'show': 'hide'">
@@ -114,12 +113,8 @@
                 }
                 this.$store.dispatch('Serverstorage', baseDateId);
                 let msgs = await setDemo('dataBase', baseDateId);
-                if (this.$route.name === "dataBase-id") {
-                    let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: cate.ItemAttributesId } });
-                    window.open(routeData.href, '_blank');
-                } else {
-                    this.$router.push({ name: "dataBase-id", query: { id: cate.ItemAttributesId } })
-                }
+                let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: cate.ItemAttributesId } });
+                window.open(routeData.href, '_blank');
             }
         }
     }
