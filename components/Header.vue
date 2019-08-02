@@ -49,6 +49,7 @@
 </template>
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import { logout, setDemo} from '../LocalAPI'
   import axios from 'axios'
   export default {
     data() {
@@ -74,22 +75,12 @@
         this.$store.dispatch('SETUP', true)
       },
       async signOut() {
-        let that = this;
-        let config = {
-          url: process.env.NODE_ENV === 'production' ? 'http://140.143.240.64:8889/api/logout' : 'http://127.0.0.1:8889/api/logout',
-          withCredentials: true,
-          method: 'post',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
+        let msg = await logout();
+        if (msg) {
+            this.$store.dispatch('LOGININ', null);
+            localStorage.removeItem('LOGININ');
+            this.$Message.success('退出成功！');
         }
-        axios(config)
-          .then(res => {
-            that.$store.dispatch('LOGININ', null);
-            localStorage.removeItem('LOGININ')
-            that.$Message.success(res.data.Msg);
-            that.$router.push({ name: "index"})
-          })
       },
     }
   }

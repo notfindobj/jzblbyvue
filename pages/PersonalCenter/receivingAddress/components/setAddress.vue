@@ -11,7 +11,16 @@
                         <Input  placeholder="收货人"  v-model="addressData.Receiver" style="width: 160px;" />
                     </FormItem>
                     <FormItem label="所在地区：">
-                        <Cascader :data="data" v-model="value1" style="width: 340px;"></Cascader>
+                        <!-- <Cascader :data="data" v-model="value1" style="width: 340px;"></Cascader> -->
+                        <Select size="small" v-model="addressData.ProvinceArea" style="width:95px" @on-change="onChange">
+                            <Option v-for="(items, index) in province" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                        </Select>
+                        <Select size="small" v-model="addressData.CityArea" @on-change="onTwoChange" style="width:95px">
+                            <Option v-for="(items, index) in city" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                        </Select>
+                        <Select size="small" v-model="addressData.CountyArea" style="width:95px">
+                            <Option v-for="(items, index) in count" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
+                        </Select>
                     </FormItem>
                     <FormItem label="详细地址：">
                         <Input  placeholder="详细地址" v-model="addressData.DetailAddress" style="width: 340px;" />
@@ -38,7 +47,7 @@
     </div>
 </template>
 <script>
-import {setAddressData} from '../../../../service/clientAPI'
+import {setAddressData, getProvinceList} from '../../../../service/clientAPI'
 // import {city} from '../../../../static/city'
 export default {
     name: 'setAddress',
@@ -55,77 +64,69 @@ export default {
     },
     data () {
         return {
-            value1: [],
-            data: [{
-                    value: 'beijing',
-                    label: '北京',
-                    children: [
-                        {
-                            value: 'gugong',
-                            label: '故宫'
-                        },
-                        {
-                            value: 'tiantan',
-                            label: '天坛'
-                        },
-                        {
-                            value: 'wangfujing',
-                            label: '王府井'
-                        }
-                    ]
-                }, 
-                {
-                    value: 'jiangsu',
-                    label: '江苏',
-                    children: [
-                        {
-                            value: 'nanjing',
-                            label: '南京',
-                            children: [
-                                {
-                                    value: 'fuzimiao',
-                                    label: '夫子庙',
-                                }
-                            ]
-                        },
-                        {
-                            value: 'suzhou',
-                            label: '苏州',
-                            children: [
-                            {
-                                value: 'zhuozhengyuan',
-                                label: '拙政园',
-                            },
-                            {
-                                value: 'shizilin',
-                                label: '狮子林',
-                            }
-                        ]
-                    }
-                ],
-            }]
+            city: [],
+            count: [],
+            province: []
+        }
+    },
+    mounted() {
+        this.getCityList();
+        if (this.addressData.CityArea) {
+            this.onChange(this.addressData.ProvinceArea)
+        }
+        if (this.addressData.CountyArea) {
+            this.onTwoChange(this.addressData.CityArea)
         }
     },
     methods: {
         closeBtn () {
             this.$emit('closeBtn')
         },
+        async getCityList (id = '', index) {
+            let queryData = {
+                ProvinceCode: id
+            }
+            let msg = await getProvinceList(queryData);
+            if (msg) {
+                if (id) {
+                    this.city = msg.respProvince;
+                } else {
+                    this.province = msg.respProvince;
+                }
+            }
+        },
+        onChange (value) {
+            let val = value.split('|')[0];
+            this.getCityList(val)
+        },
+         async onTwoChange (value) {
+            if (value) {
+                let val = value.split('|')[0];
+                let queryData = {
+                    ProvinceCode: val
+                }
+                let msg = await getProvinceList(queryData);
+                if (msg) {
+                    this.count = msg.respProvince;
+                }
+            }
+        },
         async saveAddres () {
             let queryData = {
-                "Id": "",
-                "Receiver": "ceshiasdasdd",
-                "ProvinceAreaId": "110000",
-                "ProvinceName": "北京",
-                "CityAreaId": "110100",
-                "CityName": "北京市",
-                "CountyAreaId": "110101",
-                "CountName": "东城区",
-                "DetailAddress": "详细地址1005号105室",
-                "MobilePhone": "18321284508",
-                "FixedTelephone": "0370-7766589",
-                "Email": "sqliuen@163.com",
-                "AddressAlias": "家",
-                "IsDetail": true
+                Id: this.addressData.Id,
+                Receiver: this.addressData.Receiver,
+                ProvinceAreaId: this.addressData.ProvinceArea.split('|')[0],
+                ProvinceName: this.addressData.ProvinceArea.split('|')[1],
+                CityAreaId: this.addressData.CityArea.split('|')[0],
+                CityName: this.addressData.CityArea.split('|')[1],
+                CountyAreaId: this.addressData.CountyArea.split('|')[0],
+                CountName: this.addressData.CountyArea.split('|')[1],
+                DetailAddress: this.addressData.DetailAddress,
+                MobilePhone: this.addressData.MobilePhone,
+                FixedTelephone: this.addressData.FixedTelephone,
+                Email: this.addressData.Email,
+                AddressAlias: this.addressData.AddressAlias,
+                IsDetail: this.addressData.inCount,
             }
             let msg  = await setAddressData(queryData);
             if (msg) {
@@ -151,7 +152,7 @@ export default {
             left: 50%;
             transform: translate(-50% ,-50%);
             width: 812px;
-            height: 533px;
+            height: 534px;
             background: #ffffff;
             font-size: 14px;
             &-header {

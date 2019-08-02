@@ -185,3 +185,7 @@ export const GetThisUserJobInfo = async params => {
 export const SetOrAddThisUserJobInfo = async params => {
   return await request.post(`UserInfo/SetOrAddThisUserJobInfo`, params)
 }
+//修改用户手机号码接口
+export const SetChangeMobile = async params => {
+  return await request.post(`UserInfo/ChangeMobile`, params)
+}

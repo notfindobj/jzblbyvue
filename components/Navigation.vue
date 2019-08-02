@@ -129,6 +129,7 @@
             },
             async signOut() {
                 let msg = await logout();
+                this.$router.push({name: "index"});
                 if (msg) {
                     this.$store.dispatch('LOGININ', null);
                     localStorage.removeItem('LOGININ');

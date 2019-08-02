@@ -15,26 +15,26 @@
                     </div>
                     <div  class="means">
                         <div class="means-left">
-                                <span class="means-left-label">旧手机号：</span>
-                                <span>1234****909</span>
+                            <span class="means-left-label">旧手机号：</span>
+                            <Input type="text" style="width: 160px;" v-model="setMobile.OldPhoneNumber" size="small" />
                         </div>
                     </div>
                     <div  class="means">
                         <div >
                             <span class="means-left-label">新手机号：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
-                            <span class="cerificationCode">获取验证码</span>
+                            <Input type="text" style="width: 160px;" v-model="setMobile.NewPhoneNumber" size="small" />
+                            <span class="cerificationCode" @click="getMobileCodeData">{{bindingText}}</span>
                         </div>
                     </div>
                     <div class="means">
                         <div class="means-left">
                             <span class="means-left-label">验证码：</span>
-                            <Input type="text" style="width: 160px;" size="small" />
+                            <Input type="text" style="width: 160px;" v-model="setMobile.VerificationCode" size="small" />
                             
                         </div>
                     </div>
                     <div class="message-items-right-save">
-                        <div class="modifying-head">保存</div>
+                        <div class="modifying-head" @click="changeNumber">保存</div>
                         <div class="modifying-cancel">取消</div>
                     </div>
                 </div>
@@ -108,13 +108,20 @@
     </div>
 </template>
 <script>
-import {loginByWX, bindingByWX} from '../../../service/clientAPI'
+import {loginByWX, bindingByWX, SetChangeMobile, getMobileCode} from '../../../service/clientAPI'
 import { mapState } from 'vuex'
 export default {
     data () {
         return {
             cellPhone:  true,
-            mailbox: true
+            mailbox: true,
+            isTime: false,
+            bindingText: '获取验证码',
+            setMobile: {
+                OldPhoneNumber: '',
+                NewPhoneNumber: '',
+                VerificationCode: ''
+            }
         }
     },
     computed: {
@@ -157,7 +164,54 @@ export default {
             const LEFT = (window.screen.width - 685) / 2;
             const TOP = (window.screen.height - 555) / 2;
             return window.open(url,'oauth2Login_qq','height=555,width=685, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes, top=' + TOP + ', left=' + LEFT);
-        }
+        },
+        async changeNumber () {
+            if (!this.setMobile.VerificationCode) {
+                this.$Message.warning('验证码不能为空！');
+                return false
+            }
+            let msg= await SetChangeMobile(this.setMobile);
+            if (msg) {
+                this.cellPhone = !this.cellPhone;
+                this.$Message.success('手机号修改成功！');
+            }
+        },
+        async getMobileCodeData () {
+            if (!this.setMobile.OldPhoneNumber) {
+                this.$Message.warning('请填写手机号！');
+                return false
+            }
+            if (!this.setMobile.NewPhoneNumber) {
+                this.$Message.warning('请填写新手机号！');
+                return false
+            }
+            if (this.isTime) {
+                return false
+            }
+            let queryData  = {
+                MobileNumber: this.setMobile.NewPhoneNumber,
+                SendType: 0,
+                OperationType: 2
+            }
+            let msg = await getMobileCode(queryData);
+            if (msg) {
+                this.isTime = true;
+                this.$Message.success("验证码已发送！");
+                this.setTiming()
+            }
+        },
+        setTiming () {
+            let bingTime = 60
+            this.textType = false;
+            this.initInterval = setInterval (() => {
+                this.bindingText =  bingTime-- + 's'
+                if (bingTime < 1) {
+                    clearInterval(this.initInterval)
+                    this.isTime = false;
+                    this.bindingText = '获取验证码'
+                }
+            }, 1000) 
+        },
     }
 }
 </script>
@@ -192,11 +246,14 @@ export default {
                     cursor: pointer;
                 }
                 &-edit {
-                    margin-top: 30px;
+                    // margin-top: 30px;
                     &-lable {
                         margin-left: 15px;
                         font-size: 14px;
                         color: #999999;
+                    }
+                    &:first-child {
+                        margin-top: 0;
                     }
                 }
                 &-save {
@@ -230,6 +287,7 @@ export default {
         &-textarea {
             width: 98%;
         }
+        
     }
     .cerificationCode {
         color: #FFFFFF;

@@ -114,6 +114,9 @@ export default {
             this.isShow = true;
             this.addressData.address = [];
             this.addressData = val;
+            this.addressData.ProvinceArea= val.ProvinceAreaId+'|'+ val.ProvinceName;
+            this.addressData.CityArea= val.CityAreaId+'|'+val.CityName;
+            this.addressData.CountyArea= val.CountyAreaId+'|'+val.CountName;
             this.addressData.address = [val.ProvinceAreaId, val.CityAreaId, val.CountyAreaId];
         },
         upAddres (val) {
