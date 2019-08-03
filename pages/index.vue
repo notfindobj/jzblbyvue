@@ -81,12 +81,14 @@
                     <i-col span="12">
                         <div class="left-items">
                             <template v-for="(items, lp) in lpList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items" :key="lp"/>
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items"
+                                             :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in lpList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items"
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'lpList')"
+                                             :smallCardsDate="items"
                                              :key="lp"/>
                             </template>
                         </div>
@@ -143,12 +145,14 @@
                     <i-col span="12">
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items" :key="lp"/>
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items"
+                                             :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items"
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'ztList')"
+                                             :smallCardsDate="items"
                                              :key="lp"/>
                             </template>
                         </div>
@@ -218,210 +222,211 @@
                 </Row>
             </div>
             <!-- 建筑游学 -->
-<!--            <div>-->
-<!--                <div class="main-conment">-->
-<!--                    <div class="main-conment-top">-->
-<!--                        <ul class="main-conment-sub">-->
-<!--                            <li>建筑游学</li>-->
-<!--                            <li>新亚洲/</li>-->
-<!--                            <li>（新）古典/</li>-->
-<!--                            <li>现代/</li>-->
-<!--                            <li>英式/</li>-->
-<!--                            <li>地中海</li>-->
-<!--                        </ul>-->
-<!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <Row>-->
-<!--                    <i-col span="12">-->
-<!--                        <Big-Cards/>-->
-<!--                    </i-col>-->
-<!--                    <i-col span="12">-->
-<!--                        <Small-Cards/>-->
-<!--                        <Small-Cards/>-->
-<!--                        <Small-Cards/>-->
-<!--                        <Small-Cards/>-->
-<!--                    </i-col>-->
-<!--                </Row>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; 优秀设计师 &ndash;&gt;-->
-<!--            <div>-->
-<!--                <div class="main-conment">-->
-<!--                    <div class="main-conment-top">-->
-<!--                        <ul class="main-conment-sub">-->
-<!--                            <li>优秀设计师</li>-->
-<!--                        </ul>-->
-<!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <Row>-->
-<!--                    <i-col span="24">-->
-<!--                        <div id="excellent">-->
-<!--                            <div v-swiper:mySwipers="excellent">-->
-<!--                                <div class="swiper-wrapper excellent">-->
-<!--                                    <div class="swiper-slide excellent-slide" v-for="(banner, index) in banners"-->
-<!--                                         :key="index">-->
-<!--                                        <div class="excellent-slide-title">-->
-<!--                                            <img src="../assets/images/smail.png" alt="">-->
-<!--                                        </div>-->
-<!--                                        <div class="excellent-slide-content">-->
-<!--                                            <div class="excellent-slide-content-name">张小杰</div>-->
-<!--                                            <div class="excellent-slide-content-subdel">一个有态度的设计师，给你精彩</div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                                <div class="swiper-pagination swiper-pagination-bullets"></div>-->
-<!--                            </div>-->
-<!--                            <div class="swiper-button-next"></div>-->
-<!--                            <div class="swiper-button-prev"></div>-->
-<!--                        </div>-->
-<!--                    </i-col>-->
-<!--                </Row>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; 优秀品牌商 &ndash;&gt;-->
-<!--            <div>-->
-<!--                <div class="main-conment">-->
-<!--                    <div class="main-conment-top">-->
-<!--                        <ul class="main-conment-sub">-->
-<!--                            <li>优秀品牌商</li>-->
-<!--                        </ul>-->
-<!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                <div>-->
-<!--                    <div v-for="i in 12" :key="'2'+i " class="matrix">-->
-<!--                        <div class="matrix-img">-->
-<!--                            <img src="../assets/images/matrix.png" alt="">-->
-<!--                        </div>-->
-<!--                        <div class="matrix-text">matrix</div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!--            <div>-->
+            <!--                <div class="main-conment">-->
+            <!--                    <div class="main-conment-top">-->
+            <!--                        <ul class="main-conment-sub">-->
+            <!--                            <li>建筑游学</li>-->
+            <!--                            <li>新亚洲/</li>-->
+            <!--                            <li>（新）古典/</li>-->
+            <!--                            <li>现代/</li>-->
+            <!--                            <li>英式/</li>-->
+            <!--                            <li>地中海</li>-->
+            <!--                        </ul>-->
+            <!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <Row>-->
+            <!--                    <i-col span="12">-->
+            <!--                        <Big-Cards/>-->
+            <!--                    </i-col>-->
+            <!--                    <i-col span="12">-->
+            <!--                        <Small-Cards/>-->
+            <!--                        <Small-Cards/>-->
+            <!--                        <Small-Cards/>-->
+            <!--                        <Small-Cards/>-->
+            <!--                    </i-col>-->
+            <!--                </Row>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash; 优秀设计师 &ndash;&gt;-->
+            <!--            <div>-->
+            <!--                <div class="main-conment">-->
+            <!--                    <div class="main-conment-top">-->
+            <!--                        <ul class="main-conment-sub">-->
+            <!--                            <li>优秀设计师</li>-->
+            <!--                        </ul>-->
+            <!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <Row>-->
+            <!--                    <i-col span="24">-->
+            <!--                        <div id="excellent">-->
+            <!--                            <div v-swiper:mySwipers="excellent">-->
+            <!--                                <div class="swiper-wrapper excellent">-->
+            <!--                                    <div class="swiper-slide excellent-slide" v-for="(banner, index) in banners"-->
+            <!--                                         :key="index">-->
+            <!--                                        <div class="excellent-slide-title">-->
+            <!--                                            <img src="../assets/images/smail.png" alt="">-->
+            <!--                                        </div>-->
+            <!--                                        <div class="excellent-slide-content">-->
+            <!--                                            <div class="excellent-slide-content-name">张小杰</div>-->
+            <!--                                            <div class="excellent-slide-content-subdel">一个有态度的设计师，给你精彩</div>-->
+            <!--                                        </div>-->
+            <!--                                    </div>-->
+            <!--                                </div>-->
+            <!--                                <div class="swiper-pagination swiper-pagination-bullets"></div>-->
+            <!--                            </div>-->
+            <!--                            <div class="swiper-button-next"></div>-->
+            <!--                            <div class="swiper-button-prev"></div>-->
+            <!--                        </div>-->
+            <!--                    </i-col>-->
+            <!--                </Row>-->
+            <!--            </div>-->
+            <!--            &lt;!&ndash; 优秀品牌商 &ndash;&gt;-->
+            <!--            <div>-->
+            <!--                <div class="main-conment">-->
+            <!--                    <div class="main-conment-top">-->
+            <!--                        <ul class="main-conment-sub">-->
+            <!--                            <li>优秀品牌商</li>-->
+            <!--                        </ul>-->
+            <!--                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--                <div>-->
+            <!--                    <div v-for="i in 12" :key="'2'+i " class="matrix">-->
+            <!--                        <div class="matrix-img">-->
+            <!--                            <img src="../assets/images/matrix.png" alt="">-->
+            <!--                        </div>-->
+            <!--                        <div class="matrix-text">matrix</div>-->
+            <!--                    </div>-->
+            <!--                </div>-->
+            <!--            </div>-->
         </div>
         <ToTop></ToTop>
     </div>
 </template>
 <script>
-  import LevelMenu from '~/components/home/LevelMenu'
-  import ToTop from '~/components/toTop'
-  import {setDemo} from '../LocalAPI'
-  export default {
-    head: {
-        title: '建筑部落',
-        meta: [
-            { charset: 'utf-8' },
-            { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-            {
-            hid: 'description',
-            name: 'description',
-            content:
-                '建筑部落（jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产开发设计、房地产设计网站；加快信息传播速度,降低运营成本'
-            },
-            {
-            hid: 'keywords',
-            name: 'keywords',
-            content: '建筑部落（jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产开发设计、房地产设计网站；加快信息传播速度,降低运营成本'
-            }
-        ]
-    },
-    data() {
-      return {
-        banners: [
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
-          'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
-        ],
-        swiperOption: {
-          loop: true,
-          autoplay: true,
-          slidesPerView: 'auto',
-          centeredSlides: true,
-          pagination: {
-            el: '.swiper-pagination',
-            dynamicBullets: true
-          },
-          on: {
-            slideChange() {
-              // console.log('onSlideChangeEnd', this);
-            },
-            tap() {
-              // console.log('onTap', this);
-            }
-          }
-        },
-        excellent: {
-          slidesPerView: 4,
-          slidesPerGroup: 1,
-          pagination: {
-            // el: '.swiper-pagination',
-            dynamicBullets: true
-          },
-          navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-          },
-        },
-      }
-    },
-    components: {
-      LevelMenu,
-      ToTop
-    },
-    
-    watch: {},
-    async asyncData({ app, store }) {
-      let menuData = await store.dispatch('getMenu');
-      let homeData = await store.dispatch('getHomeData');
-      return {
-        homeData: homeData,
-        SlideList: homeData.SlideList,
-        sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
-        lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
-        xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
-        suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型
-        ztList: homeData.ItemList.Zt.RecommendedItemModels || [], // 总图
-        pmList: homeData.ItemList.Pm.RecommendedItemModels || [], // 平面
-        wbList: homeData.ItemList.Wb.RecommendedItemModels || [], // 文本
-        jzList: homeData.ItemList.Jzgf.RecommendedItemModels || [], // 建筑规范
-        snList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
+    import LevelMenu from '~/components/home/LevelMenu'
+    import ToTop from '~/components/toTop'
+    import { setDemo } from '../LocalAPI'
 
-      }
-    },
-    methods: {
-      async viewItem(item, val) {
-        let baseDateId = {
-          Id: item.ItemId,
-          reqItemList: {
-            ClassTypeId: '',
-            ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-            SortType: 0,
-            KeyWords: "",
-            Order: true,
-            Page: 0,
-            Rows: 8
-          },
-          showLayout: val === 'jzList' || val === 'wbList' ? false: true
-        }
-        let serverBataBase = {
-            key: 'dataBase',
-            value: baseDateId
-        }
-        this.$store.dispatch('Serverstorage', serverBataBase);
-        let msgs = await setDemo('dataBase', serverBataBase);
-        let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
-        window.open(routeData.href, '_blank');
+    export default {
+        head: {
+            title: '建筑部落',
+            meta: [
+                { charset: 'utf-8' },
+                { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+                {
+                    hid: 'description',
+                    name: 'description',
+                    content:
+                        '建筑部落（jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产开发设计、房地产设计网站；加快信息传播速度,降低运营成本'
+                },
+                {
+                    hid: 'keywords',
+                    name: 'keywords',
+                    content: '建筑部落（jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产开发设计、房地产设计网站；加快信息传播速度,降低运营成本'
+                }
+            ]
+        },
+        data() {
+            return {
+                banners: [
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png',
+                    'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1548925914665&di=05ceb3b050890a247647d92eedf08670&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png'
+                ],
+                swiperOption: {
+                    loop: true,
+                    autoplay: true,
+                    slidesPerView: 'auto',
+                    centeredSlides: true,
+                    pagination: {
+                        el: '.swiper-pagination',
+                        dynamicBullets: true
+                    },
+                    on: {
+                        slideChange() {
+                            // console.log('onSlideChangeEnd', this);
+                        },
+                        tap() {
+                            // console.log('onTap', this);
+                        }
+                    }
+                },
+                excellent: {
+                    slidesPerView: 4,
+                    slidesPerGroup: 1,
+                    pagination: {
+                        // el: '.swiper-pagination',
+                        dynamicBullets: true
+                    },
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                },
+            }
+        },
+        components: {
+            LevelMenu,
+            ToTop
+        },
 
-        // let routeData = this.$router.resolve({
-        //   name: "DataDetails",
-        //   query: { dataBase: JSON.stringify(baseDateId) }
-        // });
-        // window.open(routeData.href, '_blank');
-      }
+        watch: {},
+        async asyncData({ app, store }) {
+            let menuData = await store.dispatch('getMenu');
+            let homeData = await store.dispatch('getHomeData');
+            return {
+                homeData: homeData,
+                SlideList: homeData.SlideList,
+                sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
+                lpList: homeData.ItemList.Lp.RecommendedItemModels || [], // 楼盘
+                xgtList: homeData.ItemList.Xgt.RecommendedItemModels || [], // 效果图
+                suList: homeData.ItemList.Sumx.RecommendedItemModels || [], // SU模型
+                ztList: homeData.ItemList.Zt.RecommendedItemModels || [], // 总图
+                pmList: homeData.ItemList.Pm.RecommendedItemModels || [], // 平面
+                wbList: homeData.ItemList.Wb.RecommendedItemModels || [], // 文本
+                jzList: homeData.ItemList.Jzgf.RecommendedItemModels || [], // 建筑规范
+                snList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
+
+            }
+        },
+        methods: {
+            async viewItem(item, val) {
+                let baseDateId = {
+                    Id: item.ItemId,
+                    reqItemList: {
+                        ClassTypeId: '',
+                        ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
+                        SortType: 0,
+                        KeyWords: "",
+                        Order: true,
+                        Page: 0,
+                        Rows: 8
+                    },
+                    showLayout: val === 'jzList' || val === 'wbList' ? false : true
+                }
+                let serverBataBase = {
+                    key: 'dataBase',
+                    value: baseDateId
+                }
+                this.$store.dispatch('Serverstorage', serverBataBase);
+                let msgs = await setDemo('dataBase', serverBataBase);
+                let routeData = this.$router.resolve({ name: 'DataDetails-id', query: { id: item.ItemId } });
+                window.open(routeData.href, '_blank');
+
+                // let routeData = this.$router.resolve({
+                //   name: "DataDetails",
+                //   query: { dataBase: JSON.stringify(baseDateId) }
+                // });
+                // window.open(routeData.href, '_blank');
+            }
+        }
     }
-  }
 </script>
 <style lang="less">
     .left-items {
@@ -446,20 +451,25 @@
         width: 1200px;
         margin: 0 auto;
     }
+
     .swiper-box {
         height: 374px;
     }
+
     .nav-atvite {
         background: #FF3C00;
     }
+
     .main-conment {
         margin-top: 50px;
         border-top: 1px solid #999999;
+
         &-top {
             display: flex;
             justify-content: space-between;
             padding: 3px 0;
         }
+
         &-sub {
             display: flex;
 
@@ -474,20 +484,24 @@
                 }
             }
         }
+
         &-more {
             line-height: 42px;
             cursor: pointer;
         }
     }
+
     .jiantou-clolr {
         color: #FF3C00;
     }
+
     .text-box {
         width: 384px;
         display: inline-block;
         height: 394px;
         padding-top: 10px;
         border: 1px solid #ccc;
+
         &-img {
             height: 266px;
 
@@ -496,6 +510,7 @@
                 height: 100%;
             }
         }
+
         &-content {
             width: 100%;
             height: 128px;
@@ -515,6 +530,7 @@
                     border-radius: 50%;
                     background: #FF0;
                     overflow: hidden;
+
                     img {
                         height: 100%;
                         width: 100%;
