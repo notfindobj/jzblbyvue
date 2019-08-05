@@ -40,7 +40,7 @@
                     <span class="list-con">{{userInfo.Expertise}}</span>
                 </li>
             </ul>
-            <p class="look-more">查看更多 ></p>
+            <p class="look-more" @click="seeMore">查看更多 ></p>
         </div>
         <div class="he-and-i-introduction-bottom">
             <h5 class="he-and-i-introduction-bottom-title">
@@ -104,7 +104,12 @@
       change(inx, count) {
         this.currentIndex = inx;
         this.$emit('changeComponents', inx, count)
+      },
+      seeMore () {
+        this.$emit('seeMore')
+        // this.$router.push({name: 'PersonalCenter'})
       }
+      
     }
   }
 </script>
@@ -231,12 +236,15 @@
                     }
                 }
             }
-
             .look-more {
+                cursor: pointer;
                 line-height: 17px;
                 text-align: center;
                 font-size: 12px;
                 color: #999999;
+                &:hover {
+                    color: #FF3C00;
+                }
             }
         }
 

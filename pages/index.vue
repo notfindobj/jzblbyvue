@@ -298,12 +298,10 @@
 <!--                </div>-->
 <!--            </div>-->
         </div>
-        <ToTop></ToTop>
     </div>
 </template>
 <script>
   import LevelMenu from '~/components/home/LevelMenu'
-  import ToTop from '~/components/toTop'
   import {setDemo} from '../LocalAPI'
   export default {
     head: {
@@ -367,8 +365,7 @@
       }
     },
     components: {
-      LevelMenu,
-      ToTop
+      LevelMenu
     },
     
     watch: {},

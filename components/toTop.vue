@@ -3,11 +3,8 @@
         <div class="to-top"  @click="scrollToTop">
             <Icon type="ios-arrow-up" color="#fff" size="30" />
         </div>
-        <div class="content" @click="goPublish">
-            发布
-        </div>
+        <div class="content" @click="goPublish">发布</div>
     </div>
-
 </template>
 
 <script>
@@ -21,6 +18,7 @@
     mounted() {
       window.addEventListener('scroll', () => {
         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        console.log(this.scrollTop)
       })
     },
 

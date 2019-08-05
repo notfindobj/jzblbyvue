@@ -4,6 +4,7 @@
         <Header/>
         <nuxt/>
         <Foot/>
+        <ToTop/>
     </div>
 </template>
 
@@ -11,16 +12,13 @@
     import Foot from '../components/Foot';
     import Header from '../components/Header';
     import TopAd from '../components/TopAd';
-
+    import ToTop from '../components/toTop'
     export default {
         components: {
             Foot,
             Header,
-            TopAd
+            TopAd,
+            ToTop
         }
     }
 </script>
-
-<style scoped>
-
-</style>

@@ -31,9 +31,9 @@
                         </div>
                         <div class="works-introduce">
                             <p>{{items.ItemName}}</p>
-                            <div>
+                            <div @click="jumpRoute(items)" >
                                 <div class="avatar-wrap">
-                                    <img class="headPortrait" @click="jumpRoute(items)" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                                    <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
                                 </div>
                                 <span class="headPortrait">{{items.NickName}}</span>
                             </div>
@@ -73,9 +73,9 @@
                             <div class="works-list-right">
                                 <p>{{items.ItemName}}</p>
                                 <div class="works-list-con">
-                                    <div class="works-name">
+                                    <div class="works-name" @click="jumpRoute(items)">
                                         <div class="avatar-wrap">
-                                            <img class="headPortrait" @click="jumpRoute(items)"  @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                                            <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
                                         </div>
                                         <span>{{items.NickName}}</span>
                                     </div>

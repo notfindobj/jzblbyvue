@@ -1,5 +1,5 @@
 <template>
-    <div class="ad" v-show="isAd">
+    <div class="ad" v-if="isAd">
         <Icon class="close-icon" size="24" type="md-close" @click="closeAd" />
     </div>
 </template>
@@ -11,12 +11,15 @@
                 isAd: true
             }
         },
-
+        mounted () {
+            this.isAd = localStorage.getItem('isAd') === 'false'? false : true;
+        },
         methods: {
-
             // 关闭顶部广告栏
             closeAd() {
                 this.isAd = false;
+                localStorage.setItem('isAd', false)
+
             }
         }
     }

@@ -8,11 +8,7 @@
         </ul>
         <div class="he-and-i-con-box-content">
             <div class="he-and-i-con-box-content-left">
-                <div
-                    :is="PersonalCenter"
-                    :headList="headList"
-                    :dataList="dataList"
-                    :paginationData="paginationData"
+                <div :is="PersonalCenter" :headList="headList" :dataList="dataList" :paginationData="paginationData"
                     @reachBottom="reachBottom"
                     @changeType="changeType"
                 ></div>
@@ -21,6 +17,7 @@
                 <HeAndIIntroduction
                     :userInfo="userInfo"
                     @changeComponents="changeComponents"
+                    @seeMore="seeMore"
                 />
             </div>
         </div>
@@ -66,6 +63,18 @@
         menuId: 0
       }
     },
+    async asyncData({ store, params }) {
+      const data = await store.dispatch('getSelfOrOthertribeInfo', {
+        "Page": 0,
+        "Rows": 0,
+        "ItemTypeId": "",
+        "typeId": 0,
+        "UserId": store.getters.getToken.UserId
+      });
+      return {
+        tribeInfo: data
+      }
+    },
     mounted() {
       getTypeMeun({
         typeId: 0,
@@ -77,6 +86,9 @@
       this.getList();
     },
     methods: {
+      seeMore () {
+
+      },
       // 获取数据
       getList(isReload = true) {
         this.$store.dispatch('getSelfOrOthertribeInfo', {
@@ -101,7 +113,6 @@
           }
         })
       },
-
       // 选择菜单
       choseOne(item, inx) {
         if (this.currentIndex !== inx) {
@@ -163,29 +174,15 @@
             break;
         }
       },
-
       // 触底
       reachBottom() {
         this.pageNum++;
         this.getList(false);
       },
-
       // 选择类型
       changeType(typeId) {
         this.typeId = typeId;
         this.getList();
-      }
-    },
-    async asyncData({ store, params }) {
-      const data = await store.dispatch('getSelfOrOthertribeInfo', {
-        "Page": 0,
-        "Rows": 0,
-        "ItemTypeId": "",
-        "typeId": 0,
-        "UserId": store.getters.getToken.UserId
-      });
-      return {
-        tribeInfo: data
       }
     }
   }
@@ -196,16 +193,17 @@
         height: auto;
         margin-bottom: 16px;
         background: transparent;
-
         &-nav {
             width: 100%;
             height: 40px;
+            position: sticky;
+            top: 0;
+            z-index: 2;
             background: #ffffff;
             padding: 0 198px;
             margin-bottom: 16px;
             display: flex;
             flex-direction: row;
-
             > li {
                 flex: 1;
                 line-height: 40px;
@@ -214,11 +212,9 @@
                 margin-right: 100px;
                 position: relative;
                 cursor: pointer;
-
                 &:last-child {
                     margin-right: 0;
                 }
-
                 &:hover {
                     &:after {
                         width: 56px;
@@ -231,7 +227,6 @@
                     }
                 }
             }
-
             .li-active {
                 &:after {
                     width: 56px;
@@ -244,24 +239,25 @@
                 }
             }
         }
-
         &-content {
             width: 100%;
             height: 100%;
-            overflow-y: scroll;
+            overflow-y: auto;
             position: relative;
-
             &-left {
-                width: 100%;
-                height: 100%;
+                display: inline-block;
+                width: 880px;
                 background: transparent;
             }
 
             &-right {
-                width: 300px;
+                width: 295px;
+                position: sticky;
                 position: absolute;
+                display: inline-block;
                 right: 0;
-                top: 0;
+                // top: 60px;
+                
             }
         }
     }

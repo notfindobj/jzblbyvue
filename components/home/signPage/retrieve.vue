@@ -94,7 +94,7 @@ export default {
                 }
                 let msg = await ResetPwd(queruys)
                 if (msg) {
-                    this.$Message.success(mobile.Msg);
+                    this.$Message.success('密码修改成功！');
                     this.nextSteps++
                 }
             }

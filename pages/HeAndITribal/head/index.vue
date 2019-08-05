@@ -100,7 +100,6 @@
             left: 0px;
             top: 0px;
             background: transparent;
-
             .theme-show {
                 width: 88px;
                 height: 28px;
@@ -110,7 +109,7 @@
                 position: absolute;
                 right: 80px;
                 top: 20px;
-                z-index: 999;
+                z-index: 20   ;
 
                 .ivu-dropdown {
                     width: 100%;

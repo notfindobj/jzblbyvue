@@ -10,6 +10,7 @@
                     :index="index"
                     @clickCollection="clickCollection"
                     @clickLike="clickLike"
+                    @goToPersonal="goToPersonal"
                 ></ImageAndText>
                 <VideoItem
                     :key="index"
@@ -38,14 +39,11 @@
         total: 0,   // 总页数
       }
     },
-
     components: {
       ImageAndText,
       VideoItem
     },
-
     methods: {
-
       // 点击收藏
       clickCollection(index, flag) {
         setCollection({
@@ -59,14 +57,17 @@
           dataInfo.itemOperateData.IsCollection = flag;
           flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
           this.$set(this.dataList, index, dataInfo);
-
-          // // 如果是点击的弹框中的，就更新videoInfo
-          // if (this.isShowModal) {
-          //   this.$set(this.dataList, 'itemOperateData', dataInfo.itemOperateData)
-          // }
         })
       },
-
+      // 跳转部落
+      goToPersonal (row) {
+        this.$router.push({
+          name: 'HeAndITribal-id',
+          params: {
+            id: row.UserId
+          }
+        })
+      },
       // 点击点赞
       clickLike(index, flag) {
         setthumbsUp({

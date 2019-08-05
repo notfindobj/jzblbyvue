@@ -27,13 +27,11 @@
             <Page :total="RspPaginationData.records" :current="RspPaginationData.page" @on-change="changePage"
                   :page-size="32" show-elevator/>
         </div>
-        <ToTop></ToTop>
     </div>
 </template>
 <script>
     import ContenNav from '../../components/contenLayout/ContenNav.vue'
     import Conten from '../../components/contenLayout/Content.vue'
-    import ToTop from '../../components/toTop'
     import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
     import { mapGetters } from 'vuex'
     import { setDemo } from '../../LocalAPI'
@@ -51,8 +49,7 @@
         },
         components: {
             ContenNav,
-            Conten,
-            ToTop
+            Conten
         },
         data() {
             return {
@@ -76,9 +73,9 @@
                 return this.RspPaginationData.page === this.RspPaginationData.total;
             }
         },
-
         async asyncData({ app, store, route }) {
             let queryData = store.state.overas.sessionStorage.dataBase;
+            queryData.Page = 1;
             let showLayout = queryData.title !== '建筑规范';
             let menuData = await store.dispatch('getMenu');
             let getBaseData = await store.dispatch('getBaseData', queryData);

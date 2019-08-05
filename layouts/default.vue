@@ -4,18 +4,20 @@
         <Navigation></Navigation>
         <nuxt/>
         <Foot></Foot>
+        <ToTop/>
     </div>
 </template>
 <script>
     import Navigation from '../components/Navigation';
     import Foot from '../components/Foot';
     import TopAd from '../components/TopAd';
-
+    import ToTop from '../components/toTop'
     export default {
         components: {
             Navigation,
             Foot,
-            TopAd
+            TopAd,
+            ToTop
         }
     }
 </script>

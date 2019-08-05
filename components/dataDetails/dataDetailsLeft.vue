@@ -165,8 +165,6 @@
             document.querySelector('.viewer-next').click()
           }
         }
-
-
       },
       // 项目点赞
       async thumbsUp(item) {

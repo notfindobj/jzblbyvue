@@ -66,7 +66,6 @@
             :modalConfig="modalConfig"
             :paymentConfig="paymentConfig"
         />
-        <ToTop></ToTop>
     </div>
 </template>
 <script>
@@ -75,7 +74,6 @@
     import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
     import commentsCon from '../../components/comments/commentsCon.vue'
     import viewPicture from '../../components/comments/viewPicture.vue'
-    import ToTop from '../../components/toTop'
     import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile} from '../../service/clientAPI'
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
     import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
@@ -123,8 +121,7 @@
             viewPicture,
             dateDetailsDown,
             dataDetailsCustom,
-            dataDetailsPDFLeft,
-            ToTop
+            dataDetailsPDFLeft
         },
         computed: {
             ...mapGetters(['isLogin']),
@@ -360,10 +357,10 @@
             async setFollow(item) {
                 let queryData = {
                     UserId: item.UserId,
-                    IsDelete: item.iscollections
+                    IsDelete: item.IsFollow
                 }
-                let collectionMsg = await setCollection(queryData)
-                this.$set(item, 'IsFollow', !item.iscollections)
+                let collectionMsg = await setFollow(queryData)
+                this.$set(item, 'IsFollow', !item.IsFollow)
             },
             dataDetailsMaskShow(obj) {
                 this.paymentConfig.url = '';

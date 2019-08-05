@@ -1,4 +1,5 @@
 const axios = require('axios')
+import { Message } from 'iview'
 const qs = require('qs')
 const url = process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/' : 'http://127.0.0.1:8889/';
 const LocalAPI = axios.create();
@@ -12,7 +13,7 @@ LocalAPI.interceptors.request.use(
         let isSossion = config.data;
         if (isSossion) {
             if (isSossion.key) {
-                $store.dispatch('Serverstorage', isSossion)
+              $store.dispatch('Serverstorage', isSossion)
             }
             config.data = qs.stringify(config.data);
         }
@@ -34,6 +35,8 @@ LocalAPI.interceptors.response.use(
         return res.data.Data
       } else if (res.data.Code === 500) {
         return {statusCode: 500, message: 'You need back to login again'}
+      } else {
+        Message.warning(res.data.Msg);
       }
     },
     error => {

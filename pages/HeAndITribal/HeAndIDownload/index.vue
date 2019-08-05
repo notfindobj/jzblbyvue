@@ -2,31 +2,17 @@
     <div class="download-box">
         <div class="download-box-con">
             <ul class="head-boxs" v-show="headList.length > 0">
-                <li
-                    :class="currentIndex === index ? 'li-active' : ''"
-                    v-for="(item,index) in headList"
-                    @click="change(item,index)"
-                    :key="index"
-                >{{item.TypeName}}
+                <li :class="currentIndex === index ? 'li-active' : ''" v-for="(item,index) in headList"
+                    @click="change(item,index)" :key="index" >{{item.TypeName}}
                 </li>
             </ul>
             <Scroll :on-reach-bottom="handleReachBottom" height="630">
-                <template
-                    v-for="(item, index) in dataList"
-                >
-                    <ImageAndText
-                        :key="index"
-                        v-if="item.TalkType !== 2"
-                        :itemInfo="item"
-                        :index="index"
+                <template v-for="(item, index) in dataList">
+                    <ImageAndText :key="index" v-if="item.TalkType !== 2" :itemInfo="item" :index="index"
                         @clickCollection="clickCollection"
                         @clickLike="clickLike"
                     ></ImageAndText>
-                    <VideoItem
-                        :key="index"
-                        v-if="item.TalkType === 2"
-                        :videoInfo="item"
-                        :index="index"
+                    <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
                         @clickCollection="clickCollection"
                         @clickLike="clickLike"
                     ></VideoItem>
@@ -118,15 +104,13 @@
 
 <style lang="less" scoped>
     .download-box {
-        width: 100%;
         height: auto;
         background: transparent;
-
+        display: inline-block;
+        width: 100%;
         .download-box-con {
-            width: 880px;
             height: auto;
             background: transparent;
-
             .head-boxs {
                 padding-left: 15px;
                 height: 40px;
