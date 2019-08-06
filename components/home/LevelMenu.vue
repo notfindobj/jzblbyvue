@@ -37,8 +37,7 @@
     import { _debounce } from '../../plugins/untils/public'
     import { mapGetters, mapState } from 'vuex'
     import { setDemo } from '../../LocalAPI'
-
-    export default {
+    export default { 
         data() {
             return {
                 id: '',
@@ -50,7 +49,7 @@
                 sessionStorages: state => state.overas.sessionStorage,
                 showSign: state => state.overas.showSign
             }),
-            ...mapGetters(['getSessionStorage']),
+            ...mapGetters(['getSessionStorage', 'isLogin']),
             // 判断是否是最后一页数据
         },
         mounted() {
@@ -96,6 +95,9 @@
             },
             // 点击一级分类
             async goList(cate) {
+                if (!this.isLogin) {
+                    return false
+                }
                 // classify 0 以及菜单 1 二级菜单 2 进入详情
                 let baseDateId = {
                     key: 'dataBase',

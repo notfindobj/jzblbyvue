@@ -1,6 +1,5 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" height="800">
-        <!-- {{getTalks}} -->
         <div class="container">
             <template v-for="(item, index) in dataList">
                 <ImageAndText
@@ -22,15 +21,16 @@
                 ></VideoItem>
             </template>
         </div>
+        <!-- <ToTop :isShowToTop="false"></ToTop> -->
     </Scroll>
-
 </template>
 
 <script>
-  import ImageAndText from '~/components/projectType/imageAndText'
-  import VideoItem from '~/components/projectType/video'
-  import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
-  export default {
+import ImageAndText from '~/components/projectType/imageAndText'
+import VideoItem from '~/components/projectType/video'
+// import ToTop from '~/components/ToTop'
+import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
+export default {
     layout: 'main',
     data() {
       return {
@@ -43,7 +43,28 @@
       ImageAndText,
       VideoItem
     },
+    async asyncData({ app, store, route }) {
+        let queryData = {
+          TalkType: "",
+          Page: 1,
+          Rows: 8
+        };
+        let getTalks = await store.dispatch('getTalk', queryData);
+        return {
+          dataList: getTalks.retModels,
+          total: getTalks.paginationData.total
+        }
+    },
     methods: {
+      async getList() {
+          const data = await this.$store.dispatch('getTalk', {
+            TalkType: "",
+            Page: this.pageNum,
+            Rows: 8
+          });
+          this.dataList = this.attentionList.concat(data.retModels);
+          this.total = data.paginationData.total;
+      },
       // 点击收藏
       clickCollection(index, flag) {
         setCollection({
@@ -87,7 +108,6 @@
           // }
         })
       },
-
       // 触底
       handleReachBottom() {
         if (this.pageNum >= this.total) {
@@ -96,34 +116,9 @@
         }
         this.pageNum++;
         this.getList();
-      },
-
-      // 获取数据
-      async getList() {
-        const data = await this.$store.dispatch('getTalk', {
-          TalkType: "",
-          Page: this.pageNum,
-          Rows: 8
-        });
-
-        this.dataList = this.attentionList.concat(data.retModels);
-        this.total = data.paginationData.total;
-      },
-    },
-
-    async asyncData({ app, store, route }) {
-      let queryData = {
-        TalkType: "",
-        Page: 1,
-        Rows: 8
-      };
-      let getTalks = await store.dispatch('getTalk', queryData);
-      return {
-        dataList: getTalks.retModels,
-        total: getTalks.paginationData.total
       }
     }
-  }
+}
 </script>
 
 <style lang="less" scoped>

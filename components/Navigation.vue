@@ -123,7 +123,6 @@
             this.menuData = menuDatas.RetMenuData || [];
         },
         methods: {
-
             SignIn() {
                 this.$store.dispatch('SETUP', true)
             },
@@ -187,19 +186,28 @@
             goRecommend() {
                 this.$router.push({ path: "/recommend" })
             },
-
             goVideo() {
+                if (!this.isLogin) {
+                    return false
+                }
                 this.$router.push({ path: "/videos" })
             },
-
             goQuestion() {
+                if (!this.isLogin) {
+                    return false
+                }
                 this.$router.push({ path: "/QuestionsAndAnswers" })
             },
-
             goBuilding() {
+                if (!this.isLogin) {
+                    return false
+                }
                 this.$router.push({ path: "/BuildingCircle" })
             },
             goHeAndI() {
+                if (!this.isLogin) {
+                    return false
+                }
                 this.$router.push({ path: "/PersonalCenter" })
             },
             goAboutUs() {

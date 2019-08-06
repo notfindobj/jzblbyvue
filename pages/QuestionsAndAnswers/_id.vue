@@ -52,27 +52,27 @@
                     @submitLike="submitLike"
                 ></v-comment>
 
-<!--                <div-->
-<!--                    class="answer-item"-->
-<!--                    v-for="(item, index) in commentList"-->
-<!--                    :key="item.CommentsId"-->
-<!--                    v-if="index < 3"-->
-<!--                >-->
-<!--                    <div class="item-top">-->
-<!--                        <div class="top-left">-->
-<!--                            <div class="avatar">-->
-<!--                                <img :src="item.HeadIcon" alt="">-->
-<!--                            </div>-->
-<!--                            <span class="user-name">{{ item.NickName }}</span>-->
-<!--                        </div>-->
-<!--                        <span class="top-right">{{ item.CreateDate }}</span>-->
-<!--                    </div>-->
-<!--                    <div class="item-middle" v-html="item.Message"></div>-->
-<!--                    <div class="item-bottom">-->
-<!--                        <i class="icon iconfont">&#xe664;</i>-->
-<!--                        <span>回复</span>-->
-<!--                    </div>-->
-<!--                </div>-->
+                <!--                <div-->
+                <!--                    class="answer-item"-->
+                <!--                    v-for="(item, index) in commentList"-->
+                <!--                    :key="item.CommentsId"-->
+                <!--                    v-if="index < 3"-->
+                <!--                >-->
+                <!--                    <div class="item-top">-->
+                <!--                        <div class="top-left">-->
+                <!--                            <div class="avatar">-->
+                <!--                                <img :src="item.HeadIcon" alt="">-->
+                <!--                            </div>-->
+                <!--                            <span class="user-name">{{ item.NickName }}</span>-->
+                <!--                        </div>-->
+                <!--                        <span class="top-right">{{ item.CreateDate }}</span>-->
+                <!--                    </div>-->
+                <!--                    <div class="item-middle" v-html="item.Message"></div>-->
+                <!--                    <div class="item-bottom">-->
+                <!--                        <i class="icon iconfont">&#xe664;</i>-->
+                <!--                        <span>回复</span>-->
+                <!--                    </div>-->
+                <!--                </div>-->
             </div>
         </div>
         <div class="main-right">
@@ -81,9 +81,12 @@
                     <img :src="detailInfo.HeadIcon" alt="">
                 </div>
                 <span class="author-name">{{ detailInfo.NickName }}</span>
-                <Button type="primary" class="attention-btn">
+                <Button type="primary" class="attention-btn" v-show="!detailInfo.IsFollow" @click="handleGz(true)">
                     <Icon class="icon-add" type="ios-add" size="24"/>
                     关注
+                </Button>
+                <Button class="attention-btn" v-show="detailInfo.IsFollow" @click="handleGz(false)">
+                    取消关注
                 </Button>
                 <Button type="primary" class="big-btn" size="large" ghost>
                     <i class="icon iconfont">&#xe60a;</i>
@@ -98,111 +101,125 @@
                 </Button>
             </div> -->
         </div>
+        <ToTop></ToTop>
     </div>
 </template>
 
 <script>
-  import Emotion from '~/components/Emotion/index'
-  import Comment from '~/components/video/comment'
-  import { setComments } from '../../service/clientAPI'
+    import Emotion from '~/components/Emotion/index'
+    import Comment from '~/components/video/comment'
+    import ToTop from '../../components/toTop'
+    import { setComments, setFollow } from '../../service/clientAPI'
 
-  export default {
-    layout: 'main',
-    data() {
-      return {
-        fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
-        content: '',
-        commentList: [],    // 评论列表
-        isShowEmotion: false,
-        isShowComment: true,
-        isLoadingComment: false
-      }
-    },
+    export default {
+        layout: 'main',
+        data() {
+            return {
+                fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
+                content: '',
+                commentList: [],    // 评论列表
+                isShowEmotion: false,
+                isShowComment: true,
+                isLoadingComment: false
+            }
+        },
 
-    components: {
-      Emotion,
-      'v-comment': Comment
-    },
+        components: {
+            Emotion,
+            ToTop,
+            'v-comment': Comment
+        },
 
-    methods: {
-      // 选择表情
-      handleEmotion(item) {
-        this.content += `[${ item.content }]`
-      },
+        methods: {
 
-      // 评论
-      submitComment() {
-        if (!this.content) {
-          this.$Message.warning('请先输入回答内容哦~');
-          return false;
+            // 关注/取消关注
+            handleGz(flag) {
+                setFollow({
+                    UserId: this.detailInfo.UserId,
+                    IsDelete: !flag
+                }).then(res => {
+                    this.$set(this.detailInfo, 'IsFollow', flag)
+                })
+            },
+
+            // 选择表情
+            handleEmotion(item) {
+                this.content += `[${ item.content }]`
+            },
+
+            // 评论
+            submitComment() {
+                if (!this.content) {
+                    this.$Message.warning('请先输入回答内容哦~');
+                    return false;
+                }
+                setComments({
+                    ItemId: this.detailInfo.ItemId,
+                    ReplyId: '',
+                    ReplyUserId: '',
+                    IsReply: false,
+                    Message: this.content,
+                    ItemImgSrc: '',
+                    ScopeType: 3
+                }).then(res => {
+                    // this.$Message.success('评论成功');
+                    this.content = '';
+                    this.getComment();
+                })
+            },
+
+            // 回复
+            submitReplay(params) {
+                this.isLoadingComment = true;
+                setComments({
+                    ItemId: this.detailInfo.ItemId,
+                    ReplyId: params.commentsId,
+                    ReplyUserId: params.userId,
+                    IsReply: true,
+                    Message: params.content,
+                    ItemImgSrc: '',
+                    ScopeType: 3
+                }).then(res => {
+                    this.$Message.success('评论成功');
+                    this.getComment();
+                })
+            },
+
+            // 点赞回复
+            submitLike(obj) {
+                setthumbsUp({
+                    ItemId: this.detailInfo.ItemId,
+                    LikeType: 0,
+                    CommentsId: obj.commentsId,
+                    IsDelete: !obj.flag
+                })
+            },
+
+            // 获取评论
+            getComment() {
+                this.$store.dispatch('getGetComments', {
+                    ItemId: this.$route.params.id,
+                    ItemImgSrc: '',
+                    ScopeType: 3
+                }).then(res => {
+                    this.isLoadingComment = false;
+                    this.commentList = res;
+                })
+            }
+        },
+
+        created() {
+            this.getComment();
+        },
+
+        async asyncData({ store, params }) {
+            const data = await store.dispatch('getQADetail', params.id);
+
+            return {
+                detailInfo: data
+            }
         }
-        setComments({
-          ItemId: this.detailInfo.ItemId,
-          ReplyId: '',
-          ReplyUserId: '',
-          IsReply: false,
-          Message: this.content,
-          ItemImgSrc: '',
-          ScopeType: 3
-        }).then(res => {
-          // this.$Message.success('评论成功');
-          this.content = '';
-          this.getComment();
-        })
-      },
-
-      // 回复
-      submitReplay(params) {
-        this.isLoadingComment = true;
-        setComments({
-          ItemId: this.detailInfo.ItemId,
-          ReplyId: params.commentsId,
-          ReplyUserId: params.userId,
-          IsReply: true,
-          Message: params.content,
-          ItemImgSrc: '',
-          ScopeType: 3
-        }).then(res => {
-          this.$Message.success('评论成功');
-          this.getComment();
-        })
-      },
-
-      // 点赞回复
-      submitLike(obj) {
-        setthumbsUp({
-          ItemId: this.detailInfo.ItemId,
-          LikeType: 0,
-          CommentsId: obj.commentsId,
-          IsDelete: !obj.flag
-        })
-      },
-
-      // 获取评论
-      getComment() {
-        this.$store.dispatch('getGetComments', {
-          ItemId: this.$route.params.id,
-          ItemImgSrc: '',
-          ScopeType: 3
-        }).then(res => {
-          this.isLoadingComment = false;
-          this.commentList = res;
-        })
-      }
-    },
-
-    created() {
-      this.getComment();
-    },
-
-    async asyncData({ store, params }) {
-      const data = await store.dispatch('getQADetail', params.id);
-
-      return {
-        detailInfo: data
-      }
     }
-  }
 </script>
 
 <style lang="less" scoped>
@@ -392,9 +409,11 @@
 
         }
     }
+
     .ql-container.ql-snow {
         border: none;
     }
+
     .ql-editor {
         padding: 0;
     }

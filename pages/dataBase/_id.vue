@@ -74,7 +74,7 @@
             }
         },
         async asyncData({ app, store, route }) {
-            let queryData = store.state.overas.sessionStorage.dataBase;
+            let queryData = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.dataBase));
             queryData.Page = 1;
             let showLayout = queryData.title !== '建筑规范';
             let menuData = await store.dispatch('getMenu');

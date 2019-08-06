@@ -72,10 +72,11 @@
         this.$router.push('/')
       },
       SignIn() {
-        this.$store.dispatch('SETUP', true)
+        this.$store.dispatch('SETUP', true);
       },
       async signOut() {
         let msg = await logout();
+        this.$router.push({name: "index"});
         if (msg) {
             this.$store.dispatch('LOGININ', null);
             localStorage.removeItem('LOGININ');
@@ -85,9 +86,7 @@
     }
   }
 </script>
-
 <style lang="less" scoped>
-
     .header {
         height: 60px;
         background-color: #fff;
