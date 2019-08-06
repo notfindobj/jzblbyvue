@@ -1,5 +1,13 @@
 <template>
     <div>
+        <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)"
+             @mouseleave="mousemoveRight" @click="moveLeftClick(1)">
+            <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt="">
+        </div>
+        <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)"
+             @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
+            <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
+        </div>
         <div class="public-block" :class="{'comment-active': isShowComment}">
             <div class="block-head" @mouseleave="hideWorks()">
                 <div class="block-head-left">
@@ -37,15 +45,17 @@
                     </Dropdown>
                 </div>
             </div>
-            <div class="content" id="aaaaaaaa">
+            <!-- 内容 -->
+            <div class="content" >
                 <p v-if="itemInfo.TalkType !== 3">{{ itemInfo.TalkContent }}</p>
                 <div v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></div>
-                <div class="photo-wrap">
+                <div class="photo-wrap" :ref="mathId">
                     <div class="img" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                     </div>
                 </div>
             </div>
+            <!-- 搜藏工具 -->
             <div class="block-foot" @click.stop="">
                 <div class="foot-child">
                     <i class="icon iconfont" v-show="!itemInfo.itemOperateData.IsCollection" @click="clickCollection(true)" >&#xe696;</i>
@@ -104,14 +114,51 @@
     data() {
       return {
         fileBaseUrl: process.env.fileBaseUrl,
+        mathId: '',
         isTool: '',
         UserProAndFans: {},
         isShowComment: false,    // 是否显示评论
         commentList: [], // 评论列表
         isLoadingComment: false,    // 是否显示评论加载中的动画
+        // 左右切换
+        Viewer: {},
+        isBtnSile: false,
+        isLeftPngF: require('../../assets/images/leftButtonColor.png'),
+        isLeftPngR: require('../../assets/images/leftButton.png'),
+        isLeft: false,
+        isRight: false,
       }
     },
+    created () {
+      this.mathId = this.getRanNum()
+    },
+    mounted () {
+      this.initView()
+    },
     methods: {
+      moveLeftClick(val) {
+        if (val === 1) {
+            document.querySelector('.viewer-prev').click()
+          } else {
+            document.querySelector('.viewer-next').click()
+          }
+      },
+      mousemoveLeft() {
+        this.isLeft = true
+        this.isRight = true
+      },
+      mousemoveRight() {
+        this.isLeft = false
+        this.isRight = false
+      },
+      getRanNum(){
+        let result = [];
+          for(let i=0;i<8;i++){
+            let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
+              result.push(String.fromCharCode(65+ranNum));
+          }
+        return  result.join('');
+      },
       // 获取项目和粉丝量
       async showWorks (id, ids) {
         let msg = await getUserProAndFans(id)
@@ -124,10 +171,10 @@
         this.isTool = '';
       },
       initView() {
-        const ViewerDom = document.getElementById('aaaaaaaa');
+        const ViewerDom = document.getElementById(this.mathId);
         let _this = this;
         _this.$nextTick(() => {
-          _this.Viewer = new Viewer(ViewerDom, {
+          _this.Viewer = new Viewer(_this.$refs[this.mathId], {
             url: 'data-original',
             button: false,
             toolbar: true,
@@ -135,9 +182,7 @@
             title: false,
             zoomRatio: 0.4,
             maxZoomRatio: 3,
-            show: function (e) {
-              _this.isShowViewBox = true;
-            },
+            show: function (e) {},
             ready: function () {
               console.log('ready')
             },
@@ -193,7 +238,6 @@
       clickLike(flag) {
         this.$emit('clickLike', this.index, flag)
       },
-
       // 点击弹出详情
       clickVideo() {
         this.$emit('clickVideo', this.itemInfo, this.index);
@@ -268,7 +312,80 @@
     }
   }
 </script>
+<style lang="less">
+.view-left-move-del {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        // height: 100%;
+        background: transparent;
+        z-index: 8888;
+        top: 50%;
+        left: 0;
+        padding-left: 30px;
+        img {
+            width: 60px;
+        }
+    }
+    .view-right-move-del {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        background: transparent;
+        z-index: 8888;
+        top: 50%;
+        right: 0;
+        text-align: right;
+        padding-right: 30px;
+        > img {
+            width: 60px;
+        }
+    }
 
+    .view-left-move {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        height: 100%;
+        background: transparent;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        padding-left: 30px;
+
+        > img {
+            top: 50%;
+            width: 80px;
+            position: relative;
+        }
+    }
+
+    .view-right-move {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        height: 100%;
+        background: transparent;
+        z-index: 9999;
+        top: 0;
+        right: 0;
+        text-align: right;
+        padding-right: 30px;
+        > img {
+            top: 54%;
+            width: 80px;
+            position: relative;
+            transform: rotate(180deg);
+        }
+    }
+  .viewer-toolbar {
+        display: none;
+    }
+</style>
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
     .photos-wrap {
@@ -324,4 +441,5 @@
         border-radius: 3px;
       }
     }
+    
 </style>

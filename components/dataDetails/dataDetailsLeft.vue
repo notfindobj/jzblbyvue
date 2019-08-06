@@ -313,7 +313,6 @@
         font-size: 12px;
         margin: 20px auto;
         border-radius: 5px;
-
         ul {
             padding-bottom: 10px;
         }
