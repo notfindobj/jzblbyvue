@@ -275,7 +275,6 @@
                     key: 'dataBase',
                     value: dataBase
                 }
-                debugger
                 this.$store.dispatch('Serverstorage', serverBataBase);
                 let msgs = await setDemo('dataBase', serverBataBase);
                 this.$router.push({name: "dataBase-id", query: {id: dataBase.Id }})
