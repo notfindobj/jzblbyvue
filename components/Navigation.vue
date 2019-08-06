@@ -3,12 +3,15 @@
         <!-- 头部导航 -->
         <div class="home-bar">
             <div class="home-bar-content">
-                <ul class="home-bar-content-left">
+                <ul class="home-bar-content-left" @mouseleave="switchRegionLeave">
                     <li>欢迎您，来到建筑部落！</li>
-                    <li>
+                    <li :class="isRegion ? 'region regionhover' : 'region'" @mouseenter="switchRegion">
                         <i class="iconfont icon-jiantou"></i>
-                        <span>上海 [切换城市]</span>
+                        <span>{{region}} [切换城市]</span>
                     </li>
+                    <ul v-show="isRegion" class="region-box" @mouseenter="switchRegion" @mouseleave="switchRegionLeave">
+                        <li :class="region ===item ? 'region-active' : ''"  v-for="(item, index) in regionData" @click="switchCities(item)" :key="index">{{item}}</li>
+                    </ul>
                 </ul>
                 <ul class="home-bar-content-right">
                     <li>
@@ -82,11 +85,11 @@
     import { getMenu } from '../service/clientAPI'
     import { mapState, mapGetters } from 'vuex'
     import { logout, setDemo} from '../LocalAPI'
-
     export default {
         data() {
             return {
                 isAd: false,
+                isRegion: false,
                 searchData: '',
                 searchTitle: '',
                 baiduData: '',
@@ -94,6 +97,12 @@
                 menuData: [],
                 isIndex: true,  // 是否是首页
                 isShowCate: false,  // 是否显示分类
+                regionData: [
+                    '上海','北京', '广州', '天津', '重庆', '河北', '山西', '河南', '辽宁', '吉林', '黑龙江', '内蒙古', '江苏'
+                    ,'山东', '安徽', '浙江', '福建', '湖北', '湖南', '广东', '广西', '江西', '四川', '海南', '贵州', '云南', '西藏',
+                    '陕西', '甘肃', '青海', '宁夏', '新疆', '港澳', '台湾'
+                ],
+                region: ''
             }
         },
         computed: {
@@ -107,6 +116,7 @@
             LevelMenu
         },
         mounted() {
+            this.region = localStorage.getItem('region') || '上海';
             if (sessionStorage.getItem('searchIndex')) {
                 this.searchTitle = sessionStorage.getItem('searchIndex') * 1;
                 this.searchData = sessionStorage.getItem('searchKeyWords');
@@ -123,6 +133,18 @@
             this.menuData = menuDatas.RetMenuData || [];
         },
         methods: {
+            switchRegion () {
+                this.isRegion = true;
+            },
+            switchRegionLeave () {
+                setTimeout ( () => {
+                    this.isRegion = false;
+                }, 200)
+            },
+            switchCities (name) {
+                this.region = name;
+                localStorage.setItem('region', name);
+            },
             SignIn() {
                 this.$store.dispatch('SETUP', true)
             },
@@ -220,17 +242,49 @@
     }
 </script>
 <style lang="less" scoped>
+    .region-active {
+        background: #FF3C00;
+        color: #ffffff !important;
+    }
+    .region {
+        padding: 0 10px;
+        border-left: 1px solid transparent;
+        border-right: 1px solid transparent;
+    }
+    .regionhover {
+        background: #ffffff;
+        z-index: 1112;
+        height: 41px;
+        border-left: 1px solid #dddddd;
+        border-right: 1px solid #dddddd;
+    }
+    .region-box {
+        position: absolute;
+        width: 280px;
+        background: #ffffff;
+        top: 40px;
+        left: 154px;
+        z-index: 1111;
+        padding: 0 16px;
+        border: 1px solid #dddddd;
+        li {
+            display: inline-block;
+            padding: 0 10px;
+            margin: 0 3px;
+            &:hover {
+                color: #FF3C00;
+            }
+        }
+    }
     .btn-bg {
         background-color: #FF3C00 !important;
         color: #ffffff !important;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
     }
-
     .home-bar {
         height: 40px;
         background: #E8E8E8;;
-
         &-content {
             width: 1200px;
             margin: 0 auto;
@@ -239,13 +293,12 @@
             color: #999999;
             font-size: 14px;
             line-height: 40px;
-
             &-left {
                 width: 50%;
                 display: flex;
                 text-align: left;
+                position: relative;
             }
-
             &-right {
                 width: 50%;
                 display: flex;
@@ -254,7 +307,6 @@
                 &-out {
                     cursor: pointer;
                 }
-
                 > li.content {
                     padding: 0 30px;
                     cursor: pointer;
@@ -263,18 +315,15 @@
                         color: #FF3C00;
                     }
                 }
-
                 .app-down {
                     color: #999999;
                 }
             }
-
             &:last-child {
                 cursor: pointer;
             }
         }
     }
-
     .main-nav {
         background: #F2F4F2;
         border-bottom: 1px solid #FF3C00;
@@ -307,7 +356,6 @@
             border-top-right-radius: 3px;
         }
     }
-
     .main-content {
         width: 1200px;
         margin: 0 auto;
@@ -327,7 +375,6 @@
             width: 137px;
         }
     }
-
     .resource {
         position: relative;
         font-size: 20px;
@@ -344,7 +391,6 @@
             z-index: 99;
         }
     }
-
     .selection {
         background-color: #FF3C00;
         color: #ffffff;
