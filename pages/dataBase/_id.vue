@@ -236,6 +236,7 @@
             async entrySorting(val) {
                 let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
                 queryData.SortType = val;
+                queryData.Order = false;
                 let serverBataBase = {
                     key: 'dataBase',
                     value: queryData

@@ -62,7 +62,8 @@ export default {
             Page: this.pageNum,
             Rows: 8
           });
-          this.dataList = this.attentionList.concat(data.retModels);
+          console.log(data.retModels)
+          this.dataList = this.dataList.concat(data.retModels);
           this.total = data.paginationData.total;
       },
       // 点击收藏

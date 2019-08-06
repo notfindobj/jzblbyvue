@@ -117,7 +117,7 @@
             .nav-list {
                 display: flex;
                 align-items: center;
-                margin-left: 70px;
+                margin-left: 30px;
                 font-size: 16px;
                 a {
                     height: 60px;

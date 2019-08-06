@@ -267,13 +267,11 @@
                 display: inline-block;
                 right: 0;
                 // top: 60px;
-                
             }
-
             .fixed-right {
                 position: fixed;
-                top: 56px;
-                right: 240px;
+                top: 48px;
+                right: 347px;
             }
         }
     }

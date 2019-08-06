@@ -117,9 +117,10 @@
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
             <div>Loading</div>
         </Spin>
+        <!-- 定制服务 -->
         <Modal v-model="serviceModal" width="594" title="提供定制服务"  class-name="service-box" >
             <div class="service-box-content">
-                <Form ref="serviceValidate" :model="serviceValidate"  :label-width="80" >
+                <Form ref="serviceValidate" :model="serviceValidate" :label-width="80" >
                     <FormItem label="定制类型:">
                         <template v-if="!isUpdateService" v-for="item in serviceList" >
                             <Button class="service-btn" size="small" :key="item.ItemDetailId"
@@ -137,7 +138,7 @@
                         <Input type="number" v-model="serviceValidate.money" placeholder="请选择"></Input>
                     </FormItem>
                     <FormItem label="手机号码:">
-                        <Input type="tel" v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
+                        <Input type="number" v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
                     </FormItem>
                     <FormItem label="定制描述:">
                         <Input v-model="serviceValidate.desc" type="textarea" :maxlength="500" :autosize="{minRows: 5,maxRows: 5}" placeholder="请填写0-500字定制描述"></Input>
@@ -155,7 +156,8 @@
   import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
   import { mapGetters } from 'vuex'
   import {setDemo} from '../../../LocalAPI'
-import { async } from 'q';
+  import {regText} from '../../../plugins/untils/Verify'
+  import { async } from 'q';
   export default {
     data() {
       return {
@@ -370,12 +372,10 @@ import { async } from 'q';
           this.$refs.uploadFile[0].clearFiles();
         }
       },
-
       // 删除上传的文件
       removeFile() {
         this.typeFile = null;
       },
-
       // 点击定制服务弹出框确定
       clickModalConfirm() {
         if (this.serviceValidate.serviceId) {
@@ -391,8 +391,11 @@ import { async } from 'q';
             this.$Message.warning('定制金额不能大于5000');
             return false;
           }
+          if (!regText(this.serviceValidate.mobile)) {
+              this.$Message.warning('手机号输入不正确!');
+              return false;
+          }
         }
-
         for (let i = 0; i < this.serviceSelectList.length; i++) {
           if (this.serviceSelectList[i].serviceId === this.serviceValidate.serviceId && !this.isUpdateService) {
             this.$Message.warning('不能重复添加定制服务');
@@ -405,7 +408,6 @@ import { async } from 'q';
               mobile: this.serviceValidate.mobile,
               desc: this.serviceValidate.desc
             };
-
             this.serviceValidate = {
               serviceId: '',
               money: '',
@@ -566,7 +568,7 @@ import { async } from 'q';
               Id: res,
               showLayout: this.showLayout,
               reqItemList: {
-                SortType: 0,
+                SortType: 1,
                 KeyWords: "",
                 Order: true,
                 Page: 0,

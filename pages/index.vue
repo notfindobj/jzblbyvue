@@ -16,20 +16,18 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>示范区景观</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
+                            <li @click="viewProperties(sfq, {}, 'sfqList')">{{sfq.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in sfq.ChildNode" @click="viewProperties(sfq, item, 'sfqList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(sfq, {}, 'sfqList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
-                    <template v-for=" (items, index) in sfqList" v-if="index < 8">
+                    <template v-for="(items, index) in sfqList" v-if="index < 8">
                         <i-col span="6" :key="index">
-                            <Small-Cards @viewItem="viewItem(items, 'sfqList')" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(sfq,items, 'sfqList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -39,14 +37,12 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>楼盘</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
+                            <li @click="viewProperties(lps, {}, 'lpList')">{{lps.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in lps.ChildNode" @click="viewProperties(lps, item, 'lpList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(lps, {}, 'lpList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
@@ -67,34 +63,33 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>效果图</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
+                            <li @click="viewProperties(xgts, {}, 'xgtList')">{{xgts.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in xgts.ChildNode" @click="viewProperties(xgts, item, 'xgtList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(xgts, {}, 'xgtList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
                     <i-col span="12">
                         <div class="left-items">
-                            <template v-for="(items, lp) in lpList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items"
-                                             :key="lp"/>
+                            <template v-for="(items, lp) in xgtList">
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'xgtList')" 
+                                                :smallCardsDate="items"
+                                                :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
-                            <template v-for="(items, lp) in lpList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'lpList')"
+                            <template v-for="(items, lp) in xgtList">
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'xgtList')"
                                              :smallCardsDate="items"
                                              :key="lp"/>
                             </template>
                         </div>
                     </i-col>
-                    <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards @viewItem="viewItem(items, 'lpList')" :bigCardsDate="items"/>
+                    <i-col span="12" v-for="(items, lp) in xgtList" v-if="lp === 4" :key="lp">
+                        <Big-Cards @viewItem="viewItem(items, 'xgtList')" :bigCardsDate="items"/>
                     </i-col>
                 </Row>
             </div>
@@ -103,14 +98,12 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>SU模型</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
+                            <li @click="viewProperties(sus, {}, 'suList')">{{sus.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in sus.ChildNode" @click="viewProperties(sus, item, 'suList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(sus, {}, 'suList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
@@ -131,14 +124,12 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>总图</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
+                            <li @click="viewProperties(zts, {}, 'ztList')">{{zts.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in zts.ChildNode" @click="viewProperties(zts, item, 'ztList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(zts, {}, 'ztList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
@@ -146,14 +137,14 @@
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
                                 <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items"
-                                             :key="lp"/>
+                                            :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
                                 <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'ztList')"
-                                             :smallCardsDate="items"
-                                             :key="lp"/>
+                                            :smallCardsDate="items"
+                                            :key="lp"/>
                             </template>
                         </div>
                     </i-col>
@@ -167,14 +158,12 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>平面</li>
-                            <li>新亚洲/</li>
-                            <li>（新）古典/</li>
-                            <li>现代/</li>
-                            <li>英式/</li>
-                            <li>地中海</li>
+                            <li @click="viewProperties(pms, {}, 'pmList')">{{pms.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in pms.ChildNode" @click="viewProperties(pms, item, 'pmList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(pms, {}, 'pmList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
@@ -195,9 +184,12 @@
                 <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>文本</li>
+                            <li @click="viewProperties(webs, {}, 'wbList')">{{webs.ItemAttributesFullName}}</li>
+                            <template>
+                                <li v-for="(item, index) in webs.ChildNode" @click="viewProperties(webs, item, 'wbList')" :key="index">{{item.ItemAttributesFullName}}</li>
+                            </template>
                         </ul>
-                        <div class="main-conment-more">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="viewProperties(webs, {}, 'wbList')">查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <Row>
@@ -212,9 +204,9 @@
                                         <img :src="item.HeadIcon" alt="">
                                     </span>
                                 </div>
-                                <div class="text-box-content-name">{{ item.NickName }}</div>
+                                <div class="text-box-content-name">{{item.NickName}}</div>
                                 <div class="text-box-content-sub-cpntent">
-                                    {{ item.ItemName }}
+                                    {{item.ItemName}}
                                 </div>
                             </div>
                         </div>
@@ -362,8 +354,47 @@
     },
     async asyncData({ app, store }) {
         let menuData = await store.dispatch('getMenu');
+        let sfq = {};
+        let lps = {};
+        let xgts = {};
+        let sus = {};
+        let zts = {};
+        let pms = {};
+        let webs = {};
+        menuData.RetMenuData.forEach(element => {
+            if (element.ItemAttributesFullName === '示范区') {
+                sfq = element
+            }
+            if (element.ItemAttributesFullName === '楼盘') {
+                lps = element
+            }
+            if (element.ItemAttributesFullName === '效果图') {
+                xgts = element
+            }
+            if (element.ItemAttributesFullName === 'SU模型') {
+                sus = element
+            }
+            if (element.ItemAttributesFullName === '总图') {
+                zts = element
+            }
+            if (element.ItemAttributesFullName === '平面') {
+                pms = element
+            }
+            if (element.ItemAttributesFullName === '文本') {
+                webs = element
+            }
+            
+        });
         let homeData = await store.dispatch('getHomeData');
         return {
+            sfq,
+            lps,
+            xgts,
+            sus,
+            zts,
+            pms,
+            webs,
+            menuData,
             homeData: homeData,
             SlideList: homeData.SlideList,
             sfqList: homeData.ItemList.Sfq.RecommendedItemModels || [], // 示范区
@@ -378,21 +409,54 @@
         }
     },
     methods: {
-        async viewItem(item, val) {
+        async viewProperties (data, row, name) {
+            if (!this.isLogin) {
+                return false
+            }
+            let ClassTypeArrList= [];
+            if (JSON.stringify(row) === '{}') {
+                ClassTypeArrList = ''
+            } else {
+               ClassTypeArrList = [
+                    {
+                        ArrId: row.ItemAttributesId || '',
+                        ArrEnCode: row.ItemSubAttributeCode || ''
+                    }
+                ]
+            }
+            let baseDateId = {
+                ClassTypeId: `${data.ItemSubAttributeCode }|${ data.ItemAttributesId }`,
+                ClassTypeArrList: ClassTypeArrList,
+                SortType: '1',
+                KeyWords: "",
+                Order: true,
+                Page: 0,
+                classify: 0,
+                Rows: 32,
+                title: data.ItemAttributesFullName,
+            }
+            let serverBataBase = {
+                key: 'dataBase',
+                value: baseDateId
+            }
+            this.$store.dispatch('Serverstorage', serverBataBase);
+            let msgs = await setDemo('dataBase', serverBataBase);
+            let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: data.ItemAttributesId}});
+            window.open(routeData.href, '_blank');
+        },
+        async viewItem(row, item, val) {
             if (!this.isLogin) {
                 return false
             }
             let baseDateId = {
                 Id: item.ItemId,
-                reqItemList: {
-                    ClassTypeId: '',
-                    ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-                    SortType: 0,
-                    KeyWords: "",
-                    Order: true,
-                    Page: 0,
-                    Rows: 8
-                },
+                ClassTypeId: `${row.ItemSubAttributeCode }|${ row.ItemAttributesId }`,
+                ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
+                SortType: 1,
+                KeyWords: "",
+                Order: true,
+                Page: 0,
+                Rows: 8,
                 showLayout: val === 'jzList' || val === 'wbList' ? false: true
             }
             let serverBataBase = {
@@ -403,7 +467,6 @@
             let msgs = await setDemo('dataBase', serverBataBase);
             let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
             window.open(routeData.href, '_blank');
-
         }
     }
 }
@@ -452,15 +515,23 @@
 
         &-sub {
             display: flex;
-
             > li {
                 padding: 0 8px 0 0;
                 line-height: 42px;
                 color: #333333;
-
+                cursor: pointer;
                 &:first-child {
                     padding-right: 10px;
                     font-size: 30px;
+                }
+                &:not(:first-child, :last-child)::after {
+                    position: relative;
+                    content: '/';
+                    display: inline-block;
+                    left: 5px;
+                }
+                &:hover {
+                    color: #FF3C00;
                 }
             }
         }
@@ -468,6 +539,9 @@
         &-more {
             line-height: 42px;
             cursor: pointer;
+            &:hover {
+                color: #FF3C00;
+            }
         }
     }
 
@@ -536,7 +610,6 @@
                 line-clamp: 2;
             }
         }
-
         &:hover {
             box-shadow: 0 2px 15px #999999;
         }
@@ -573,7 +646,6 @@
                 color: #666666;
             }
         }
-
         &:hover {
             box-shadow: 0 2px 15px #999999;
         }
@@ -605,11 +677,9 @@
         margin-right: 10px;
         cursor: pointer;
         text-align: center;
-
         &:nth-child(6n) {
             margin-right: 0;
         }
-
         .matrix-img {
             width: 191px;
             height: 70px;

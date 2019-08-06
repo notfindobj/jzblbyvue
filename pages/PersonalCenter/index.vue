@@ -97,6 +97,9 @@ export default {
                     margin: 50px 50px 10px 50px;
                     background: #999999;
                     overflow: hidden;
+                    img {
+                        height: 100%;
+                    }
                 }
                 &-name {
                     font-size: 16px;

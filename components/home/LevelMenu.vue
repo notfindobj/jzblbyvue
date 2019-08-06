@@ -65,6 +65,9 @@
                 this.id = id
             }, 100),
             async clickFullName(pre, type, ch) {
+                if (!this.isLogin) {
+                    return false
+                }
                 let baseDateId = {
                     key: 'dataBase',
                     value: {
@@ -75,7 +78,7 @@
                                 ArrEnCode: ch.ItemSubAttributeCode
                             }
                         ],
-                        SortType: '0',
+                        SortType: '1',
                         KeyWords: "",
                         Order: true,
                         Page: 0,
@@ -86,12 +89,8 @@
                 }
                 this.$store.dispatch('Serverstorage', baseDateId);
                 let msgs = await setDemo('dataBase', baseDateId);
-                if (this.$route.name === "dataBase-id") {
-                    let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: type.ItemAttributesId } });
-                    window.open(routeData.href, '_blank');
-                } else {
-                    this.$router.push({ name: "dataBase-id", query: { id: type.ItemAttributesId } })
-                }
+                let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: type.ItemAttributesId } });
+                window.open(routeData.href, '_blank');
             },
             // 点击一级分类
             async goList(cate) {
@@ -104,7 +103,7 @@
                     value: {
                         ClassTypeId: `${ cate.ItemSubAttributeCode }|${ cate.ItemAttributesId }`,
                         ClassTypeArrList: '',
-                        SortType: '0',
+                        SortType: '1',
                         KeyWords: "",
                         Order: true,
                         Page: 0,
@@ -115,7 +114,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseDateId);
                 let msgs = await setDemo('dataBase', baseDateId);
-                let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: cate.ItemAttributesId } });
+                let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: cate.ItemAttributesId}});
                 window.open(routeData.href, '_blank');
             }
         }

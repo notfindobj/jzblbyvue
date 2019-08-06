@@ -145,7 +145,7 @@
                     value: {
                         ClassTypeId: `${ this.menuData[this.searchTitle].ItemSubAttributeCode }|${ this.menuData[this.searchTitle].ItemAttributesId }`,
                         ClassTypeArrList: [{ArrId: '',ArrEnCode: ''}],
-                        SortType: '0',
+                        SortType: '1',
                         KeyWords: this.searchData,
                         Order: true,
                         Page: 0,
