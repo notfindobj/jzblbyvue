@@ -1,27 +1,26 @@
 <template>
     <div class="download-box">
         <div class="download-box-con">
-            <ul class="head-boxs" v-show="headList.length > 0">
+            <ul class="head-boxs" v-show="headList && headList.length > 0">
                 <li :class="currentIndex === index ? 'li-active' : ''" v-for="(item,index) in headList"
                     @click="change(item,index)" :key="index" >{{item.TypeName}}
                 </li>
             </ul>
             <Scroll :on-reach-bottom="handleReachBottom" height="630">
                 <template v-for="(item, index) in dataList">
-                    <ImageAndText :key="index" v-if="item.TalkType !== 2" :itemInfo="item" :index="index"
+                    <ImageAndText v-if="item.TalkType !== 2" :itemInfo="item" :index="index" :key="index"
                         @clickCollection="clickCollection"
                         @clickLike="clickLike"
-                    ></ImageAndText>
+                    />
                     <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
                         @clickCollection="clickCollection"
                         @clickLike="clickLike"
-                    ></VideoItem>
+                    />
                 </template>
             </Scroll>
         </div>
     </div>
 </template>
-
 <script>
   import ImageAndText from '../../../components/projectType/imageAndText'
   import VideoItem from '../../../components/projectType/video'
@@ -91,11 +90,10 @@
           this.$Message.warning('已经到底了~')
         }
       },
-
       change(item, inx) {
         if (this.currentIndex !== inx) {
           this.currentIndex = inx;
-          this.$emit('changeType', item.TypeId)
+          this.$emit('changeType', item.TypeId, inx)
         }
       }
     }

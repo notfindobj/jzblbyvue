@@ -21,7 +21,7 @@
         <div class="he-and-i-introduction-center">
             <h5 class="he-and-i-introduction-center-title">
                 <span class="title-name">资料简介</span>
-                <span class="edit-my-introduction" v-if="userInfo.IsEdit">编辑个人资料></span>
+                <span class="edit-my-introduction" @click="enterCenter" v-if="userInfo.IsEdit">编辑个人资料></span>
             </h5>
             <ul class="my-introduction-list">
                 <li>
@@ -40,15 +40,15 @@
                     <span class="list-con">{{userInfo.Expertise}}</span>
                 </li>
             </ul>
-            <p class="look-more" @click="seeMore">查看更多 ></p>
+            <p class="look-more" @click="enterCenter">查看更多 ></p>
         </div>
         <div class="he-and-i-introduction-bottom">
             <h5 class="he-and-i-introduction-bottom-title">
                 <span class="title-name">最近访客</span>
             </h5>
             <ul class="he-and-i-introduction-bottom-list">
-                <li v-for="item in userInfo.TribeVisit" :key="item.UserId" :title="item.NickName">
-                    <img :src="item.HeadIcon" alt="">
+                <li v-for="item in userInfo.TribeVisit" @click="jumpRoute(item)" :key="item.UserId" :title="item.NickName">
+                    <img  :src="item.HeadIcon" alt="用户头像">
                     <p>{{item.NickName}}</p>
                 </li>
             </ul>
@@ -70,45 +70,29 @@
     },
     data() {
       return {
-        currentIndex: -1,
-        my_introduction: {
-          phone: '185****4502',
-          birthday: '1992年02月01日',
-          good_at: '篮球、足球'
-        },
-        recent_visitors_list: [
-          {
-            user_img: 'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name: '张小杰'
-          },
-          {
-            user_img: 'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name: '张小杰'
-          },
-          {
-            user_img: 'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name: '张小杰'
-          }, {
-            user_img: 'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name: '张小杰'
-          },
-          {
-            user_img: 'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name: '张小杰'
-          },
-        ]
-
+        currentIndex: -1
       }
     },
     methods: {
-      change(inx, count) {
-        this.currentIndex = inx;
-        this.$emit('changeComponents', inx, count)
-      },
-      seeMore () {
-        this.$emit('seeMore')
-        // this.$router.push({name: 'PersonalCenter'})
-      }
+        enterCenter () {
+            this.$router.push({ name: "PersonalCenter" });
+        },
+        change(inx, count) {
+            this.currentIndex = inx;
+            this.$emit('changeComponents', inx, count)
+        },
+        // 路由跳转
+        jumpRoute(items) {
+            if (!items.UserId) {
+                this.$Message.error('用户ID为空！');
+                return false;
+            }
+            let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
+            window.open(routeData.href, '_blank');
+        },
+        seeMore () {
+            this.$emit('seeMore')
+        }
       
     }
   }
@@ -198,15 +182,13 @@
                     font-size: 14px;
                     color: #333333;
                 }
-
                 .edit-my-introduction {
+                    cursor: pointer;
                     font-size: 12px;
                     color: #FF3C00;
                     font-weight: normal;
                 }
-
             }
-
             .my-introduction-list {
                 height: 100px;
                 padding: 15px 15px 5px;
@@ -285,13 +267,12 @@
                 flex-wrap: wrap;
                 align-items: center;
                 justify-content: flex-start;
-
                 > li {
                     width: 50px;
                     height: 75px;
                     margin-right: 22px;
                     margin-bottom: 16px;
-
+                    cursor: pointer;
                     > img {
                         display: inline-block;
                         width: 50px;
@@ -299,7 +280,6 @@
                         border-radius: 50%;
                         margin-bottom: 6px;
                     }
-
                     > p {
                         text-align: center;
                         font-size: 12px;

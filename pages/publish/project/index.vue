@@ -581,7 +581,7 @@
             }
             this.$store.dispatch('Serverstorage', serverBataBase);
             let msgs = await setDemo('dataBase', serverBataBase);
-            this.$router.push({name: "DataDetails-id", query: {id: val}})
+            this.$router.push({name: "DataDetails-id", query: {id: queryData.Id}})
           }
         })
       }

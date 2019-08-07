@@ -1,6 +1,5 @@
 <template>
     <div class="data-details-left">
-        <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
         <div :class="isBtnSile ? 'view-left-move': 'view-left-move-del'" @mouseenter="mousemoveLeft(1)"
              @mouseleave="mousemoveRight" @click="moveLeftClick(isBtnSile ? 1 : pageTurning.PrevItemId)">
             <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt="">
@@ -9,6 +8,7 @@
              @mouseleave="mousemoveRight" @click="moveLeftClick(isBtnSile ? 2 : pageTurning.NextItemId)">
             <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
         </div>
+        <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
         <!-- <div class="view-box-model" v-show="isShowViewBox">
            <div class="view-box">
              <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
@@ -87,6 +87,8 @@
         isLeft: false,
         isRight: false,
         Viewer: {},
+        itemLength: 0,
+        itemIndex: 0,
         isBtnSile: false
       }
     },
@@ -133,13 +135,16 @@
             built: function () {
               console.log('built')
             },
-            view: async function () {
-              let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
-              let queryData = {
-                ItemId: _this.detaDetails.ItemId,
-                ItemImgSrc: '',
-                ScopeType: 1
-              }
+            view: async function (e) {
+              _this.itemLength = e.target.childElementCount;
+              _this.itemIndex = e.detail.index + 1;
+              console.log(_this.itemLength, _this.itemIndex)
+              // let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
+              // let queryData = {
+              //   ItemId: _this.detaDetails.ItemId,
+              //   ItemImgSrc: '',
+              //   ScopeType: 1
+              // }
             },
             shown: function (e) {
               _this.isBtnSile = true;
@@ -159,10 +164,14 @@
         if (!this.isBtnSile) {
           this.$emit('pageTurning', val)
         } else {
+          if (this.itemLength-1 === this.itemIndex) {
+            this.Viewer.close();
+            this.Viewer.hide();
+          }
           if (val === 1) {
-            document.querySelector('.viewer-prev').click()
+            this.Viewer.prev()
           } else {
-            document.querySelector('.viewer-next').click()
+            this.Viewer.next()
           }
         }
       },

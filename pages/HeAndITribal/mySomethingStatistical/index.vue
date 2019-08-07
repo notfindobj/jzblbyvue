@@ -1,22 +1,21 @@
 <template>
   <div class="download-box">
     <div class="download-box-con">
-      <div class="head-boxs">全部{{headName}} <span>{{headNum}}</span></div>
       <Scroll :on-reach-bottom="handleReachBottom" height="600">
         <div class="container">
           <div class="my-someing-box">
             <ul>
-              <li v-for="(item,index) in someing_list" :key="index">
-                <div class="people-img">
-                  <img :src="item.user_img" alt="">
+              <li v-for="(item,index) in followList" :key="index">
+                <div class="people-img" @click="jumpRoute(item)">
+                  <img :src="item.HeadIcon" alt="用户头像">
                 </div>
                 <div class="people-introduction">
-                  <p class="people-name">{{item.user_name}}</p>
+                  <p class="people-name">{{item.NickName}}</p>
                   <p class="people-status">
                     <Icon type="ios-checkmark-empty"></Icon>
-                    {{item.status}}
+                    {{item.Description}}
                   </p>
-                  <p class="people-introduction-con">{{item.introduction}}</p>
+                  <p class="people-introduction-con">{{item.paginationData}}</p>
                 </div>
                 <div class="block-head-right">
                   <Dropdown placement="bottom-end" trigger="click">
@@ -36,13 +35,17 @@
       </Scroll>
     </div>
   </div>
-
-
 </template>
-
 <script>
+  import {getFollowOrFans} from '../../../service/clientAPI'
   export default {
     layout: 'main',
+    props: {
+      followList: {
+        type: Array,
+        default: () => []
+      }
+    },
     data () {
       return {
         currentIndex:0,
@@ -53,91 +56,27 @@
             status:'已关注',
             introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
           },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },{
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },{
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },{
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-
-
-
         ]
       }
     },
-    props: {
-      isShowHead: Boolean,
-      headList:Array,
-      headName:String,
-      headNum:Number
-    },
-    mounted () {
-      console.log(this.isShowHead)
-    },
     methods: {
+      // 路由跳转
+      jumpRoute(items) {
+        if (!items.UserId) {
+          this.$Message.error('用户ID为空！');
+          return false;
+        }
+        let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
+        window.open(routeData.href, '_blank');
+      },
+      async getFollowOrFansList () {
+        let queryData = {
+          "IsFollow": true,
+          "page": 0,
+          "UserId": "d5b4fbaa-40a0-4145-a119-88af91c3bf8f"
+        }
+        let msg = await getFollowOrFans(queryData);
+      },
       handleReachBottom() {
       },
       renderThisComponents (params) {
@@ -203,6 +142,7 @@
                 height: 50px;
                 border-radius: 50%;
                 margin-right: 10px;
+                cursor: pointer;
                 overflow: hidden;
                 > img {
                   display: inline-block;

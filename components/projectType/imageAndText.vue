@@ -58,10 +58,10 @@
             <!-- 搜藏工具 -->
             <div class="block-foot" @click.stop="">
                 <div class="foot-child">
-                    <i class="icon iconfont" v-show="!itemInfo.itemOperateData.IsCollection" @click="clickCollection(true)" >&#xe696;</i>
-                    <i class="icon iconfont" style="color: #ff3c00; font-size: 17px;" v-show="itemInfo.itemOperateData.IsCollection"
-                       @click="clickCollection(false)" >&#xe69d;</i>
-                    <span :class="{ active: itemInfo.itemOperateData.IsCollection }">收藏</span>
+                    <span @click="clickCollection(!itemInfo.itemOperateData.IsCollection)">
+                      <i :class="itemInfo.itemOperateData.IsCollection ? 'icon iconfont active-tool icon-cc-star': 'icon iconfont  icon-favorite'"></i>
+                      <span :class="{ active: itemInfo.itemOperateData.IsCollection }">收藏</span>
+                    </span>
                 </div>
                 <div class="foot-child">
                     <i class="icon iconfont">&#xe6be;</i>
@@ -72,9 +72,10 @@
                     <span>评论</span>
                 </div>
                 <div class="foot-child">
-                    <i class="icon iconfont"  v-show="!itemInfo.itemOperateData.IsLike" @click="clickLike(true)" >&#xe67e;</i>
-                    <i class="icon iconfont" style="color: #ff3c00;" v-show="itemInfo.itemOperateData.IsLike" @click="clickLike(false)" >&#xe621;</i>
+                  <span @click="clickLike(!itemInfo.itemOperateData.IsLike)">
+                    <i :class="itemInfo.itemOperateData.IsLike ? 'icon iconfont active-tool icon-like-b' : 'icon iconfont icon-dianzan1'"></i>
                     <span :class="{ active: itemInfo.itemOperateData.IsLike }">点赞</span>
+                  </span>
                 </div>
             </div>
         </div>
@@ -122,7 +123,17 @@
       'v-comment': Comment
     },
     data() {
+      function getRanNum(){
+        let result = [];
+          for(let i=0;i<8;i++){
+            let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
+              result.push(String.fromCharCode(65+ranNum));
+          }
+        return  result.join('');
+      }
+      let ViewerIndex = this.getRanNum()
       return {
+        ViewerIndex,
         fileBaseUrl: process.env.fileBaseUrl,
         mathId: '',
         isTool: '',
@@ -131,7 +142,8 @@
         commentList: [], // 评论列表
         isLoadingComment: false,    // 是否显示评论加载中的动画
         // 左右切换
-        Viewer: {},
+        itemIndex: 0,
+        itemLength: 0,
         isBtnSile: false,
         isLeftPngF: require('../../assets/images/leftButtonColor.png'),
         isLeftPngR: require('../../assets/images/leftButton.png'),
@@ -140,18 +152,22 @@
       }
     },
     created () {
-      this.mathId = this.getRanNum()
+      this.mathId = this.getRanNum();
     },
     mounted () {
       this.initView()
     },
     methods: {
       moveLeftClick(val) {
+        if (this.itemLength === this.itemIndex) {
+          this[this.ViewerIndex].close();
+          this[this.ViewerIndex].hide();
+        }
         if (val === 1) {
-            document.querySelector('.viewer-prev').click()
-          } else {
-            document.querySelector('.viewer-next').click()
-          }
+          this[this.ViewerIndex].prev()
+        } else {
+          this[this.ViewerIndex].next()
+        }
       },
       mousemoveLeft() {
         this.isLeft = true
@@ -188,7 +204,7 @@
         const ViewerDom = document.getElementById(this.mathId);
         let _this = this;
         _this.$nextTick(() => {
-          _this.Viewer = new Viewer(_this.$refs[this.mathId], {
+          _this[_this.ViewerIndex] = new Viewer(_this.$refs[this.mathId], {
             url: 'data-original',
             button: false,
             toolbar: true,
@@ -196,12 +212,18 @@
             title: false,
             zoomRatio: 0.4,
             maxZoomRatio: 3,
-            show: function (e) {},
+            show: function (e) {
+              console.log(e)
+            },
             ready: function () {
               console.log('ready')
             },
             build: function () {
               console.log('build')
+            },
+            view: function(e) {
+              _this.itemLength = e.target.childElementCount;
+              _this.itemIndex = e.detail.index + 1;
             },
             built: function () {
               console.log('built')
@@ -215,7 +237,7 @@
             },
             hidden() {
               _this.isBtnSile = false;
-              _this.Viewer.destroy();
+              // _this.Viewer.destroy();
               // _this.viewShowBox()
             }
           })
@@ -325,7 +347,7 @@
   }
 </script>
 <style lang="less">
-.view-left-move-del {
+    .view-left-move-del {
         cursor: pointer;
         position: fixed;
         display: inline-block;
@@ -355,7 +377,6 @@
             width: 60px;
         }
     }
-
     .view-left-move {
         cursor: pointer;
         position: fixed;
@@ -367,14 +388,12 @@
         top: 0;
         left: 0;
         padding-left: 30px;
-
         > img {
             top: 50%;
             width: 80px;
             position: relative;
         }
     }
-
     .view-right-move {
         cursor: pointer;
         position: fixed;
@@ -388,7 +407,7 @@
         text-align: right;
         padding-right: 30px;
         > img {
-            top: 54%;
+            top: 50%;
             width: 80px;
             position: relative;
             transform: rotate(180deg);
@@ -400,6 +419,10 @@
 </style>
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
+    .active-tool {
+      color: #ff3c00;
+      // font-size: 17px;
+    }
     .photos-wrap {
         width: 700px;
         display: flex;

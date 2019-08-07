@@ -16,8 +16,9 @@
                 <div class="my-head-portrait">
                     <img :src="userInfo.HeadIcon" alt=".">
                 </div>
-                <p class="my-name">{{ userInfo.NickName }}<i
-                    :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i></p>
+                <p class="my-name">{{ userInfo.NickName }}
+                  <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i>
+                </p>
                 <p class="my-Introduction-con">{{ userInfo.Description }}</p>
             </div>
         </div>

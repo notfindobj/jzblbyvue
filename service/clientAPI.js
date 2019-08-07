@@ -189,3 +189,7 @@ export const SetOrAddThisUserJobInfo = async params => {
 export const SetChangeMobile = async params => {
   return await request.post(`UserInfo/ChangeMobile`, params)
 }
+//获取关注或粉丝
+export const getFollowOrFans = async params => {
+  return await request.post(`MyTribe/GetFollowOrFans`, params)
+}
