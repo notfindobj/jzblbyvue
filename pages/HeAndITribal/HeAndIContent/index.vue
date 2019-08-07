@@ -271,7 +271,7 @@
             .fixed-right {
                 position: fixed;
                 top: 48px;
-                right: 347px;
+                right: 351px;
             }
         }
     }

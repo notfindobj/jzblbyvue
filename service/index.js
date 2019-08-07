@@ -36,6 +36,7 @@ service.interceptors.response.use(
         return {statusCode: 500, message: 'You need back to login again'}
       }
     }
+    // console.log(router)
     // 客户端
     if (process.client) {
       if (res.data.Code === 200) {
@@ -43,7 +44,7 @@ service.interceptors.response.use(
           res.data.Data = 1
         }
         return res.data.Data
-      } else {
+      }else {
         Message.warning(res.data.Msg);
         // return res.data.Data
       }

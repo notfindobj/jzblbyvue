@@ -195,12 +195,12 @@
                 <Row>
                     <Col span="8" v-for="(item, index) in wbList" v-if="index < 3" :key="index">
                         <div class="text-box">
-                            <div class="text-box-img">
+                            <div class="text-box-img" @click="viewItem(webs, item, 'wbList')">
                                 <img :src="item.ItemTitleImg" alt="">
                             </div>
                             <div class="text-box-content">
                                 <div class="text-box-content-had">
-                                    <span class="text-box-content-had-img">
+                                    <span class="text-box-content-had-img" @click="jumpRoute(item)">
                                         <img :src="item.HeadIcon" alt="">
                                     </span>
                                 </div>
@@ -353,7 +353,6 @@
         LevelMenu
     },
     async asyncData({ app, store }) {
-        let menuData = await store.dispatch('getMenu');
         let sfq = {};
         let lps = {};
         let xgts = {};
@@ -361,6 +360,7 @@
         let zts = {};
         let pms = {};
         let webs = {};
+        let menuData = await store.dispatch('getMenu');
         menuData.RetMenuData.forEach(element => {
             if (element.ItemAttributesFullName === '示范区') {
                 sfq = element
@@ -383,7 +383,6 @@
             if (element.ItemAttributesFullName === '文本') {
                 webs = element
             }
-            
         });
         let homeData = await store.dispatch('getHomeData');
         return {
@@ -468,6 +467,10 @@
             let msgs = await setDemo('dataBase', serverBataBase);
             let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
             window.open(routeData.href, '_blank');
+        },
+        // 路由跳转
+        jumpRoute(items) {
+            this.$router.push({ name: "HeAndITribal-id", query: { id: items.UserId } });
         }
     }
 }
@@ -559,7 +562,7 @@
 
         &-img {
             height: 266px;
-
+            cursor: pointer;
             img {
                 width: 100%;
                 height: 100%;
@@ -569,11 +572,9 @@
         &-content {
             width: 100%;
             height: 128px;
-
             &-had {
                 position: relative;
                 height: 35px;
-
                 &-img {
                     display: inline-block;
                     position: absolute;
@@ -585,7 +586,7 @@
                     border-radius: 50%;
                     background: #FF0;
                     overflow: hidden;
-
+                    cursor: pointer;
                     img {
                         height: 100%;
                         width: 100%;

@@ -6,7 +6,7 @@
                 <ul class="home-bar-content-left" @mouseleave="switchRegionLeave">
                     <li>欢迎您，来到建筑部落！</li>
                     <li :class="isRegion ? 'region regionhover' : 'region'" @mouseenter="switchRegion">
-                        <i class="iconfont icon-jiantou"></i>
+                        <i class="icon iconfont">&#xe6ad;</i>
                         <span>{{region}} [切换城市]</span>
                     </li>
                     <ul v-show="isRegion" class="region-box" @mouseenter="switchRegion" @mouseleave="switchRegionLeave">
@@ -14,10 +14,13 @@
                     </ul>
                 </ul>
                 <ul class="home-bar-content-right">
-                    <li>
+                    <li class="Headportrait">
+                        <div class="avatar">
+                            <img :src="auth ? auth.HeadIcon : ''" alt="">
+                        </div>
                         <span v-if="!auth" @click="SignIn">登录</span>
-                        <div v-else>
-                            <span>{{auth.NickName}}</span>
+                        <div v-else style="display: inline-block;">
+                            <span @click="enterCenter">{{auth.NickName}}</span>
                             <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                         </div>
                     </li>
@@ -191,6 +194,12 @@
             onlineMap() {
                 window.open('https://map.51240.com/zhongguo__map/')
             },
+            enterCenter () {
+                if (!this.isLogin) {
+                    return false
+                }
+                this.$router.push({ path: "/PersonalCenter" });
+            },
             // 百度搜索
             onSearch() {
                 if (!this.baiduData) return false
@@ -230,7 +239,7 @@
                 if (!this.isLogin) {
                     return false
                 }
-                this.$router.push({ path: "/PersonalCenter" })
+                // this.$router.push({ path: "/PersonalCenter" })
             },
             goAboutUs() {
                 this.$router.push({ path: "/aboutUS" })
@@ -247,6 +256,7 @@
         color: #ffffff !important;
     }
     .region {
+        color: #FF3C00;
         padding: 0 10px;
         border-left: 1px solid transparent;
         border-right: 1px solid transparent;
@@ -396,5 +406,18 @@
         color: #ffffff;
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
+    }
+    .avatar {
+        display: inline-block;
+        width: 28px;
+        height: 28px;
+        background-color: #ccc;
+        border-radius: 50%;
+        overflow: hidden;
+        vertical-align: middle;
+        img {
+            width: 100%;
+            height: 100%;
+        }
     }
 </style>

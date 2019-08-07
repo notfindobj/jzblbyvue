@@ -134,17 +134,14 @@
                     border-bottom: 2px solid #ff3c00;
                 }
             }
-
             .search {
                 margin-left: 20px;
             }
-
             .user {
                 display: flex;
                 align-items: center;
                 margin-left: 40px;
                 cursor: pointer;
-
                 .avatar {
                     width: 28px;
                     height: 28px;
@@ -156,14 +153,12 @@
                         height: 100%;
                     }
                 }
-
                 .user-name {
                     font-size: 14px;
                     color: #999;
                     margin-left: 4px;
                 }
             }
-
             .online-map {
                 cursor: pointer;
                 font-size: 14px;
