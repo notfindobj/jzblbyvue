@@ -49,11 +49,11 @@
                     <template v-for="(items, index) in lpList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards @viewItem="viewItem(items, 'lpList')" :bigCardsDate="items"/>
+                                <Big-Cards @viewItem="viewItem(lps, items, 'lpList')" :bigCardsDate="items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards @viewItem="viewItem(items, 'lpList')" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(lps, items, 'lpList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -75,21 +75,21 @@
                     <i-col span="12">
                         <div class="left-items">
                             <template v-for="(items, lp) in xgtList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'xgtList')" 
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(xgts, items, 'xgtList')" 
                                                 :smallCardsDate="items"
                                                 :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in xgtList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'xgtList')"
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(xgts, items, 'xgtList')"
                                              :smallCardsDate="items"
                                              :key="lp"/>
                             </template>
                         </div>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in xgtList" v-if="lp === 4" :key="lp">
-                        <Big-Cards @viewItem="viewItem(items, 'xgtList')" :bigCardsDate="items"/>
+                        <Big-Cards @viewItem="viewItem(xgts, items, 'xgtList')" :bigCardsDate="items"/>
                     </i-col>
                 </Row>
             </div>
@@ -110,11 +110,11 @@
                     <template v-for="(items, index) in suList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards @viewItem="viewItem(items, 'suList')" :bigCardsDate="items"/>
+                                <Big-Cards @viewItem="viewItem(sus, items, 'suList')" :bigCardsDate="items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards @viewItem="viewItem(items, 'suList')" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(sus, items, 'suList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -136,20 +136,20 @@
                     <i-col span="12">
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
-                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(items, 'ztList')" :smallCardsDate="items"
+                                <Small-Cards v-if="lp < 2" @viewItem="viewItem(zts, items, 'ztList')" :smallCardsDate="items"
                                             :key="lp"/>
                             </template>
                         </div>
                         <div class="left-items">
                             <template v-for="(items, lp) in ztList">
-                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(items, 'ztList')"
+                                <Small-Cards v-if="lp > 1 && lp < 4" @viewItem="viewItem(zts, items, 'ztList')"
                                             :smallCardsDate="items"
                                             :key="lp"/>
                             </template>
                         </div>
                     </i-col>
                     <i-col span="12" v-for="(items, lp) in lpList" v-if="lp === 4" :key="lp">
-                        <Big-Cards @viewItem="viewItem(items, 'ztList')" :bigCardsDate="items"/>
+                        <Big-Cards @viewItem="viewItem(zts, items, 'ztList')" :bigCardsDate="items"/>
                     </i-col>
                 </Row>
             </div>
@@ -170,11 +170,11 @@
                     <template v-for="(items, index) in pmList">
                         <template v-if="index === 0">
                             <i-col span="12" :key="index">
-                                <Big-Cards @viewItem="viewItem(items, 'pmList')" :bigCardsDate="items"/>
+                                <Big-Cards @viewItem="viewItem(pms, items, 'pmList')" :bigCardsDate="items"/>
                             </i-col>
                         </template>
                         <i-col span="6" v-if="index >0 && index<5" :key="index">
-                            <Small-Cards @viewItem="viewItem(items, 'pmList')" :smallCardsDate="items"/>
+                            <Small-Cards @viewItem="viewItem(pms, items, 'pmList')" :smallCardsDate="items"/>
                         </i-col>
                     </template>
                 </Row>
@@ -459,6 +459,7 @@
                 Rows: 8,
                 showLayout: val === 'jzList' || val === 'wbList' ? false: true
             }
+           
             let serverBataBase = {
                 key: 'dataBase',
                 value: baseDateId
