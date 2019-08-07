@@ -95,7 +95,17 @@
   import 'viewerjs/dist/viewer.css';
   import Comment from '../video/comment'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow } from '../../service/clientAPI'
+  function getRanNum(){
+    let result = [];
+      for(let i=0;i<8;i++){
+        let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
+          result.push(String.fromCharCode(65+ranNum));
+      }
+    return  result.join('');
+  }
+  var name = getRanNum()
   export default {
+    name: name,
     props: {
       itemInfo: {
         type: Object,
@@ -161,6 +171,10 @@
       },
       // 获取项目和粉丝量
       async showWorks (id, ids) {
+        if (!id) {
+           this.$Message.error('用户ID为空！');
+           return false;
+        }
         let msg = await getUserProAndFans(id)
         if (msg) {
           this.isTool = ids;
@@ -201,6 +215,7 @@
             },
             hidden() {
               _this.isBtnSile = false;
+              _this.Viewer.destroy();
               // _this.viewShowBox()
             }
           })
@@ -217,7 +232,6 @@
       // 跳转部落
       goToPersonal (row) {
         this.$emit('goToPersonal', row)
-        console.log('跳转部落');
       },
       // 关注
       async worksFocus(item) {
@@ -242,7 +256,6 @@
       clickVideo() {
         this.$emit('clickVideo', this.itemInfo, this.index);
       },
-
       // 点击评论
       clickComment() {
         if (this.isShowComment) {
@@ -282,7 +295,6 @@
           this.getComment();
         })
       },
-
       // 回复
       submitReplay(params) {
         this.isLoadingComment = true;
