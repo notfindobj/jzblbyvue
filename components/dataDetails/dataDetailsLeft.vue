@@ -164,7 +164,7 @@
         if (!this.isBtnSile) {
           this.$emit('pageTurning', val)
         } else {
-          if (this.itemLength-1 === this.itemIndex) {
+          if (this.itemLength-1 === this.itemIndex  || this.itemIndex === 1) {
             this.Viewer.close();
             this.Viewer.hide();
           }

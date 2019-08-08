@@ -118,7 +118,7 @@
                 display: flex;
                 align-items: center;
                 margin-left: 30px;
-                font-size: 16px;
+                font-size: 14px;
                 a {
                     height: 60px;
                     margin: 0 20px;

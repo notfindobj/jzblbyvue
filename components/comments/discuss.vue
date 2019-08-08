@@ -142,6 +142,7 @@ export default {
                 overflow: hidden;
                 background: #abc;
                 img {
+                    height: 100%;
                     width: 100%;
                 }
             }

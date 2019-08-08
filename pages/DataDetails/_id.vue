@@ -28,17 +28,18 @@
                         :PdfInfo="PdfInfo"
                     />
                 </template>
-                <div>
+                <div class="position-sticky">
+                    <!--  :class="{'fix-top': scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900, 'fix-bottom': distanceBottom < 362 && bodyHeight > 1900}" -->
                     <data-details-right
-                        :class="{'fix-top': scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900, 'fix-bottom': distanceBottom < 362 && bodyHeight > 1900}"
+                       
                         :style="rightPx"
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
                     />
+                    <!-- :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362 && bodyHeight > 1900}" -->
                     <commentsCon
-                        :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362 && bodyHeight > 1900}"
                         :style="rightPx1"
                         :width="'340px'"
                         :publish="detaDetails"
@@ -221,7 +222,7 @@
                 if (showLayout.title === '文本') {
                     this.isLayout = false
                 } else {
-                    this.isLayout = showLayout.showLayout === 'true' ? true : false;
+                    this.isLayout = (showLayout.showLayout || showLayout.showLayout === 'true') ? true : false;
                 }
             } catch (error) {}
         },
@@ -230,16 +231,16 @@
             $(document).ready(function () {
                 _this.initLazy()
             });
-            this.clientWidth = document.body.clientWidth;
-            this.contentHeight = document.documentElement.clientHeight - 460;
-            window.addEventListener('scroll', () => {
-                this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-                this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
-            })
-            window.onresize = () => {
-                this.clientWidth = document.body.clientWidth;
-                this.contentHeight = document.documentElement.clientHeight - 460;
-            }
+            // this.clientWidth = document.body.clientWidth;
+            // this.contentHeight = document.documentElement.clientHeight - 460;
+            // window.addEventListener('scroll', () => {
+            //     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            //     this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
+            // })
+            // window.onresize = () => {
+            //     this.clientWidth = document.body.clientWidth;
+            //     this.contentHeight = document.documentElement.clientHeight - 460;
+            // }
             // 记录用户访问
             recordFrequency({
                 ItemId: this.detaDetails.ItemId,
@@ -416,6 +417,10 @@
     }
 </script>
 <style lang="less" scoped>
+    .position-sticky {
+        position: sticky;
+        top: 0px;
+    }
     .data-details-box {
         width: 100%;
         height: auto;

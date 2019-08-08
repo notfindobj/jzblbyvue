@@ -167,7 +167,7 @@
     },
     methods: {
       moveLeftClick(val) {
-        if (this.itemLength === this.itemIndex) {
+        if (this.itemLength === this.itemIndex || this.itemIndex === 1) {
           this[this.ViewerIndex].close();
           this[this.ViewerIndex].hide();
         }

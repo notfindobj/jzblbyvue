@@ -42,10 +42,10 @@
             </div>
             <div class="content">
                 <Menu mode="horizontal" theme="light" :active-name="menuIndex" class="tabs" @on-select="selectMenu">
-                    <MenuItem name="1"> 本周最热</MenuItem>
-                    <MenuItem name="2"> 本月最热</MenuItem>
                     <MenuItem name="0"> 最近回答</MenuItem>
                     <MenuItem name="3"> 等待回答</MenuItem>
+                    <MenuItem name="1"> 本周最热</MenuItem>
+                    <MenuItem name="2"> 本月最热</MenuItem>
                     <MenuItem name="4" v-show="isSearch"> 搜索</MenuItem>
                 </Menu>
                 <div class="content-list">

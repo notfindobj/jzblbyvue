@@ -133,6 +133,7 @@
         position: relative;
         margin-top: 4px;
         padding: 20px 30px;
+        top: 10px;
         background-color: #fff;
 
         .comment-head {

@@ -48,7 +48,6 @@
 </template>
 <script>
 import {setAddressData, getProvinceList} from '../../../../service/clientAPI'
-// import {city} from '../../../../static/city'
 export default {
     name: 'setAddress',
     props: {
@@ -112,21 +111,26 @@ export default {
             }
         },
         async saveAddres () {
-            let queryData = {
-                Id: this.addressData.Id,
-                Receiver: this.addressData.Receiver,
-                ProvinceAreaId: this.addressData.ProvinceArea.split('|')[0],
-                ProvinceName: this.addressData.ProvinceArea.split('|')[1],
-                CityAreaId: this.addressData.CityArea.split('|')[0],
-                CityName: this.addressData.CityArea.split('|')[1],
-                CountyAreaId: this.addressData.CountyArea.split('|')[0],
-                CountName: this.addressData.CountyArea.split('|')[1],
-                DetailAddress: this.addressData.DetailAddress,
-                MobilePhone: this.addressData.MobilePhone,
-                FixedTelephone: this.addressData.FixedTelephone,
-                Email: this.addressData.Email,
-                AddressAlias: this.addressData.AddressAlias,
-                IsDetail: this.addressData.inCount,
+            try {
+                let queryData = {
+                    Id: this.addressData.Id,
+                    Receiver: this.addressData.Receiver,
+                    ProvinceAreaId: this.addressData.ProvinceArea.split('|')[0],
+                    ProvinceName: this.addressData.ProvinceArea.split('|')[1],
+                    CityAreaId: this.addressData.CityArea.split('|')[0],
+                    CityName: this.addressData.CityArea.split('|')[1],
+                    CountyAreaId: this.addressData.CountyArea.split('|')[0],
+                    CountName: this.addressData.CountyArea.split('|')[1],
+                    DetailAddress: this.addressData.DetailAddress,
+                    MobilePhone: this.addressData.MobilePhone,
+                    FixedTelephone: this.addressData.FixedTelephone,
+                    Email: this.addressData.Email,
+                    AddressAlias: this.addressData.AddressAlias,
+                    IsDetail: this.addressData.IsDetail || false,
+                }
+            } catch (error) {
+                this.$Message.error('参数错误');
+                return false
             }
             let msg  = await setAddressData(queryData);
             if (msg) {

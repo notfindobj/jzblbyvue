@@ -505,16 +505,23 @@
       // 发送请求
       sendPost(attributesList) {
         let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];
-        if (this.typeFile && this.typeName !== '建筑规范') {
-          this.showLayout = true
-          ItemFilePath = this.typeFile.packageOrPdfUrl;
-          ItemFileName = this.typeFile.fileName;
-        } else if (this.typeName === '建筑规范') {
+        if (this.typeFile && this.typeName === '建筑规范') {
           this.showLayout = false
           PdfModel = {
             ItemFileName: this.typeFile.fileName,
             ItemFilePath: this.typeFile.packageOrPdfUrl
           }
+        }
+        if (this.typeFile && this.typeName === '文本') {
+          this.showLayout = false
+          PdfModel = {
+            ItemFileName: this.typeFile.fileName,
+            ItemFilePath: this.typeFile.packageOrPdfUrl
+          }
+        } else if (this.typeFile)  {
+          this.showLayout = true
+          ItemFilePath = this.typeFile.packageOrPdfUrl;
+          ItemFileName = this.typeFile.fileName;
         }
         const CustomizeList = [];
         for (let i = 0; i < this.serviceSelectList.length; i++) {
@@ -567,13 +574,11 @@
             const queryData = {
               Id: res,
               showLayout: this.showLayout,
-              reqItemList: {
-                SortType: 1,
-                KeyWords: "",
-                Order: true,
-                Page: 0,
-                Rows: 32
-              }
+              SortType: 1,
+              KeyWords: "",
+              Order: true,
+              Page: 0,
+              Rows: 32
             };
             let serverBataBase = {
               key: 'dataBase',

@@ -88,10 +88,10 @@
                 <Button class="attention-btn" v-show="detailInfo.IsFollow" @click="handleGz(false)">
                     取消关注
                 </Button>
-                <Button type="primary" class="big-btn" size="large" ghost>
+                <!-- <Button type="primary" class="big-btn" size="large" ghost>
                     <i class="icon iconfont">&#xe60a;</i>
                     我要提问
-                </Button>
+                </Button> -->
             </div>
 
             <!-- <div class="block-btn">
