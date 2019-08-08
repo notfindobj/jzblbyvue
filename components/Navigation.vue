@@ -69,7 +69,7 @@
                     <LevelMenu class="banner-nav" v-show="isIndex || isShowCate"></LevelMenu>
                 </li>
                 <li @click="goAttention">关注</li>
-                <li @click="goRecommend">推荐</li>
+                <!-- <li @click="goRecommend">推荐</li> -->
                 <li @click="goVideo">视频</li>
                 <li @click="goQuestion">问答</li>
                 <li @click="goBuilding">建筑圈</li>
@@ -236,13 +236,15 @@
                 this.$router.push({ path: "/BuildingCircle" })
             },
             goHeAndI() {
+                this.$Message.error('开发中....')
                 if (!this.isLogin) {
                     return false
                 }
                 // this.$router.push({ path: "/PersonalCenter" })
             },
             goAboutUs() {
-                this.$router.push({ path: "/aboutUS" })
+                this.$Message.error('开发中....')
+                // this.$router.push({ path: "/aboutUS" })
             },
             goMytribe() {
                 this.$router.push({ path: "/HeAndITribal" })

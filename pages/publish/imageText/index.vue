@@ -18,18 +18,13 @@
                     <span  class="hidden-text" v-show="isLongText">想更加专业的发布文章？点击这里加入部落号</span>
                 </div>
                 <div class="toolbar-right">
-                    <Dropdown
-                        placement="bottom"
-                        trigger="click"
-                        @on-click="selectIsPublic"
-                    >
+                    <Dropdown placement="bottom" trigger="click" @on-click="selectIsPublic" >
                         <a href="javascript:void(0)">
-                            {{ publishMode }}
+                            {{ publishMode | interceptText }}
                             <Icon type="ios-arrow-down"></Icon>
                         </a>
                         <DropdownMenu slot="list">
-                            <DropdownItem name="公开">公开</DropdownItem>
-                            <DropdownItem name="私密">私密</DropdownItem>
+                            <DropdownItem v-for="(item, index) in privacyList" :name="item.Name + '|'+ item.Id" :key="index">{{item.Name}}</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                     <Button class="publish-btn" type="primary" @click="clickPublish">发布</Button>
@@ -66,7 +61,7 @@
 <script>
   import Upload from '~/components/publish/upload'
   import Emotion from '~/components/Emotion/index'
-  import {releaseStatement} from '../../../service/clientAPI'
+  import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
   export default {
     data() {
       return {
@@ -76,16 +71,24 @@
         publishMode: '公开',
         content: '',
         imgList: [],
-        imageText: {
-            text: ''
-        }
+        privacyList: []
       }
     },
     components: {
       'v-upload': Upload,
       Emotion
     },
+    mounted () {
+      this.getPrivacyList();
+    },
     methods: {
+      async getPrivacyList () {
+        let msg = await GetOperatPrivacy(3);
+        if (msg) {
+          this.privacyList = msg.respOperatPrivacy;
+          this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
+        }
+      },
       // 点击上传图片
       clickUpload() {
         this.isShowUpload = !this.isShowUpload;
@@ -106,6 +109,7 @@
         releaseStatement({
           talkType: 1,
           talkTitle: '',
+          displayPrivacyId: this.publishMode.split('|')[1],
           talkContent: this.content,
           listImg: this.imgList
         }).then(res => {
@@ -128,19 +132,16 @@
       handleEmotion (item) {
         this.content += `[${item.content}]`
       },
-
       // 选择是否公开
       selectIsPublic(name) {
         this.publishMode = name;
       },
-
       // 图片上传成功
       uploadSuccess(fileList) {
         for(let i of fileList) {
           this.imgList.push(i);
         }
       },
-
       // 点击删除图片
       delImg(index) {
         this.$delete(this.imgList, index);

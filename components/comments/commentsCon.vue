@@ -86,7 +86,7 @@
       return {
         isComment: false,
         commentsInfo: {
-          downNum: 2.8,
+          downNum: '',
         },
         commentV: '',
         contentHeight: ''

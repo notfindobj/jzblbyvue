@@ -165,7 +165,7 @@ export const downloadFile = async params => {
 export const bindingByWX = async params => {
   return await request.post('UserInfo/BindWx', params)
 }
-// 获取用户信息 【操作权限 / 感情状况】数据接口 操作权限；code 2：感情状况 ,默认是1
+// 获取用户信息 【操作权限 / 感情状况】数据接口 操作权限；code 2：感情状况 ,默认是1 ,3 发布展示可看权限
 export const GetOperatPrivacy = async params => {
   return await request.post(`UserInfo/GetOperatPrivacy?code=${params}`)
 }

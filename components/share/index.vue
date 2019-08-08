@@ -17,11 +17,6 @@ export default {
             default: () => {}
         }
     },
-    head:{
-        script: [
-            {src: 'https://static.runoob.com/assets/qrcode/qrcode.min.js'}
-        ]  
-    },
     data () {
         return {
             modal3: true

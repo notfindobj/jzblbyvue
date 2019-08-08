@@ -4,6 +4,15 @@ import moment from 'moment'
 Vue.filter('datefmt', function (input, fmtstring) {
   return moment(input).format(fmtstring)
 })
+//  截取|
+Vue.filter('interceptText', function (value) {
+  let reg = RegExp(/|/);
+  if(reg.test(value)){
+    return value.split('|')[0]
+  } else {
+    return value
+  }
+})
 //获取整数部分
 Vue.filter('NumFormat', function (value) {
   if (!value) return '0';

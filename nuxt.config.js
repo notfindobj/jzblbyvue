@@ -16,7 +16,8 @@ module.exports = {
     ],
     script: [
       { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
-      { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' }
+      { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
+      { src: 'https://static.runoob.com/assets/qrcode/qrcode.min.js' },
     ],
   },
   // 插件依赖

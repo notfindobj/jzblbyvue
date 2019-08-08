@@ -16,18 +16,14 @@
                     </span>
                 </div>
                 <div class="toolbar-right">
-                    <Dropdown
-                        placement="bottom"
-                        trigger="click"
-                        @on-click="selectIsPublic"
-                    >
+                    <Dropdown placement="bottom" trigger="click"
+                        @on-click="selectIsPublic" >
                         <a href="javascript:void(0)">
-                            {{ publishMode }}
+                            {{ publishMode | interceptText }}
                             <Icon type="ios-arrow-down"></Icon>
                         </a>
                         <DropdownMenu slot="list">
-                            <DropdownItem name="公开">公开</DropdownItem>
-                            <DropdownItem name="私密">私密</DropdownItem>
+                            <DropdownItem v-for="(item, index) in privacyList" :name="item.Name + '|'+ item.Id" :key="index">{{item.Name}}</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                     <Button class="publish-btn" type="primary" @click="clickSubmit">发布</Button>
@@ -37,11 +33,8 @@
                 <h3>上传视频</h3>
                 <p class="sub-title">发布后，视频将出现在我的部落</p>
                 <div class="upload-main">
-                    <v-upload
-                        class="upload"
-                        @clearVideo="clearVideo"
-                        @uploadSuccess="uploadSuccess"
-                    />
+                    <v-upload class="upload" @clearVideo="clearVideo"
+                        @uploadSuccess="uploadSuccess" />
                     <p class="upload-tip">仅支持MP4视频格式，大小不超过50M，请勿上传反动色情等违法视频。</p>
                 </div>
                 <Spin fix v-if="spinShow">
@@ -64,7 +57,7 @@
 <script>
   import Upload from '~/components/publish/uploadVideo'
   import Emotion from '@/components/Emotion/index'
-  import {releaseStatement} from '../../../service/clientAPI'
+  import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -74,17 +67,25 @@
         publishMode: '公开',
         content: '',
         videoInfo: null,
-        spinShow: false
+        spinShow: false,
+        privacyList: []
       }
     },
-
     components: {
       'v-upload': Upload,
       Emotion
     },
-
+    mounted () {
+      this.getPrivacyList();
+    },
     methods: {
-
+      async getPrivacyList () {
+        let msg = await GetOperatPrivacy(3);
+        if (msg) {
+          this.privacyList = msg.respOperatPrivacy;
+          this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
+        }
+      },
       // 点击上传视频
       clickUpload() {
         this.isShowUpload = !this.isShowUpload;
@@ -122,6 +123,7 @@
           talkType: 2,
           talkTitle: this.content,
           talkContent: '',
+          displayPrivacyId: this.publishMode.split('|')[1],
           listImg: [this.videoInfo]
         }).then(res => {
           this.$Message.success('发布成功！');
