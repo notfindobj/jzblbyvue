@@ -13,29 +13,29 @@
             </div>
             <ul class="comments-status-info">
                 <li>
-          <span :class="publish.islikes? 'operationColor': ''" @click="thumbsUp(publish)">
-            <i class="icon iconfont icon-dianzan1"></i>
-            <span>{{publish.likes}}</span>
-          </span>
+                    <span :class="publish.islikes? 'operationColor': ''" @click="thumbsUp(publish)">
+                        <i class="icon iconfont icon-dianzan1"></i>
+                        <span>{{publish.likes}}</span>
+                    </span>
                 </li>
                 <li>
                     <!-- 转发 -->
                     <span @click="Forward(publish)">
-             <i class="icon iconfont icon-share"></i>
-            <span>{{commentsInfo.downNum}}</span>
-          </span>
+                        <i class="icon iconfont icon-share"></i>
+                        <span>{{commentsInfo.downNum}}</span>
+                    </span>
                 </li>
                 <li>
-          <span :class="publish.iscollections? 'operationColor': ''" @click="Collection(publish)">
-            <i class="icon iconfont icon-favorite"></i>
-            <span>{{publish.collections}}</span>
-          </span>
+                    <span :class="publish.iscollections? 'operationColor': ''" @click="Collection(publish)">
+                        <i class="icon iconfont icon-favorite"></i>
+                        <span>{{publish.collections}}</span>
+                    </span>
                 </li>
                 <li>
-          <span @click="isComment = !isComment">
-            <i class="icon iconfont icon-pinglun"></i>
-            <span>{{publish.commentss}}</span>
-          </span>
+                    <span @click="isComment = !isComment">
+                        <i class="icon iconfont icon-pinglun"></i>
+                        <span>{{publish.commentss}}</span>
+                    </span>
                 </li>
             </ul>
             <div class="comment-box">

@@ -82,7 +82,6 @@
           // }
         })
       },
-
       handleReachBottom() {
         if (this.paginationData.page < this.paginationData.total) {
           this.$emit('reachBottom')

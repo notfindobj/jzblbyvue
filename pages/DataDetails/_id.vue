@@ -48,6 +48,7 @@
                         @commentValue="commentValue"
                         @discussValue="discussValue"
                         @somePraise="somePraise"
+                        @Forward="Forward"
                     />
                 </div>
             </div>
@@ -66,6 +67,7 @@
             :modalConfig="modalConfig"
             :paymentConfig="paymentConfig"
         />
+        <share :config="configShare"/>
     </div>
 </template>
 <script>
@@ -74,6 +76,7 @@
     import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
     import commentsCon from '../../components/comments/commentsCon.vue'
     import viewPicture from '../../components/comments/viewPicture.vue'
+    import share from '../../components/share'
     import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile} from '../../service/clientAPI'
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
     import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
@@ -110,10 +113,14 @@
                     isWxConfig: false
                 },
                 paymentConfig: {},
-                downloadTime: null
+                downloadTime: null,
+                configShare: {
+                    isModal: false
+                }
             }
         },
         components: {
+            share,
             weixinBox,
             dataDetailsLeft,
             dataDetailsRight,
@@ -361,6 +368,10 @@
                 }
                 let collectionMsg = await setFollow(queryData)
                 this.$set(item, 'IsFollow', !item.IsFollow)
+            },
+            // 转发
+            Forward () {
+                this.configShare.isModal = true;
             },
             dataDetailsMaskShow(obj) {
                 this.paymentConfig.url = '';

@@ -64,8 +64,10 @@
                     </span>
                 </div>
                 <div class="foot-child">
-                    <i class="icon iconfont">&#xe6be;</i>
-                    <span>{{ itemInfo.itemOperateData.ShareCount }}</span>
+                    <span @click="textShare">
+                        <i class="icon iconfont">&#xe6be;</i>
+                        <span>{{ itemInfo.itemOperateData.ShareCount }}</span>
+                    </span>
                 </div>
                 <div class="foot-child" @click="clickComment">
                     <i class="icon iconfont">&#xe664;</i>
@@ -88,6 +90,7 @@
             @submitReplay="submitReplay"
             @submitLike="submitLike"
         ></v-comment>
+        <share :config="configModal"/>
     </div>
 </template>
 
@@ -95,12 +98,13 @@
   import Viewer from 'viewerjs';
   import 'viewerjs/dist/viewer.css';
   import Comment from '../video/comment'
+  import share from '../share'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow } from '../../service/clientAPI'
   function getRanNum(){
     let result = [];
       for(let i=0;i<8;i++){
         let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
-          result.push(String.fromCharCode(65+ranNum));
+        result.push(String.fromCharCode(65+ranNum));
       }
     return  result.join('');
   }
@@ -120,7 +124,8 @@
       }
     },
     components: {
-      'v-comment': Comment
+      'v-comment': Comment,
+      share
     },
     data() {
       function getRanNum(){
@@ -149,6 +154,9 @@
         isLeftPngR: require('../../assets/images/leftButton.png'),
         isLeft: false,
         isRight: false,
+        configModal: {
+          isModal: false
+        }
       }
     },
     created () {
@@ -269,6 +277,10 @@
       // 收藏
       clickCollection(flag) {
         this.$emit('clickCollection', this.index, flag)
+      },
+      // 转发
+      textShare () {
+        this.configModal.isModal = true
       },
       // 赞
       clickLike(flag) {

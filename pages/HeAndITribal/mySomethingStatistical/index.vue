@@ -37,7 +37,6 @@
   </div>
 </template>
 <script>
-  import {getFollowOrFans} from '../../../service/clientAPI'
   export default {
     layout: 'main',
     props: {
@@ -48,15 +47,7 @@
     },
     data () {
       return {
-        currentIndex:0,
-        someing_list:[
-          {
-            user_img:'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-            user_name:'张小杰',
-            status:'已关注',
-            introduction:'为了设计啦啦啦啦啦啦啦啦啦啦啦啦啦啦啦！'
-          },
-        ]
+        currentIndex:0
       }
     },
     methods: {
@@ -68,14 +59,6 @@
         }
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
         window.open(routeData.href, '_blank');
-      },
-      async getFollowOrFansList () {
-        let queryData = {
-          "IsFollow": true,
-          "page": 0,
-          "UserId": "d5b4fbaa-40a0-4145-a119-88af91c3bf8f"
-        }
-        let msg = await getFollowOrFans(queryData);
       },
       handleReachBottom() {
       },

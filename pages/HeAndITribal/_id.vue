@@ -16,6 +16,7 @@
                             :headList= "headList" 
                             :dataList="dataList" 
                             :paginationData="paginationData"
+                            @reachBottom="reachBottom"
                             @changeType="getList"/>
                         <mySomethingStatistical
                             v-if="PersonalCenter === 'mySomethingStatistical'"
@@ -85,6 +86,7 @@
             // 选择二级菜单
             getTypeMeunList (item, inx) {
                 this.currentIndex = inx || 0;
+                this.pageNum = 1;
                 let queryData = {
                     typeId: inx || 0,
                     UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID
@@ -96,7 +98,8 @@
                 })
             },
             changeComponents (index, count) {
-                this.currentIndex = null
+                this.currentIndex = null;
+                this.pageNum = 1;
                 let Components = ['mySomethingStatistical', 'mySomethingStatistical', 'HeAndIDownload'];
                 this.PersonalCenter = Components[index];
                 if (index === 0 || index === 1) {
@@ -107,7 +110,7 @@
             async getfollowList (index) {
                 let query = {
                     "IsFollow": index === 0 ? true : false,
-                    "page": 1,
+                    "page": this.pageNum,
                     "UserId": this.$route.query.id ? this.$route.query.id : this.userInfoID
                 }
                 let msg  = await getFollowOrFans(query);
@@ -118,7 +121,7 @@
             // 触底
             reachBottom() {
                 this.pageNum++;
-                this.getList(false);
+                this.getList();
             },
             // 获取发布数据
             getList(id, index) {
@@ -136,7 +139,7 @@
                         } else {
                             this.dataList = this.dataList.concat(res.retModels);
                         }
-                        
+                        this.paginationData = res.paginationData;
                     }
                 })
             }
@@ -220,7 +223,7 @@
             justify-content: space-between;
             &-left {
                 display: inline-block;
-                width: 880px;
+                width: 950px;
                 background: transparent;
             }
             &-right {
