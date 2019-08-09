@@ -32,7 +32,7 @@
                                 <Icon type="ios-arrow-down"></Icon>
                             </a>
                             <DropdownMenu slot="list">
-                                <DropdownItem>驴打滚</DropdownItem>
+                                <DropdownItem>关于我们</DropdownItem>
                                 <DropdownItem>炸酱面</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>

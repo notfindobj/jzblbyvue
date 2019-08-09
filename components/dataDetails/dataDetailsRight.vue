@@ -23,7 +23,7 @@
                    @click="unAnddown()"></i>
             </div>
             <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
-                <div v-if="detaDetails.IsDownload" @click="immediatelyDown()">立即下载 <span class="btn-group-Price">￥{{detaDetails.Price}}</span></div>
+                <div v-if="detaDetails.IsDownload" @click="immediatelyDown(detaDetails)">立即下载 <span class="btn-group-Price">￥{{detaDetails.Price}}</span></div>
                 <div v-if="detaDetails.IsCustomized" @click="customthis()">同款定制</div>
             </div>
         </div>
@@ -67,12 +67,16 @@
           }
         })
       },
-
       unAnddown() {
         this.isShowIcon = !this.isShowIcon
       },
-      immediatelyDown() {
-        this.$emit('dataDetailsMaskShow', { type: 'Down' })
+      immediatelyDown(row) {
+        let val = {
+          ItemId: row.ItemId,
+          isPay: row.IsPay,
+          type: 'Down'
+        }
+        this.$emit('dataDetailsMaskShow', val)
       },
       customthis() {
         this.$emit('dataDetailsMaskShow', { type: 'Custom' })

@@ -24,7 +24,7 @@
                     </a>
                     <DropdownMenu slot="list">
                       <DropdownItem>私信</DropdownItem>
-                      <DropdownItem>取消关注</DropdownItem>
+                      <DropdownItem @click.native="DropdownItem(item)">取消关注</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
                 </div>
@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+  import {setFollow } from '../../../service/clientAPI'
   export default {
     layout: 'main',
     props: {
@@ -51,6 +52,14 @@
       }
     },
     methods: {
+      async DropdownItem (item) {
+        // 关注/取消关注
+        // let queryData = {
+        //   UserId: item.UserId,
+        //   IsDelete: ''
+        // }
+        // let msg = await setFollow()
+      },
       // 路由跳转
       jumpRoute(items) {
         if (!items.UserId) {

@@ -123,15 +123,12 @@
                 isLoadingComment: false
             }
         },
-
         components: {
             Emotion,
             ToTop,
             'v-comment': Comment
         },
-
         methods: {
-
             // 关注/取消关注
             handleGz(flag) {
                 setFollow({

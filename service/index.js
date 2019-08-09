@@ -44,7 +44,9 @@ service.interceptors.response.use(
           res.data.Data = 1
         }
         return res.data.Data
-      }else {
+      } else if (res.data.Code === 6001) {
+        return res.data
+      } else {
         Message.warning(res.data.Msg);
         // return res.data.Data
       }
@@ -150,7 +152,7 @@ export default {
         Authorization : "Bearer "+ tooken
       },
       methods: 'post',
-      responseType: 'blob',
+      // responseType: 'blob',
       url,
       params: data
     })

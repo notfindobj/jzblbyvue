@@ -1,6 +1,7 @@
 <template>
     <Modal
         v-model="modalConfig.isWxConfig"
+        @on-cancel="cancel"
         title="打赏作者">
         <div class="QRcode-title">
             <p>微信扫码支付</p>
@@ -28,7 +29,11 @@ export default {
             }
         }
     },
-    methods: {}
+    methods: {
+        cancel () {
+            this.$emit('cancel')
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

@@ -31,8 +31,6 @@
                 <div class="position-sticky">
                     <!--  :class="{'fix-top': scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900, 'fix-bottom': distanceBottom < 362 && bodyHeight > 1900}" -->
                     <data-details-right
-                       
-                        :style="rightPx"
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
@@ -40,7 +38,6 @@
                     />
                     <!-- :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362 && bodyHeight > 1900}" -->
                     <commentsCon
-                        :style="rightPx1"
                         :width="'340px'"
                         :publish="detaDetails"
                         :comments="getGetCommentsData"
@@ -67,6 +64,7 @@
         <weixinBox
             :modalConfig="modalConfig"
             :paymentConfig="paymentConfig"
+            @cancel="cancel"
         />
         <share :config="configShare"/>
     </div>
@@ -82,7 +80,7 @@
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
     import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
     import weixinBox from '../../components/weixin'
-    import { mapGetters } from 'vuex'
+    import { mapGetters ,mapState} from 'vuex'
     import { setDemo } from '../../LocalAPI'
     import axios from 'axios'
     import qs from 'qs'
@@ -134,59 +132,9 @@
         computed: {
             ...mapGetters(['isLogin']),
             ...mapGetters(['getSessionStorage']),
-            bodyHeight() {
-                return  document.body.scrollHeight;
-            },
-            rightPx() {
-                if (this.clientWidth >= 1200) {
-                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
-                        return {
-                            right: (this.clientWidth - 1200) / 2 + 'px',
-                            bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
-                        };
-                    } else {
-                        return {
-                            right: (this.clientWidth - 1200) / 2 + 'px',
-                        };
-                    }
-                } else {
-                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
-                        return {
-                            right: this.clientWidth - 1200 + 'px',
-                            bottom: 362 + 100 - this.distanceBottom + this.contentHeight + 10 + 'px'
-                        };
-                    } else {
-                        return {
-                            right: this.clientWidth - 1200 + 'px'
-                        };
-                    }
-                }
-            },
-            rightPx1() {
-                if (this.clientWidth >= 1200) {
-                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
-                        return {
-                            right: (this.clientWidth - 1200) / 2 + 'px',
-                            bottom: 470 - this.distanceBottom + 'px'
-                        };
-                    } else {
-                        return {
-                            right: (this.clientWidth - 1200) / 2 + 'px',
-                        };
-                    }
-                } else {
-                    if (this.distanceBottom < 470 && document.body.scrollHeight > 1900) {
-                        return {
-                            right: this.clientWidth - 1200 + 'px',
-                            bottom: 470 - this.distanceBottom + 'px'
-                        };
-                    } else {
-                        return {
-                            right: this.clientWidth - 1200 + 'px'
-                        };
-                    }
-                }
-            }
+            ...mapState({
+                auth: state => state.overas.auth
+            }),
         },
         async asyncData({ app, store, route }) {
             let queryData = store.state.overas.sessionStorage.dataBase;
@@ -248,6 +196,9 @@
             })
         },
         methods: {
+            cancel () {
+                clearInterval(this.downloadTime)
+            },
             // 上下翻页，项目详情
             async PNpage(val) {
                 if (!val) {
@@ -374,36 +325,63 @@
             Forward () {
                 this.configShare.isModal = true;
             },
-            dataDetailsMaskShow(obj) {
+            async dataDetailsMaskShow(obj) {
                 this.paymentConfig.url = '';
+                if (obj.isPay) {
+                    let msg = await downloadFile(obj.ItemId);
+                    if (msg) {
+                        let name = msg.split('&')[1]
+                        var eleLink = document.createElement('a');
+                        eleLink.download = '';
+                        eleLink.style.display = 'none';
+                        eleLink.href = msg.split('&')[0];
+                        // 触发点击
+                        document.body.appendChild(eleLink);
+                        eleLink.click();
+                        // 然后移除
+                        document.body.removeChild(eleLink);
+                    }
+                    return false
+                }
+                
                 this.modalConfig.isWxConfig = false;
                 if (obj.type == 'Down') {
                     this.isShowDateDetailsDown = true;
                 } else {
                     this.isShowDataDetailsCustom = true;
                 }
+
             },
             // 支付接口调用成功的回调
             async payment(config, type, id) {
                 if (type === 0) {
                     this.modalConfig.isWxConfig = true;
                     this.paymentConfig = config;
-                    // this.downloadTime = setInterval(async () => {
+                    this.downloadTime = setInterval(async () => {
                         let msg = await downloadFile(id);
                         if (msg) {
-                            let name = msg.split('&')[1]
-                            var eleLink = document.createElement('a');
-                            eleLink.download = msg.split('&')[1];
-                            eleLink.style.display = 'none';
-                            eleLink.href = msg.split('&')[0];
-                            // 触发点击
-                            document.body.appendChild(eleLink);
-                            eleLink.click();
-                            // 然后移除
-                            document.body.removeChild(eleLink);
+                            if (msg.Code === 200) {
+                                clearInterval(this.downloadTime)
+                            } else {
+                                return false
+                            }
+                            try {
+                                let name = msg.split('&')[1]
+                                var eleLink = document.createElement('a');
+                                eleLink.download = '';
+                                eleLink.style.display = 'none';
+                                eleLink.href = msg.split('&')[0];
+                                // 触发点击
+                                document.body.appendChild(eleLink);
+                                eleLink.click();
+                                // 然后移除
+                                document.body.removeChild(eleLink);
+                            } catch (error) {
+                                
+                            }
                         }
-                    // }, 2000)
-                } else {
+                    }, 3000)
+                } else {s
                     window.location.href = config.data
                 }
                 this.isShowDateDetailsDown = false;
