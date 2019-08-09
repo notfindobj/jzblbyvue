@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Scroll :on-reach-bottom="handleReachBottom" height="800">
+        <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
             <div class="container">
                 <template v-for="(item, index) in attentionList">
                     <ImageAndText
@@ -20,64 +20,10 @@
                         @clickLike="clickLike"
                     ></VideoItem>
                 </template>
-                <!--            <div class="public-block recommend">-->
-                <!--                <div class="recommend-title">-->
-                <!--                    <i class="icon iconfont">&#xe60b;</i>-->
-                <!--                    <span>推荐</span>-->
-                <!--                </div>-->
-                <!--                <div class="recommend-list">-->
-                <!--                    <div class="recommend-item">-->
-                <!--                        <div class="img-wrap"></div>-->
-                <!--                        <div class="name">-->
-                <!--                            张小杰-->
-                <!--                            <div class="hidden-box">-->
-                <!--                                <div class="avatar"></div>-->
-                <!--                                <p class="user-name">杨小幂</p>-->
-                <!--                                <div class="user-data">-->
-                <!--                                    <div class="data data-left">-->
-                <!--                                        <span class="data-name">项目</span>-->
-                <!--                                        <span class="data-value">1334</span>-->
-                <!--                                    </div>-->
-                <!--                                    <div class="line"></div>-->
-                <!--                                    <div class="data data-left">-->
-                <!--                                        <span class="data-name">粉丝</span>-->
-                <!--                                        <span class="data-value">1.3万</span>-->
-                <!--                                    </div>-->
-                <!--                                </div>-->
-                <!--                                <div class="hidden-btns">-->
-                <!--                                    <Button size="small" type="primary">关注</Button>-->
-                <!--                                    <Button size="small">私信</Button>-->
-                <!--                                </div>-->
-                <!--                            </div>-->
-                <!--                        </div>-->
-                <!--                        <p class="info">一个有态度的设计师，给你精彩</p>-->
-                <!--                    </div>-->
-                <!--                    <div class="recommend-item">-->
-                <!--                        <div class="img-wrap"></div>-->
-                <!--                        <div class="name">张小杰</div>-->
-                <!--                        <p class="info">一个有态度的设计师，给你精彩</p>-->
-                <!--                    </div>-->
-                <!--                    <div class="recommend-item">-->
-                <!--                        <div class="img-wrap"></div>-->
-                <!--                        <div class="name">张小杰</div>-->
-                <!--                        <p class="info">一个有态度的设计师，给你精彩</p>-->
-                <!--                    </div>-->
-                <!--                    <div class="recommend-item">-->
-                <!--                        <div class="img-wrap"></div>-->
-                <!--                        <div class="name">张小杰</div>-->
-                <!--                        <p class="info">一个有态度的设计师，给你精彩</p>-->
-                <!--                    </div>-->
-                <!--                    <div class="to-pre">-->
-                <!--                        <i class="icon iconfont">&#xe62e;</i>-->
-                <!--                    </div>-->
-                <!--                    <div class="to-next">-->
-                <!--                        <i class="icon iconfont">&#xe62e;</i>-->
-                <!--                    </div>-->
-                <!--                </div>-->
-                <!--            </div>-->
             </div>
             <ToTop :isShowToTop="false"></ToTop>
-        </Scroll>
+            <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+        </crollBox>
     </div>
 </template>
 
@@ -85,6 +31,7 @@
     import ImageAndText from '~/components/projectType/imageAndText'
     import VideoItem from '~/components/projectType/video'
     import ToTop from '../../components/toTop'
+    import crollBox from '../../components/crollBox'
     import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
 
     export default {
@@ -94,16 +41,48 @@
             return {
                 pageNum: 1,
                 attentionList: [],
+                isLast: false,
+                records: 0,
                 total: 0,   // 总页数
             }
         },
         components: {
             ImageAndText,
             VideoItem,
-            ToTop
+            ToTop,
+            crollBox
         },
-
         methods: {
+            debounce(fn, wait) {    
+                var timeout = null;    
+                return function() {        
+                    if(timeout !== null)   clearTimeout(timeout);        
+                    timeout = setTimeout(fn, wait);    
+                }
+            },
+            onChangePage (num, type = 1) {
+                this.pageNum = num;
+                this.getList(num, type);
+                (function smoothscroll(){
+                    var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (currentScroll > 0) {
+                        window.requestAnimationFrame(smoothscroll);
+                        window.scrollTo (0,currentScroll - (currentScroll/5));
+                    }
+                })();
+            },
+            // 触底事件
+            willReachBottom () {
+                if (this.pageNum >= this.total) {
+                    this.$Message.info('已经是最后一页了');
+                    return false;
+                }
+                this.pageNum++;
+                this.getList();
+                // this.debounce(() => {
+                    
+                // }, 1500)
+            },
             // 点击收藏
             clickCollection(index, flag) {
                 setCollection({
@@ -124,7 +103,6 @@
                     // }
                 })
             },
-
             // 点击点赞
             clickLike(index, flag) {
                 setthumbsUp({
@@ -145,33 +123,27 @@
                 })
             },
             // 获取数据
-            async getList() {
+            async getList(row, type) {
                 const data = await this.$store.dispatch('getAttentionList', {
                     Page: this.pageNum,
                     Rows: 10
                 });
-
-                this.attentionList = this.attentionList.concat(data.retModels);
-                this.total = data.paginationData.total;
-            },
-
-            // 触底事件
-            handleReachBottom() {
-                if (this.pageNum >= this.total) {
-                    this.$Message.info('已经是最后一页了');
-                    return false;
+                if (type === 1) {
+                    this.attentionList = [];
+                    this.attentionList = data.retModels;
+                } else {
+                    this.attentionList = this.attentionList.concat(data.retModels);
                 }
-                this.pageNum++;
-                this.getList();
-            }
+                this.total = data.paginationData.total;
+                this.pageNum = data.paginationData.page;
+                this.records = data.paginationData.records;
+            },
         },
-
         async asyncData({ store }) {
             const data = await store.dispatch('getAttentionList', {
                 Page: 1,
                 Rows: 10
             });
-
             return {
                 attentionList: data.retModels,
                 total: data.paginationData.total
@@ -181,5 +153,8 @@
 </script>
 
 <style lang="less" scoped>
+    .ivu-page {
+        text-align: center;
+    }
     @import "~assets/css/ModulesStyle/index.less";
 </style>

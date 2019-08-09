@@ -27,11 +27,13 @@ export default {
     },
     methods: {
         scrollToTop() {
-            if (document.documentElement.scrollTop) {
-                document.documentElement.scrollTop = 0;
-            } else {
-                document.body.scrollTop = 0;
-            }
+            (function smoothscroll(){
+                var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                if (currentScroll > 0) {
+                    window.requestAnimationFrame(smoothscroll);
+                    window.scrollTo (0,currentScroll - (currentScroll/5));
+                }
+            })();
         },
         goPublish() {
             this.$router.push('/publish/project')

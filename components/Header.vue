@@ -11,7 +11,7 @@
                 <div class="nav-list">
                     <nuxt-link to="/HeAndITribal">我的部落</nuxt-link>
                     <nuxt-link to="/attention">关注</nuxt-link>
-                    <nuxt-link to="/recommend">推荐</nuxt-link>
+                    <!-- <nuxt-link to="/recommend">推荐</nuxt-link> -->
                     <nuxt-link to="/videos">视频</nuxt-link>
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                     <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>

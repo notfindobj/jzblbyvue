@@ -167,15 +167,22 @@
     },
     methods: {
       moveLeftClick(val) {
-        if (this.itemLength === this.itemIndex || this.itemIndex === 1) {
-          this[this.ViewerIndex].close();
-          this[this.ViewerIndex].hide();
-        }
-        if (val === 1) {
-          this[this.ViewerIndex].prev()
-        } else {
-          this[this.ViewerIndex].next()
-        }
+        if (val === 2) {
+            if (this.itemLength - 1 === this.itemIndex) {
+              this[this.ViewerIndex].close();
+              this[this.ViewerIndex].hide();
+            } else {
+              this[this.ViewerIndex].next()
+            } 
+          }
+          if (val === 1) {
+            if (this.itemIndex === 0) {
+              this[this.ViewerIndex].close();
+              this[this.ViewerIndex].hide();
+            } else {
+              this[this.ViewerIndex].prev()
+            }
+          }
       },
       mousemoveLeft() {
         this.isLeft = true
@@ -231,7 +238,7 @@
             },
             view: function(e) {
               _this.itemLength = e.target.childElementCount;
-              _this.itemIndex = e.detail.index + 1;
+              _this.itemIndex = e.detail.index;
             },
             built: function () {
               console.log('built')

@@ -123,6 +123,7 @@
             // parent: document.getElementById('view'),
             // container: document.getElementById('view'),
             show: function (e) {
+              console.log('aaaaaaaaaaaaaa')
               _this.isShowViewBox = true;
             },
             ready: function () {
@@ -137,8 +138,7 @@
             },
             view: async function (e) {
               _this.itemLength = e.target.childElementCount;
-              _this.itemIndex = e.detail.index + 1;
-              console.log(_this.itemLength, _this.itemIndex)
+              _this.itemIndex = e.detail.index;
               // let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
               // let queryData = {
               //   ItemId: _this.detaDetails.ItemId,
@@ -164,14 +164,21 @@
         if (!this.isBtnSile) {
           this.$emit('pageTurning', val)
         } else {
-          if (this.itemLength-1 === this.itemIndex  || this.itemIndex === 1) {
-            this.Viewer.close();
-            this.Viewer.hide();
+          if (val === 2) {
+            if (this.itemLength - 1 === this.itemIndex) {
+              this.Viewer.close();
+              this.Viewer.hide();
+            } else {
+              this.Viewer.next()
+            } 
           }
           if (val === 1) {
-            this.Viewer.prev()
-          } else {
-            this.Viewer.next()
+            if (this.itemIndex === 0) {
+              this.Viewer.close();
+              this.Viewer.hide();
+            } else {
+              this.Viewer.prev()
+            }
           }
         }
       },

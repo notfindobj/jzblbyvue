@@ -2,8 +2,8 @@
     <div class="dropdown">
         <slot></slot>
         <div v-if="!isLast" class="loading-box">
-            <div class="loading-wrap">
-                <i class="icon iconfont loading-icon" v-show="isShowLoadingIcon">&#xe6ac;</i>
+            <div class="loading-wrap" v-if="isShowLoadingIcon">
+                <i class="icon iconfont loading-icon" >&#xe6ac;</i>
             </div>
         </div>
     </div>
@@ -17,14 +17,11 @@
                 default: false
             }
         },
-
         data() {
             return {
                 isShowLoadingIcon: false
             }
         },
-
-
         mounted() {
             window.onscroll = () => {
                 //变量t是滚动条滚动时，距离顶部的距离
@@ -37,13 +34,21 @@
                 }
                 if (bt <= 10) {
                     if (!this.isLast) {
-                        this.isShowLoadingIcon = true;
+                        this.isShowLoadingIcon = true
                     }
-                    this.$emit('willReachBottom')
+                    this.debounce(this.$emit('willReachBottom'), 1500)
                 }
             }
         },
-        methods: {}
+        methods: {
+            debounce(fn, wait) {    
+                var timeout = null;    
+                return function() {        
+                    if(timeout !== null)   clearTimeout(timeout);        
+                    timeout = setTimeout(fn, wait);    
+                }
+            }
+        }
     }
 </script>
 <style scoped lang="less">
