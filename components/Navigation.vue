@@ -240,7 +240,7 @@
                 if (!this.isLogin) {
                     return false
                 }
-                // this.$router.push({ path: "/PersonalCenter" })
+                this.$router.push({ path: "/PersonalCenter" })
             },
             goAboutUs() {
                 this.$Message.error('开发中....')

@@ -193,3 +193,13 @@ export const SetChangeMobile = async params => {
 export const getFollowOrFans = async params => {
   return await request.post(`MyTribe/GetFollowOrFans`, params)
 }
+
+// 获取绑定信息
+export const getAccountBindInfo = async () => {
+    return await request.get(`UserInfo/GetAccountBindInfo`)
+}
+
+// 解绑qq或者微信
+export const unBindQQOrWX = async params => {
+    return await request.post(`UserInfo/UnBindQQorWx`, params)
+}
