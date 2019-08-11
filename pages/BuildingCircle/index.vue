@@ -41,7 +41,7 @@ export default {
         dataList: [],
         isLast: false,
         records: 0,
-        total: 0,   // 总页数
+        total: 1,   // 总页数
       }
     },
     components: {
@@ -83,6 +83,10 @@ export default {
       },
       // 触底事件
       willReachBottom () {
+          if (this.total === 1) {
+              this.isLast = true
+              return false
+          }
           if (this.pageNum >= this.total) {
               this.$Message.info('已经是最后一页了');
               return false;

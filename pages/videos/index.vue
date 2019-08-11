@@ -75,6 +75,10 @@
             },
             // 触底事件
             willReachBottom () {
+                if (this.total === 1) {
+                    this.isLast = true
+                    return false
+                }
                 if (this.pageNum >= this.total) {
                     this.$Message.info('已经是最后一页了');
                     return false;
