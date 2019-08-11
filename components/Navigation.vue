@@ -84,7 +84,7 @@
 </template>
 <script>
     import signPage from '../components/home/signPage'
-    import LevelMenu from '~/components/home/LevelMenu'
+    import LevelMenu from '../components/home/LevelMenu'
     import { getMenu } from '../service/clientAPI'
     import { mapState, mapGetters } from 'vuex'
     import { logout, setDemo} from '../LocalAPI'

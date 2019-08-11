@@ -106,8 +106,8 @@
 </template>
 
 <script>
-    import Emotion from '~/components/Emotion/index'
-    import Comment from '~/components/video/comment'
+    import Emotion from '../../components/Emotion/index'
+    import Comment from '../../components/video/comment'
     import ToTop from '../../components/toTop'
     import { setComments, setFollow } from '../../service/clientAPI'
 

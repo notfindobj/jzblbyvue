@@ -297,7 +297,7 @@
     </div>
 </template>
 <script>
-  import LevelMenu from '~/components/home/LevelMenu'
+  import LevelMenu from '../components/home/LevelMenu'
   import {setDemo} from '../LocalAPI'
   import { mapGetters} from 'vuex'
   export default {

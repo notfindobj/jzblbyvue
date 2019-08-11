@@ -59,8 +59,8 @@
 </template>
 
 <script>
-  import Upload from '~/components/publish/upload'
-  import Emotion from '~/components/Emotion/index'
+  import Upload from '../../../components/publish/upload'
+  import Emotion from '../../../components/Emotion/index'
   import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
   export default {
     data() {

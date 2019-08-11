@@ -29,7 +29,7 @@
 </template>
 
 <script>
-  import Emotion from '~/components/Emotion/index'
+  import Emotion from '../../components/Emotion/index'
   export default {
     props: {
       width: {

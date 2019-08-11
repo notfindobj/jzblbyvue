@@ -46,8 +46,8 @@
 </template>
 
 <script>
-  import Reply from '~/components/video/reply'
-  import ReplyItem from '~/components/video/replyItem'
+  import Reply from '../../components/video/reply'
+  import ReplyItem from '../../components/video/replyItem'
   import { setComments, setthumbsUp } from '../../service/clientAPI'
   export default {
     props: {

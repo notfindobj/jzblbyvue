@@ -1,5 +1,5 @@
 <template>
-    <Scroll :on-reach-bottom="handleReachBottom" height="800">
+     <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
         <div class="container">
             <template v-for="(item, index) in dataList">
                 <ImageAndText
@@ -21,27 +21,34 @@
                 ></VideoItem>
             </template>
         </div>
-        <!-- <ToTop :isShowToTop="false"></ToTop> -->
-    </Scroll>
+        <ToTop :isShowToTop="false"></ToTop>
+        <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+    </crollBox>
 </template>
 
 <script>
-import ImageAndText from '~/components/projectType/imageAndText'
-import VideoItem from '~/components/projectType/video'
-// import ToTop from '~/components/ToTop'
+import ImageAndText from '../../components/projectType/imageAndText'
+import VideoItem from '../../components/projectType/video'
+import crollBox from '../../components/crollBox'
+import ToTop from '../../components/toTop'
 import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
 export default {
     layout: 'main',
+    middleware: 'authenticated',
     data() {
       return {
         pageNum: 1,
         dataList: [],
+        isLast: false,
+        records: 0,
         total: 0,   // 总页数
       }
     },
     components: {
       ImageAndText,
-      VideoItem
+      VideoItem,
+      ToTop,
+      crollBox
     },
     async asyncData({ app, store, route }) {
         let queryData = {
@@ -56,15 +63,50 @@ export default {
         }
     },
     methods: {
-      async getList() {
+      debounce(fn, wait) {    
+          var timeout = null;    
+          return function() {        
+              if(timeout !== null)   clearTimeout(timeout);        
+              timeout = setTimeout(fn, wait);    
+          }
+      },
+      onChangePage (num, type = 1) {
+          this.pageNum = num;
+          this.getList(num, type);
+          (function smoothscroll(){
+              var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+              if (currentScroll > 0) {
+                  window.requestAnimationFrame(smoothscroll);
+                  window.scrollTo (0,currentScroll - (currentScroll/5));
+              }
+          })();
+      },
+      // 触底事件
+      willReachBottom () {
+          if (this.pageNum >= this.total) {
+              this.$Message.info('已经是最后一页了');
+              return false;
+          }
+          this.pageNum++;
+          this.getList();
+      },
+      async getList(row, type) {
           const data = await this.$store.dispatch('getTalk', {
             TalkType: "",
             Page: this.pageNum,
             Rows: 8
           });
-          console.log(data.retModels)
-          this.dataList = this.dataList.concat(data.retModels);
-          this.total = data.paginationData.total;
+          if (data) {
+            if (type === 1) {
+              this.dataList = [];
+              this.dataList = data.retModels;
+            } else {
+              this.dataList = this.attentionList.concat(data.retModels);
+            }
+            this.pageNum = data.paginationData.page;
+            this.total = data.paginationData.total;
+            this.records = data.paginationData.records;
+          }
       },
       // 点击收藏
       clickCollection(index, flag) {
@@ -108,15 +150,6 @@ export default {
           //   this.$set(this.videoInfo, 'itemOperateData', itemInfo.itemOperateData)
           // }
         })
-      },
-      // 触底
-      handleReachBottom() {
-        if (this.pageNum >= this.total) {
-          this.$Message.info('已经是最后一页了');
-          return false;
-        }
-        this.pageNum++;
-        this.getList();
       }
     }
 }

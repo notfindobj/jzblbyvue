@@ -6,7 +6,6 @@
         <div class="content" @click="goPublish">发布</div>
     </div>
 </template>
-
 <script>
 export default {
     props: {

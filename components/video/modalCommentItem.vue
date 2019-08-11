@@ -56,7 +56,7 @@
 </template>
 
 <script>
-    import Emotion from '~/components/Emotion/index'
+    import Emotion from '../../components/Emotion/index'
     import { setComments, setthumbsUp } from '../../service/clientAPI'
     export default {
         props: {

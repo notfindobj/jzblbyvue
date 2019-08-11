@@ -1,5 +1,5 @@
 <template>
-    <Scroll :on-reach-bottom="handleReachBottom" height="800">
+    <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
         <div class="container">
             <video-item
                 v-for="(item, index) in videoList"
@@ -19,28 +19,34 @@
             @collectionSuccess="collectionSuccess"
         />
         <ToTop :isShowToTop="false"></ToTop>
-    </Scroll>
+        <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+    </crollBox>
 
 </template>
 
 <script>
-    import VideoModal from '~/components/video/videoModal'
-    import VideoItem from '~/components/projectType/video'
+    import VideoModal from '../../components/video/videoModal'
+    import VideoItem from '../../components/projectType/video'
     import ToTop from '../../components/toTop'
+    import crollBox from '../../components/crollBox'
     import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
 
     export default {
         layout: 'main',
+        middleware: 'authenticated',
         components: {
             'video-modal': VideoModal,
             'video-item': VideoItem,
-            ToTop
+            ToTop,
+            crollBox
         },
         data() {
             return {
                 fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
                 pageNum: 1,
                 videoList: [],
+                isLast: false,
+                records: 0,
                 nextList: [],    // 下一页数据
                 total: 0,   // 总页数
                 isShowModal: false, // 是否显示弹框
@@ -49,16 +55,50 @@
             }
         },
         methods: {
+            debounce(fn, wait) {    
+                var timeout = null;    
+                return function() {        
+                    if(timeout !== null)   clearTimeout(timeout);        
+                    timeout = setTimeout(fn, wait);    
+                }
+            },
+            onChangePage (num, type = 1) {
+                this.pageNum = num;
+                this.getList(num, type);
+                (function smoothscroll(){
+                    var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (currentScroll > 0) {
+                        window.requestAnimationFrame(smoothscroll);
+                        window.scrollTo (0,currentScroll - (currentScroll/5));
+                    }
+                })();
+            },
+            // 触底事件
+            willReachBottom () {
+                if (this.pageNum >= this.total) {
+                    this.$Message.info('已经是最后一页了');
+                    return false;
+                }
+                this.pageNum++;
+                this.getList();
+            },
             // 获取数据
-            async getList() {
+            async getList(row, type) {
                 const data = await this.$store.dispatch('getTalk', {
                     TalkType: 2,
                     Page: this.pageNum
                 });
-
-                this.nextList = data.retModels;
-                this.total = data.paginationData.total
-
+                if (data) {
+                    if (type === 1) {
+                        this.nextList = [];
+                        this.nextList = data.retModels;
+                    } else {
+                        this.nextList = this.nextList.concat(data.retModels);
+                    }    
+                    this.total = data.paginationData.total;
+                    this.pageNum = data.paginationData.page;
+                    this.records = data.paginationData.records;
+                }
             },
             // 点击视频
             clickVideo(video, index) {

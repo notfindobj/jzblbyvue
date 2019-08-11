@@ -116,7 +116,7 @@
 </template>
 
 <script>
-  import ScrollBox from '~/components/crollBox'
+  import ScrollBox from '../../components/crollBox'
   import {mapGetters } from 'vuex'
   export default {
     name: 'conten',

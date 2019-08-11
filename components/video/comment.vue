@@ -42,8 +42,8 @@
 </template>
 
 <script>
-  import Emotion from '~/components/Emotion/index'
-  import CommentItem from '~/components/video/commentItem'
+  import Emotion from '../../components/Emotion/index'
+  import CommentItem from '../../components/video/commentItem'
   import { mapState, mapGetters } from 'vuex'
   export default {
     props: {

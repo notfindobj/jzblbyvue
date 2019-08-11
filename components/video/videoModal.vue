@@ -216,7 +216,7 @@
 </template>
 
 <script>
-    import Emotion from '~/components/Emotion/index'
+    import Emotion from '../../components/Emotion/index'
     import ModalComment from './modalCommentItem'
     import { setComments, setthumbsUp } from '../../service/clientAPI'
 

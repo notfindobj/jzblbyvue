@@ -21,21 +21,21 @@
                     ></VideoItem>
                 </template>
             </div>
-            <ToTop :isShowToTop="false"></ToTop>
+            <!-- <ToTop :isShowToTop="false"></ToTop> -->
             <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         </crollBox>
     </div>
 </template>
 
 <script>
-    import ImageAndText from '~/components/projectType/imageAndText'
-    import VideoItem from '~/components/projectType/video'
-    import ToTop from '../../components/toTop'
+    import ImageAndText from '../../components/projectType/imageAndText'
+    import VideoItem from '../../components/projectType/video'
+    // import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
     import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
-
     export default {
         layout: 'main',
+        name: 'attention',
         middleware: 'authenticated',
         data() {
             return {
@@ -49,7 +49,6 @@
         components: {
             ImageAndText,
             VideoItem,
-            ToTop,
             crollBox
         },
         methods: {
@@ -79,9 +78,6 @@
                 }
                 this.pageNum++;
                 this.getList();
-                // this.debounce(() => {
-                    
-                // }, 1500)
             },
             // 点击收藏
             clickCollection(index, flag) {
@@ -96,11 +92,6 @@
                     dataInfo.itemOperateData.IsCollection = flag;
                     flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
                     this.$set(this.attentionList, index, dataInfo);
-
-                    // // 如果是点击的弹框中的，就更新videoInfo
-                    // if (this.isShowModal) {
-                    //   this.$set(this.dataList, 'itemOperateData', dataInfo.itemOperateData)
-                    // }
                 })
             },
             // 点击点赞
