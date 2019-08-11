@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="message-items-operation" @click="bindingWX" v-if="!isBindWX">绑定</div>
-            <div class="message-items-operation" v-if="isBindWX" @click="isShowUnBindWX = false">解绑</div>
+            <div class="message-items-operation" v-if="isBindWX" @click="isShowUnBindWX = true">解绑</div>
         </div>
         <!-- 邮箱绑定 -->
         <!-- <div class="message-items message-items-text">
