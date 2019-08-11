@@ -101,7 +101,7 @@ export default {
               this.dataList = [];
               this.dataList = data.retModels;
             } else {
-              this.dataList = this.attentionList.concat(data.retModels);
+              this.dataList = this.dataList.concat(data.retModels);
             }
             this.pageNum = data.paginationData.page;
             this.total = data.paginationData.total;
