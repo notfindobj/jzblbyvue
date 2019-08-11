@@ -1,7 +1,7 @@
 <template>
   <div class="download-box">
     <div class="download-box-con">
-      <Scroll :on-reach-bottom="handleReachBottom" height="600">
+      <!-- <Scroll :on-reach-bottom="handleReachBottom" height="600"> -->
         <div class="container">
           <div class="my-someing-box">
             <ul>
@@ -32,7 +32,7 @@
             </ul>
           </div>
         </div>
-      </Scroll>
+      <!-- </Scroll> -->
     </div>
   </div>
 </template>
@@ -68,11 +68,6 @@
         }
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
         window.open(routeData.href, '_blank');
-      },
-      handleReachBottom() {
-      },
-      renderThisComponents (params) {
-
       }
     }
   }

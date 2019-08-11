@@ -6,18 +6,16 @@
                     @click="change(item,index)" :key="index" >{{item.TypeName}}
                 </li>
             </ul>
-            <Scroll :on-reach-bottom="handleReachBottom" height="630">
-                <template v-for="(item, index) in dataList">
-                    <ImageAndText v-if="item.TalkType !== 2" :itemInfo="item" :index="index" :key="index"
-                        @clickCollection="clickCollection"
-                        @clickLike="clickLike"
-                    />
-                    <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
-                        @clickCollection="clickCollection"
-                        @clickLike="clickLike"
-                    />
-                </template>
-            </Scroll>
+              <template v-for="(item, index) in dataList">
+                  <ImageAndText v-if="item.TalkType !== 2" :itemInfo="item" :index="index" :key="index"
+                      @clickCollection="clickCollection"
+                      @clickLike="clickLike"
+                  />
+                  <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
+                      @clickCollection="clickCollection"
+                      @clickLike="clickLike"
+                  />
+              </template>
         </div>
     </div>
 </template>
