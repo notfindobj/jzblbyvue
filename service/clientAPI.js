@@ -163,7 +163,7 @@ export const downloadFile = async params => {
 }
 // 绑定微信登录
 export const bindingByWX = async params => {
-  return await request.post('UserInfo/BindWx', params)
+  return await request.post(`UserInfo/BindWx?code=${params.code}&state=${params.state}`)
 }
 // 获取用户信息 【操作权限 / 感情状况】数据接口 操作权限；code 2：感情状况 ,默认是1 ,3 发布展示可看权限
 export const GetOperatPrivacy = async params => {

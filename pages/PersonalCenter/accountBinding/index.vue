@@ -144,7 +144,8 @@
         unBindQQOrWX,
         SetChangeMobile,
         getMobileCode,
-        getAccountBindInfo
+        getAccountBindInfo,
+        getUserByQQ
     } from '../../../service/clientAPI'
     import { mapState } from 'vuex'
 
@@ -200,18 +201,13 @@
                             bindingByWX({
                                 code,
                                 state
-                            }).then(res => {
-                                // if (!res.token) {
-                                //         this.$store.dispatch('WXREGISTER', res);
-                                //         this.goToRegister('register');
-                                // } else {
-                                //     localStorage.removeItem('code');
-                                //     localStorage.removeItem('state');
-                                //     this.$store.dispatch('LOGININ', res);
-                                //     localStorage.setItem('LOGININ', JSON.stringify(res))
-                                //     this.$store.dispatch('SETUP', false)
-                                //     this.$Message.success('登录成功');
-                                // }
+                            }).then(() => {
+                                localStorage.removeItem('code');
+                                localStorage.removeItem('state');
+                                this.getInfo();
+                            }).catch(() => {
+                                localStorage.removeItem('code');
+                                localStorage.removeItem('state');
                             });
                             clearInterval(interId);
                         }
@@ -230,19 +226,15 @@
                             qqWindow.close();
                             getUserByQQ({
                                 code,
-                                state
-                            }).then(res => {
-                                if (!res.token) {
-                                    this.$store.dispatch('WXREGISTER', res);
-                                    this.goToRegister('register');
-                                } else {
-                                    localStorage.removeItem('code');
-                                    localStorage.removeItem('state');
-                                    this.$store.dispatch('LOGININ', res);
-                                    localStorage.setItem('LOGININ', JSON.stringify(res))
-                                    this.$store.dispatch('SETUP', false)
-                                    this.$Message.success('登录成功');
-                                }
+                                state,
+                                Authorization: JSON.parse(localStorage.getItem('LOGININ')).token
+                            }).then(() => {
+                                this.getInfo();
+                                localStorage.removeItem('code');
+                                localStorage.removeItem('state');
+                            }).catch(() => {
+                                localStorage.removeItem('code');
+                                localStorage.removeItem('state');
                             });
                             clearInterval(interId);
                         }
@@ -262,6 +254,10 @@
 
             // 解绑 flag 0: qq  1: wx
             handleUnBind(flag) {
+                if ((flag === 0 && !this.telephoneNum1) || (flag === 1 && !this.telephoneNum2)) {
+                    this.$Message.warning("请输入手机号码~");
+                    return false;
+                }
                 unBindQQOrWX({
                     PhoneNumber: flag === 0 ? this.telephoneNum1 : this.telephoneNum2,
                     flag
