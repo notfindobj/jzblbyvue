@@ -255,7 +255,7 @@
             // 解绑 flag 0: qq  1: wx
             handleUnBind(flag) {
                 if ((flag === 0 && !this.telephoneNum1) || (flag === 1 && !this.telephoneNum2)) {
-                    this.$Message.warning("请输入手机~");
+                    this.$Message.warning("请输入手机号码~");
                     return false;
                 }
                 unBindQQOrWX({
