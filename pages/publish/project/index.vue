@@ -23,7 +23,7 @@
                 <FormItem label="类型选择" class="type-select" prop="typeId">
                     <i v-for="item in menu.RetMenuData" :key="item.ItemAttributesId" >
                         <Button size="large" v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
-                        <Button size="large" v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName)" >{{ item.ItemAttributesFullName }} </Button>
+                        <Button size="large" v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName, item.ItemSubAttributeCode)" >{{ item.ItemAttributesFullName }} </Button>
                     </i>
                     <div class="attr-box" v-show="attrList">
                         <div class="attr-select-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" :key="item.id" >
@@ -48,7 +48,7 @@
                                 v-if="item.EnCode === '[wjsc]'"
                                 :action="baseUrl + 'Upload/DataUpload?uploadType=6'"
                                 :headers="{
-                                    Authorization: token
+                                  Authorization: token
                                 }"
                                 :format="['zip', 'rar']"
                                 :on-format-error="handleFormatError"
@@ -231,7 +231,8 @@
         serviceSelectList: [],
         serviceName: '',
         isUpdateService: false, // 是否是更新定制服务,
-        showLayout: true
+        showLayout: true,
+        typyString: ''
       }
     },
     computed: {
@@ -348,8 +349,9 @@
       },
 
       // 选择类型
-      clickType(id, name) {
+      clickType(id, name, type) {
         this.typeFile = null; // 清空已上传内容
+        this.typyString = type;
         this.serviceSelectList = [];
         getProjectType(id).then(res => {
           this.queryAttrList = res;
@@ -572,13 +574,17 @@
           this.$Spin.hide();
           if (res) {
             const queryData = {
-              Id: res,
+              Id: res.ItemId,
+              reqItemList: {
+                ClassTypeId: `${this.typyString }|${ res.TypeId }`,
+                ClassTypeArrList: '',
+                SortType: 1,
+                KeyWords: "",
+                Order: true,
+                Page: 0,
+                Rows: 32
+              },
               showLayout: this.showLayout,
-              SortType: 1,
-              KeyWords: "",
-              Order: true,
-              Page: 0,
-              Rows: 32
             };
             let serverBataBase = {
               key: 'dataBase',

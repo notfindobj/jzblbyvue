@@ -247,7 +247,10 @@
             },
             // 查看详情
             async viewItem(item) {
-                let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                let reqItemList = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                let queryData = {
+                    reqItemList
+                }
                 queryData.Id = item.ItemId;
                 queryData.showLayout = this.showLayout;
                 let serverBataBase = {

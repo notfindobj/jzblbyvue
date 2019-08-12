@@ -160,6 +160,7 @@ export default {
     }
     .icon-smile {
         color: #FF3C00;
+        cursor: pointer;
     }
     .icon-tupian {
         color: #00B358;

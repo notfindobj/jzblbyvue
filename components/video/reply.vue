@@ -20,7 +20,7 @@
                         class="emotion"
                         @emotion="handleEmotion"
                         :height="200"
-                        v-show="isShowReplyEmotion"
+                        v-if="isShowReplyEmotion"
                     ></emotion>
                 </div>
             </div>
@@ -53,7 +53,6 @@
       handleEmotion(item) {
         this.replyCon += `[${ item.content }]`
       },
-
       // 点击回复
       handleReply() {
         if (!this.replyCon) {

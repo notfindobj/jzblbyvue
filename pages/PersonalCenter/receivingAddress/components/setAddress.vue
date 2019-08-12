@@ -111,8 +111,9 @@ export default {
             }
         },
         async saveAddres () {
+            let queryData ={}
             try {
-                let queryData = {
+                queryData = {
                     Id: this.addressData.Id,
                     Receiver: this.addressData.Receiver,
                     ProvinceAreaId: this.addressData.ProvinceArea.split('|')[0],

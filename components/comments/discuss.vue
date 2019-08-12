@@ -69,6 +69,7 @@
 </template>
 <script>
 import comment from '../comment'
+import {getEmotionList} from '../../plugins/untils/public'
 export default {
     props: {
         discussData:{
@@ -83,8 +84,12 @@ export default {
             isDiscuss: [],
             subDiscuss:[],
             muchReply: [],
-            muchReplyVlaue: ''
+            muchReplyVlaue: '',
+            list: []
         }
+    },
+    async created () {
+      this.list = await getEmotionList()
     },
     methods: {
         setDiscuss (index) {
@@ -97,19 +102,16 @@ export default {
             this.muchReply.includes(index) ? this.muchReply = this.muchReply.filter(n => n !== index) : this.muchReply.push(index)
         },
         emotion (res) {
-            let word = res.replace(/\[|\]/gi,'')
-            const list= [
-                {content:'微笑', title: 'zhongguozan_org'}
-            ]
+            let word = res.replace(/\[|\]/gi,'');
             let wordShow = true
             let wordContent = ''
             let wordContentHtml = ''
-            list.forEach(ele => {
+            this.list.forEach(ele => {
             if (wordShow) {
                 if (ele.content === word) {
-                wordContent = ele.title
-                wordContentHtml = `<img src="https://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/2018new_${wordContent}.png">`
-                wordShow = false
+                    wordContent = ele.title
+                    wordContentHtml = `<img style="width: 25px;" src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
+                    wordShow = false
                 }
             }
             })
@@ -200,6 +202,10 @@ export default {
             }
             &-content{
                 margin: 10px 0;
+                img {
+                    display: inline-block;
+                    width: 30px;
+                }
             }
             &-footer {
                 text-align: right;

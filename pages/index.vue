@@ -430,8 +430,8 @@
                 KeyWords: "",
                 Order: true,
                 Page: 0,
-                classify: 0,
                 Rows: 32,
+                classify: 0,
                 title: data.ItemAttributesFullName,
             }
             let serverBataBase = {
@@ -449,13 +449,15 @@
             }
             let baseDateId = {
                 Id: item.ItemId,
-                ClassTypeId: `${row.ItemSubAttributeCode }|${ row.ItemAttributesId }`,
-                ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-                SortType: 1,
-                KeyWords: "",
-                Order: true,
-                Page: 0,
-                Rows: 8,
+                reqItemList: {
+                    ClassTypeId: `${row.ItemSubAttributeCode }|${ row.ItemAttributesId }`,
+                    ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
+                    SortType: 1,
+                    KeyWords: "",
+                    Order: true,
+                    Page: 0,
+                    Rows: 8,
+                },
                 showLayout: val === 'jzList' || val === 'wbList' ? false: true
             }
            

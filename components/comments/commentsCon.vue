@@ -40,7 +40,7 @@
             </ul>
             <div class="comment-box">
                 <comment
-                    v-show="isComment"
+                    v-if="isComment"
                     v-model="commentV"
                     @commentValue="commentValue"
                 />
@@ -84,7 +84,7 @@
     },
     data() {
       return {
-        isComment: false,
+        isComment: true,
         commentsInfo: {
           downNum: '',
         },
@@ -121,10 +121,8 @@
         this.$emit('somePraise', item)
       },
       emotion(res) {
-        let word = res.replace(/\[|\]/gi, '')
-        const list = [
-          { content: '微笑', title: 'zhongguozan_org' }
-        ]
+        let word = res.replace(/\[|\]/gi, '');
+        const list = JSON.parse(localStorage.getItem('Emotions'));
         let wordShow = true
         let wordContent = ''
         let wordContentHtml = ''
@@ -132,7 +130,7 @@
           if (wordShow) {
             if (ele.content === word) {
               wordContent = ele.title
-              wordContentHtml = `<img src="https://img.t.sinajs.cn/t4/appstyle/expression/ext/normal/6d/2018new_${ wordContent }.png">`
+              wordContentHtml = `<img style="width: 25px;" src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
               wordShow = false
             }
           }

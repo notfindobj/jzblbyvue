@@ -140,10 +140,8 @@
             let queryData = store.state.overas.sessionStorage.dataBase;
             let reqItemList = JSON.parse(JSON.stringify(queryData));
             delete reqItemList.Id;
-            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', {
-                Id: queryData.Id,
-                reqItemList
-            });
+            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', Object.assign({
+                Id: queryData.Id}, reqItemList));
             // 根据项目详情请求评论信息
             let Comment = {
                 itemId: getBaseDataDetail.ItemEntity.ItemId,
@@ -220,6 +218,7 @@
             },
             async clickCate(index) {
                 let attrList = [];
+                let query = {};
                 let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
                 this.ItemAttributesEntities.forEach((item, attrIndex) => {
                     if (index >= attrIndex) {
@@ -229,14 +228,16 @@
                         })
                     }
                 });
-                dataBase.ClassTypeArrList = attrList;
+                
+                query = dataBase.reqItemList
+                query.ClassTypeArrList = attrList;
                 let serverBataBase = {
                     key: 'dataBase',
-                    value: dataBase
+                    value: query
                 }
                 this.$store.dispatch('Serverstorage', serverBataBase);
                 let msgs = await setDemo('dataBase', serverBataBase);
-                this.$router.push({name: "dataBase-id", query: {id: dataBase.Id }})
+                this.$router.push({name: "dataBase-id", query: {id: query.Id }})
             },
             initLazy() {
                 $("img[data-original]").lazyload()

@@ -30,7 +30,7 @@
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
     import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
-
+    import { _throttle } from '../../plugins/untils/public'
     export default {
         layout: 'main',
         middleware: 'authenticated',
@@ -74,18 +74,19 @@
                 })();
             },
             // 触底事件
-            willReachBottom () {
+            willReachBottom: _throttle(function () {
                 if (this.total === 1) {
                     this.isLast = true
                     return false
                 }
+                 this.isLast = false
                 if (this.pageNum >= this.total) {
                     this.$Message.info('已经是最后一页了');
                     return false;
                 }
                 this.pageNum++;
                 this.getList();
-            },
+            }, 1500),
             // 获取数据
             async getList(row, type) {
                 const data = await this.$store.dispatch('getTalk', {
@@ -94,10 +95,10 @@
                 });
                 if (data) {
                     if (type === 1) {
-                        this.nextList = [];
-                        this.nextList = data.retModels;
+                        this.videoList = [];
+                        this.videoList = data.retModels;
                     } else {
-                        this.nextList = this.nextList.concat(data.retModels);
+                        this.videoList = this.videoList.concat(data.retModels);
                     }    
                     this.total = data.paginationData.total;
                     this.pageNum = data.paginationData.page;
@@ -160,15 +161,6 @@
                         this.$set(this.videoInfo, 'itemOperateData', videoInfo.itemOperateData)
                     }
                 })
-            },
-            // 触底事件
-            handleReachBottom() {
-                this.pageNum++;
-                this.getList();
-                setTimeout(() => {
-                    this.videoList = this.videoList.concat(this.nextList);
-                    this.nextList = [];
-                }, 1000)
             }
         },
         mounted() {

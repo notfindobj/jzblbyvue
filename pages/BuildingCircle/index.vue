@@ -31,6 +31,7 @@ import ImageAndText from '../../components/projectType/imageAndText'
 import VideoItem from '../../components/projectType/video'
 import crollBox from '../../components/crollBox'
 import ToTop from '../../components/toTop'
+import { _throttle } from '../../plugins/untils/public'
 import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
 export default {
     layout: 'main',
@@ -82,7 +83,7 @@ export default {
           })();
       },
       // 触底事件
-      willReachBottom () {
+      willReachBottom: _throttle(function  () {
           if (this.total === 1) {
               this.isLast = true
               return false
@@ -93,7 +94,7 @@ export default {
           }
           this.pageNum++;
           this.getList();
-      },
+      }, 1500),
       async getList(row, type) {
           const data = await this.$store.dispatch('getTalk', {
             TalkType: "",

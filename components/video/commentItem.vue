@@ -9,25 +9,14 @@
                     <span class="user-name">{{ commentInfo.NickName }}</span>
                     <span class="publish-time">{{ commentInfo.CreateDate }}</span>
                 </div>
-                <p class="comment-content">{{ commentInfo.Message }}</p>
+                <div class="comment-content" v-html="commentInfo.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
                 <p class="opera-row">
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
-                        <i
-                            class="icon iconfont"
-                            v-show="!isLike"
-                            @click="clickLike(true)"
-                        >&#xe67e;</i>
-                        <i
-                            class="icon iconfont"
-                            style="color: #ff3c00;"
-                            v-show="isLike"
-                            @click="clickLike(false)"
-                        >&#xe621;</i>
-                        赞
+                        <i class="icon iconfont" v-show="!isLike" @click="clickLike(true)" >&#xe67e;</i>
+                        <i class="icon iconfont" style="color: #ff3c00;" v-show="isLike" @click="clickLike(false)" >&#xe621;</i> 赞
                     </span>
-
                 </p>
             </div>
         </div>
@@ -48,7 +37,8 @@
 <script>
   import Reply from '../../components/video/reply'
   import ReplyItem from '../../components/video/replyItem'
-  import { setComments, setthumbsUp } from '../../service/clientAPI'
+  import { setComments, setthumbsUp} from '../../service/clientAPI'
+  import {getEmotionList} from '../../plugins/untils/public'
   export default {
     props: {
       commentInfo: {
@@ -72,10 +62,26 @@
         isLike: this.commentInfo.islikes
       }
     },
-
     methods: {
+      emotion (res) {
+          const list =  JSON.parse(localStorage.getItem('Emotions'));
+          // let list = await getEmotionList();
+          let word = res.replace(/\[|\]/gi,'')
+          let wordShow = true
+          let wordContent = ''
+          let wordContentHtml = '';
+          list.forEach(ele => {
+          if (wordShow) {
+            if (ele.content === word) {
+                    wordContent = ele.title
+                    wordContentHtml = `<img style="width: 25px;" src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
+                    wordShow = false
+                }
+            }
+          })
+          return wordContentHtml
+      },
       clickReply() {
-
         if (this.$route.name === 'QuestionsAndAnswers-id') {
           this.replyInputWith = 575;
         }

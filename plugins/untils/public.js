@@ -1,3 +1,4 @@
+import {getEmoticon} from '../../service/clientAPI';
 // 防抖
 export function _debounce(fn, delay) {
 
@@ -33,6 +34,19 @@ export function _throttle(fn, interval) {
         } else {
             last = now;
             fn.apply(th, args);
+        }
+    }
+}
+
+export async function getEmotionList () {
+    let isEmotion = localStorage.getItem('Emotions');
+    if (isEmotion) {
+        return JSON.parse(isEmotion)
+    } else {
+        let msg = await getEmoticon();
+        if (msg) {
+            localStorage.setItem('Emotions', JSON.stringify(msg))
+            return  isEmotion = msg;
         }
     }
 }

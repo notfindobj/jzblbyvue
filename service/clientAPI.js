@@ -198,8 +198,11 @@ export const getFollowOrFans = async params => {
 export const getAccountBindInfo = async () => {
     return await request.get(`UserInfo/GetAccountBindInfo`)
 }
-
 // 解绑qq或者微信
 export const unBindQQOrWX = async params => {
     return await request.post(`UserInfo/UnBindQQorWx`, params)
+}
+// 获取表情包
+export const getEmoticon = async params => {
+  return await request.get(`Other/GetEmoticon`, params)
 }

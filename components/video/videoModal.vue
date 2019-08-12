@@ -151,59 +151,6 @@
                             :index="index"
                             @getCommentList="getCommentList"
                         />
-<!--                        <div-->
-<!--                            class="comment-item"-->
-<!--                            v-for="(item, index) in commentList"-->
-<!--                            :key="item.CommentsId"-->
-<!--                            v-show="index < showCount"-->
-<!--                        >-->
-<!--                            <div class="commenter-avatar">-->
-<!--                                <img :src="item.HeadIcon" alt="">-->
-<!--                            </div>-->
-<!--                            <div class="comment-info">-->
-<!--                                <p class="comment-nickname">{{ item.NickName }}</p>-->
-<!--                                <p class="comment-time">{{ item.CreateDate }}</p>-->
-<!--                                <p class="comment-con">-->
-<!--                                    {{ item.Message }}-->
-<!--                                </p>-->
-<!--                                <div class="comment-operation">-->
-<!--                                    <p>-->
-<!--                                        <i-->
-<!--                                            class="icon iconfont icon1"-->
-<!--                                            v-if="!item.islikes"-->
-<!--                                            @click="likeComment(index, true)"-->
-<!--                                        >-->
-<!--                                            &#xe643;-->
-<!--                                        </i>-->
-<!--                                        <i-->
-<!--                                            class="icon iconfont icon1-active"-->
-<!--                                            v-if="item.islikes"-->
-<!--                                            @click="likeComment(index, false)"-->
-<!--                                        >-->
-<!--                                            &#xe621;-->
-<!--                                        </i>-->
-<!--                                        <span>点赞</span>-->
-<!--                                    </p>-->
-<!--                                    <Divider type="vertical" style="margin: 0 10px;"/>-->
-<!--                                    <p>-->
-<!--                                        <i class="icon iconfont reply-comment-icon">&#xe664;</i>-->
-<!--                                        <span>评论</span>-->
-<!--                                    </p>-->
-<!--                                </div>-->
-<!--                                <div class="reply-comment-box">-->
-<!--                                    <div class="reply-avatar-wrap">-->
-<!--                                        <img :src="$store.state.overas.auth.HeadIcon" alt="">-->
-<!--                                    </div>-->
-<!--                                    <div class="reply-input-box">-->
-<!--                                        <Input size="small" style="width: 240px;"/>-->
-<!--                                        <div class="comment-bottom">-->
-<!--                                            <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>-->
-<!--                                            <Button type="primary" size="small" @click="handleSubmit">评论</Button>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="show-more-box" v-if="commentList.length > 3">
                             <span>{{ commentList[0].NickName }}</span>等人<span>共{{ commentList.length }}条回复</span> <i
                             class="icon iconfont" @click="showAllComment">&#xe64a;</i>

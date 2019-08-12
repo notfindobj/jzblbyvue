@@ -105,12 +105,11 @@
             display: flex;
             align-items: center;
             margin: 0 auto;
-
+            justify-content: space-between;
             .logo-img {
                 width: 100px;
                 cursor: pointer;
             }
-
             .address {
                 color: #FF3C00;
                 margin-left: 30px;
@@ -125,7 +124,7 @@
                 display: flex;
                 align-items: center;
                 margin-left: 30px;
-                font-size: 14px;
+                font-size: 16px;
                 a {
                     height: 60px;
                     margin: 0 20px;
