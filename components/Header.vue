@@ -25,7 +25,7 @@
                     </div>
                     <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
                     <div class="user-name" v-else>
-                          <span>{{auth.NickName}}</span>
+                          <span @click="enterCenter">{{auth.NickName}}</span>
                           <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                     </div>
                 </div>
@@ -61,30 +61,37 @@
         ...mapState({
             auth: state => state.overas.auth
         }),
+        ...mapGetters(['isLogin'])
     },
     methods: {
-      // 在线地图
-      onlineMap() {
-        window.open('https://map.51240.com/zhongguo__map/')
-      },
-      // 回首页
-      goHome() {
-        this.$router.push('/')
-      },
-      SignIn() {
-        this.$store.dispatch('SETUP', true);
-      },
-      async signOut() {
-        let msg = await logout();
-        this.$router.push({name: "index"});
-        if (msg) {
-            this.$store.dispatch('LOGININ', null);
-            localStorage.removeItem('LOGININ');
-            this.$Message.success('退出成功！');
-        }
-      },
+        enterCenter () {
+            if (!this.isLogin) {
+                return false
+            }
+            this.$router.push({ path: "/PersonalCenter" });
+        },
+        // 在线地图
+        onlineMap() {
+            window.open('https://map.51240.com/zhongguo__map/')
+        },
+        // 回首页
+        goHome() {
+            this.$router.push('/')
+        },
+        SignIn() {
+            this.$store.dispatch('SETUP', true);
+        },
+        async signOut() {
+            let msg = await logout();
+            this.$router.push({name: "index"});
+            if (msg) {
+                this.$store.dispatch('LOGININ', null);
+                localStorage.removeItem('LOGININ');
+                this.$Message.success('退出成功！');
+            }
+        },
     }
-  }
+}
 </script>
 <style lang="less" scoped>
     .header {

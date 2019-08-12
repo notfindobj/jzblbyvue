@@ -11,17 +11,17 @@
                 </ul>
                 <div class="he-and-i-con-box-content">
                     <div class="he-and-i-con-box-content-left">
-                        <HeAndIDownload 
-                            v-if="PersonalCenter === 'HeAndIDownload'"
-                            :headList= "headList" 
-                            :dataList="dataList" 
-                            :paginationData="paginationData"
-                            @reachBottom="reachBottom"
-                            @changeType="getList"/>
-                        <mySomethingStatistical
-                            v-if="PersonalCenter === 'mySomethingStatistical'"
-                            :followList="followList"
-                        />
+                        <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
+                            <HeAndIDownload 
+                                v-if="PersonalCenter === 'HeAndIDownload'"
+                                :headList="headList" 
+                                :dataList="dataList" 
+                                @changeType="getList"/>
+                            <mySomethingStatistical
+                                v-if="PersonalCenter === 'mySomethingStatistical'"
+                                :followList="followList"
+                            />
+                        </crollBox>
                     </div>
                     <div class="he-and-i-con-box-content-right">
                         <HeAndIIntroduction
@@ -42,10 +42,13 @@
     import mySomethingStatistical from './mySomethingStatistical'
     import { mapState } from 'vuex'
     import Heads from './head'
+    import crollBox from '../../components/crollBox'
     import ToTop from '../../components/toTop'
     import { getTypeMeun , getFollowOrFans} from '~/service/clientAPI'
+    import { _throttle } from '../../plugins/untils/public'
     export default {
         layout: 'main',
+        middleware: 'authenticated',
         name: 'PersonalCenter',
         components: {
             HeAndIContent,
@@ -53,7 +56,8 @@
             HeAndIDownload,
             mySomethingStatistical,
             Heads,
-            ToTop
+            ToTop,
+            crollBox
         },
         data() {
             return {
@@ -61,10 +65,12 @@
                 headList: [],
                 dataList: [],
                 followList: [],
-                paginationData: {},
                 PersonalCenter: 'PersonalCenter',
                 pageNum: 1,
                 menuId: 0,
+                isLast: false,
+                records: 0,
+                total: 0,   // 总页数
             }
         },
         computed: {
@@ -83,6 +89,30 @@
             this.getTypeMeunList();
         },
         methods: {
+            onChangePage (num, type = 1) {
+                this.pageNum = num;
+                this.getList(num, type);
+                (function smoothscroll(){
+                    var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                    if (currentScroll > 0) {
+                        window.requestAnimationFrame(smoothscroll);
+                        window.scrollTo (0,currentScroll - (currentScroll/5));
+                    }
+                })();
+            },
+            // 触底事件
+            willReachBottom: _throttle (function () {
+                if (this.total === 1) {
+                    this.isLast = true
+                    return false
+                }
+                if (this.pageNum >= this.total) {
+                    this.$Message.info('已经是最后一页了');
+                    return false;
+                }
+                this.pageNum++;
+                this.getList();
+            }, 1500),
             // 选择二级菜单
             getTypeMeunList (item, inx) {
                 this.currentIndex = inx || 0;
@@ -115,13 +145,12 @@
                 }
                 let msg  = await getFollowOrFans(query);
                 if (msg) {
-                    this.followList = msg.forFs 
+                    // this.followList = this.followList.concat(msg.forFs);
+                    this.followList = msg.forFs;
+                    this.total = msg.paginationData.total;
+                    this.pageNum = msg.paginationData.page;
+                    this.records = msg.paginationData.records;
                 }
-            },
-            // 触底
-            reachBottom() {
-                this.pageNum++;
-                this.getList();
             },
             // 获取发布数据
             getList(id, index) {
@@ -139,7 +168,9 @@
                         } else {
                             this.dataList = this.dataList.concat(res.retModels);
                         }
-                        this.paginationData = res.paginationData;
+                        this.total = res.paginationData.total;
+                        this.pageNum = res.paginationData.page;
+                        this.records = res.paginationData.records;
                     }
                 })
             }

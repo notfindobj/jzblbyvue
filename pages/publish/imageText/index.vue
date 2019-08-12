@@ -32,14 +32,14 @@
             </div>
             <div class="upload-box" v-show="isShowUpload">
                 <h3>本地上传</h3>
-                <p class="sub-title">共{{imgList.length}}张，还能上传{{9 -imgList.length}}张</p>
+                <p class="sub-title">共{{imgList.length}}张，还能上传{{30 -imgList.length}}张</p>
                 <div class="upload-main">
                     <div class="img-item" v-for="(item, index) in imgList" :key="index" >
                       <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
                       <img :src="item.smallImgUrl" alt="">
                     </div>
                     <v-upload
-                        v-show="imgList.length < 9"
+                        v-show="imgList.length < 30"
                         class="upload"
                         :uploadType="2"
                         @uploadSuccess="uploadSuccess"

@@ -1,11 +1,11 @@
 <template>
     <div>
         <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)"
-             @mouseleave="mousemoveRight" @click="moveLeftClick(1)">
+            @mouseleave="mousemoveRight" @click="moveLeftClick(1)">
             <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt="">
         </div>
         <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)"
-             @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
+            @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
             <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
         </div>
         <div class="public-block" :class="{'comment-active': isShowComment}">
@@ -50,7 +50,7 @@
                 <p v-if="itemInfo.TalkType !== 3">{{ itemInfo.TalkContent }}</p>
                 <div v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></div>
                 <div class="photo-wrap" :ref="mathId">
-                    <div class="img" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
+                    <div :class="imgIndex < 9 ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                     </div>
                 </div>
@@ -366,6 +366,9 @@
   }
 </script>
 <style lang="less">
+  .itemHide {
+    display: none;
+  }
     .view-left-move-del {
         cursor: pointer;
         position: fixed;
