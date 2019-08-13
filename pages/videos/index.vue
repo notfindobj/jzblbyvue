@@ -11,17 +11,16 @@
                 @clickLike="clickLike"
             ></video-item>
         </div>
-        <video-modal
+        <!-- <video-modal
             :isShowModal="isShowModal"
             :videoInfo="videoInfo"
             @closeModal="closeVideoModal"
             @likeSuccess="likeSuccess"
             @collectionSuccess="collectionSuccess"
-        />
+        /> -->
         <ToTop :isShowToTop="false"></ToTop>
-        <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+        <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
     </crollBox>
-
 </template>
 
 <script>

@@ -1,4 +1,5 @@
 import {getEmoticon} from '../../service/clientAPI';
+const fileUrl = process.env.fileBaseUrl
 // 防抖
 export function _debounce(fn, delay) {
 
@@ -37,7 +38,7 @@ export function _throttle(fn, interval) {
         }
     }
 }
-
+// 表情包数据存储
 export async function getEmotionList () {
     let isEmotion = localStorage.getItem('Emotions');
     if (isEmotion) {
@@ -48,5 +49,24 @@ export async function getEmotionList () {
             localStorage.setItem('Emotions', JSON.stringify(msg))
             return  isEmotion = msg;
         }
+    }
+}
+// 获取随机数
+export function getRanNum(lenght = 8){
+    let result = [];
+    for(let i=0; i<lenght; i++){
+    //生成一个0到25的数字
+    let ranNum = Math.ceil(Math.random() * 25); 
+        result.push(String.fromCharCode(65+ranNum));
+    }
+    return  result.join('');
+}
+// 
+export function baseUrlRegExp (str) {
+    let reg = RegExp(/\http:\/\/www./);
+    if(str.match(reg)){
+        return str
+    } else {
+        return fileUrl+ str
     }
 }

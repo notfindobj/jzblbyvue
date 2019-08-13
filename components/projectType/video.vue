@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="public-block" :class="{'comment-active': isShowComment}" @click="clickVideo">
+        <div class="public-block" :class="{'comment-active': isShowComment}">
             <div class="block-head">
                 <div class="block-head-left" @mouseleave="hideWorks()">
                     <div class="avatar" @click="goToPersonal(videoInfo)" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 0)">
@@ -39,17 +39,13 @@
                     </Dropdown>
                 </div>
             </div>
-              
+            <!-- 视频内容 -->
             <div class="content">
-                <p>{{ videoInfo.TalkContent }}</p>
+                <p>{{ videoInfo.TalkTitle }}</p>
                 <div class="video-wrap" v-if="videoInfo.Imgs.length > 0">
                     <div class="photo-wrap">
                         <div class="video" @click.stop="">
-                            <video controls :poster="videoInfo.Imgs[0].smallImgUrl">
-                                <source :src="baseUrlRegExp(videoInfo.Imgs[0].videoUrl)" type="video/mp4">
-                                <source :src="baseUrlRegExp(videoInfo.Imgs[0].videoUrl)" type="video/ogg">
-                                您的浏览器不支持Video标签。
-                            </video>
+                          <videos :itemVideo="videoInfo.Imgs[0]" :detaDetails="videoInfo" />
                         </div>
                     </div>
                 </div>
@@ -79,7 +75,7 @@
                 </div>
             </div>
         </div>
-        <v-comment
+        <Comment
             :isShow="isShowComment"
             :itemId="videoInfo.ItemId"
             :commentList="commentList"
@@ -87,16 +83,16 @@
             @submitComment="submitComment"
             @submitReplay="submitReplay"
             @submitLike="submitLike"
-        ></v-comment>
+        />
         <share :config="configModal"/>
     </div>
 </template>
 
 <script>
-  import Comment from '../video/comment'
   import share from '../share'
-  import { setComments, setthumbsUp , getUserProAndFans, setFollow} from '../../service/clientAPI'
+  import Comment from '../video/comment'
 
+  import { setComments, setthumbsUp , getUserProAndFans, setFollow} from '../../service/clientAPI'
   export default {
     props: {
       videoInfo: {
@@ -110,10 +106,9 @@
         default: 0
       }
     },
-
     components: {
-      'v-comment': Comment,
-      share
+      share,
+      Comment
     },
     data() {
       return {
@@ -154,7 +149,7 @@
       goToPersonal (row) {
         this.$emit('goToPersonal', row)
       },
-       // 关注
+      // 关注
       async worksFocus(item) {
         let queryData = {
             UserId: item.UserId,

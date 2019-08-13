@@ -22,7 +22,7 @@
                 </template>
             </div>
             <!-- <ToTop :isShowToTop="false"></ToTop> -->
-            <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+            <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         </crollBox>
     </div>
 </template>

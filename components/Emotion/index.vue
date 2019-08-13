@@ -12,7 +12,6 @@
 <script>
   import Emotion from './Emotion'
   import {getEmotionList} from '../../plugins/untils/public'
-
   export default {
     props: {
       height: {
@@ -29,7 +28,7 @@
         ]
       }
     },
-    async created () {
+    async mounted () {
       this.list = await getEmotionList();
     },
     methods: {
