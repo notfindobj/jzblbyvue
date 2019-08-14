@@ -41,7 +41,7 @@
             </div>
             <!-- 视频内容 -->
             <div class="content">
-                <p>{{ videoInfo.TalkTitle }}</p>
+                <p><emotHtml v-model="videoInfo.TalkTitle"/></p>
                 <div class="video-wrap" v-if="videoInfo.Imgs.length > 0">
                     <div class="photo-wrap">
                         <div class="video" @click.stop="">

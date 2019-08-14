@@ -21,7 +21,7 @@
                    </div>
                  </div>
                  <div class="details-box-brief">
-                    {{detaDetails.TalkTitle}}
+                    <emotHtml v-model="detaDetails.TalkTitle"/>
                  </div>
                </div>
                <commentsCon
