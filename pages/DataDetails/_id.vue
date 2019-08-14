@@ -164,8 +164,12 @@
                 let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
                 if (showLayout.title === '文本') {
                     this.isLayout = false
+                } else if (showLayout.showLayout === 'false') {
+                    this.isLayout = false
+                } else if (showLayout.showLayout === 'true') {
+                    this.isLayout =  true
                 } else {
-                    this.isLayout = (showLayout.showLayout || showLayout.showLayout === 'true') ? true : false;
+                    this.isLayout = showLayout.showLayout
                 }
             } catch (error) {}
         },

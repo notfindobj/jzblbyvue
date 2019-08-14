@@ -33,8 +33,7 @@
                         </p>
                         <ul>
                             <li v-for="item in recommentList" :key="item.QAId">
-                                <nuxt-link :to="{name: 'QuestionsAndAnswers-id', params: {id: item.QAId}}">{{ item.QATitle
-                                    }}
+                                <nuxt-link :to="{name: 'QuestionsAndAnswers-id', params: {id: item.QAId}}">{{ item.QATitle}}
                                 </nuxt-link>
                             </li>
                         </ul>
@@ -70,7 +69,7 @@
                                             {{ labelItem.FullName }}
                                         </span>
                                     </div>
-                                    <p class="item-answer">回答：{{ item.LatestAnswer }}</p>
+                                    <p class="item-answer">回答：<emotHtml v-model="item.LatestAnswer"/></p>
                                 </div>
                                 <div class="item-right">
                                     <span>{{ item.LatestAnswerDate }}</span>

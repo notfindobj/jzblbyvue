@@ -252,7 +252,11 @@
                     reqItemList
                 }
                 queryData.Id = item.ItemId;
-                queryData.showLayout = this.showLayout;
+                if (reqItemList.title === '文本' || reqItemList.title === '建筑规范') {
+                    queryData.showLayout = false
+                } else {
+                    queryData.showLayout = this.showLayout;
+                }
                 let serverBataBase = {
                     key: 'dataBase',
                     value: queryData
