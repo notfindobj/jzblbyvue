@@ -23,122 +23,136 @@
             <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
             <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
         </div>
-       <div class="block-none">
-           您好！此网站暂未对外开放，了解更多请联系：15121173536
-       </div>
+        <div class="block-none">
+            您好！此网站暂未对外开放，了解更多请联系：15121173536
+        </div>
     </div>
 </template>
 <script>
-  import { lognIn, loginByQQ, loginByWX, getUserByWX, getUserByQQ } from '../../../service/clientAPI'
-  import {login} from '../../../LocalAPI'
-  export default {
-    data() {
-      return {
-        userItem: {
-          // mobile: '18321284508',
-          mobile: '',
-          // password: '123456'
-          password: ''
+    import { lognIn, loginByQQ, loginByWX, getUserByWX, getUserByQQ } from '../../../service/clientAPI'
+    import { login } from '../../../LocalAPI'
+
+    export default {
+        data() {
+            return {
+                userItem: {
+                    // mobile: '18321284508',
+                    mobile: '',
+                    // password: '123456'
+                    password: ''
+                },
+                ruleInline: {
+                    mobile: [
+                        { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+                    ],
+                    passWord: [
+                        { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+                        {
+                            type: 'string',
+                            min: 6,
+                            message: 'The password length cannot be less than 6 bits',
+                            trigger: 'blur'
+                        }
+                    ]
+                }
+            }
         },
-        ruleInline: {
-          mobile: [
-            { required: true, message: 'Please fill in the user name', trigger: 'blur' }
-          ],
-          passWord: [
-            { required: true, message: 'Please fill in the password.', trigger: 'blur' },
-            { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
-          ]
-        }
-      }
-    },
-    methods: {
-      // qq登录
-      handleLoginByQQ() {
-        loginByQQ().then(res => {
-          const qqWindow = this.loginAtQQ(res, 1);
-          const interId = setInterval(() => {
-            const code = localStorage.getItem('code');
-            const state = localStorage.getItem('state');
-            if (code && state) {
-              qqWindow.close();
-              getUserByQQ({
-                code,
-                state
-              }).then(res => {
-                if (!res.token) {
-                  this.$store.dispatch('WXREGISTER', res);
-                  this.goToRegister('register');
-                } else {
-                  localStorage.removeItem('code');
-                  localStorage.removeItem('state');
-                  this.$store.dispatch('LOGININ', res);
-                  localStorage.setItem('LOGININ', JSON.stringify(res))
-                  this.$store.dispatch('SETUP', false)
-                  this.$Message.success('登录成功');
+        methods: {
+            // qq登录
+            handleLoginByQQ() {
+                if (localStorage.getItem('code') || localStorage.getItem('state')) {
+                    localStorage.removeItem('code');
+                    localStorage.removeItem('state');
                 }
-              });
-              clearInterval(interId);
-            }
-          }, 200)
-        })
-      },
-      // 微信登录
-      handleLoginByWX() {
-        loginByWX().then(res => {
-          const wxWindow = this.loginAtQQ(res, 2);
-          const interId = setInterval(() => {
-            const code = localStorage.getItem('code');
-            const state = localStorage.getItem('state');
-            if (code && state) {
-              wxWindow.close();
-              getUserByWX({
-                code,
-                state
-              }).then(res => {
-                if (!res.token) {
-                  this.$store.dispatch('WXREGISTER', res);
-                  this.goToRegister('register');
-                } else {
-                  localStorage.removeItem('code');
-                  localStorage.removeItem('state');
-                  this.$store.dispatch('LOGININ', res);
-                  localStorage.setItem('LOGININ', JSON.stringify(res))
-                  this.$store.dispatch('SETUP', false)
-                  this.$Message.success('登录成功');
+                loginByQQ().then(res => {
+                    const qqWindow = this.loginAtQQ(res, 1);
+                    const interId = setInterval(() => {
+                        const code = localStorage.getItem('code');
+                        const state = localStorage.getItem('state');
+                        if (code && state) {
+                            qqWindow.close();
+                            getUserByQQ({
+                                code,
+                                state
+                            }).then(res => {
+                                if (!res.token) {
+                                    this.$store.dispatch('WXREGISTER', res);
+                                    this.goToRegister('register');
+                                } else {
+                                    localStorage.removeItem('code');
+                                    localStorage.removeItem('state');
+                                    this.$store.dispatch('LOGININ', res);
+                                    localStorage.setItem('LOGININ', JSON.stringify(res))
+                                    this.$store.dispatch('SETUP', false)
+                                    this.$Message.success('登录成功');
+                                }
+                            });
+                            clearInterval(interId);
+                        }
+                    }, 200)
+                })
+            },
+            // 微信登录
+            handleLoginByWX() {
+                if (localStorage.getItem('code') || localStorage.getItem('state')) {
+                    localStorage.removeItem('code');
+                    localStorage.removeItem('state');
                 }
-              });
-              clearInterval(interId);
+                loginByWX().then(res => {
+                    const wxWindow = this.loginAtQQ(res, 2);
+                    const interId = setInterval(() => {
+                        const code = localStorage.getItem('code');
+                        const state = localStorage.getItem('state');
+                        if (code && state) {
+                            wxWindow.close();
+                            getUserByWX({
+                                code,
+                                state
+                            }).then(res => {
+                                if (!res.token) {
+                                    this.$store.dispatch('WXREGISTER', res);
+                                    this.goToRegister('register');
+                                } else {
+                                    localStorage.removeItem('code');
+                                    localStorage.removeItem('state');
+                                    this.$store.dispatch('LOGININ', res);
+                                    localStorage.setItem('LOGININ', JSON.stringify(res))
+                                    this.$store.dispatch('SETUP', false)
+                                    this.$Message.success('登录成功');
+                                }
+                            });
+                            clearInterval(interId);
+                        }
+                    }, 200)
+                })
+            },
+            // 打开登录窗口 type 1 qq登录 2 微信登录
+            loginAtQQ(url, type) {
+                const LEFT = (window.screen.width - 685) / 2;
+                const TOP = (window.screen.height - 555) / 2;
+                return window.open(url, 'oauth2Login_qq', 'height=555,width=685, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes, top=' + TOP + ', left=' + LEFT);
+            },
+            goToRegister(val) {
+                this.$store.dispatch('LOGGEDIN', val);
+            },
+            retrieve(val) {
+                this.$store.dispatch('LOGGEDIN', val);
+            },
+            async handleSubmit() {
+                let postData = {
+                    mobile: this.userItem.mobile,
+                    password: this.userItem.password
+                }
+                let msg = await login(postData);
+                if (msg) {
+                    this.$store.dispatch('LOGININ', msg);
+                    localStorage.setItem('LOGININ', JSON.stringify(msg))
+                    this.$store.dispatch('SETUP', false)
+                    this.$Message.success('登录成功！');
+                }
             }
-          }, 200)
-        })
-      },
-      // 打开登录窗口 type 1 qq登录 2 微信登录
-      loginAtQQ(url, type) {
-        const LEFT = (window.screen.width - 685) / 2;
-        const TOP = (window.screen.height - 555) / 2;
-        return window.open(url,'oauth2Login_qq','height=555,width=685, toolbar=no, menubar=no, scrollbars=no, status=no, location=yes, resizable=yes, top=' + TOP + ', left=' + LEFT);
-      },
-      goToRegister(val) {
-        this.$store.dispatch('LOGGEDIN', val);
-      },
-      retrieve(val) {
-        this.$store.dispatch('LOGGEDIN', val);
-      },
-      async handleSubmit() {
-        let postData = {
-          mobile: this.userItem.mobile,
-          password: this.userItem.password
         }
-        let msg = await login(postData);
-        if (msg) {
-          this.$store.dispatch('LOGININ', msg);
-          localStorage.setItem('LOGININ', JSON.stringify(msg))
-          this.$store.dispatch('SETUP', false)
-          this.$Message.success('登录成功！');
-        }
-      }
     }
-  }
 </script>
 <style lang="less" scoped>
     .ivu-modal-body {
