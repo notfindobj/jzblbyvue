@@ -54,7 +54,7 @@
         <!-- 评论信息 -->
         <discuss
             class="comment-scroll"
-            style="height: 220px;"
+            style="height: 240px;"
             :discussData="comments"
             @commentValue="discussValue"
             @somePraise="somePraise"
