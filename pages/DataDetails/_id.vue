@@ -51,7 +51,6 @@
                 </div>
             </div>
         </div>
-        <viewPicture/>
         <data-details-custom
             :itemId="detaDetails.ItemId"
             @dataDetailsMaskClose="dataDetailsMaskClose"
@@ -74,7 +73,6 @@
     import dataDetailsPDFLeft from '../../components/dataDetails/dataDetailsPDFLeft'
     import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
     import commentsCon from '../../components/comments/commentsCon.vue'
-    import viewPicture from '../../components/comments/viewPicture.vue'
     import share from '../../components/share'
     import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile} from '../../service/clientAPI'
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
@@ -124,7 +122,6 @@
             dataDetailsLeft,
             dataDetailsRight,
             commentsCon,
-            viewPicture,
             dateDetailsDown,
             dataDetailsCustom,
             dataDetailsPDFLeft

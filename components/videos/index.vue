@@ -78,13 +78,11 @@ export default {
             }, function () {
                 let that =this;
                 let fullScreen = getRanNum()
-                let ctrlBar = createEle(); // 创建一个div节点
-                this.el().appendChild(ctrlBar);  // 添加进去，css设置好样式就可以了
                 let barHtml = `
                     <div class="video-bar">
-                        <span>收藏</span>
-                        <span class="video-star">点赞</span>
-                        <span cls id="${fullScreen}">全屏</span>
+                        <span class="iconfont icon-favorite"></span>
+                        <span class="video-star iconfont icon-dianzan1"></span>
+                        <span class="iconfont icon-shipinfangda" id="${fullScreen}"></span>
                     </div>`
                 let bar = document.createElement('div');
                 bar.innerHTML = barHtml;
@@ -135,28 +133,8 @@ export default {
       }
     }
 };
-function createEle (){
-      var _html = `
-        <div></div>
-        <div class="play-box">
-          <div class="play-box-dian" onclick="clickPlay">
-            点赞
-          </div>
-          <div class="vol-box fr">
-            收藏
-          </div>
-        </div>
-      `;
-      let ctrlBar = document.createElement('div');
-      ctrlBar.className = 'vjs-mycontrol-bar';
-      ctrlBar.innerHTML = _html;
-      return ctrlBar;
-}
-function clickPlay () {
-    console.log('asdsdasd')
-}
 </script>
-<style lang="less">
+<style lang="less" scoped>
 .video-js .vjs-big-play-button {
     /* 这里的样式重写 */
 }
@@ -168,12 +146,12 @@ video:not(:root):-webkit-full-screen {
     pointer-events: none;
 }
 .vjs-matrix.video-js {
-  color: #FF3C00;
+//   color: #FF3C00;
 }
 .vjs-matrix .vjs-volume-level,
 .vjs-matrix .vjs-play-progress,
 .vjs-matrix .vjs-slider-bar {
-  background: #FF3C00;
+//   background: #FF3C00;
 }
 .vjs-mycontrol-bar {
     display: flex;
@@ -190,13 +168,21 @@ video:not(:root):-webkit-full-screen {
     cursor: pointer;
     margin-right: 30px;
 }
-.video-bar {
-    display: flex;
-    line-height: 30px;
-    padding: 0 10px;
-    cursor: pointer;
-}
+
 .video-star {
     margin: 0 10px;
 }
+</style>
+<style lang="less">
+    .video-bar {
+        display: flex;
+        line-height: 29px;
+        height: 32px;
+        cursor: pointer;
+        span {
+            display: inline-block;
+            padding: 0 10px;
+            font-size: 14px;
+        }
+    }
 </style>

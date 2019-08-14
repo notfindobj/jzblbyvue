@@ -134,7 +134,6 @@
                     videoInfo.itemOperateData.IsLike = flag;
                     flag ? videoInfo.itemOperateData.LikeCount += 1 : videoInfo.itemOperateData.LikeCount -= 1;
                     this.$set(this.videoList, index, videoInfo);
-
                     // 如果是点击的弹框中的，就更新videoInfo
                     if (this.isShowModal) {
                         this.$set(this.videoInfo, 'itemOperateData', videoInfo.itemOperateData)
