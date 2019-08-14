@@ -22,7 +22,7 @@
                 </template>
             </div>
             <!-- <ToTop :isShowToTop="false"></ToTop> -->
-            <Page v-show="pageNum > 8" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+            <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         </crollBox>
     </div>
 </template>
@@ -32,6 +32,7 @@
     import VideoItem from '../../components/projectType/video'
     // import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
+    import { _throttle } from '../../plugins/untils/public'
     import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
     export default {
         layout: 'main',
@@ -64,18 +65,19 @@
                 })();
             },
             // 触底事件
-            willReachBottom () {
+            willReachBottom: _throttle(function () {
                 if (this.total === 1) {
                     this.isLast = true
                     return false
                 }
+                this.isLast = false;
                 if (this.pageNum >= this.total) {
                     this.$Message.info('已经是最后一页了');
                     return false;
                 }
                 this.pageNum++;
                 this.getList();
-            },
+            }, 1500),
             // 点击收藏
             clickCollection(index, flag) {
                 setCollection({

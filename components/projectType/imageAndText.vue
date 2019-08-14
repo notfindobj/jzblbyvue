@@ -47,10 +47,10 @@
             </div>
             <!-- 内容 -->
             <div class="content" >
-                <p v-if="itemInfo.TalkType !== 3">{{ itemInfo.TalkContent }}</p>
+                <p v-if="itemInfo.TalkType !== 3"><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></div>
                 <div class="photo-wrap" :ref="mathId">
-                    <div :class="imgIndex < 9 ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
+                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                     </div>
                 </div>
@@ -112,6 +112,10 @@
   export default {
     name: name,
     props: {
+      textLength: {
+        type: Number,
+        default: 8
+      },
       itemInfo: {
         type: Object,
         default: function () {

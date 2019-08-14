@@ -7,7 +7,10 @@
                 </li>
             </ul>
               <template v-for="(item, index) in dataList">
-                  <ImageAndText v-if="item.TalkType !== 2" :itemInfo="item" :index="index" :key="index"
+                  <ImageAndText v-if="item.TalkType !== 2" 
+                      :textLength="9"
+                      :itemInfo="item" 
+                      :index="index" :key="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
                   />

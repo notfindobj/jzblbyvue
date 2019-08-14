@@ -194,13 +194,12 @@
                     <span class="message-items-right-fill">马上填写</span>
                     <span>你的职业信息，让他人更好的了解你，与更多的同事在建筑部落相遇！</span>
                 </div>
-                <div class="message-items-right-edit">
+                <div v-if="JurisdiInfo.CompanyName || !career" class="message-items-right-edit">
                     <div class="means">
                         <div>
                             <span class="means-left-label">单位名称：</span>
                             <span v-if="career">{{JurisdiInfo.CompanyName}}</span>
-                            <Input v-else type="text" v-model="ModelJurisdiInfo.CompanyName" style="width: 340px;"
-                                   size="small"/>
+                            <Input v-else type="text" v-model="ModelJurisdiInfo.CompanyName" style="width: 340px;" size="small"/>
                         </div>
                         <div class="means-right content-right">
                             <div class="means-right-option">
@@ -217,8 +216,7 @@
                         <div>
                             <span class="means-left-label">部门/职业：</span>
                             <span v-if="career">{{JurisdiInfo.DepaOrPosi}}</span>
-                            <Input v-else type="text" v-model="ModelJurisdiInfo.DepaOrPosi" style="width: 340px;"
-                                   size="small"/>
+                            <Input v-else type="text" v-model="ModelJurisdiInfo.DepaOrPosi" style="width: 340px;" size="small"/>
                         </div>
                     </div>
                     <div class="means">
@@ -446,12 +444,16 @@
                 this.career = !this.career;
                 this.getJurisdiList();
                 this.getCityList()
-                if (this.JurisdiInfo.CountyAreaId) {
-                    this.getCityList(this.JurisdiInfo.CityAreaId);
-                }
-                if (this.JurisdiInfo.ProvinceAreaId) {
-                    this.onTwoChange(this.JurisdiInfo.CountyAreaId + '|' + this.JurisdiInfo.CountyName);
-                }
+               try {
+                    if (this.JurisdiInfo.CountyAreaId) {
+                        this.getCityList(this.JurisdiInfo.CityAreaId);
+                    }
+                    if (this.JurisdiInfo.ProvinceAreaId) {
+                        this.onTwoChange(this.JurisdiInfo.CountyAreaId + '|' + this.JurisdiInfo.CountyName);
+                    }
+               } catch (error) {
+                   
+               }
             },
             // 个人资料  END
             async setNickName() {
@@ -479,18 +481,21 @@
             async getThisUserJobInfoList() {
                 let msg = await GetThisUserJobInfo();
                 if (msg) {
-                    let val = msg.jobInfos[0]
-                    this.JurisdiInfo = val
-                    this.ModelJurisdiInfo = {
-                        CompanyName: val.CompanyName,
-                        CompanyId: val.CompanyName,
-                        DepaOrPosi: val.DepaOrPosi,
-                        OperatHours: [val.OperatHoursStart, val.OperatHoursEnd],
-                        Privacy: val.PrivacyId + '|' + val.PrivacyName,
-                        ProvinceArea: val.ProvinceAreaId + '|' + val.ProvinceName,
-                        CityArea: val.CityAreaId + '|' + val.CityName,
-                        CountyArea: val.CountyAreaId + '|' + val.CountName,
+                    if (msg.jobInfos) {
+                        let val = msg.jobInfos[0]
+                        this.JurisdiInfo = val
+                        this.ModelJurisdiInfo = {
+                            CompanyName: val.CompanyName,
+                            CompanyId: val.CompanyName,
+                            DepaOrPosi: val.DepaOrPosi,
+                            OperatHours: [val.OperatHoursStart, val.OperatHoursEnd],
+                            Privacy: val.PrivacyId + '|' + val.PrivacyName,
+                            ProvinceArea: val.ProvinceAreaId + '|' + val.ProvinceName,
+                            CityArea: val.CityAreaId + '|' + val.CityName,
+                            CountyArea: val.CountyAreaId + '|' + val.CountName,
+                        }
                     }
+                    
                 }
             },
             async setJob(id) {

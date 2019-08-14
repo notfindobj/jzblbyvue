@@ -51,7 +51,6 @@
                 </div>
             </div>
         </div>
-        <viewPicture/>
         <data-details-custom
             :itemId="detaDetails.ItemId"
             @dataDetailsMaskClose="dataDetailsMaskClose"
@@ -74,7 +73,6 @@
     import dataDetailsPDFLeft from '../../components/dataDetails/dataDetailsPDFLeft'
     import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
     import commentsCon from '../../components/comments/commentsCon.vue'
-    import viewPicture from '../../components/comments/viewPicture.vue'
     import share from '../../components/share'
     import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile} from '../../service/clientAPI'
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
@@ -124,7 +122,6 @@
             dataDetailsLeft,
             dataDetailsRight,
             commentsCon,
-            viewPicture,
             dateDetailsDown,
             dataDetailsCustom,
             dataDetailsPDFLeft
@@ -140,10 +137,8 @@
             let queryData = store.state.overas.sessionStorage.dataBase;
             let reqItemList = JSON.parse(JSON.stringify(queryData));
             delete reqItemList.Id;
-            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', {
-                Id: queryData.Id,
-                reqItemList
-            });
+            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', Object.assign({
+                Id: queryData.Id}, reqItemList));
             // 根据项目详情请求评论信息
             let Comment = {
                 itemId: getBaseDataDetail.ItemEntity.ItemId,
@@ -169,8 +164,12 @@
                 let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
                 if (showLayout.title === '文本') {
                     this.isLayout = false
+                } else if (showLayout.showLayout === 'false') {
+                    this.isLayout = false
+                } else if (showLayout.showLayout === 'true') {
+                    this.isLayout =  true
                 } else {
-                    this.isLayout = (showLayout.showLayout || showLayout.showLayout === 'true') ? true : false;
+                    this.isLayout = showLayout.showLayout
                 }
             } catch (error) {}
         },
@@ -220,6 +219,7 @@
             },
             async clickCate(index) {
                 let attrList = [];
+                let query = {};
                 let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
                 this.ItemAttributesEntities.forEach((item, attrIndex) => {
                     if (index >= attrIndex) {
@@ -229,14 +229,16 @@
                         })
                     }
                 });
-                dataBase.ClassTypeArrList = attrList;
+                
+                query = dataBase.reqItemList
+                query.ClassTypeArrList = attrList;
                 let serverBataBase = {
                     key: 'dataBase',
-                    value: dataBase
+                    value: query
                 }
                 this.$store.dispatch('Serverstorage', serverBataBase);
                 let msgs = await setDemo('dataBase', serverBataBase);
-                this.$router.push({name: "dataBase-id", query: {id: dataBase.Id }})
+                this.$router.push({name: "dataBase-id", query: {id: query.Id }})
             },
             initLazy() {
                 $("img[data-original]").lazyload()

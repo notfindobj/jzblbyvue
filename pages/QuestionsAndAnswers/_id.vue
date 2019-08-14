@@ -4,14 +4,11 @@
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
             <div class="ql-container ql-snow">
                 <div class="ql-editor detail-text" v-html="detailInfo.TalkContent">
+                    <emotHtml v-model="detailInfo.TalkContent"/>
                 </div>
             </div>
             <div class="img-row">
-                <div
-                    class="img"
-                    v-for="item in detailInfo.Imgs"
-                    :key="item.smallImgUrl"
-                >
+                <div class="img" v-for="item in detailInfo.Imgs" :key="item.smallImgUrl" >
                     <img :src="fileBaseUrl + item.smallImgUrl" alt="">
                 </div>
             </div>

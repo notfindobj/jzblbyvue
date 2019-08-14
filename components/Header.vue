@@ -9,7 +9,7 @@
                     <span>[切换城市]</span>
                 </div>
                 <div class="nav-list">
-                    <nuxt-link to="/HeAndITribal">我的部落</nuxt-link>
+                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
                     <nuxt-link to="/attention">关注</nuxt-link>
                     <!-- <nuxt-link to="/recommend">推荐</nuxt-link> -->
                     <nuxt-link to="/videos">视频</nuxt-link>
@@ -81,6 +81,11 @@
         SignIn() {
             this.$store.dispatch('SETUP', true);
         },
+        goMytribe() {
+            if (this.$route.name === "HeAndITribal-id") {
+                window.location.reload();
+            }
+        },
         async signOut() {
             let msg = await logout();
             this.$router.push({name: "index"});
@@ -105,12 +110,11 @@
             display: flex;
             align-items: center;
             margin: 0 auto;
-
+            justify-content: space-between;
             .logo-img {
                 width: 100px;
                 cursor: pointer;
             }
-
             .address {
                 color: #FF3C00;
                 margin-left: 30px;
@@ -125,7 +129,7 @@
                 display: flex;
                 align-items: center;
                 margin-left: 30px;
-                font-size: 14px;
+                font-size: 16px;
                 a {
                     height: 60px;
                     margin: 0 20px;

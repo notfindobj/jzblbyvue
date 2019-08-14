@@ -12,8 +12,9 @@
             </div>
             <div class="discuss-content" v-html="items.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
             <div class="discuss-footer">
-                <span class="discuss-footer-dianzan" @click="somePraise(items)">
-                    <i class="icon iconfont icon-dianzan1"></i>
+                <span class="discuss-footer-dianzan" @click="somePraise(items)" :style="`color:${items.islikes ? '#FF3C00;' : ''} `">
+                    <i v-if="items.islikes" class="icon iconfont icon-like-b"></i>
+                    <i v-else class="icon iconfont icon-dianzan1"></i>
                     点赞{{items.LikeCount}}
                 </span>
                 <span class="discuss-footer-pinglun" @click="setDiscuss(index)">
@@ -43,8 +44,9 @@
                     </div>
                     <div class="discuss-reply-content" v-html="sub.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
                     <div class="discuss-reply-footer">
-                        <span class="discuss-footer-dianzan" @click="somePraise(sub)">
-                            <i class="icon iconfont icon-dianzan1"></i>
+                        <span class="discuss-footer-dianzan" @click="somePraise(sub)" :style="`color:${sub.islikes ? '#FF3C00;' : ''} `">
+                            <i v-if="sub.islikes" class="icon iconfont icon-like-b"></i>
+                            <i v-else class="icon iconfont icon-dianzan1"></i>
                             点赞{{sub.LikeCount}}
                         </span>
                         <span class="discuss-footer-pinglun" @click="setSubDiscuss(sunIndex + sub.CommentsId)">
@@ -131,6 +133,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .clickDiscuss {
+        color: #FF3C00;
+    }
     .discuss {
         background: #ffffff;
         padding: 10px;

@@ -13,18 +13,9 @@
                     <Icon type="ios-close-circle-outline" size="36" color="#fff"/>
                 </div>
                 <div class="video-wrap" v-if="isShowModal">
-                    <video
-                        ref="video"
-                        :poster="videoInfo.Imgs[0].smallImgUrl"
-                    >
-                        <source
-                            :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl"
-                            type="video/mp4"
-                        >
-                        <source
-                            :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl"
-                            type="video/ogg"
-                        >
+                    <video ref="video" :poster="videoInfo.Imgs[0].smallImgUrl" >
+                        <source :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl" type="video/mp4" >
+                        <source :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl" type="video/ogg" >
                         您的浏览器不支持Video标签。
                     </video>
                     <div class="controls-box">
@@ -60,23 +51,16 @@
                                 <span>{{ videoInfo.itemOperateData.ReadCount }}</span>
                             </div>
                         </div>
-                        <p class="content-text" v-show="videoInfo.TalkContent.length > 60 && !isShowAll">项目介绍：{{
-                            videoInfo.TalkContent.substr(0,60) }}</p>
-                        <p class="content-text" v-show="videoInfo.TalkContent.length > 60 && isShowAll">项目介绍：{{
-                            videoInfo.TalkContent }}</p>
-                        <span
-                            class="btn-open"
-                            v-show="videoInfo.TalkContent.length > 60 && !isShowAll"
-                            @click="isShowAll = true"
-                        >
+                        <p class="content-text" v-show="videoInfo.TalkContent.length > 60 && !isShowAll">项目介绍：{{ videoInfo.TalkContent.substr(0,60) }}</p>
+                        <p class="content-text" v-show="videoInfo.TalkContent.length > 60 && isShowAll">项目介绍：{{ videoInfo.TalkContent }}</p>
+                        <span class="btn-open" v-show="videoInfo.TalkContent.length > 60 && !isShowAll"
+                            @click="isShowAll = true" >
                             展开详情
                             <Icon type="ios-arrow-down"/>
                         </span>
-                        <span
-                            class="btn-open"
+                        <span class="btn-open"
                             v-show="videoInfo.TalkContent.length > 60 && isShowAll"
-                            @click="isShowAll = false"
-                        >
+                            @click="isShowAll = false" >
                             展开详情
                             <Icon type="ios-arrow-down"/>
                         </span>
@@ -84,16 +68,8 @@
                     <div class="operator-box">
                         <div class="operator-bar">
                             <p>
-                                <i
-                                    class="icon iconfont icon1"
-                                    v-show="!videoInfo.itemOperateData.IsLike"
-                                    @click="clickLike(true)"
-                                >&#xe643;</i>
-                                <i
-                                    class="icon iconfont icon1-active"
-                                    v-show="videoInfo.itemOperateData.IsLike"
-                                    @click="clickLike(false)"
-                                >&#xe621;</i>
+                                <i class="icon iconfont icon1" v-show="!videoInfo.itemOperateData.IsLike" @click="clickLike(true)" >&#xe643;</i>
+                                <i class="icon iconfont icon1-active" v-show="videoInfo.itemOperateData.IsLike" @click="clickLike(false)" >&#xe621;</i>
                                 <span>{{ videoInfo.itemOperateData.LikeCount }}</span>
                             </p>
                             <Divider type="vertical"/>
@@ -104,20 +80,13 @@
                             </p>
                             <Divider type="vertical"/>
                             <p>
-                                <i class="icon iconfont icon3"
-                                   v-show="!videoInfo.itemOperateData.IsCollection"
-                                   @click="clickCollection(true)"
-                                >&#xe696;</i>
-                                <i class="icon iconfont icon3 icon3-active"
-                                   v-show="videoInfo.itemOperateData.IsCollection"
-                                   @click="clickCollection(false)"
-                                >&#xe69d;</i>
+                                <i class="icon iconfont icon3" v-show="!videoInfo.itemOperateData.IsCollection" @click="clickCollection(true)" >&#xe696;</i>
+                                <i class="icon iconfont icon3 icon3-active" v-show="videoInfo.itemOperateData.IsCollection" @click="clickCollection(false)" >&#xe69d;</i>
                                 <span>{{ videoInfo.itemOperateData.CollectionCount }}</span>
                             </p>
                             <Divider type="vertical"/>
                             <p>
-                                <i class="icon iconfont icon4"
-                                   v-show="!videoInfo.itemOperateData.IsComment">&#xe664;</i>
+                                <i class="icon iconfont icon4" v-show="!videoInfo.itemOperateData.IsComment">&#xe664;</i>
                                 <i class="icon iconfont icon4-active" v-show="videoInfo.itemOperateData.IsComment">&#xe664;</i>
                                 <span>{{ videoInfo.itemOperateData.CommentCount }}</span>
                             </p>
@@ -133,12 +102,7 @@
                                 <i class="icon iconfont select-icon" @click.stop="isShowEmotion = !isShowEmotion">&#xe64e;</i>
                                 <Button type="primary" size="small" @click="handleSubmit">发表评论</Button>
                             </div>
-                            <emotion
-                                class="emotion"
-                                @emotion="handleEmotion"
-                                :height="200"
-                                v-show="isShowEmotion"
-                            ></emotion>
+                            <emotion class="emotion"  @emotion="handleEmotion" :height="200" v-show="isShowEmotion" ></emotion>
                         </div>
                     </div>
                     <div class="comment-list" v-if="commentList.length > 0">
@@ -151,59 +115,6 @@
                             :index="index"
                             @getCommentList="getCommentList"
                         />
-<!--                        <div-->
-<!--                            class="comment-item"-->
-<!--                            v-for="(item, index) in commentList"-->
-<!--                            :key="item.CommentsId"-->
-<!--                            v-show="index < showCount"-->
-<!--                        >-->
-<!--                            <div class="commenter-avatar">-->
-<!--                                <img :src="item.HeadIcon" alt="">-->
-<!--                            </div>-->
-<!--                            <div class="comment-info">-->
-<!--                                <p class="comment-nickname">{{ item.NickName }}</p>-->
-<!--                                <p class="comment-time">{{ item.CreateDate }}</p>-->
-<!--                                <p class="comment-con">-->
-<!--                                    {{ item.Message }}-->
-<!--                                </p>-->
-<!--                                <div class="comment-operation">-->
-<!--                                    <p>-->
-<!--                                        <i-->
-<!--                                            class="icon iconfont icon1"-->
-<!--                                            v-if="!item.islikes"-->
-<!--                                            @click="likeComment(index, true)"-->
-<!--                                        >-->
-<!--                                            &#xe643;-->
-<!--                                        </i>-->
-<!--                                        <i-->
-<!--                                            class="icon iconfont icon1-active"-->
-<!--                                            v-if="item.islikes"-->
-<!--                                            @click="likeComment(index, false)"-->
-<!--                                        >-->
-<!--                                            &#xe621;-->
-<!--                                        </i>-->
-<!--                                        <span>点赞</span>-->
-<!--                                    </p>-->
-<!--                                    <Divider type="vertical" style="margin: 0 10px;"/>-->
-<!--                                    <p>-->
-<!--                                        <i class="icon iconfont reply-comment-icon">&#xe664;</i>-->
-<!--                                        <span>评论</span>-->
-<!--                                    </p>-->
-<!--                                </div>-->
-<!--                                <div class="reply-comment-box">-->
-<!--                                    <div class="reply-avatar-wrap">-->
-<!--                                        <img :src="$store.state.overas.auth.HeadIcon" alt="">-->
-<!--                                    </div>-->
-<!--                                    <div class="reply-input-box">-->
-<!--                                        <Input size="small" style="width: 240px;"/>-->
-<!--                                        <div class="comment-bottom">-->
-<!--                                            <i class="icon iconfont select-icon" @click.stop="isShowEmotion = true">&#xe64e;</i>-->
-<!--                                            <Button type="primary" size="small" @click="handleSubmit">评论</Button>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="show-more-box" v-if="commentList.length > 3">
                             <span>{{ commentList[0].NickName }}</span>等人<span>共{{ commentList.length }}条回复</span> <i
                             class="icon iconfont" @click="showAllComment">&#xe64a;</i>

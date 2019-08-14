@@ -8,33 +8,38 @@
                     <span>发布日期：{{publish.CreateDate | datefmt('YYYY-MM-DD')}}</span>
                 </div>
                 <div class="comments-box-status-right">
-                    <i class="icon iconfont icon-chakan"></i>{{publish.Views}}
+                    <i class="icon iconfont icon-chakan"></i>{{ publish.itemOperateData.ReadCount || 0}}
                 </div>
             </div>
             <ul class="comments-status-info">
                 <li>
-                    <span :class="publish.islikes? 'operationColor': ''" @click="thumbsUp(publish)">
-                        <i class="icon iconfont icon-dianzan1"></i>
-                        <span>{{publish.likes}}</span>
+                    <!-- 点赞 -->
+                    <span :class="publish.itemOperateData.IsLike? 'operationColor': ''" @click="thumbsUp(publish)">
+                        <i v-if="publish.itemOperateData.IsLike" class="icon iconfont icon-like-b"></i>
+                        <i v-else class="icon iconfont icon-dianzan1"></i>
+                        <span>{{publish.itemOperateData.LikeCount || 0}}</span>
                     </span>
                 </li>
                 <li>
                     <!-- 转发 -->
                     <span @click="Forward(publish)">
                         <i class="icon iconfont icon-share"></i>
-                        <span>{{commentsInfo.downNum}}</span>
+                        <span>{{publish.itemOperateData.ShareCount || 0}}</span>
                     </span>
                 </li>
                 <li>
-                    <span :class="publish.iscollections? 'operationColor': ''" @click="Collection(publish)">
-                        <i class="icon iconfont icon-favorite"></i>
-                        <span>{{publish.collections}}</span>
+                    <!-- 收藏 -->
+                    <span :class="publish.itemOperateData.IsCollection? 'operationColor': ''" @click="Collection(publish)">
+                        <i v-if="publish.itemOperateData.IsCollection" class="icon iconfont icon-cc-star"></i>
+                        <i v-else class="icon iconfont icon-favorite"></i>
+                        <span>{{publish.itemOperateData.CollectionCount  || 0}}</span>
                     </span>
                 </li>
                 <li>
+                    <!-- 评论 -->
                     <span @click="isComment = !isComment">
                         <i class="icon iconfont icon-pinglun"></i>
-                        <span>{{publish.commentss}}</span>
+                        <span>{{publish.itemOperateData.CommentCount  || 0}}</span>
                     </span>
                 </li>
             </ul>
@@ -49,7 +54,7 @@
         <!-- 评论信息 -->
         <discuss
             class="comment-scroll"
-            :style="{height: contentHeight}"
+            style="height: 240px;"
             :discussData="comments"
             @commentValue="discussValue"
             @somePraise="somePraise"
@@ -58,10 +63,9 @@
 </template>
 
 <script>
-  import comment from '../comment'
-  import discuss from './discuss'
-
-  export default {
+import comment from '../comment'
+import discuss from './discuss'
+export default {
     name: 'commentsCon',
     props: {
       publish: {
@@ -85,9 +89,6 @@
     data() {
       return {
         isComment: true,
-        commentsInfo: {
-          downNum: '',
-        },
         commentV: '',
         contentHeight: ''
       }

@@ -14,17 +14,8 @@
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
-                        <i
-                            class="icon iconfont"
-                            v-show="!isLike"
-                            @click="clickLike(true)"
-                        >&#xe67e;</i>
-                        <i
-                            class="icon iconfont"
-                            style="color: #ff3c00;"
-                            v-show="isLike"
-                            @click="clickLike(false)"
-                        >&#xe621;</i>
+                        <i class="icon iconfont" v-show="!isLike" @click="clickLike(true)" >&#xe67e;</i>
+                        <i class="icon iconfont" style="color: #ff3c00;" v-show="isLike" @click="clickLike(false)" >&#xe621;</i>
                         赞
                     </span>
                 </p>
