@@ -3,48 +3,41 @@
         <div class="nav-list">
             <p>在以下分类中找：</p>
             <ul>
-                <li v-for="(item, index) in listInfo" :class="item.ItemAttributesId === currentInex ? 'li-active' : ''" :key="index" @click="choseSome(index,item)">
+                <li v-for="(item, index) in getSessionStorage.searchMenu" :class="item.ItemAttributesId === currentInex ? 'li-active' : ''" :key="index" @click="choseSome(index,item)">
                     {{item.ItemAttributesFullName}}
                     <img src="../../assets/images/sanjiao.png"/>
                 </li>
             </ul>
         </div>
         <div class="screening-nav">
+            <!-- 面包屑 -->
             <Breadcrumb separator=">">
                 <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>
                 <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}
                 </BreadcrumbItem>
             </Breadcrumb>
+            <!-- 选中的属性 -->
             <div class="itemAttribute">
                 <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index"  @click="delItems(items)">
-                    <span>{{items.ClassTypeName}}:{{items.ArrName}}</span>
+                    <span>{{items.AttrKeyFullName}}:{{items.AttrValueFullName}}</span>
                     <i class="iconfont icon-chahao2"></i>
                 </div>
             </div>
+            <!-- 属性展示 -->
             <ul class="screening-nav-list">
                 <li v-for="(item,index) in itemAttribute" :key="index"
-                    :class="item.ItemAttributesId ? 'li-active' : ''">
-                    <p>{{item.ItemAttributesFullName}}</p>
+                    :class="item.AttrId ? 'li-active' : ''">
+                    <p>{{item.AttrName}}</p>
                     <ol>
                         <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)">
-                            {{items.ItemAttributesFullName}}
+                            {{items.AttrName}}
                         </li>
                     </ol>
-                    <i :class="item.ItemAttributesId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
+                    <i :class="item.AttrId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
                        v-if="item.ChildNode.length > 13" @click="upAndDown(item)"></i>
                 </li>
             </ul>
         </div>
-        <!--    <Breadcrumb separator=">" style="margin-bottom: 20px">-->
-        <!--      <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>-->
-        <!--      <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}</BreadcrumbItem>-->
-        <!--    </Breadcrumb>-->
-        <!--    <div class="itemAttribute">-->
-        <!--      <div class="itemAttribute-items" v-for="(items, index) in queryConditions" :key="index">-->
-        <!--        <span >{{items.ClassTypeName}}:{{items.ArrName}}</span>-->
-        <!--        <i class="iconfont icon-chahao2" @click="delItems(items)"></i>-->
-        <!--      </div>-->
-        <!--    </div>-->
     </div>
 </template>
 <script>
@@ -63,14 +56,7 @@ export default {
             type: Array,
             required: true,
             default: function () {
-            return []
-            }
-        },
-        listInfo: {
-            type: Array,
-            required: true,
-            default: function () {
-            return []
+                return []
             }
         }
     },
@@ -85,9 +71,8 @@ export default {
         ...mapGetters(['getSessionStorage']),
     },
     created() {
-        let queryData = this.getSessionStorage.dataBase;
-        this.currentName = queryData.title;
-        this.currentInex = queryData.ClassTypeId.split('|')[1];
+        this.currentName = this.getSessionStorage.baseSearchNav.title;
+        this.currentInex = this.getSessionStorage.baseSearchNav.ClassTypeArrList[0].AttrKey;
     },
     methods: {
         // 一级

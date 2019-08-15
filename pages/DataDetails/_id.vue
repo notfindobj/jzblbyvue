@@ -29,14 +29,12 @@
                     />
                 </template>
                 <div class="position-sticky">
-                    <!--  :class="{'fix-top': scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900, 'fix-bottom': distanceBottom < 362 && bodyHeight > 1900}" -->
                     <data-details-right
                         :detaDetails="detaDetails"
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
                     />
-                    <!-- :class="{'margin-top': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900 ) && (detaDetails.IsCustomized || detaDetails.IsDownload), 'margin-top2': (scrollTop > 312 && distanceBottom > 362 && bodyHeight > 1900) && !detaDetails.IsCustomized && !detaDetails.IsDownload, 'margin-bottom': distanceBottom < 362 && bodyHeight > 1900}" -->
                     <commentsCon
                         :width="'340px'"
                         :publish="detaDetails"
@@ -134,11 +132,18 @@
             }),
         },
         async asyncData({ app, store, route }) {
-            let queryData = store.state.overas.sessionStorage.dataBase;
-            let reqItemList = JSON.parse(JSON.stringify(queryData));
-            delete reqItemList.Id;
-            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', Object.assign({
-                Id: queryData.Id}, reqItemList));
+            let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
+            let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
+            // 项目数据
+            let itemData = {
+                reqItemList: {
+                    ClassTypeArrList: baseSearchNav.ClassTypeArrList,
+                    Pagination: baseSearchItem.Pagination,
+                },
+                Id: baseSearchNav.Id
+            }
+            let getBaseDataDetail = await store.dispatch('getBaseDataDetails', itemData);
+            
             // 根据项目详情请求评论信息
             let Comment = {
                 itemId: getBaseDataDetail.ItemEntity.ItemId,
@@ -150,6 +155,7 @@
                 NextItemId: getBaseDataDetail.NextItemId,
             }
             return {
+                itemData,
                 getBaseDataDetail,
                 PdfInfo: getBaseDataDetail.PdfInfo,
                 detaDetails: getBaseDataDetail.ItemEntity,
@@ -161,7 +167,7 @@
         },
         created() {
             try {
-                let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
                 if (showLayout.title === '文本') {
                     this.isLayout = false
                 } else if (showLayout.showLayout === 'false') {
@@ -178,17 +184,7 @@
             $(document).ready(function () {
                 _this.initLazy()
             });
-            // this.clientWidth = document.body.clientWidth;
-            // this.contentHeight = document.documentElement.clientHeight - 460;
-            // window.addEventListener('scroll', () => {
-            //     this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-            //     this.distanceBottom = document.body.clientHeight - this.scrollTop - document.documentElement.clientHeight;
-            // })
-            // window.onresize = () => {
-            //     this.clientWidth = document.body.clientWidth;
-            //     this.contentHeight = document.documentElement.clientHeight - 460;
-            // }
-            // 记录用户访问
+            // // 记录用户访问
             recordFrequency({
                 ItemId: this.detaDetails.ItemId,
                 DomainType: 0
@@ -205,40 +201,49 @@
                     return false
                 }
                 try {
-                    let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                    dataBase.Id = val
-                    let serverBataBase = {
-                        key: 'dataBase',
-                        value: dataBase
+                    let baseSearchItem = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchItem));
+                    let baseSearchNav = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                    // 项目数据
+                    let itemData = {
+                        reqItemList: {
+                            ClassTypeArrList: baseSearchNav.ClassTypeArrList,
+                            Pagination: baseSearchItem.Pagination,
+                        },
+                        Id:val
                     }
-                    this.$store.dispatch('Serverstorage', serverBataBase);
-                    let msgs = await setDemo('dataBase', serverBataBase);
+                    baseSearchNav.Id = val
+                    // 搜索页导航数据
+                    let baseSearch = {
+                        key: 'baseSearchNav',
+                        value: baseSearchNav
+                    }
+                    this.$store.dispatch('Serverstorage', baseSearch);
+                    let msgs = await setDemo('baseSearchNav', baseSearch);
                     this.$router.push({ name: "DataDetails-id", query: { id: val } })
                     location.reload()
                 } catch (error) {}
             },
             async clickCate(index) {
-                let attrList = [];
-                let query = {};
-                let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                this.ItemAttributesEntities.forEach((item, attrIndex) => {
-                    if (index >= attrIndex) {
-                        attrList.push({
-                            ArrEnCode: item.ItemSubAttributeCode,
-                            ArrId: item.ItemAttributesId
-                        })
-                    }
-                });
-                
-                query = dataBase.reqItemList
-                query.ClassTypeArrList = attrList;
-                let serverBataBase = {
-                    key: 'dataBase',
-                    value: query
-                }
-                this.$store.dispatch('Serverstorage', serverBataBase);
-                let msgs = await setDemo('dataBase', serverBataBase);
-                this.$router.push({name: "dataBase-id", query: {id: query.Id }})
+                // let attrList = [];
+                // let query = {};
+                // // let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
+                // this.ItemAttributesEntities.forEach((item, attrIndex) => {
+                //     if (index >= attrIndex) {
+                //         attrList.push({
+                //             ArrEnCode: item.ItemSubAttributeCode,
+                //             ArrId: item.ItemAttributesId
+                //         })
+                //     }
+                // });
+                // query = dataBase.reqItemList
+                // query.ClassTypeArrList = attrList;
+                // let serverBataBase = {
+                //     key: 'dataBase',
+                //     value: query
+                // }
+                // this.$store.dispatch('Serverstorage', serverBataBase);
+                // let msgs = await setDemo('dataBase', serverBataBase);
+                // this.$router.push({name: "dataBase-id", query: {id: query.Id }})
             },
             initLazy() {
                 $("img[data-original]").lazyload()

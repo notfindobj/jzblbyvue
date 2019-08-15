@@ -9,9 +9,15 @@ const qs = require('qs')
 
 // Body parser，用来封装 req.body
 // app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ 
+    parameterLimit: 100000,
+    limit: 1024 * 1024 * 10
+})); //根据需求更改limit大小
+app.use(bodyParser.json({
+    parameterLimit: 100000,
+    limit: 1024 * 1024 * 10 
+}));  //据需求更改limit大小
 app.use(cookieParser());
-
 axios.defaults.withCredentials = true;
 //  session 存储数据
 
@@ -33,6 +39,7 @@ app.post('/session/:name', function (req, res) {
     try {
         response.Msg = '存储成功'
         req.session[req.params.name] = req.body
+        response.Data =  req.session
     } catch (error) {
         response.Msg = '存储失败'
         response.Code = 400
@@ -61,7 +68,6 @@ app.use('/user/setUserInfo', function (req, res) {
         user.HeadIcon = req.body.headIcon
     }
     response.Data = user;
-    consola.log(response.Data);
     return res.json(response);
 })
 

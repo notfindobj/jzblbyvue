@@ -573,26 +573,34 @@
         publishProject(postData).then(async (res) => {
           this.$Spin.hide();
           if (res) {
-            const queryData = {
-              Id: res.ItemId,
-              reqItemList: {
-                ClassTypeId: `${this.typyString }|${ res.TypeId }`,
-                ClassTypeArrList: '',
-                SortType: 1,
-                KeyWords: "",
-                Order: true,
-                Page: 0,
-                Rows: 32
-              },
-              showLayout: this.showLayout,
-            };
-            let serverBataBase = {
-              key: 'dataBase',
-              value: queryData
+            // 搜索页导航数据
+            let baseSearchNav = {
+                key: 'baseSearchNav',
+                value: {
+                    ClassTypeArrList: [{AttrKey: res.TypeId, AttrValue: this.typyString }],
+                    title: this.typeName,
+                    Id: res.ItemId,
+                    showLayout: this.showLayout
+                }
             }
-            this.$store.dispatch('Serverstorage', serverBataBase);
-            let msgs = await setDemo('dataBase', serverBataBase);
-            this.$router.push({name: "DataDetails-id", query: {id: queryData.Id}})
+            this.$store.dispatch('Serverstorage', baseSearchNav);
+            let msgs = await setDemo('baseSearchNav', baseSearchNav);
+            // 搜索页项目数据
+            let baseSearchItem = {
+                key: 'baseSearchItem',
+                value: {
+                    Pagination: {
+                        SortType: 1,
+                        KeyWords: "",
+                        Order: true,
+                        Page: 1,
+                        Rows: 32
+                    }
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchItem);
+            let msgss = await setDemo('baseSearchItem', baseSearchItem);
+            this.$router.push({name: "DataDetails-id", query: {id: res.ItemId}})
           }
         })
       }

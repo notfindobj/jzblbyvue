@@ -409,37 +409,42 @@
     },
     methods: {
         async viewProperties (data, row, name) {
+            // 待完善
             if (!this.isLogin) {
                 return false
             }
-            let ClassTypeArrList= [];
-            if (JSON.stringify(row) === '{}') {
-                ClassTypeArrList = ''
-            } else {
-               ClassTypeArrList = [
-                    {
-                        ArrId: row.ItemAttributesId || '',
-                        ArrEnCode: row.ItemSubAttributeCode || ''
+             // 搜索页导航数据
+            let baseSearchNav = {
+                key: 'baseSearchNav',
+                value: {
+                        ClassTypeArrList: [
+                            {AttrKey: data.ItemAttributesId, AttrValue: data.ItemSubAttributeCode}
+                        ],
+                        title: data.ItemAttributesFullName,
                     }
-                ]
             }
-            let baseDateId = {
-                ClassTypeId: `${data.ItemSubAttributeCode }|${ data.ItemAttributesId }`,
-                ClassTypeArrList: ClassTypeArrList,
-                SortType: '1',
-                KeyWords: "",
-                Order: true,
-                Page: 0,
-                Rows: 32,
-                classify: 0,
-                title: data.ItemAttributesFullName,
+            // if (JSON.stringify(row) !== '{}') {
+            //     baseSearchNav.value.ClassTypeArrList.push(
+            //         {AttrKey: row.ItemAttributesId, AttrValue: row.ItemAttributesId}
+            //     )
+            // }
+            this.$store.dispatch('Serverstorage', baseSearchNav);
+            let msgs = await setDemo('baseSearchNav', baseSearchNav);
+            // 搜索页项目数据
+            let baseSearchItem = {
+                key: 'baseSearchItem',
+                value: {
+                    Pagination: {
+                        SortType: '1',
+                        KeyWords: "",
+                        Order: true,
+                        Page: 1,
+                        Rows: 32
+                    }
+                }
             }
-            let serverBataBase = {
-                key: 'dataBase',
-                value: baseDateId
-            }
-            this.$store.dispatch('Serverstorage', serverBataBase);
-            let msgs = await setDemo('dataBase', serverBataBase);
+            this.$store.dispatch('Serverstorage', baseSearchItem);
+            let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: data.ItemAttributesId}});
             window.open(routeData.href, '_blank');
         },
@@ -447,26 +452,33 @@
             if (!this.isLogin) {
                 return false
             }
-            let baseDateId = {
-                Id: item.ItemId,
-                reqItemList: {
-                    ClassTypeId: `${row.ItemSubAttributeCode }|${ row.ItemAttributesId }`,
-                    ClassTypeArrList: [{ ArrId: '', ArrEnCode: '' }],
-                    SortType: 1,
-                    KeyWords: "",
-                    Order: true,
-                    Page: 0,
-                    Rows: 8,
-                },
-                showLayout: val === 'jzList' || val === 'wbList' ? false: true
+            // 搜索页导航数据
+            let baseSearchNav = {
+                key: 'baseSearchNav',
+                value: {
+                    ClassTypeArrList: [{AttrKey: row.ItemAttributesId, AttrValue: row.ItemSubAttributeCode}],
+                    title: row.ItemAttributesFullName,
+                    Id: item.ItemId,
+                    showLayout: val === 'jzList' || val === 'wbList' ? false: true
+                }
             }
-           
-            let serverBataBase = {
-                key: 'dataBase',
-                value: baseDateId
+            this.$store.dispatch('Serverstorage', baseSearchNav);
+            let msgs = await setDemo('baseSearchNav', baseSearchNav);
+            // 搜索页项目数据
+            let baseSearchItem = {
+                key: 'baseSearchItem',
+                value: {
+                    Pagination: {
+                        SortType: 1,
+                        KeyWords: "",
+                        Order: true,
+                        Page: 1,
+                        Rows: 32
+                    }
+                }
             }
-            this.$store.dispatch('Serverstorage', serverBataBase);
-            let msgs = await setDemo('dataBase', serverBataBase);
+            this.$store.dispatch('Serverstorage', baseSearchItem);
+            let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
             window.open(routeData.href, '_blank');
         },
