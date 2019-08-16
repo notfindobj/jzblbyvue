@@ -50,11 +50,17 @@
                 showSign: state => state.overas.showSign
             }),
             ...mapGetters(['getSessionStorage', 'isLogin']),
-            // 判断是否是最后一页数据
         },
         mounted() {
-            this.$store.dispatch('getMenu').then(res => {
+            this.$store.dispatch('getMenu').then(async (res) => {
                 this.oneMeun = res.RetMenuData;
+                let searchMenu = {
+                    key: 'searchMenu',
+                    value: {}
+                }
+                searchMenu.value = res.RetMenuData;
+                this.$store.dispatch('Serverstorage', searchMenu);
+                let msgs = await setDemo('searchMenu', searchMenu);
             })
         },
         methods: {
@@ -64,32 +70,41 @@
             mouseleave: _debounce(function (id) {
                 this.id = id
             }, 100),
+            // 点击二级分类
             async clickFullName(pre, type, ch) {
                 if (!this.isLogin) {
                     return false
                 }
-                let baseDateId = {
-                    key: 'dataBase',
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
                     value: {
-                        ClassTypeId: `${ pre.ItemSubAttributeCode }|${ pre.ItemAttributesId }`,
-                        ClassTypeArrList: [
-                            {
-                                ArrId: type.ItemAttributesId,
-                                ArrEnCode: ch.ItemSubAttributeCode
-                            }
-                        ],
-                        SortType: '1',
-                        KeyWords: "",
-                        Order: true,
-                        Page: 0,
-                        classify: 1,
-                        Rows: 32,
-                        title: pre.ItemAttributesFullName,
+                            ClassTypeArrList: [
+                                {AttrKey: pre.ItemAttributesId, AttrValue: pre.ItemSubAttributeCode},
+                                {AttrKey: type.ItemAttributesId, AttrValue: ch.ItemAttributesId},
+                            ],
+                            title: pre.ItemAttributesFullName,
+                        }
+                    
+                }
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                // 搜索页项目数据
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: '1',
+                            KeyWords: "",
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
+                       }
                     }
                 }
-                this.$store.dispatch('Serverstorage', baseDateId);
-                let msgs = await setDemo('dataBase', baseDateId);
-                let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: type.ItemAttributesId } });
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
+                let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: type.ItemAttributesId}});
                 window.open(routeData.href, '_blank');
             },
             // 点击一级分类
@@ -97,24 +112,32 @@
                 if (!this.isLogin) {
                     return false
                 }
-                // classify 0 以及菜单 1 二级菜单 2 进入详情
-                let baseDateId = {
-                    key: 'dataBase',
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
                     value: {
-                        ClassTypeId: `${ cate.ItemSubAttributeCode }|${ cate.ItemAttributesId }`,
-                        ClassTypeArrList: '',
-                        SortType: '1',
-                        KeyWords: "",
-                        Order: true,
-                        Page: 0,
-                        Rows: 32,
-                        classify: 0,
+                        ClassTypeArrList: [{AttrKey: cate.ItemAttributesId, AttrValue: cate.ItemSubAttributeCode}],
                         title: cate.ItemAttributesFullName,
                     }
                 }
-                this.$store.dispatch('Serverstorage', baseDateId);
-                let msgs = await setDemo('dataBase', baseDateId);
-                let routeData = this.$router.resolve({ name: 'dataBase-id', query: { id: cate.ItemAttributesId}});
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                // 搜索页项目数据
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: 1,
+                            KeyWords: "",
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
+                       }
+                    }
+                }
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
+                let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: cate.ItemAttributesId}});
                 window.open(routeData.href, '_blank');
             }
         }

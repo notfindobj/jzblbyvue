@@ -165,22 +165,30 @@
                     this.$Message.warning('请先选择资源库类型~');
                     return false;
                 }
-                let baseDateId = {
-                    key: 'dataBase',
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
                     value: {
-                        ClassTypeId: `${ this.menuData[this.searchTitle].ItemSubAttributeCode }|${ this.menuData[this.searchTitle].ItemAttributesId }`,
-                        ClassTypeArrList: [{ArrId: '',ArrEnCode: ''}],
-                        SortType: '1',
-                        KeyWords: this.searchData,
-                        Order: true,
-                        Page: 0,
-                        Rows: 32,
-                        classify: 0,
+                        ClassTypeArrList: [{AttrKey: this.menuData[this.searchTitle].ItemAttributesId, AttrValue: this.menuData[this.searchTitle].ItemSubAttributeCode}],
                         title: this.menuData[this.searchTitle].ItemAttributesFullName,
                     }
                 }
-                this.$store.dispatch('Serverstorage', baseDateId);
-                let msgs = await setDemo('dataBase', baseDateId);
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                // 搜索页项目数据
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: 1,
+                            KeyWords: this.searchData,
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
+                        }
+                    }
+                }
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 if (this.$route.name === "dataBase-id") {
                     this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId}});
                     sessionStorage.setItem('searchIndex', this.searchTitle);

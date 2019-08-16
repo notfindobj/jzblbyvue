@@ -1,9 +1,8 @@
 <template>
     <div class="conten-layout-box">
         <conten-nav
-            :itemAttribute="RspSelectMenuDatas.ChildNode||[]"
-            :queryConditions="RspQueryClassify.QueryConditions|| []"
-            :listInfo="listInfo"
+            :itemAttribute="RspSelectMenuDatas"
+            :queryConditions="RspQueryClassify"
             @choseSome="getItemsBaseData"
             @choseSomeOne="choseSomeOne"
             @delItems="delItems"
@@ -24,8 +23,7 @@
             @handleCollections="handleCollections"
         />
         <div class="page-box">
-            <Page :total="RspPaginationData.records" :current="RspPaginationData.page" @on-change="changePage"
-                  :page-size="32" show-elevator/>
+            <Page :total="RspPaginationData.records" :current="RspPaginationData.page" @on-change="changePage" :page-size="32" show-elevator/>
         </div>
     </div>
 </template>
@@ -35,7 +33,7 @@
     import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
     import { mapGetters } from 'vuex'
     import { setDemo } from '../../LocalAPI'
-
+    import { _throttle } from '../../plugins/untils/public'
     export default {
         middleware: 'authenticated',
         head() {
@@ -53,8 +51,6 @@
         },
         data() {
             return {
-                pagesNum: {},
-                listInfo: {},
                 RspSelectMenuDatas: [],
                 RspItemDatas: [],
                 RspQueryClassify: [],
@@ -63,30 +59,33 @@
                 showLayout: true,
                 currentWorks: '',
                 isFinished: true,   // 判断请求是否完成
-                pageNum: 1
+                pageNum: 1,
+                isLast: false
             }
         },
         computed: {
-            ...mapGetters(['getSessionStorage']),
-            // 判断是否是最后一页数据
-            isLast() {
-                return this.RspPaginationData.page === this.RspPaginationData.total;
-            }
+            ...mapGetters(['getSessionStorage'])
         },
         async asyncData({ app, store, route }) {
-            let queryData = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.dataBase));
-            queryData.Page = 1;
-            let showLayout = queryData.title !== '建筑规范';
-            let menuData = await store.dispatch('getMenu');
-            let getBaseData = await store.dispatch('getBaseData', queryData);
+            let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
+            let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
+            baseSearchItem.Pagination.Page = 1;
+            let showLayout = baseSearchNav.title !== '建筑规范';
+            // 导航
+            let searchNav = await store.dispatch('getSearchNav', baseSearchNav);
+            // 项目数据
+            let itemData = {
+                ...baseSearchNav,
+                ...baseSearchItem
+            }
+            let getBaseData = await store.dispatch('getItemList', itemData);
             return {
-                pagesNum: queryData,
+                searchNav,
+                RspSelectMenuDatas: searchNav.RetMenuData.ChildNode, //菜单数据
+                RspQueryClassify: searchNav.RetSelectTypeData.selectBtns, //查询参数
                 showLayout: showLayout,
-                listInfo: menuData.RetMenuData || [], // 导肮
-                getBaseData: getBaseData,
-                RspSelectMenuDatas: getBaseData.RspSelectMenuDatas, //菜单数据
+                getBaseData,
                 RspItemDatas: getBaseData.RspItemDatas, //项目数据
-                RspQueryClassify: getBaseData.RspQueryClassify, //查询参数
                 RspPaginationData: getBaseData.RspPaginationData, //翻页数据
             }
         },
@@ -105,164 +104,190 @@
                 })
             },
             // 加载数据
-            loadData() {
-                if (this.isFinished && this.RspPaginationData.page < this.RspPaginationData.total) {
-                    let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                    this.isFinished = false;
-                    queryData.Page = queryData.Page === 0 ? 2 : queryData.Page + 1;
-                    this.getBaseDatas(queryData, true)
+            loadData: _throttle(async function () {
+                if (!this.isFinished) {
+                    return false;
+                } 
+                let baseSearchItem = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchItem));
+                let page = Number(baseSearchItem.Pagination.Page);
+                if (this.RspPaginationData.total === 1) {
+                    this.isLast = true;
+                    return false;
                 }
-            },
+                this.isLast = false;
+                if (this.RspPaginationData.page >= this.RspPaginationData.total) {
+                    this.$Message.info('已经是最后一页了');
+                    return false;
+                }
+                this.isFinished = false
+                baseSearchItem.Pagination.Page =page + 1;
+                // 搜索页项目数据
+                let SearchItem = {
+                    key: 'baseSearchItem',
+                    value: baseSearchItem
+                }
+                this.$store.dispatch('Serverstorage', SearchItem);
+                let msgss = await setDemo('baseSearchItem', SearchItem);
+                this.getItemsList(1)
+            }, 1500),
             // 点击分页
             async changePage(page) {
-                this.pageNum = page;
-                if (document.documentElement.scrollTop) {
-                    document.documentElement.scrollTop = 0;
-                } else {
-                    document.body.scrollTop = 0;
+                let baseSearchItem = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchItem));
+                let pages = Number(baseSearchItem.Pagination.Page);
+                baseSearchItem.Pagination.Page = page;
+                // 搜索页项目数据
+                let SearchItem = {
+                    key: 'baseSearchItem',
+                    value: baseSearchItem
                 }
-                let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                queryData.Page = page;
-                let serverBataBase = {
-                    key: 'dataBase',
-                    value: queryData
-                }
-                this.$store.dispatch('Serverstorage', serverBataBase);
-                let msgs = await setDemo('dataBase', serverBataBase);
-                this.getBaseDatas(queryData, false)
+                this.$store.dispatch('Serverstorage', SearchItem);
+                let msgss = await setDemo('baseSearchItem', SearchItem);
+                this.getItemsList()
             },
             //一级菜单
             async getItemsBaseData(row) {
-                let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                this.showLayout = row.ItemAttributesFullName !== '建筑规范';
-                queryData.title = row.ItemAttributesFullName;
-                queryData.KeyWords = ''
-                queryData.ClassTypeId = `${ row.ItemSubAttributeCode }|${ row.ItemAttributesId }`;
-                queryData.ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }];
-                let serverBataBase = {
-                    key: 'dataBase',
-                    value: queryData
+                this.showLayout = row.AttrName !== '建筑规范';
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
+                    value: {
+                            ClassTypeArrList: [{AttrKey: row.ItemAttributesId, AttrValue: row.ItemSubAttributeCode}],
+                            title: row.ItemAttributesFullName,
+                        }
                 }
-                this.$store.dispatch('Serverstorage', serverBataBase);
-                let msgs = await setDemo('dataBase', serverBataBase);
-                this.getBaseDatas(queryData)
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                // 搜索页项目数据
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: 0,
+                            KeyWords: "",
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
+                       }
+                    }
+                }
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } });
-
+                this.getNavList()
+                this.getItemsList()
                 // 去除搜索框内容
                 if (sessionStorage.getItem('searchIndex') && sessionStorage.getItem('searchKeyWords')) {
                     sessionStorage.removeItem('searchIndex');
                     sessionStorage.removeItem('searchKeyWords');
                     window.location.reload();
                 }
-
             },
             //二级菜单
             async choseSomeOne(row, rows) {
-                let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                if (queryData.ClassTypeArrList === '') {
-                    queryData.ClassTypeArrList = [];
+                let baseSearch = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav))
+                let attr = {
+                    AttrKey: row.AttrId,
+                    AttrValue: rows.AttrId
                 }
-                let TypeArrList = queryData.ClassTypeArrList || [];
-                let ClassTypeArrList = []
-                TypeArrList.forEach(ele => {
-                    if (ele.ArrId !== '') {
-                        ClassTypeArrList.push(ele)
+                baseSearch.ClassTypeArrList.push(attr);
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
+                    value: baseSearch
+                }
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                // 搜索页项目数据
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: 0,
+                            KeyWords: "",
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
                     }
-                })
-                let isHave = false;
-                queryData.ClassTypeArrList.forEach(element => {
-                    if (element.ArrId === row.ItemAttributesId) {
-                        isHave = true
                     }
-                });
-                if (!isHave) {
-                    let optionObg = {
-                        ArrId: row.ItemAttributesId,
-                        ArrEnCode: rows.ItemSubAttributeCode
-                    };
-                    ClassTypeArrList.push(optionObg)
-                    queryData.ClassTypeArrList = ClassTypeArrList;
-
-                    let serverBataBase = {
-                        key: 'dataBase',
-                        value: queryData
-                    }
-                    this.$store.dispatch('Serverstorage', serverBataBase);
-                    let msgs = await setDemo('dataBase', serverBataBase);
-                    this.getBaseDatas(queryData)
-                    this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } })
+                }
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
+                this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } })
+                this.getNavList()
+                this.getItemsList()
+                    // 去除搜索框内容
+                if (sessionStorage.getItem('searchIndex') && sessionStorage.getItem('searchKeyWords')) {
+                    sessionStorage.removeItem('searchIndex');
+                    sessionStorage.removeItem('searchKeyWords');
+                    window.location.reload();
                 }
             },
             // 删除选项
             async delItems(items) {
-                let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                let TypeArrList = queryData.ClassTypeArrList || [];
-                let ClassTypeArrList = [];
-                ClassTypeArrList = TypeArrList.filter(o => o.ArrEnCode !== items.ArrEnCode);
-                if (ClassTypeArrList.length < 1) {
-                    ClassTypeArrList = [{ ArrId: '', ArrEnCode: '' }]
-                }
-                queryData.ClassTypeArrList = ClassTypeArrList;
-                let serverBataBase = {
-                    key: 'dataBase',
-                    value: queryData
-                }
-                this.$store.dispatch('Serverstorage', serverBataBase);
-                let msgs = await setDemo('dataBase', serverBataBase);
-                this.getBaseDatas(queryData)
-            },
-            async getBaseDatas(queryData, isAutoLoading = false) {
-                let showLayout = queryData.title !== '建筑规范';
-                let pageCon = JSON.parse(JSON.stringify(queryData))
-                let BaseData = await getBaseData(queryData);
-                this.isFinished = true;
-                if (BaseData) {
-                    this.RspQueryClassify = [];
-                    this.RspSelectMenuDatas = BaseData.RspSelectMenuDatas;//菜单数据
-                    this.RspItemDatas = !isAutoLoading ? BaseData.RspItemDatas : this.RspItemDatas.concat(BaseData.RspItemDatas); //项目数据
-                    this.RspQueryClassify = BaseData.RspQueryClassify; //查询参数
-                    this.RspPaginationData = BaseData.RspPaginationData; //翻页数据
-                    pageCon.Page = BaseData.RspPaginationData.page;
-                    let serverBataBase = {
-                        key: 'dataBase',
-                        value: pageCon
+                let baseSearch = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                let searchData =  baseSearch.ClassTypeArrList.filter(o => o.AttrValue !== items.AttrValue)
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
+                    value: {
+                        ClassTypeArrList: searchData,
+                        title: baseSearch.title
                     }
-                    this.$store.dispatch('Serverstorage', serverBataBase);
-                    let msgs = await setDemo('dataBase', serverBataBase);
-                    // 只留了第几页
                 }
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: 0,
+                            KeyWords: "",
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
+                        }
+                    }
+                }
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
+                this.getNavList()
+                this.getItemsList()
             },
             // 排序
             async entrySorting(val) {
-                let queryData = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                queryData.SortType = val;
-                queryData.Order = false;
-                let serverBataBase = {
-                    key: 'dataBase',
-                    value: queryData
+                // 搜索页项目数据
+                let baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: val,
+                            KeyWords: "",
+                            Order: false,
+                            Page: 1,
+                            Rows: 32
+                       }
+                    }
                 }
-                this.$store.dispatch('Serverstorage', serverBataBase);
-                let msgs = await setDemo('dataBase', serverBataBase);
-                this.getBaseDatas(queryData)
+                this.$store.dispatch('Serverstorage', baseSearchItem);
+                let msgss = await setDemo('baseSearchItem', baseSearchItem);
+                this.getItemsList()
             },
             // 查看详情
             async viewItem(item) {
-                let reqItemList = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                let queryData = {
-                    reqItemList
-                }
-                queryData.Id = item.ItemId;
-                if (reqItemList.title === '文本' || reqItemList.title === '建筑规范') {
-                    queryData.showLayout = false
+                let baseSearch = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                baseSearch.Id = item.ItemId
+                if (baseSearch.title === '文本' || baseSearch.title === '建筑规范') {
+                    baseSearch.showLayout = false
                 } else {
-                    queryData.showLayout = this.showLayout;
+                    baseSearch.showLayout = this.showLayout;
                 }
-                let serverBataBase = {
-                    key: 'dataBase',
-                    value: queryData
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
+                    value: baseSearch
                 }
-                this.$store.dispatch('Serverstorage', serverBataBase);
-                let msgs = await setDemo('dataBase', serverBataBase);
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
                 let routeData = this.$router.resolve({ name: 'DataDetails-id', query: { id: item.ItemId } });
                 window.open(routeData.href, '_blank');
             },
@@ -292,8 +317,34 @@
             jumpRoute(items) {
                 this.$router.push({ name: "HeAndITribal-id", query: { id: items.UserId } });
             },
-            tipClick() {
-                this.$Message.info('This is a info tip');
+            // 导航
+            async getNavList () {
+                let baseSearchNav = this.getSessionStorage.baseSearchNav
+                let searchNav = await this.$store.dispatch('getSearchNav', baseSearchNav);
+                if (searchNav) {
+                    this.RspSelectMenuDatas = searchNav.RetMenuData.ChildNode; //菜单数据
+                    this.RspQueryClassify = searchNav.RetSelectTypeData.selectBtns; //查询参数
+                }
+            },
+            // 数据
+            async getItemsList (type) {
+                let baseSearchItem = this.getSessionStorage.baseSearchItem;
+                let baseSearchNav = this.getSessionStorage.baseSearchNav;
+                // 项目数据
+                let itemData = {
+                    ...baseSearchNav,
+                    ...baseSearchItem
+                }
+                let searchNav = await this.$store.dispatch('getItemList', itemData);
+                if (searchNav) {
+                    this.isFinished = true;
+                    this.RspPaginationData = searchNav.RspPaginationData
+                    if (type === 1) {
+                        this.RspItemDatas = this.RspItemDatas.concat(searchNav.RspItemDatas);
+                    } else {
+                        this.RspItemDatas = searchNav.RspItemDatas; //项目数据
+                    }
+                }
             }
         }
     }
@@ -307,7 +358,6 @@
     }
 
     .page-box {
-        // display: flex;
         text-align: center;
         justify-content: center;
         padding: 20px 0;
@@ -315,5 +365,6 @@
 
     .ivu-page {
         display: inline-block;
+        width: 100%;
     }
 </style>

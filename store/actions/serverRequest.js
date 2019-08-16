@@ -75,5 +75,16 @@ export const serverRequest = {
   async getAddressData({commit}, params) {
     return await request.get(`UserInfo/GetThisALLUserShippingAddress`, params)
   },
-  
+  /** 
+ * 搜索页改版
+ * 
+*/
+// 获取搜索页导航
+  async getSearchNav({commit}, params) {
+    return await request.post(`ItemList/GetItemListMeunData`, params)
+  },
+// 获取搜索页导航
+  async getItemList({commit}, params) {
+    return await request.post(`ItemList/GetItemListData`, params)
+  },
 }

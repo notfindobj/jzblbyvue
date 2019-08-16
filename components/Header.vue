@@ -49,7 +49,7 @@
 </template>
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { logout, setDemo} from '../LocalAPI'
+  import { logout} from '../LocalAPI'
   import axios from 'axios'
   export default {
     data() {

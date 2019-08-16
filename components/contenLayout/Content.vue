@@ -1,10 +1,10 @@
 <template>
     <div class="content-box">
         <ul class="content-screening-list">
-            <li :class="getSessionStorage.dataBase.SortType === '1' ?'li-active' : ''" @click="entrySorting('1')">人气</li>
-            <li :class="getSessionStorage.dataBase.SortType === '0' ?'li-active' : ''" @click="entrySorting('0')">最新上传</li>
-            <li :class="getSessionStorage.dataBase.SortType === '2' ?'li-active' : ''" @click="entrySorting('2')">下载</li>
-            <li :class="getSessionStorage.dataBase.SortType === '3' ?'li-active' : ''" @click="entrySorting('3')">收藏</li>
+            <li :class="getSessionStorage.baseSearchItem.Pagination.SortType === '1' ?'li-active' : ''" @click="entrySorting('1')">人气</li>
+            <li :class="getSessionStorage.baseSearchItem.Pagination.SortType === '0' ?'li-active' : ''" @click="entrySorting('0')">最新上传</li>
+            <li :class="getSessionStorage.baseSearchItem.Pagination.SortType === '2' ?'li-active' : ''" @click="entrySorting('2')">下载</li>
+            <li :class="getSessionStorage.baseSearchItem.Pagination.SortType === '3' ?'li-active' : ''" @click="entrySorting('3')">收藏</li>
         </ul>
         <!--建筑规范之外的布局 四列-->
         <div v-if="showLayout" class="works-list_box">
@@ -152,13 +152,11 @@
     },
     data() {
       return {
-        sortAction: 0
+        sortAction: 0,
       }
     },
     computed: {
         ...mapGetters(['getSessionStorage']),
-    },
-    mounted() {
     },
     methods: {
       // 将要滚动到底部
