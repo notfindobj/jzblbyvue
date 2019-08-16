@@ -1,14 +1,12 @@
 <template>
     <div class="head-box">
-        <img class="theme-bg" src="../../../assets/images/default_theme.png" alt="">
+        <img class="theme-bg" :src="userTheme.Src" alt="">
         <div class="head-con">
             <div class="theme-show">
-                <Dropdown placement="bottom-end" trigger="click">
-                    <a href="javascript:void(0)" class="theme-title">
-                        ...切换主题
-                    </a>
+                <Dropdown placement="bottom-end" divided trigger="click" v-show="userTheme.IsSelf">
+                    <a href="javascript:void(0)" class="theme-title">{{tremeName}}</a>
                     <DropdownMenu slot="list">
-                        <DropdownItem v-for="(item,index) in theme_list" :key="index">{{item.name}}</DropdownItem>
+                        <DropdownItem  v-for="(item,index) in theme_list" :key="index" @click.native="dropdownItem(item)" :name="item.Src">{{item.Name}}</DropdownItem>
                     </DropdownMenu>
                 </Dropdown>
             </div>
@@ -17,7 +15,7 @@
                     <img :src="userInfo.HeadIcon" alt=".">
                 </div>
                 <p class="my-name">{{ userInfo.NickName }}
-                  <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i>
+                  <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
                 <p class="my-Introduction-con">{{ userInfo.Description }}</p>
             </div>
@@ -26,7 +24,8 @@
 </template>
 
 <script>
-  export default {
+import {getALLTheme, getUserTheme, setUserTheme} from '../../../service/clientAPI'
+export default {
     name: 'Head',
     components: {},
     props: {
@@ -35,10 +34,16 @@
         default: function () {
           return {}
         }
+      },
+      userId : {
+        type: String,
+        default: ''
       }
     },
     data() {
       return {
+        tremeName: '...切换主题',
+        userTheme: {},
         theme_list: [
           {
             name: '炫彩紫',
@@ -68,22 +73,34 @@
             name: '炫彩紫',
             url: '../../../assets/images/default_theme.png'
           }
-        ],
-        my_introduction: {
-          img_url: 'http://www.jzbl.com/ImgTemp/SlidesImgs/1551774656.jpg',
-          name: '杨幂',
-          sex: 0,
-          introduction: '一个有态度的设计师，斤斤计较斤斤计较斤斤计较可口可乐，坎坎坷坷坎坎坷坷坎坎坷坷坎坎坷坷坎坎坷坷看看坎坎坷坷坎坎坷坷坎坎坷坷剋坎坎坷坷坎坎坷坷坎坎坷坷坎坎坷坷坎'
+        ]
+      }
+    },
+    created () {
+      this.getALLThemeList();
+      this.getUsere()
+    },
+    methods: {
+      async getUsere () {
+        let msg = await getUserTheme (this.userId);
+        if (msg) {
+          this.userTheme = msg
+        }
+      },
+      async getALLThemeList () {
+        let msg = await getALLTheme();
+        if (msg) {
+          this.theme_list = msg;
+        }
+      },
+      async dropdownItem (row) {
+        let msg = await setUserTheme(row.ThemeId);
+        if (msg) {
+          this.userTheme.Src = row.Src;
         }
       }
     }
-    ,
-    methods: {
-      changeMenu(name) {
-        console.log(name)
-      }
-    }
-  }
+}
 </script>
 <style lang="less" scoped>
     .head-box {

@@ -70,7 +70,6 @@
                 </div>
                 <div class="recommend-tags">
                     <span class="recommend-title">推荐标签: </span>
-                    <!-- include -->
                     <span v-for="(item, index) in labelList" :key="item.LabelId" :class="!ruleLabel(item) ?'tag-item' : 'tag-item no-drop'" @click="pushSelect(index, ruleLabel(item))">
                         <i class="icon iconfont">&#xe61c;</i>
                         {{ item.LabelName }}

@@ -1,7 +1,7 @@
 <template>
     <div class="he-and-i-tribal">
         <div class="he-and-i-tribal-content">
-            <heads :userInfo="tribeInfo"/>
+            <heads :userInfo="tribeInfo" :userId="userId"/>
             <div class="he-and-i-con-box">
                 <ul class="he-and-i-con-box-nav">
                     <li v-for="(item,index) in tribeInfo.MyOrOtherMeun" :key="item.id"
@@ -82,6 +82,7 @@
             let id = query.id ? query.id : store.getters.getToken.UserId;
             const data = await store.dispatch('getTribeInfo', id);
             return {
+                userId: id,
                 tribeInfo: data
             }
         },

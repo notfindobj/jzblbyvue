@@ -179,10 +179,18 @@
                 <span class="message-items-left-label">个人擅长</span>
             </div>
             <div class="message-items-right">
-                <span class="message-items-right-fill">马上填写</span>
-                <span>自己的标签，让大家全方位了解你！</span>
+                <span>
+                    <Button v-if="userLabel.length > 0" class="userLabel-label" v-for="(items, index) in userLabel" :key="index" icon="ios-add" size="small">{{items.LabelName}}</Button>
+                    <span v-else>
+                        <span class="message-items-right-fill">马上填写</span>
+                        <span>自己的标签，让大家全方位了解你！</span>
+                    </span>
+                </span>
+                <div class="message-items-right-edit" v-if="isLabel">
+                    <Input style="width:230px" v-model="userLabelModel" search enter-button="添加" @on-search="addLabel" placeholder="请输入标签" />
+                </div>
             </div>
-            <div class="message-items-operation">编辑</div>
+            <div class="message-items-operation" @click="isLabel = !isLabel">{{isLabel ? '收起' : '编辑'}}</div>
         </div>
         <!-- 职业信息 -->
         <div class="message-items message-items-text">
@@ -270,10 +278,12 @@
         SetUserNickNameData,
         GetUserExpertise,
         GetThisUserJobInfo,
-        SetOrAddThisUserJobInfo
+        SetOrAddThisUserJobInfo,
+        getQALabel,
+        addUserLabel
     } from '../../../service/clientAPI'
     import { setHearImg } from '../../../LocalAPI'
-    import { mapState, mapGetters } from 'vuex'
+    import { mapState, mapGetters} from 'vuex'
 
     export default {
         data() {
@@ -283,6 +293,7 @@
                 means: true,
                 educational: true,
                 career: true,
+                isLabel: false,
                 Privacy: [],
                 city: [],
                 count: [],
@@ -312,7 +323,9 @@
                     CityArea: "",
                     CountyArea: "",
                 },
-                JurisdiInfo: {}
+                JurisdiInfo: {},
+                userLabel: [],
+                userLabelModel: ''
             }
         },
         computed: {
@@ -324,6 +337,7 @@
             this.getUserInfo();
             this.getUserExpertiseList();
             this.getThisUserJobInfoList();
+            this.getUserLabel()
         },
         methods: {
             // 上传头像
@@ -532,11 +546,35 @@
                 if (msg) {
                     this.Jurisdi = msg.respOperatPrivacy;
                 }
+            },
+            /**
+             * 
+             * 
+             * 
+             */
+            async getUserLabel () {
+                let queryData = {
+                    BelongTypes:"",
+                    page: 1,
+                    funModels: '1'
+                }
+                let msg = await getQALabel(queryData);
+                if (msg) {
+                    this.userLabel = msg.labelData || [];
+                }
+            },
+            async addLabel () {
+                let msg  = await addUserLabel({LabelName:  this.userLabelModel});
+                if (msg) {
+                    this.userLabelModel = '';
+                    this.userLabel.push(msg)
+                }
             }
         }
     }
 </script>
 <style lang="less" scoped>
+    
     .message {
         &-items {
             padding-bottom: 30px;
@@ -559,7 +597,12 @@
 
             &-right {
                 width: 100%;
-
+                .userLabel-label {
+                    margin-left: 10px;
+                    &:first-child {
+                        margin-left: 0;
+                    }
+                }
                 &-header {
                     width: 100px;
                     height: 100px;
@@ -576,17 +619,14 @@
                     color: #FF3C00;
                     cursor: pointer;
                 }
-
                 &-edit {
                     margin-top: 30px;
-
                     &-lable {
                         margin-left: 15px;
                         font-size: 14px;
                         color: #999999;
                     }
                 }
-
                 &-save {
                     margin-top: 30px;
                 }

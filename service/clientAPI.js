@@ -206,3 +206,20 @@ export const unBindQQOrWX = async params => {
 export const getEmoticon = async params => {
   return await request.get(`Other/GetEmoticon`, params)
 }
+// 获取表情包
+export const addUserLabel = async params => {
+  return await request.post(`UserInfo/AddLabel`, params)
+}
+
+// 获取所有主题接口
+export const getALLTheme = async params => {
+  return await request.get(`UserInfo/GetALLTheme`, params)
+}
+// 获取所有主题接口
+export const getUserTheme = async params => {
+  return await request.get(`UserInfo/GetUserTheme?userId=${params}`)
+}
+// 设置主题接口
+export const setUserTheme = async params => {
+  return await request.post(`UserInfo/SetUserTheme?themeId=${params}`)
+}
