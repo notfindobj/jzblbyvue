@@ -1,5 +1,5 @@
 <template>
-    <div class="view-box-model" @click="handleClose">
+    <div class="view-box-model" @click="handleClose" >
         <div class="view-box" @click.stop>
              <div id="view">
                 <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">

@@ -105,7 +105,7 @@ export default {
                 // 放大
                 document.getElementById(fullScreen).addEventListener('click', function () {
                     _this.isShowViewBox = !_this.isShowViewBox;
-                    preventSliding('model-postion');
+                    _this.stop()
                     _this.itemVideo.videoTime = that.currentTime();
                     _this.itemVideo.videoId = _this.videoRef
                     that.pause()
@@ -128,7 +128,7 @@ export default {
             );
             },
         closVideoModel (row) {
-            preventSliding('model-postion')
+            this.move()
             this.isShowViewBox = !this.isShowViewBox
             this[this.videoCon].currentTime(this.itemVideo.videoTime);
             this[this.videoCon].play();
@@ -230,6 +230,18 @@ export default {
                 }
             }
         },
+        //滑动限制
+        stop(){
+            var mo=function(e){e.preventDefault();};
+            document.body.style.overflow='hidden';
+            document.addEventListener("touchmove",mo,false);//禁止页面滑动
+            },
+        //取消滑动限制
+        move(){
+            var mo=function(e){e.preventDefault();};
+            document.body.style.overflow='';//出现滚动条
+            document.removeEventListener("touchmove",mo,false);
+        }
     }
 };
 </script>
