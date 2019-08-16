@@ -75,16 +75,15 @@ export function addEvent(obj,type,fn){
 let Top = null
 export function preventSliding (className) {
     let isOpen = document.body.className === '' ? false : true;
-    debugger
-    if (!isOpen) {
-        Top = $(window).scrollTop();
-        document.body.classList.add(className)
-        $('body').css("top", - Top + "px");
-    } else {
-        document.body.classList.remove(className)
-        $('body').removeAttr("style");
-        $(window).scrollTop(Top);
-    }
+    // if (!isOpen) {
+    //     Top = $(window).scrollTop();
+    //     document.body.classList.add(className)
+    //     $('body').css("top", - Top + "px");
+    // } else {
+    //     document.body.classList.remove(className)
+    //     $('body').removeAttr("style");
+    //     $(window).scrollTop(Top);
+    // }
 }
 // 
 export function baseUrlRegExp (str) {

@@ -45,14 +45,16 @@
                 <div class="video-wrap" v-if="videoInfo.Imgs.length > 0">
                     <div class="photo-wrap">
                         <div class="video" @click.stop="">
-                          <videos :itemVideo="videoInfo.Imgs[0]" :detaDetails="videoInfo" />
+                          <videos 
+                          :itemVideo="videoInfo.Imgs[0]" 
+                          :detaDetails="videoInfo" />
                         </div>
                     </div>
                 </div>
             </div>
             <div class="block-foot" @click.stop="">
                 <div class="foot-child">
-                    <span @click="clickCollection(!videoInfo.itemOperateData.IsCollection)">
+                    <span @click="clickCollection(videoInfo)">
                       <i :class="videoInfo.itemOperateData.IsCollection ? 'icon iconfont active-tool icon-cc-star': 'icon iconfont  icon-favorite'"></i>
                       <span :class="{ active: videoInfo.itemOperateData.IsCollection }">收藏</span>
                     </span>
@@ -68,7 +70,7 @@
                     <span>评论</span>
                 </div>
                 <div class="foot-child">
-                  <span @click="clickLike(!videoInfo.itemOperateData.IsLike)">
+                  <span @click="clickLike(videoInfo)">
                     <i :class="videoInfo.itemOperateData.IsLike ? 'icon iconfont active-tool icon-like-b' : 'icon iconfont icon-dianzan1'"></i>
                     <span :class="{ active: videoInfo.itemOperateData.IsLike }">点赞</span>
                   </span>
@@ -91,8 +93,7 @@
 <script>
   import share from '../share'
   import Comment from '../video/comment'
-
-  import { setComments, setthumbsUp , getUserProAndFans, setFollow} from '../../service/clientAPI'
+  import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow} from '../../service/clientAPI'
   export default {
     props: {
       videoInfo: {
@@ -162,20 +163,40 @@
         }
       },
       // 收藏
-      clickCollection(flag) {
-        this.$emit('clickCollection', this.index, flag)
+      async clickCollection(row) {
+        let queryData = {
+            ItemId: row.ItemId,
+            TalkType: 2,
+            IsDelete: row.itemOperateData.IsCollection
+        }
+        let collectionMsg = await setCollection(queryData);
+        if (collectionMsg) {
+              if (row.itemOperateData.IsCollection) {
+                this.$set(row.itemOperateData, 'CollectionCount', row.itemOperateData.CollectionCount - 1)
+            } else {
+                this.$set(row.itemOperateData, 'CollectionCount', row.itemOperateData.CollectionCount + 1)
+            }
+            this.$set(row.itemOperateData, 'IsCollection', !row.itemOperateData.IsCollection)
+        }
       },
-      // 赞
-      clickLike(flag) {
-        this.$emit('clickLike', this.index, flag)
+      // 项目点赞
+      async clickLike(row) {
+        let queryData = {
+            ItemId: row.ItemId,
+            LikeType: 1,
+            IsDelete: row.itemOperateData.IsLike
+        }
+        let thumbsUpMsg = await setthumbsUp(queryData);
+        if (row.itemOperateData.IsLike) {
+            this.$set(row.itemOperateData, 'LikeCount', row.itemOperateData.LikeCount - 1)
+        } else {
+            this.$set(row.itemOperateData, 'LikeCount', row.itemOperateData.LikeCount + 1)
+        }
+        this.$set(row.itemOperateData, 'IsLike', !row.itemOperateData.IsLike)
       },
       // 转发
       textShare () {
         this.configModal.isModal = true
-      },
-      // 点击弹出详情
-      clickVideo() {
-        this.$emit('clickVideo', this.videoInfo, this.index);
       },
       // 点击评论
       clickComment() {

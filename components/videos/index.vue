@@ -15,6 +15,7 @@
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 import {getRanNum, addEvent, preventSliding} from '../../plugins/untils/public'
+import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow} from '../../service/clientAPI'
 export default {
     name: getRanNum(15),
     props: {
@@ -79,16 +80,29 @@ export default {
                 }
             }, function () {
                 let that =this;
-                let fullScreen = getRanNum()
+                let fullScreen = getRanNum();
+                let favorite = getRanNum(5);
+                let dianzan = getRanNum(4);
+                let IsLike = _this.detaDetails.itemOperateData.IsLike;
+                let IsCollection = _this.detaDetails.itemOperateData.IsCollection;
                 let barHtml = `
                     <div class="video-bar">
-                        <span class="iconfont icon-favorite"></span>
-                        <span class="video-star iconfont icon-dianzan1"></span>
+                        <span class="video-star iconfont ${IsLike ? 'icon-like-b' : 'icon-dianzan1'}" data-video="${IsLike}" style="color: ${IsLike? '#FF3C00': ''}" id="${dianzan}"></span>
+                        <span class="iconfont ${IsCollection ? 'icon-cc-star': 'icon-favorite'}" style="color: ${IsLike? '#FF3C00': ''}" id="${favorite}" data-video="${IsCollection}"></span>
                         <span class="iconfont icon-shipinfangda" id="${fullScreen}"></span>
                     </div>`
                 let bar = document.createElement('div');
                 bar.innerHTML = barHtml;
                 this.controlBar.el().appendChild(bar);
+                // 收藏
+                document.getElementById(favorite).addEventListener('click', function () {
+                    _this.Collection(_this.detaDetails, favorite)
+                })
+                // 点赞
+                document.getElementById(dianzan).addEventListener('click', function () {
+                    _this.thumbsUp(_this.detaDetails, dianzan)
+                })
+                // 放大
                 document.getElementById(fullScreen).addEventListener('click', function () {
                     _this.isShowViewBox = !_this.isShowViewBox;
                     preventSliding('model-postion');
@@ -122,6 +136,40 @@ export default {
         clickEnlarge () {
             console.log('asdsdasd')
         },
+        // 收藏
+        async Collection(item, domId) {
+            let queryData = {
+                ItemId: item.ItemId,
+                TalkType: 2,
+                IsDelete: item.itemOperateData.IsCollection
+            }
+            let collectionMsg = await setCollection(queryData);
+            if (collectionMsg) {
+                 if (item.itemOperateData.IsCollection) {
+                    this.$set(item.itemOperateData, 'CollectionCount', item.itemOperateData.CollectionCount - 1)
+                } else {
+                    this.$set(item.itemOperateData, 'CollectionCount', item.itemOperateData.CollectionCount + 1)
+                }
+                this.setDom(domId)
+                this.$set(item.itemOperateData, 'IsCollection', !item.itemOperateData.IsCollection)
+            }
+        },
+        // 项目点赞
+        async thumbsUp(item, domId) {
+            let queryData = {
+                ItemId: item.ItemId,
+                LikeType: 1,
+                IsDelete: item.itemOperateData.IsLike
+            }
+            let thumbsUpMsg = await setthumbsUp(queryData);
+            if (item.itemOperateData.IsLike) {
+                this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
+            } else {
+                this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
+            }
+            this.setDom(domId)
+            this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
+        },
         // 获取评论
         async getComment() {
             let queryData = {
@@ -153,7 +201,35 @@ export default {
                     }
                 } catch (error) {}
             });
-        }
+        },
+        // 小视频框
+        setDom (domId) {
+            if (domId) {
+                let dataDom = document.getElementById(domId);
+                let data = dataDom.getAttribute('data-video');
+                if (data === 'true') {
+                    dataDom.style.color = '';
+                    if (domId.length === 4) {
+                        dataDom.classList.remove('icon-like-b')
+                        dataDom.classList.add('icon-dianzan1')
+                    } else {
+                        dataDom.classList.remove('icon-cc-star')
+                        dataDom.classList.add('icon-favorite')
+                    }
+                    dataDom.setAttribute('data-video', 'false');
+                } else {
+                    dataDom.style.color = '#FF3C00';
+                    if (domId.length === 4) {
+                        dataDom.classList.remove('icon-dianzan1');
+                        dataDom.classList.add('icon-like-b');
+                    } else {
+                        dataDom.classList.remove('icon-favorite');
+                        dataDom.classList.add('icon-cc-star');
+                    }
+                    dataDom.setAttribute('data-video', 'true');
+                }
+            }
+        },
     }
 };
 </script>

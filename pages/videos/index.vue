@@ -6,18 +6,8 @@
                 :key="item.TalkId"
                 :videoInfo="item"
                 :index="index"
-                @clickVideo="clickVideo(item, index)"
-                @clickCollection="clickCollection"
-                @clickLike="clickLike"
             ></video-item>
         </div>
-        <!-- <video-modal
-            :isShowModal="isShowModal"
-            :videoInfo="videoInfo"
-            @closeModal="closeVideoModal"
-            @likeSuccess="likeSuccess"
-            @collectionSuccess="collectionSuccess"
-        /> -->
         <ToTop :isShowToTop="false"></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
     </crollBox>
@@ -54,13 +44,6 @@
             }
         },
         methods: {
-            debounce(fn, wait) {    
-                var timeout = null;    
-                return function() {        
-                    if(timeout !== null)   clearTimeout(timeout);        
-                    timeout = setTimeout(fn, wait);    
-                }
-            },
             onChangePage (num, type = 1) {
                 this.pageNum = num;
                 this.getList(num, type);
@@ -103,62 +86,6 @@
                     this.pageNum = data.paginationData.page;
                     this.records = data.paginationData.records;
                 }
-            },
-            // 点击视频
-            clickVideo(video, index) {
-                this.videoInfo = video;
-                this.watchIndex = index;
-                this.isShowModal = true;
-            },
-            // 关闭视频弹框
-            closeVideoModal() {
-                this.isShowModal = false;
-            },
-            // 弹出框点赞成功
-            likeSuccess(flag) {
-                this.clickLike(this.watchIndex, flag);
-            },
-            // 收藏
-            collectionSuccess(flag) {
-                this.clickCollection(this.watchIndex, flag);
-            },
-            // 点击点赞
-            clickLike(index, flag) {
-                setthumbsUp({
-                    ItemId: this.videoList[index].ItemId,
-                    LikeType: 2,
-                    CommentsId: '',
-                    IsDelete: !flag
-                }).then(() => {
-                    let videoInfo = JSON.parse(JSON.stringify(this.videoList[index]));
-                    videoInfo.itemOperateData.IsLike = flag;
-                    flag ? videoInfo.itemOperateData.LikeCount += 1 : videoInfo.itemOperateData.LikeCount -= 1;
-                    this.$set(this.videoList, index, videoInfo);
-                    // 如果是点击的弹框中的，就更新videoInfo
-                    if (this.isShowModal) {
-                        this.$set(this.videoInfo, 'itemOperateData', videoInfo.itemOperateData)
-                    }
-                })
-            },
-            // 点击收藏
-            clickCollection(index, flag) {
-                setCollection({
-                    ItemId: this.videoList[index].ItemId,
-                    ItemName: this.videoList[index].TalkTitle,
-                    ItemTitleImg: '',
-                    IsDelete: !flag,
-                    TalkType: 2
-                }).then(() => {
-                    let videoInfo = JSON.parse(JSON.stringify(this.videoList[index]));
-                    videoInfo.itemOperateData.IsCollection = flag;
-                    flag ? videoInfo.itemOperateData.CollectionCount += 1 : videoInfo.itemOperateData.CollectionCount -= 1;
-                    this.$set(this.videoList, index, videoInfo);
-
-                    // 如果是点击的弹框中的，就更新videoInfo
-                    if (this.isShowModal) {
-                        this.$set(this.videoInfo, 'itemOperateData', videoInfo.itemOperateData)
-                    }
-                })
             }
         },
         mounted() {
@@ -170,7 +97,6 @@
                 TalkType: 2,
                 Page: 0
             })
-
             return {
                 data,
                 videoList: data.retModels,

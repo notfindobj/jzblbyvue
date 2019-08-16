@@ -2,8 +2,9 @@
     <div class="download-box">
         <div class="download-box-con">
             <ul class="head-boxs" v-show="headList && headList.length > 0">
-                <li :class="currentIndex === index ? 'li-active' : ''" v-for="(item,index) in headList"
-                    @click="change(item,index)" :key="index" >{{item.TypeName}}
+                <li :class="currentIndex === item.TypeId ? 'li-active' : ''" v-for="(item,index) in headList"
+                    @click="change(item,item.TypeId)" :key="index" >
+                    {{item.TypeName}}
                 </li>
             </ul>
               <template v-for="(item, index) in dataList">
@@ -30,7 +31,7 @@
     layout: 'main',
     data() {
       return {
-        currentIndex: 0
+        currentIndex: '0'
       }
     },
     components: {
