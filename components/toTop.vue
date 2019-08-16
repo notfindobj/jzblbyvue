@@ -7,6 +7,7 @@
     </div>
 </template>
 <script>
+import {addEvent} from '../plugins/untils/public'
 export default {
     props: {
         isShowToTop: {
@@ -20,9 +21,9 @@ export default {
         }
     },
     mounted() {
-      window.addEventListener('scroll', () => {
-        this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      })
+        addEvent(window,'scroll',function(){
+            this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        })
     },
     methods: {
         scrollToTop() {

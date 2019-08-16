@@ -1,6 +1,6 @@
 <template>
     <div class="test_two_box">
-        <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
+        <video :id="videoRef" :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
             <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
         </video>
         <videoModel 
@@ -14,7 +14,7 @@
 <script>
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
-import {getRanNum} from '../../plugins/untils/public'
+import {getRanNum, addEvent, preventSliding} from '../../plugins/untils/public'
 export default {
     name: getRanNum(15),
     props: {
@@ -37,19 +37,21 @@ export default {
             myPlayer: null,
             videoRef: '',
             videoCon: '',
-            isShowViewBox: false
+            isShowViewBox: false,
+            isPlay: '',
+            controlPlay: {}
         };
     },
     created () {
         this.videoRef = getRanNum(10);
         this.videoCon = getRanNum(11);
+        this.controlPlay = getRanNum(16);
+        this.isPlay = getRanNum(8);
+        this[this.isPlay] = false;
     },
     mounted() { 
         this.initVideo();
-        window.onscroll = () => {
-            //变量t是滚动条滚动时，距离顶部的距离
-            const h = document.documentElement.clientHeight;
-        }
+        this.initScroll()
     },
     methods: {
         initVideo() {
@@ -61,7 +63,7 @@ export default {
                 //自动播放属性,muted:静音播放
                 autoplay: false,
                 //建议浏览器是否应在<video>加载元素后立即开始下载视频数据。
-                preload: "auto",
+                preload: "meta",
                 //设置视频播放器的显示宽度（以像素为单位）
                 width: "500px",
                 //设置视频播放器的显示高度（以像素为单位）
@@ -88,7 +90,8 @@ export default {
                 bar.innerHTML = barHtml;
                 this.controlBar.el().appendChild(bar);
                 document.getElementById(fullScreen).addEventListener('click', function () {
-                    _this.isShowViewBox = !_this.isShowViewBox
+                    _this.isShowViewBox = !_this.isShowViewBox;
+                    preventSliding('model-postion');
                     _this.itemVideo.videoTime = that.currentTime();
                     _this.itemVideo.videoId = _this.videoRef
                     that.pause()
@@ -96,18 +99,22 @@ export default {
                 //开始播放视频
                 this.on('play', function () {
                     console.log('开始播放');
+                    this[this.videoCon] = true
                 });
                 //结束
                 this.on('ended', function () {
+                    this[this.videoCon] = false
                     console.log('结束播放');
                 });
                 this.on('pause', function () {
                     console.log('暂停播放');
+                    this[this.videoCon] = false
                 });
                 }            
             );
             },
         closVideoModel (row) {
+            preventSliding('model-postion')
             this.isShowViewBox = !this.isShowViewBox
             this[this.videoCon].currentTime(this.itemVideo.videoTime);
             this[this.videoCon].play();
@@ -129,12 +136,29 @@ export default {
                 return str
             } else {
                 return this.fileBaseUrl+ str
+            }
+        },
+        initScroll () {
+            let that = this;
+            addEvent(window,'scroll',function(){
+                try {
+                    let controlPlay = that.$refs[that.videoRef].getBoundingClientRect();
+                    if (that[that.isPlay] && (controlPlay.top < -290 || controlPlay.top > 230)) {
+                        that[that.videoCon].pause()
+                        that[that.isPlay] = false
+                    }
+                    if (!that[that.isPlay] && controlPlay.top > 0 && controlPlay.top < 230) {
+                        that[that.videoCon].play();
+                        that[that.isPlay] = true
+                    }
+                } catch (error) {}
+            });
         }
-      }
     }
 };
 </script>
 <style lang="less" scoped>
+
 .video-js .vjs-big-play-button {
     /* 这里的样式重写 */
 }
@@ -174,6 +198,10 @@ video:not(:root):-webkit-full-screen {
 }
 </style>
 <style lang="less">
+    .model-postion {
+        position: fixed;
+        width: 100%;
+    }
     .video-bar {
         display: flex;
         line-height: 29px;

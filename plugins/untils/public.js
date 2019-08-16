@@ -61,6 +61,31 @@ export function getRanNum(lenght = 8){
     }
     return  result.join('');
 }
+// 处理多个scroll事件
+export function addEvent(obj,type,fn){
+    if(obj.attachEvent){
+        obj.attachEvent('on'+type,function(){
+            fn.call(obj);
+        })
+    }else{
+        obj.addEventListener(type,fn,false);
+    }
+}
+// 
+let Top = null
+export function preventSliding (className) {
+    let isOpen = document.body.className === '' ? false : true;
+    debugger
+    if (!isOpen) {
+        Top = $(window).scrollTop();
+        document.body.classList.add(className)
+        $('body').css("top", - Top + "px");
+    } else {
+        document.body.classList.remove(className)
+        $('body').removeAttr("style");
+        $(window).scrollTop(Top);
+    }
+}
 // 
 export function baseUrlRegExp (str) {
     let reg = RegExp(/\http:\/\/www./);
