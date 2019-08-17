@@ -224,26 +224,27 @@
                 } catch (error) {}
             },
             async clickCate(index) {
-                // let attrList = [];
-                // let query = {};
-                // // let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.dataBase));
-                // this.ItemAttributesEntities.forEach((item, attrIndex) => {
-                //     if (index >= attrIndex) {
-                //         attrList.push({
-                //             ArrEnCode: item.ItemSubAttributeCode,
-                //             ArrId: item.ItemAttributesId
-                //         })
-                //     }
-                // });
-                // query = dataBase.reqItemList
-                // query.ClassTypeArrList = attrList;
-                // let serverBataBase = {
-                //     key: 'dataBase',
-                //     value: query
-                // }
-                // this.$store.dispatch('Serverstorage', serverBataBase);
-                // let msgs = await setDemo('dataBase', serverBataBase);
-                // this.$router.push({name: "dataBase-id", query: {id: query.Id }})
+                let attrList = [];
+                let query = {};
+                let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                this.ItemAttributesEntities.forEach((item, attrIndex) => {
+                    if (index >= attrIndex) {
+                        query = item
+                        attrList.push({
+                            AttrKey: item.ItemAttributesId, AttrValue: item.ItemSubAttributeId
+                        })
+                    }
+                });
+                dataBase.ClassTypeArrList.push(...attrList)
+                // 搜索页导航数据
+                let baseSearchNav = {
+                    key: 'baseSearchNav',
+                    value: dataBase
+                    
+                }
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                this.$router.push({name: "dataBase-id", query: {id: query.ItemSubAttributeId}})
             },
             initLazy() {
                 $("img[data-original]").lazyload()

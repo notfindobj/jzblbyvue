@@ -1,6 +1,6 @@
 <template>
     <div>
-        <TopAd></TopAd>
+        <!-- <TopAd></TopAd> -->
         <Navigation></Navigation>
         <nuxt/>
         <Foot></Foot>

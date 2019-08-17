@@ -10,7 +10,9 @@
                     <p class="discuss-title-content-time">{{items.CreateDate}}</p>
                 </div>
             </div>
-            <div class="discuss-content" v-html="items.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
+            <div class="discuss-content">
+                <emotHtml v-model="items.Message"/>
+            </div>
             <div class="discuss-footer">
                 <span class="discuss-footer-dianzan" @click="somePraise(items)" :style="`color:${items.islikes ? '#FF3C00;' : ''} `">
                     <i v-if="items.islikes" class="icon iconfont icon-like-b"></i>
@@ -42,7 +44,9 @@
                         <span class="discuss-reply-title-name">{{sub.NickName}}：</span>
                         <span>{{sub.CreateDate}}</span>
                     </div>
-                    <div class="discuss-reply-content" v-html="sub.Message.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></div>
+                    <div class="discuss-reply-content">
+                        <emotHtml v-model="sub.Message"/>
+                    </div>
                     <div class="discuss-reply-footer">
                         <span class="discuss-footer-dianzan" @click="somePraise(sub)" :style="`color:${sub.islikes ? '#FF3C00;' : ''} `">
                             <i v-if="sub.islikes" class="icon iconfont icon-like-b"></i>
@@ -70,7 +74,6 @@
 </template>
 <script>
 import comment from '../comment'
-import {getEmotionList} from '../../plugins/untils/public'
 export default {
     props: {
         discussData:{
@@ -89,9 +92,6 @@ export default {
             list: []
         }
     },
-    async created () {
-      this.list = await getEmotionList()
-    },
     methods: {
         setDiscuss (index) {
             this.isDiscuss.includes(index) ? this.isDiscuss = this.isDiscuss.filter(n => n !== index) : this.isDiscuss.push(index)
@@ -101,22 +101,6 @@ export default {
         },
         openMuchReply (index) {
             this.muchReply.includes(index) ? this.muchReply = this.muchReply.filter(n => n !== index) : this.muchReply.push(index)
-        },
-        emotion (res) {
-            let word = res.replace(/\[|\]/gi,'');
-            let wordShow = true
-            let wordContent = ''
-            let wordContentHtml = ''
-            this.list.forEach(ele => {
-            if (wordShow) {
-                if (ele.content === word) {
-                    wordContent = ele.title
-                    wordContentHtml = `<img style="width: 25px;" src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
-                    wordShow = false
-                }
-            }
-            })
-            return wordContentHtml
         },
         // 评论
         commentValue (val) {

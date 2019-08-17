@@ -159,7 +159,7 @@ export const setWechatPay = async params => {
 }
 // 支付下载接口
 export const downloadFile = async params => {
-  return await request.downFile(`AllPay/DownloadFile?itemId=${params}`)
+  return await request.post(`AllPay/DownloadFile?itemId=${params}`)
 }
 // 绑定微信登录
 export const bindingByWX = async params => {

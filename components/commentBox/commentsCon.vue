@@ -121,23 +121,6 @@ export default {
       somePraise(item) {
         this.$emit('somePraise', item)
       },
-      emotion(res) {
-        let word = res.replace(/\[|\]/gi, '');
-        const list = JSON.parse(localStorage.getItem('Emotions'));
-        let wordShow = true
-        let wordContent = ''
-        let wordContentHtml = ''
-        list.forEach(ele => {
-          if (wordShow) {
-            if (ele.content === word) {
-              wordContent = ele.title
-              wordContentHtml = `<img style="width: 25px;" src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
-              wordShow = false
-            }
-          }
-        })
-        return wordContentHtml
-      },
       goTodetails(inx) {
         alert(inx)
       },

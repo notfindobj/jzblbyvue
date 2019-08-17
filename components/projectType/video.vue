@@ -3,7 +3,7 @@
         <div class="public-block" :class="{'comment-active': isShowComment}">
             <div class="block-head">
                 <div class="block-head-left" @mouseleave="hideWorks()">
-                    <div class="avatar" @click="goToPersonal(videoInfo)" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 0)">
+                    <div class="avatar" @click="goToPersonal(videoInfo)" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)">
                         <img :src="videoInfo.HeadIcon" alt="">
                     </div>
                     <div class="info">
@@ -11,7 +11,7 @@
                         <p class="time">{{ videoInfo.CreateDate }}</p>
                     </div>
                 </div>
-                <div class="tool-box" v-if="isTool === videoInfo.ItemId" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)" @mouseleave="hideWorks()">
+                <div class="tool-box" v-if="isTool === videoInfo.ItemId" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 0)" @mouseleave="hideWorks()">
                   <div class="tool-box-top">
                    <div>
                       <p>项目</p>
