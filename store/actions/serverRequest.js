@@ -87,4 +87,8 @@ export const serverRequest = {
   async getItemList({commit}, params) {
     return await request.post(`ItemList/GetItemListData`, params)
   },
+  // 获取友情连接
+  async getFriendLinks({commit}, params) {
+    return await request.get(`Other/GetFriendLinks`, params)
+  },
 }

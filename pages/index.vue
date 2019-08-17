@@ -423,11 +423,6 @@
                         title: data.ItemAttributesFullName,
                     }
             }
-            // if (JSON.stringify(row) !== '{}') {
-            //     baseSearchNav.value.ClassTypeArrList.push(
-            //         {AttrKey: row.ItemAttributesId, AttrValue: row.ItemAttributesId}
-            //     )
-            // }
             this.$store.dispatch('Serverstorage', baseSearchNav);
             let msgs = await setDemo('baseSearchNav', baseSearchNav);
             // 搜索页项目数据
