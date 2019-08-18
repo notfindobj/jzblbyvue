@@ -31,7 +31,7 @@
     layout: 'main',
     data() {
       return {
-        currentIndex: '0'
+        // currentIndex: '0'
       }
     },
     components: {
@@ -41,7 +41,11 @@
     props: {
       headList: Array,
       dataList: Array,
-      paginationData: Object
+      paginationData: Object,
+      currentIndex: {
+        type: String,
+        default: '0'
+      },
     },
     methods: {
       // 点击收藏
@@ -57,11 +61,6 @@
           dataInfo.itemOperateData.IsCollection = flag;
           flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
           this.$set(this.dataList, index, dataInfo);
-
-          // // 如果是点击的弹框中的，就更新videoInfo
-          // if (this.isShowModal) {
-          //   this.$set(this.dataList, 'itemOperateData', dataInfo.itemOperateData)
-          // }
         })
       },
 
@@ -77,11 +76,6 @@
           itemInfo.itemOperateData.IsLike = flag;
           flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
           this.$set(this.dataList, index, itemInfo);
-
-          // // 如果是点击的弹框中的，就更新videoInfo
-          // if (this.isShowModal) {
-          //   this.$set(this.videoInfo, 'itemOperateData', itemInfo.itemOperateData)
-          // }
         })
       },
       handleReachBottom() {
@@ -93,7 +87,7 @@
       },
       change(item, inx) {
         if (this.currentIndex !== inx) {
-          this.currentIndex = inx;
+          // this.currentIndex = inx;
           this.$emit('changeType', item.TypeId, inx)
         }
       }

@@ -10,6 +10,7 @@
                     @clickCollection="clickCollection"
                     @clickLike="clickLike"
                     @goToPersonal="goToPersonal"
+                    @goDetail="goDetail"
                 ></ImageAndText>
                 <VideoItem
                     :key="index"
@@ -132,10 +133,13 @@ export default {
       goToPersonal (row) {
         this.$router.push({
           name: 'HeAndITribal-id',
-          params: {
+          query: {
             id: row.UserId
           }
         })
+      },
+      goDetail (id) {
+        // this.$router.push({name: 'QuestionsAndAnswers',query: {id: id}})
       },
       // 点击点赞
       clickLike(index, flag) {
@@ -162,7 +166,9 @@ export default {
 
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
-
+    .ivu-page {
+      text-align: center;
+    }
     .photos-wrap {
         width: 700px;
         display: flex;

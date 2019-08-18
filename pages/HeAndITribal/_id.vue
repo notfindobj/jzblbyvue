@@ -14,6 +14,7 @@
                         <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                             <HeAndIDownload 
                                 v-if="PersonalCenter === 'HeAndIDownload'"
+                                :currentIndex="currentItem"
                                 :headList="headList" 
                                 :dataList="dataList" 
                                 @changeType="getList"/>
@@ -62,6 +63,7 @@
         data() {
             return {
                 currentIndex: 0,
+                currentItem: '0',
                 headList: [],
                 dataList: [],
                 followList: [],
@@ -112,7 +114,7 @@
                     return false;
                 }
                 this.pageNum++;
-                this.getList();
+                this.getList(undefined, 1);
             }, 1500),
             // 选择二级菜单
             getTypeMeunList (item, inx) {
@@ -155,6 +157,11 @@
             },
             // 获取发布数据
             getList(id, index) {
+                if (index) {
+                    this.currentItem = index
+                } else {
+                     this.currentItem = '0'
+                }
                 this.$store.dispatch('getSelfOrOthertribeInfo', {
                     Page: this.pageNum,
                     Rows: 8,
@@ -164,10 +171,10 @@
                 }).then(res => {
                     if (res.retModels instanceof Array) {
                         if (index) {
+                            this.dataList = this.dataList.concat(res.retModels);
+                        } else {
                             this.dataList = [];
                             this.dataList = res.retModels;
-                        } else {
-                            this.dataList = this.dataList.concat(res.retModels);
                         }
                         this.total = res.paginationData.total;
                         this.pageNum = res.paginationData.page;

@@ -440,7 +440,7 @@
             }
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
-            let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: data.ItemAttributesId}});
+            let routeData = this.$router.resolve({ name: 'dataBase'});
             window.open(routeData.href, '_blank');
         },
         async viewItem(row, item, val) {

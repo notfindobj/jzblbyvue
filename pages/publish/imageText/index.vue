@@ -124,7 +124,7 @@
 
       // 隐藏弹出框
       hiddenModal() {
-        this.isShowUpload = false;
+        // this.isShowUpload = false;
         this.isShowEmotion = false;
       },
 

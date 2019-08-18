@@ -11,8 +11,8 @@
                         <div>
                             <i class="icon iconfont icon-face"
                                @click.stop="isShowReplyEmotion = !isShowReplyEmotion">&#xe64e;</i>
-                            <i class="icon iconfont icon-photo">&#xe61a;</i>
-                            <i class="icon iconfont icon-tags">&#xe610;</i>
+                            <!-- <i class="icon iconfont icon-photo">&#xe61a;</i> -->
+                            <!-- <i class="icon iconfont icon-tags">&#xe610;</i> -->
                         </div>
                         <Button type="primary" @click="handleReply">回复</Button>
                     </div>

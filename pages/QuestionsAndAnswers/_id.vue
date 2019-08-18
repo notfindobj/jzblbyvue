@@ -1,13 +1,21 @@
 <template>
     <div class="container" @click="isShowEmotion = false">
+        <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)"
+            @mouseleave="mousemoveRight" @click="moveLeftClick(1)">
+            <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt="">
+        </div>
+        <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)"
+            @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
+            <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
+        </div>
         <div class="main-left">
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
             <div class="ql-container ql-snow">
-                <div class="ql-editor detail-text" v-html="detailInfo.TalkContent">
+                <div class="ql-editor detail-text">
                     <emotHtml v-model="detailInfo.TalkContent"/>
                 </div>
             </div>
-            <div class="img-row">
+            <div class="img-row" :ref="mathId">
                 <div class="img" v-for="item in detailInfo.Imgs" :key="item.smallImgUrl" >
                     <img :src="fileBaseUrl + item.smallImgUrl" alt="">
                 </div>
@@ -36,10 +44,9 @@
                     ></emotion>
                 </div>
             </div>
-
-
             <div class="answer-list">
                 <v-comment
+                    :isShape="false"
                     :isShow="isShowComment"
                     :itemId="detailInfo.ItemId"
                     :commentList="commentList"
@@ -101,8 +108,9 @@
         <ToTop></ToTop>
     </div>
 </template>
-
 <script>
+    import Viewer from 'viewerjs';
+    import 'viewerjs/dist/viewer.css';
     import Emotion from '../../components/Emotion/index'
     import Comment from '../../components/video/comment'
     import ToTop from '../../components/toTop'
@@ -117,7 +125,13 @@
                 commentList: [],    // 评论列表
                 isShowEmotion: false,
                 isShowComment: true,
-                isLoadingComment: false
+                isLoadingComment: false,
+                mathId: '',
+                isBtnSile: false,
+                isLeftPngF: require('../../assets/images/leftButtonColor.png'),
+                isLeftPngR: require('../../assets/images/leftButton.png'),
+                isLeft: false,
+                isRight: false,
             }
         },
         components: {
@@ -126,6 +140,32 @@
             'v-comment': Comment
         },
         methods: {
+            moveLeftClick(val) {
+                if (val === 2) {
+                    if (this.itemLength - 1 === this.itemIndex) {
+                    this[this.ViewerIndex].close();
+                    this[this.ViewerIndex].hide();
+                    } else {
+                    this[this.ViewerIndex].next()
+                    } 
+                }
+                if (val === 1) {
+                    if (this.itemIndex === 0) {
+                    this[this.ViewerIndex].close();
+                    this[this.ViewerIndex].hide();
+                    } else {
+                    this[this.ViewerIndex].prev()
+                    }
+                }
+            },
+            mousemoveLeft() {
+                this.isLeft = true
+                this.isRight = true
+            },
+            mousemoveRight() {
+                this.isLeft = false
+                this.isRight = false
+            },
             // 关注/取消关注
             handleGz(flag) {
                 setFollow({
@@ -199,13 +239,66 @@
                     this.isLoadingComment = false;
                     this.commentList = res;
                 })
-            }
+            },
+            initView() {
+                const ViewerDom = document.getElementById(this.mathId);
+                let _this = this;
+                _this.$nextTick(() => {
+                    _this[_this.ViewerIndex] = new Viewer(_this.$refs[this.mathId], {
+                        url: 'data-original',
+                        button: false,
+                        toolbar: true,
+                        navbar: true,
+                        title: false,
+                        zoomRatio: 0.4,
+                        maxZoomRatio: 3,
+                        show: function (e) {
+                        console.log(e)
+                        },
+                        ready: function () {
+                        console.log('ready')
+                        },
+                        build: function () {
+                        console.log('build')
+                        },
+                        view: function(e) {
+                        _this.itemLength = e.target.childElementCount;
+                        _this.itemIndex = e.detail.index;
+                        },
+                        built: function () {
+                        console.log('built')
+                        },
+                        shown: function (e) {
+                        _this.isBtnSile = true;
+                        var that = e.target.viewer;
+                        $(e.target.viewer.viewer).find(".viewer-canvas").on("dblclick", "img", function () {
+                            that.hide();
+                        });
+                        },
+                        hidden() {
+                        _this.isBtnSile = false;
+                        // _this.Viewer.destroy();
+                        // _this.viewShowBox()
+                        }
+                    })
+                })
+            },
+            getRanNum(){
+                let result = [];
+                for(let i=0;i<8;i++){
+                    let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
+                    result.push(String.fromCharCode(65+ranNum));
+                }
+                return  result.join('');
+            },
         },
-
         created() {
+            this.mathId = this.getRanNum();
             this.getComment();
         },
-
+        mounted () {
+            this.initView()
+        },
         async asyncData({ store, params }) {
             const data = await store.dispatch('getQADetail', params.id);
 
@@ -215,7 +308,6 @@
         }
     }
 </script>
-
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
 
@@ -276,7 +368,7 @@
             }
 
             .answer-list {
-                margin-top: 20px;
+                margin-top: 40px;
 
                 .answer-item {
                     padding: 20px 0 15px;

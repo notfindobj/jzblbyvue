@@ -5,7 +5,7 @@
                 <Input v-model="userItem.mobile" size="large" type="text" placeholder="请输入手机号码"/>
             </FormItem>
             <FormItem prop="passWord">
-                <Input v-model="userItem.password" size="large" type="password" placeholder="请输入密码"/>
+                <Input v-model="userItem.password" size="large" type="password" placeholder="请输入密码" @keyup.enter.native="handleSubmit"/>
             </FormItem>
             <FormItem>
                 <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit">登录</Button>
@@ -18,14 +18,14 @@
             </p>
             <p @click="retrieve('retrieve')">忘记密码？</p>
         </div>
-        <div class="third-party">第三方登录</div>
+        <!-- <div class="third-party">第三方登录</div>
         <div class="third-party-iocn">
             <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
             <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
-        </div>
-        <div class="block-none">
+        </div> -->
+        <!-- <div class="block-none">
             您好！此网站暂未对外开放，了解更多请联系：15121173536
-        </div>
+        </div> -->
     </div>
 </template>
 <script>

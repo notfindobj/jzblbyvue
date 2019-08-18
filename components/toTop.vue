@@ -3,7 +3,7 @@
         <div class="to-top" @click="scrollToTop" v-show="isShowToTop">
             <Icon type="ios-arrow-up" color="#fff" size="30"/>
         </div>
-        <div class="content" @click="goPublish">发布</div>
+        <div class="content pushObj"  @click="goPublish">发布</div>
     </div>
 </template>
 <script>
@@ -45,8 +45,9 @@ export default {
 <style lang="less" scoped>
     .to-top, .content {
         position: fixed;
-        right: 10px;
-        bottom: 150px;
+        left: 50%;
+        margin-left: 600px;
+        bottom: 110px;
         width: 50px;
         height: 50px;
         background-color: #C1C1C1;
@@ -55,15 +56,24 @@ export default {
         cursor: pointer;
         transition: all .1s ease-in;
     }
-
     .content {
         bottom: 200px;
         margin-bottom: 1px;
         color: #fff;
         font-size: 16px;
     }
-
     .content:hover, .to-top:hover {
         background-color: #ff3c00;
+        
+    }
+    .pushObj {
+        top: 156px;
+        background-color: #ff3c00;
+    }
+    .ivu-icon-ios-arrow-up {
+        color: #ff3c00 !important;
+    }
+    .to-top:hover .ivu-icon-ios-arrow-up {
+        color: #ffffff !important;
     }
 </style>

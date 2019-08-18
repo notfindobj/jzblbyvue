@@ -235,6 +235,7 @@
                         })
                     }
                 });
+                dataBase.ClassTypeArrList.splice(1);
                 dataBase.ClassTypeArrList.push(...attrList)
                 // 搜索页导航数据
                 let baseSearchNav = {
@@ -243,8 +244,8 @@
                     
                 }
                 this.$store.dispatch('Serverstorage', baseSearchNav);
+                this.$router.push({ name: "dataBase"});
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
-                this.$router.push({name: "dataBase-id", query: {id: query.ItemSubAttributeId}})
             },
             initLazy() {
                 $("img[data-original]").lazyload()
@@ -338,16 +339,20 @@
                 if (obj.isPay) {
                     let msg = await downloadFile(obj.ItemId);
                     if (msg) {
-                        let name = msg.split('&')[1]
-                        var eleLink = document.createElement('a');
-                        eleLink.download = '';
-                        eleLink.style.display = 'none';
-                        eleLink.href = msg.split('&')[0];
-                        // 触发点击
-                        document.body.appendChild(eleLink);
-                        eleLink.click();
-                        // 然后移除
-                        document.body.removeChild(eleLink);
+                       try {
+                            let name = msg.split('&')[1]
+                            var eleLink = document.createElement('a');
+                            eleLink.download = '';
+                            eleLink.style.display = 'none';
+                            eleLink.href = msg.split('&')[0];
+                            // 触发点击
+                            document.body.appendChild(eleLink);
+                            eleLink.click();
+                            // 然后移除
+                            document.body.removeChild(eleLink);
+                       } catch (error) {
+                         console.log('下载出错');
+                       }
                     }
                     return false
                 }

@@ -54,13 +54,6 @@
         mounted() {
             this.$store.dispatch('getMenu').then(async (res) => {
                 this.oneMeun = res.RetMenuData;
-                let searchMenu = {
-                    key: 'searchMenu',
-                    value: {}
-                }
-                searchMenu.value = res.RetMenuData;
-                this.$store.dispatch('Serverstorage', searchMenu);
-                let msgs = await setDemo('searchMenu', searchMenu);
             })
         },
         methods: {
@@ -104,7 +97,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
-                let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: type.ItemAttributesId}});
+                let routeData = this.$router.resolve({ name: 'dataBase'});
                 window.open(routeData.href, '_blank');
             },
             // 点击一级分类
@@ -137,7 +130,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
-                let routeData = this.$router.resolve({ name: 'dataBase-id', query: {id: cate.ItemAttributesId}});
+                let routeData = this.$router.resolve({ name: 'dataBase'});
                 window.open(routeData.href, '_blank');
             }
         }

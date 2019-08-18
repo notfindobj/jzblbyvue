@@ -6,23 +6,23 @@ export const getMenu = async (params) => {
 
 // qq登录
 export const loginByQQ = async () => {
-  return await request.post('Account/Thirdparty_QQ_binding?redirectUri=http://www.demo.jzbl.com/qq')
+  return await request.post('Account/Thirdparty_QQ_binding?redirectUri=http://www.jzbl.com/qq')
 }
 
 // 微信登录
 export const loginByWX = async () => {
-  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.demo.jzbl.com/wx')
+  return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.jzbl.com/wx')
 }
 
 // 微信登录获取用户信息
 export const getUserByWX = async (params) => {
-  const url = process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/front/wxLogin' : 'http://127.0.0.1:8889/front/wxLogin';
+  const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/front/wxLogin' : 'http://127.0.0.1:8889/front/wxLogin';
   return await request.post(url, params)
 }
 
 // 微信qq获取用户信息
 export const getUserByQQ = async (params) => {
-  const url = process.env.NODE_ENV === 'production' ? 'http://www.demo.jzbl.com/front/qqLogin' : 'http://127.0.0.1:8889/front/qqLogin';
+  const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/front/qqLogin' : 'http://127.0.0.1:8889/front/qqLogin';
   return await request.post(url, params)
 }
 

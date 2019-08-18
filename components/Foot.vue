@@ -55,7 +55,6 @@ export default {
             let msg =  await this.$store.dispatch('getFriendLinks');
             if (msg) {
                 this.friendLinks = msg;
-                console.log(this.friendLinks)
             }
         }
     }

@@ -45,6 +45,7 @@
     .emotion-box {
         /* width: 420px; */
         box-sizing: border-box;
+        max-width: 390px;
         padding: 15px;
         background-color: #fff;
         box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.15);

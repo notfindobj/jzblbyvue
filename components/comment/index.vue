@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="hideEmtion">
         <div class="comment-box">
             <div class="comment-img" v-if="uPImgList.length > 0">
                 <div class="comment-img-items" v-for="(items, index) in uPImgList" :key="index" :style="`height:${width}px;width:${width}px;`">
@@ -16,11 +16,11 @@
                 @on-change="onChange"
                 :rows="emotionRows" 
                 :placeholder="placeholder" />
-            <div class="comment">
-                <div class="comment-smile">
+            <div class="comment" @click.stop="">
+                <div class="comment-smile" >
                     <i class="iconfont icon-smile" @click="showEmotion"></i>
                     <input type="file" ref="files" @change="fileSelected" style="display:none">
-                    <i class="iconfont icon-tupian" @click="showImg"></i>
+                    <!-- <i class="iconfont icon-tupian" @click="showImg"></i> -->
                 </div>
                 <div>
                     <span class="comment-btn" @click="comment">
@@ -73,6 +73,9 @@ export default {
       Emotion
     },
     methods:{
+        hideEmtion () {
+            this.isEmotion = !this.isEmotion
+        },
         onChange (e) {
             this.$emit('input', this.commentValue)
         },

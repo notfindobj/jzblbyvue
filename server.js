@@ -3,6 +3,7 @@ const consola = require('consola')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const app = require('express')()
+const timeout = require('connect-timeout')
 const session = require('express-session');
 const axios = require('axios')
 const qs = require('qs')
@@ -19,8 +20,11 @@ app.use(bodyParser.json({
 }));  //据需求更改limit大小
 app.use(cookieParser());
 axios.defaults.withCredentials = true;
-//  session 存储数据
 
+
+
+
+//  session 存储数据
 app.use(session({
     secret: 'demo_test',
     name: 'mydemo',                         //这里的name值得是cookie的name，默认cookie的name是：connect.sid

@@ -33,7 +33,7 @@
     import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
     import { mapGetters } from 'vuex'
     import { setDemo } from '../../LocalAPI'
-    import { _throttle } from '../../plugins/untils/public'
+    import { _throttle ,scrollToTop} from '../../plugins/untils/public'
     export default {
         middleware: 'authenticated',
         head() {
@@ -68,7 +68,9 @@
         },
         async asyncData({ app, store, route }) {
             let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
+            console.log('baseSearchItem>>>..........', baseSearchItem)
             let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
+            console.log('baseSearchNav', baseSearchNav)
             baseSearchItem.Pagination.Page = 1;
             let showLayout = baseSearchNav.title !== '建筑规范';
             // 导航
@@ -146,7 +148,7 @@
             },
             //一级菜单
             async getItemsBaseData(row) {
-                this.showLayout = row.AttrName !== '建筑规范';
+                this.showLayout = row.ItemAttributesFullName !== '建筑规范';
                 // 搜索页导航数据
                 let baseSearchNav = {
                     key: 'baseSearchNav',
@@ -172,7 +174,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
-                this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } });
+                this.$router.push({ name: "dataBase"});
                 this.getNavList()
                 this.getItemsList()
                 // 去除搜索框内容
@@ -212,7 +214,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
-                this.$router.push({ name: "dataBase-id", query: { id: row.ItemAttributesId } })
+                this.$router.push({ name: "dataBase"});
                 this.getNavList()
                 this.getItemsList()
                     // 去除搜索框内容
@@ -343,6 +345,7 @@
                         this.RspItemDatas = this.RspItemDatas.concat(searchNav.RspItemDatas);
                     } else {
                         this.RspItemDatas = searchNav.RspItemDatas; //项目数据
+                        scrollToTop()
                     }
                 }
             }

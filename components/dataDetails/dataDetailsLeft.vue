@@ -136,15 +136,9 @@
             built: function () {
               console.log('built')
             },
-            view: async function (e) {
-              _this.itemLength = e.target.childElementCount;
+            view: function (e) {
+              _this.itemLength = document.querySelectorAll('.viewer-list > li').length;
               _this.itemIndex = e.detail.index;
-              // let ItemImgSrc = document.querySelector('.viewer-canvas img').src;
-              // let queryData = {
-              //   ItemId: _this.detaDetails.ItemId,
-              //   ItemImgSrc: '',
-              //   ScopeType: 1
-              // }
             },
             shown: function (e) {
               _this.isBtnSile = true;

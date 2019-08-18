@@ -62,7 +62,7 @@
       goPersonalCenter() {
         this.$router.push({
           name: 'HeAndITribal-id',
-          params: {
+          query: {
             id: this.detaDetails.UserId
           }
         })

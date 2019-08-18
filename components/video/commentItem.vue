@@ -9,8 +9,7 @@
                     <span class="user-name">{{ commentInfo.NickName }}</span>
                     <span class="publish-time">{{ commentInfo.CreateDate }}</span>
                 </div>
-                <div class="comment-content">
-                <emotHtml v-model="commentInfo.Message"/></div>
+                <div class="comment-content"><emotHtml v-model="commentInfo.Message"/></div>
                 <p class="opera-row">
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
@@ -58,14 +57,14 @@
         isLast: false,
         showCount: 3,
         commitWidth: '96%',
-        replyInputWith: 974,
+        replyInputWith: 850,
         isLike: this.commentInfo.islikes
       }
     },
     methods: {
       clickReply() {
         if (this.$route.name === 'QuestionsAndAnswers-id') {
-          this.replyInputWith = 575;
+          this.replyInputWith = 460;
         }
         this.isShowInput = !this.isShowInput;
         // if (this.commentInfo.IsCoutReply) {
@@ -188,6 +187,7 @@
         }
 
         .comment-content {
+          text-align: left;
             font-size: 14px;
             color: #333;
             line-height: 24px;

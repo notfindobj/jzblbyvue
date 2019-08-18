@@ -3,7 +3,7 @@
         <div class="nav-list">
             <p>在以下分类中找：</p>
             <ul>
-                <li v-for="(item, index) in getSessionStorage.searchMenu" :class="item.ItemAttributesId === currentInex ? 'li-active' : ''" :key="index" @click="choseSome(index,item)">
+                <li v-for="(item, index) in oneMeun" :class="item.ItemAttributesId === currentInex ? 'li-active' : ''" :key="index" @click="choseSome(index,item)">
                     {{item.ItemAttributesFullName}}
                     <img src="../../assets/images/sanjiao.png"/>
                 </li>
@@ -64,6 +64,7 @@ export default {
         return {
             currentInex: '',
             currentName: '',
+            oneMeun: [],
             clicked: -1
         }
     },
@@ -73,6 +74,9 @@ export default {
     created() {
         this.currentName = this.getSessionStorage.baseSearchNav.title;
         this.currentInex = this.getSessionStorage.baseSearchNav.ClassTypeArrList[0].AttrKey;
+        this.$store.dispatch('getMenu').then(async (res) => {
+            this.oneMeun = res.RetMenuData;
+        })
     },
     methods: {
         // 一级

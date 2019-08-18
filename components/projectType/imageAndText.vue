@@ -48,7 +48,7 @@
             <!-- 内容 -->
             <div class="content" >
                 <p v-if="itemInfo.TalkType !== 3"><emotHtml v-model="itemInfo.TalkContent"/></p>
-                <div v-if="itemInfo.TalkType === 3" class="ql-editor detail-text" v-html="itemInfo.TalkContent"></div>
+                <div v-if="itemInfo.TalkType === 3" @click="goDetail(itemInfo.ItemId)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
@@ -99,16 +99,9 @@
   import 'viewerjs/dist/viewer.css';
   import Comment from '../video/comment'
   import share from '../share'
+  import {getRanNum} from '../../plugins/untils/public'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow } from '../../service/clientAPI'
-  function getRanNum(){
-    let result = [];
-      for(let i=0;i<8;i++){
-        let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
-        result.push(String.fromCharCode(65+ranNum));
-      }
-    return  result.join('');
-  }
-  var name = getRanNum()
+  var name = getRanNum(5)
   export default {
     name: name,
     props: {
@@ -132,15 +125,7 @@
       share
     },
     data() {
-      function getRanNum(){
-        let result = [];
-          for(let i=0;i<8;i++){
-            let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
-              result.push(String.fromCharCode(65+ranNum));
-          }
-        return  result.join('');
-      }
-      let ViewerIndex = this.getRanNum()
+      let ViewerIndex = getRanNum(6)
       return {
         ViewerIndex,
         fileBaseUrl: process.env.fileBaseUrl,
@@ -164,12 +149,15 @@
       }
     },
     created () {
-      this.mathId = this.getRanNum();
+      this.mathId = getRanNum(7);
     },
     mounted () {
       this.initView()
     },
     methods: {
+      goDetail(id) {
+        this.$emit('goDetail', id);
+      },
       moveLeftClick(val) {
         if (val === 2) {
             if (this.itemLength - 1 === this.itemIndex) {
@@ -195,14 +183,6 @@
       mousemoveRight() {
         this.isLeft = false
         this.isRight = false
-      },
-      getRanNum(){
-        let result = [];
-          for(let i=0;i<8;i++){
-            let ranNum = Math.ceil(Math.random() * 25); //生成一个0到25的数字
-              result.push(String.fromCharCode(65+ranNum));
-          }
-        return  result.join('');
       },
       // 获取项目和粉丝量
       async showWorks (id, ids) {
@@ -502,5 +482,11 @@
         border-radius: 3px;
       }
     }
-    
+    .qaa {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 12px 0;
+      color: #000000;
+      cursor: pointer;
+    }
 </style>

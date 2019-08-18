@@ -2,8 +2,8 @@
     <div class="head-box">
         <img class="theme-bg" :src="userTheme.Src" alt="">
         <div class="head-con">
-            <div class="theme-show">
-                <Dropdown placement="bottom-end" divided trigger="click" v-show="userTheme.IsSelf">
+            <div class="theme-show" v-show="userTheme.IsSelf">
+                <Dropdown placement="bottom-end" divided trigger="click" >
                     <a href="javascript:void(0)" class="theme-title">{{tremeName}}</a>
                     <DropdownMenu slot="list">
                         <DropdownItem  v-for="(item,index) in theme_list" :key="index" @click.native="dropdownItem(item)" :name="item.Src">{{item.Name}}</DropdownItem>

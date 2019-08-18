@@ -1,6 +1,6 @@
 <template>
-    <div style="position: relative;" v-show="isShow" @click="isShowEmotion = false">
-        <div class="comment-shape" :style="{right: right}"></div>
+    <div class="comment-shape-t" v-show="isShow" @click="isShowEmotion = false">
+        <div v-show="isShape" class="comment-shape "  :style="{right: right}"></div>
         <div class="comment">
             <div class="comment-head" v-if="isShowInput">
                 <div class="comment-avatar">
@@ -11,8 +11,8 @@
                     <div class="comment-tool">
                         <div>
                             <i class="icon iconfont icon-face" @click.stop="isShowEmotion = !isShowEmotion">&#xe64e;</i>
-                            <i class="icon iconfont icon-photo">&#xe61a;</i>
-                            <i class="icon iconfont icon-tags">&#xe610;</i>
+                            <!-- <i class="icon iconfont icon-photo">&#xe61a;</i> -->
+                            <!-- <i class="icon iconfont icon-tags">&#xe610;</i> -->
                         </div>
                         <Button type="primary" @click="handleComment">评论</Button>
                     </div>
@@ -69,6 +69,10 @@
       isShowInput: {
         type: Boolean,
         default: true
+      },
+      isShape: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
@@ -77,7 +81,7 @@
         isShowEmotion: false,
         showCount: 3,   // 显示几条评论
         isLast: false,
-        width: '1101px',
+        width: '96%',
         right: '439px'
       }
     },
@@ -129,13 +133,17 @@
 </script>
 
 <style lang="less" scoped>
+    .comment-shape-t {
+      position: relative;
+      text-align: right;
+    }
     .comment {
         position: relative;
-        margin-top: 4px;
-        padding: 20px 30px;
-        top: 10px;
+        display: inline-block;
+        padding: 20px 90px;
+        top: 1px;
         background-color: #fff;
-
+        width: 93%;
         .comment-head {
             display: flex;
             justify-content: space-between;

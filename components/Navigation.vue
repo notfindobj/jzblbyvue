@@ -32,8 +32,8 @@
                                 <Icon type="ios-arrow-down"></Icon>
                             </a>
                             <DropdownMenu slot="list">
-                                <DropdownItem>关于我们</DropdownItem>
-                                <DropdownItem>炸酱面</DropdownItem>
+                                <DropdownItem disabled>功能开发中</DropdownItem>
+                                <!-- <DropdownItem>炸酱面</DropdownItem> -->
                             </DropdownMenu>
                         </Dropdown>
                     </li>
@@ -49,7 +49,7 @@
                         </nuxt-link>
                     </div>
                     <div class="main-content-left-search">
-                        <Input v-model="searchData" style="width:450px;" size="large">
+                        <Input v-model="searchData" style="width:450px;" size="large" @keydown.enter.native="searchBaseData">
                             <Select slot="prepend" v-model="searchTitle" style="width:100px">
                                 <Option v-for="(items, indexs) in menuData" :value="indexs" :key="indexs">{{items.ItemAttributesFullName}} </Option>
                             </Select>
@@ -77,7 +77,7 @@
                 <li @click="goAboutUs">建筑书店</li>
                 <li @click="goMytribe">我的部落</li>
             </ul>
-            <div class="main-nav-publish" @click="publish">发布</div>
+            <!-- <div class="main-nav-publish" @click="publish">发布</div> -->
         </div>
         <signPage></signPage>
     </div>
@@ -189,13 +189,14 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
-                if (this.$route.name === "dataBase-id") {
-                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId}});
+                if (this.$route.name === "dataBase") {
+                    // let routeData = this.$router.resolve({ name: 'dataBase'});
+                    this.$router.push({ name: "dataBase"});
                     sessionStorage.setItem('searchIndex', this.searchTitle);
                     sessionStorage.setItem('searchKeyWords', this.searchData);
                     window.location.reload();
                 } else {
-                    this.$router.push({ name: "dataBase-id", query: { id: this.menuData[this.searchTitle].ItemAttributesId}})
+                    this.$router.push({ name: "dataBase"});
                 }
             },
             // 在线地图
@@ -210,7 +211,7 @@
             },
             // 百度搜索
             onSearch() {
-                if (!this.baiduData) return false
+                // if (!this.baiduData) return false
                 window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${ this.baiduData }`)
             },
             publish() {
