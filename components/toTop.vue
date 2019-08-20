@@ -51,6 +51,7 @@ export default {
         width: 50px;
         height: 50px;
         background-color: #C1C1C1;
+        border-radius: 5px;
         text-align: center;
         line-height: 50px;
         cursor: pointer;
@@ -69,6 +70,7 @@ export default {
     .pushObj {
         top: 156px;
         background-color: #ff3c00;
+        border-radius: 50%;
     }
     .ivu-icon-ios-arrow-up {
         color: #ff3c00 !important;

@@ -91,4 +91,12 @@ export const serverRequest = {
   async getFriendLinks({commit}, params) {
     return await request.get(`Other/GetFriendLinks`, params)
   },
+  // 获取历史记录
+  async getQueryHistory({commit}, params) {
+    return await request.post(`Query/QueryHistory`, params)
+  },
+  // 获取要展示的搜索的按钮
+  async getQueryBtnData({commit}, params) {
+    return await request.post(`Query/QueryBtnData`, params)
+  },
 }

@@ -16,7 +16,7 @@
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                     <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
                 </div>
-                <div class="search">
+                <div class="search" @click="searchPach">
                     <i class="icon iconfont">&#xe608;</i>
                 </div>
                 <div class="user">
@@ -83,6 +83,9 @@
                 window.location.reload();
             }
         },
+        searchPach () {
+            this.$router.push({ name: "searchPage" });
+        },
         async signOut() {
             let msg = await logout();
             this.$router.push({name: "index"});
@@ -143,7 +146,11 @@
                 }
             }
             .search {
+                cursor: pointer;
                 margin-left: 20px;
+                &:hover {
+                    color: #FF3C00;
+                }
             }
             .user {
                 display: flex;

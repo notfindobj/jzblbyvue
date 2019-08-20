@@ -223,3 +223,7 @@ export const getUserTheme = async params => {
 export const setUserTheme = async params => {
   return await request.post(`UserInfo/SetUserTheme?themeId=${params}`)
 }
+// 搜索
+export const getQueryData = async params => {
+  return await request.post(`Query/QueryData`, params)
+}
