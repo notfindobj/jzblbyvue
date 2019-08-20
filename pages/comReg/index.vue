@@ -8,7 +8,7 @@
                 <Input v-model="formLeft.input2" style="width: 300px;"></Input>
             </FormItem>
             <FormItem label="营业执照:" prop="name">
-                <div @click="changeFile" class="ivu-icon ivu-icon-ios-camera">
+                <div @click="changeFile" class="updataFile-camera ivu-icon ivu-icon-ios-camera">
                     <input ref="updataFile" type="file" style="display: none;">
                 </div>
                 <!-- <Input v-model="formLeft.input3" style="width: 300px;"></Input> -->
@@ -41,6 +41,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .updataFile-camera {
+        font-size: 26px;
+        border: 1px dotted #8e8e8e;
+        cursor: pointer;
+        padding: 10px;
+        &:hover {
+            border: 1px dotted #ff3c00;
+        }
+    }
     .comreg {
         width: 1000px;
         padding: 30px;
