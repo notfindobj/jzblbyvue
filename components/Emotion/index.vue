@@ -1,10 +1,7 @@
 <template>
     <div @click.stop="">
         <div class="emotion-box" :style="{height: height + 'px' }">
-            <!-- <div class="emotion-box-line" v-for="(line, i) in list" :key="i"> -->
-                <emotion class="emotion-item" v-for="(item, i) in list" :key="i"
-                    @click.native.stop="clickHandler(item)" >{{item.title}}</emotion>
-            <!-- </div> -->
+            <emotion class="emotion-item" v-for="(item, i) in list" :key="i" @click.native.stop="clickHandler(item)" >{{item.title}}</emotion>
         </div>
     </div>
 </template>
@@ -21,11 +18,7 @@
     },
     data() {
       return {
-        list: [
-          [
-            { content: '微笑', title: 'zhongguozan_org' }
-          ]
-        ]
+        list: []
       }
     },
     async mounted () {

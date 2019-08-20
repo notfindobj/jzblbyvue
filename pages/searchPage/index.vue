@@ -2,22 +2,18 @@
     <div class="search-main">
         <div class="search-main-bar">
             <div style="display:inline-block;width: 80%;">
-                <Input search enter-button="搜索" placeholder="" />
+                <Input search enter-button="搜索" v-model="searchData" placeholder="" @keydown.enter.native="getQueryBtnDataList" @on-search="getQueryBtnDataList"/>
             </div>
         </div>
         <div class="search-main-title">
             <ul>
-                <li :class="searchTop === index ? 'active-search' : '' " v-for="(item, index) in btnData" :key="index" @click="switchAttr(item, index)">{{item.Text}}</li>
-                <!-- <li class="active-search">找人</li>
-                <li>文章</li> -->
+                <li :class="searchTop === item.Id ? 'active-search' : '' " v-for="(item, index) in btnData" :key="index" @click="switchAttr(item, index)">{{item.Text}}</li>
             </ul>
         </div>
         <div class="search-coment">
             <div class="search-coment-left">
-                <ul class="search-coment-left-title">
-                    <li >全部</li>
-                    <li class="active-left-search">昵称</li>
-                    <li>标签</li>
+                <ul class="search-coment-left-title" v-if="twoSwitch.length > 0">
+                    <li v-for="(item, index) in twoSwitch" :key="index" :class="searchTitle === item.Id ? 'active-left-search' : ''" @click="switchTwo(item)">{{item.Text}}</li>
                 </ul>
                 <div>
                     <div class="search-item">
@@ -106,9 +102,9 @@
                     <span class="s-btn-c">清除</span>
                 </div>
                 <ul class="history">
-                    <li class="history-tems">
-                        <span>aaaaa</span>
-                        <i>X</i>
+                    <li class="history-tems" v-for="(items, index) in historyList" :key="index">
+                        <span>{{items.Name}}</span>
+                        <i @click="delSearch" class="iconfont icon-chahao3"></i>
                     </li>
                 </ul>
             </div>
@@ -122,45 +118,59 @@ export default {
     middleware: 'authenticated',
     data() {
         return {
-            searchTop: 0,
-            twoSwitch: []
+            searchTop: '',
+            searchTitle: '',
+            twoSwitch: [],
+            searchData: ''
         }
     },
     async asyncData({route, store}) {
         let btnData = await store.dispatch('getQueryBtnData');
+        let searchTop = btnData[0].Id
         let queryData = {
             TypeId: 0,
         }
-        let msg = await store.dispatch('getQueryHistory', queryData);
-        if (msg) {
-            console.log('>>>>>>>>>>>>', msg)
-            console.log(msg)
-        }
+        let historyList = await store.dispatch('getQueryHistory', queryData);
         return {
-            btnData
+            btnData,
+            searchTop,
+            historyList
         }
-        // getQueryBtnData
     },
     methods: {
         switchAttr (row, index) {
-            this.searchTop = index;
-            this.twoSwitch = row.TextBtnDatas
+            this.searchTop = row.Id;
+            this.twoSwitch = row.TextBtnDatas;
+            if (this.twoSwitch.length > 0) {
+                this.searchTitle = this.twoSwitch[0].Id
+            }
+        },
+        switchTwo (row) {
+            this.searchTitle = row.Id;
+        },
+        delSearch () {
+            console.log('删除');
         },
         async getQueryBtnDataList () {
             let queryData = {
-                QueryKey: "",
-                QueryValue: "",
-                TypeId: 0,
+                QueryKey: this.searchTop,
+                QueryValue: this.searchData,
+                TypeId: this.searchTitle,
                 Page: 1,
                 Rows: 8
             }
-            let msg = getQueryBtnData();
-            console.log()
+            let msg = await getQueryData(queryData);
         }
     }
 }
 </script>
 <style lang="less" scoped>
+    .icon-chahao3 {
+        font-size: 12px;
+        &:hover {
+            color: #ff3c00;
+        }
+    }
     .search-main {
         width: 1000px;
         margin: 0 auto;
@@ -209,6 +219,7 @@ export default {
         margin-top: 10px;
         justify-content: space-between;
         &-left {
+            width: 750px;
             &-title {
             display: flex;
             justify-content: flex-start;
