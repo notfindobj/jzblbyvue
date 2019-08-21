@@ -1,6 +1,5 @@
 <template>
     <div class="search-main">
-        {{btnData}}
         <div class="search-main-bar">
             <div style="display:inline-block;width: 80%;">
                 <Input search enter-button="搜索" v-model="searchData" placeholder="" @keydown.enter.native="getQueryBtnDataList" @on-search="getQueryBtnDataList"/>
@@ -17,81 +16,40 @@
                     <li v-for="(item, index) in twoSwitch" :key="index" :class="searchTitle === item.Id ? 'active-left-search' : ''" @click="switchTwo(item)">{{item.Text}}</li>
                 </ul>
                 <div>
-                    <div class="search-item">
+                    <div class="search-item" v-for="(items, index) in searchItems" :key="index">
                         <div class="search-item-left">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.1080.1080.180/875769b9jw8exw7awittij20u00u0n2v.jpg?Expires=1566202618&ssig=%2FlbutDFRR2&KID=imgbed,tva" alt="">
+                            <img :src="items.HeadIcon" alt="" @click="jumpRoute(items)">
                         </div>
                         <div class="search-item-right">
                             <div>
-                                <span>name</span>
-                                <span class="follow">关注</span>
+                                <span>{{items.NickName}}</span>
+                                <span :class="!items.IsFollow ? 'follow' : 'unfollow'" @click="worksFocus(items)">{{!items.IsFollow ? '关注' : '已关注'}}</span>
                             </div>
-                            <div> 
-                                浙江 丽水  个人主页
-                            </div>
-                            <ul class="user-info">
-                                <li>
-                                    <span>关注</span>
-                                    <span>42</span>
+                            <ul class="user-city">
+                                <li v-if="items.CityName">{{items.CityName}}</li>
+                                <li v-if="items.CountyName">{{items.CountyName}}</li>
+                                <li @click="jumpRoute(items)">个人部落</li>
+                            </ul>
+                            <ul class="user-info" v-if="items.Follow && items.Fans">
+                                <li v-if="items.Follow">
+                                    <span>关注:</span>
+                                    <span class="item-num">{{items.Follow}}</span>
                                 </li>
-                                <li>
-                                    <span>粉丝</span>
-                                    <span>42</span>
-                                </li>
-                                <li>
-                                    <span>微博</span>
-                                    <span>42</span>
+                                <li v-if="items.Fans">
+                                    <span>粉丝:</span>
+                                    <span class="item-num">{{items.Fans}}</span>
                                 </li>
                             </ul>
-                            <div> 
-                                简介
+                            <div v-if="items.Description"> 
+                                简介: {{items.Description}}
                             </div>
-                            <ul>
-                                <li>标签</li>
-                                <li>搞笑幽默</li>
+                            <ul v-if="items.Labels" class="user-labels">
+                                <li>标签:</li>
+                                <li>{{items.Labels}}</li>
                             </ul>
-                            <div>
-                                <span>教育信息</span>
-                                <span>广东轻工职业技术学院</span>
-                            </div>
-                        </div>
-                    </div>
-                     <div class="search-item">
-                        <div class="search-item-left">
-                            <img src="https://tva1.sinaimg.cn/crop.0.0.1080.1080.180/875769b9jw8exw7awittij20u00u0n2v.jpg?Expires=1566202618&ssig=%2FlbutDFRR2&KID=imgbed,tva" alt="">
-                        </div>
-                        <div class="search-item-right">
-                            <div>
-                                <span>name</span>
-                                <span class="follow">关注</span>
-                            </div>
-                            <div> 
-                                浙江 丽水  个人主页
-                            </div>
-                            <ul class="user-info">
-                                <li>
-                                    <span>关注</span>
-                                    <span>42</span>
-                                </li>
-                                <li>
-                                    <span>粉丝</span>
-                                    <span>42</span>
-                                </li>
-                                <li>
-                                    <span>微博</span>
-                                    <span>42</span>
-                                </li>
-                            </ul>
-                            <div> 
-                                简介
-                            </div>
-                            <ul>
-                                <li>标签</li>
-                                <li>搞笑幽默</li>
-                            </ul>
-                            <div>
-                                <span>教育信息</span>
-                                <span>广东轻工职业技术学院</span>
+                            <div v-if="items.JobInfos">
+                                <span>公司:</span>
+                                <span>{{items.JobInfos}}</span>
                             </div>
                         </div>
                     </div>
@@ -100,12 +58,12 @@
             <div class="search-coment-right">
                 <div class="card-head">
                     <h4 class="title">搜索历史</h4>
-                    <span class="s-btn-c">清除</span>
+                    <span class="s-btn-c" @click="delSearch()">清除</span>
                 </div>
                 <ul class="history">
                     <li class="history-tems" v-for="(items, index) in historyList" :key="index">
                         <span>{{items.Name}}</span>
-                        <i @click="delSearch" class="iconfont icon-chahao3"></i>
+                        <i @click="delSearch(items, index)" class="iconfont icon-chahao3"></i>
                     </li>
                 </ul>
             </div>
@@ -113,7 +71,7 @@
     </div>
 </template>
 <script> 
-import {getQueryData} from '../../service/clientAPI'
+import {getQueryData, setFollow, delQueryData} from '../../service/clientAPI'
 export default {
     layout: 'main',
     middleware: 'authenticated',
@@ -122,12 +80,15 @@ export default {
             searchTop: '',
             searchTitle: '',
             twoSwitch: [],
-            searchData: ''
+            searchData: '',
+            searchItems: []
         }
     },
     async asyncData({route, store}) {
         let btnData = await store.dispatch('getQueryBtnData');
-        let searchTop = btnData[0].Id
+        let searchTop = btnData[1].Id;
+        let twoSwitch = btnData[1].TextBtnDatas;
+        let searchTitle = twoSwitch[0].Id;
         let queryData = {
             TypeId: 0,
         }
@@ -135,37 +96,99 @@ export default {
         return {
             btnData,
             searchTop,
-            historyList
+            historyList,
+            twoSwitch,
+            searchTitle
         }
     },
     methods: {
         switchAttr (row, index) {
+            if (row.Text !== '找人') {
+                this.$Message.error('开发中,请耐心等待！')
+                return false
+            }
             this.searchTop = row.Id;
             this.twoSwitch = row.TextBtnDatas;
             if (this.twoSwitch.length > 0) {
-                this.searchTitle = this.twoSwitch[0].Id
+                this.searchTitle = this.twoSwitch[1].Id
             }
         },
         switchTwo (row) {
             this.searchTitle = row.Id;
         },
-        delSearch () {
-            console.log('删除');
+        async delSearch (item, index) {
+             let msg = ''
+            if (item) {
+                msg = await delQueryData(item.Id);
+                if (msg) {
+                    this.historyList.splice(index, 1)
+                }
+            } else {
+                msg = await delQueryData(this.historyList.join(','));
+                if (msg) {
+                    this.historyList = [];
+                }
+            }
+            
         },
         async getQueryBtnDataList () {
+            if (this.searchData === '') return false; 
             let queryData = {
-                QueryKey: this.searchTop,
+                QueryKey: this.searchTitle,
                 QueryValue: this.searchData,
-                TypeId: this.searchTitle,
+                TypeId: this.searchTop,
                 Page: 1,
-                Rows: 8
+                Rows: 20
             }
             let msg = await getQueryData(queryData);
-        }
+            if (msg) {
+                this.searchItems = msg;
+            }
+        },
+         // 关注
+        async worksFocus(item) {
+            let queryData = {
+                UserId: item.UserId,
+                IsDelete: item.IsFollow
+            };
+            let collectionMsg = await setFollow(queryData)
+            if (collectionMsg) {
+                this.$set(item, 'IsFollow', !item.IsFollow)
+            }
+        },
+        // 路由跳转
+        jumpRoute(items) {
+            if (!items.UserId) {
+                this.$Message.error('用户ID为空！');
+                return false;
+            }
+            let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
+            window.open(routeData.href, '_blank');
+        },
     }
 }
 </script>
 <style lang="less" scoped>
+    .item-num {
+        margin: 0 5px;
+        color: #ff3c00;
+    }
+    .user-city {
+        display: flex;
+        li {
+            margin-right: 5px;
+            &:last-child {
+                cursor: pointer;
+                color: #ff3c00;
+            }
+        }
+    }
+    .user-labels {
+        display: flex;
+        &:first-child {
+            margin-right: 5px;
+        }
+    }
     .icon-chahao3 {
         font-size: 12px;
         &:hover {
@@ -206,7 +229,8 @@ export default {
                             background: #ff3c00;
                             position: absolute;
                             bottom: 0px;
-                            left: 0;
+                            left: 50%;
+                            transform: translateX(-50%);
                         }
                     }
                 }
@@ -245,7 +269,8 @@ export default {
                             background: #ff3c00;
                             position: absolute;
                             bottom: 0px;
-                            left: 0;;
+                            left: 50%;
+                            transform: translateX(-50%);
                         }
                     }
                 }
@@ -284,7 +309,19 @@ export default {
         cursor: pointer;
         font-size: 14px;
         min-width: 40px;
-        color: #333;
+        color: #ff3c00;
+        height: 24px;
+        line-height: 25px;
+        padding: 4px 8px;
+        border: 1px solid #d9d9d9;
+        background: #fff;
+    }
+    .unfollow {
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        min-width: 40px;
+        color: #e8e8e8;
         height: 24px;
         line-height: 25px;
         padding: 4px 8px;

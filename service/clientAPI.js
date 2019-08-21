@@ -227,3 +227,7 @@ export const setUserTheme = async params => {
 export const getQueryData = async params => {
   return await request.post(`Query/QueryData`, params)
 }
+// 搜索
+export const delQueryData = async params => {
+  return await request.post(`Query/QueryDeleteHistory?strQueryIds=${params}`)
+}
