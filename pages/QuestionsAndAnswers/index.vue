@@ -15,6 +15,7 @@
                 </div>
             </div>
             <div class="main-right">
+                <!-- 头部 -->
                 <div class="right-top">
                     <div class='swiper-box'>
                         <div v-swiper:mySwiper="swiperOption">
@@ -40,6 +41,7 @@
                         <nuxt-link class="bottom-link" to="/">更多话题等您参与>></nuxt-link>
                     </div>
                 </div>
+                <!-- 主内容区 -->
                 <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="content">
                         <Menu mode="horizontal" theme="light" :active-name="menuIndex" class="tabs" @on-select="selectMenu">
@@ -56,25 +58,28 @@
                                     <span class="num">{{ item.ReplyCount }}</span>
                                     <span>回答</span>
                                 </div>
-                                <div class="item-info">
-                                    <h3 class="item-question" @click="goDetail(item.QAId)">{{ item.QATitle }}</h3>
-                                    <div class="question-info">
-                                        <div @click="jumpRoute(item)">
-                                            <span class="avatar">
-                                                <img :src="item.UserWebEntity.HeadIcon" alt="头像">
-                                            </span>
-                                            <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                                <div class="item-box">
+                                    <div class="item-info">
+                                        <div class="question-info">
+                                            <div @click="jumpRoute(item)">
+                                                <span class="avatar">
+                                                    <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
+                                                </span>
+                                                <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                                            </div>
+                                            <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
+                                            <span>{{item.LatestAnswerDate}}</span>
                                         </div>
-                                        <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">
-                                            {{ labelItem.FullName }}
-                                        </span>
+                                        <h3 class="item-question" @click="goDetail(item.QAId)">{{ item.QATitle }}</h3>
+                                        <div class="item-answer">
+                                            <span>回答：</span>
+                                            <emotHtml class="beyond-quest" v-model="item.LatestAnswer"/>
+                                        </div>
                                     </div>
-                                    <p class="item-answer">回答：<emotHtml v-model="item.LatestAnswer"/></p>
-                                </div>
-                                <div class="item-right">
-                                    <span>{{ item.LatestAnswerDate }}</span>
-                                    <div class="img" @click="goDetail(item.QAId)">
-                                        <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                    <div class="item-right">
+                                        <div class="img" @click="goDetail(item.QAId)">
+                                            <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -403,9 +408,9 @@ export default {
                 height: 130px;
                 border-bottom: 1px solid #d8d8d8;
                 padding: 15px 20px;
-
+                display: flex;
+                justify-content: space-between;
                 .item-left-box {
-                    float: left;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
@@ -425,31 +430,27 @@ export default {
                         line-height: 16px;
                     }
                 }
-
                 .no-answer {
                     background-image: linear-gradient(-135deg, #FAC270 0%, #F7AB3C 100%);
                 }
-
                 .item-info {
-                    float: left;
                     display: flex;
                     flex-direction: column;
                     justify-content: space-between;
                     align-items: flex-start;
                     height: 100%;
                     margin-left: 24px;
-
+                    max-width: 570px;
                     .item-question {
                         font-size: 16px;
                         color: #333;
                         line-height: 14px;
                         cursor: pointer;
+                        margin: 10px 0 ;
                     }
-
                     .question-info {
                         display: flex;
                         align-items: center;
-
                         .avatar {
                             cursor: pointer;
                             width: 24px;
@@ -474,7 +475,6 @@ export default {
                             display: inline-block;
                             line-height: 24px;
                         }
-
                         .tags {
                             margin-right: 10px;
                             padding: 2px 10px;
@@ -483,13 +483,15 @@ export default {
                             background-color: #f5f6f5;
                         }
                     }
-
                     .item-answer {
+                        display: flex;
                         font-size: 12px;
                         color: #666;
+                        flex-direction:row;
+                        height: 35px;
+                        overflow: hidden;
                     }
                 }
-
                 .item-right {
                     float: right;
                     display: flex;
@@ -524,5 +526,16 @@ export default {
             justify-content: center;
             padding-top: 30px;
         }
+    }
+    .beyond-quest {
+        height: 56px;
+        display: inline-block;
+        overflow: hidden;
+        width: 530px;
+    }
+    .item-box {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
     }
 </style>

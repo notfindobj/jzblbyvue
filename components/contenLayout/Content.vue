@@ -16,16 +16,8 @@
                             <div class="works-like">
                                 <p><i class="icon iconfont icon-chakan"></i>{{items.Views}}</p>
                                 <p>
-                                    <i class="icon iconfont icon-favorite"
-                                       v-show="!items.IsCollections"
-                                       @click.stop="clickCollections(true, index)"
-                                    ></i>
-                                    <i
-                                        class="icon iconfont"
-                                        style="color: #ff3c00; margin-right: 8px;"
-                                        v-show="items.IsCollections"
-                                        @click.stop="clickCollections(false, index)"
-                                    >&#xe69d;</i>收藏
+                                    <i class="icon iconfont icon-favorite" v-show="!items.IsCollections" @click.stop="clickCollections(true, index)" ></i>
+                                    <i class="icon iconfont"  style="color: #ff3c00; margin-right: 8px;" v-show="items.IsCollections" @click.stop="clickCollections(false, index)" >&#xe69d;</i>收藏
                                 </p>
                             </div>
                         </div>
@@ -40,7 +32,7 @@
                         </div>
                         <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"
                              @mouseleave="hideWorks(items)">
-                            <img :src="UserProAndFans.HeadIcon || items.HeadIcon" alt=""
+                            <img :src="UserProAndFans.HeadIcon || $defaultHead" alt=""
                                  @click="jumpRoute(UserProAndFans)">
                             <p>{{UserProAndFans.NickName || items.NickName}}</p>
                             <ul class="works-con-introduce">
@@ -75,7 +67,7 @@
                                 <div class="works-list-con">
                                     <div class="works-name" @click="jumpRoute(items)">
                                         <div class="avatar-wrap">
-                                            <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                                            <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon|| $defaultHead" alt="">
                                         </div>
                                         <span>{{items.NickName}}</span>
                                     </div>

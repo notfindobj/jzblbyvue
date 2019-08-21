@@ -2,7 +2,7 @@
     <div class="comment-item">
         <div class="comment-item-con">
             <div class="item-avatar">
-                <img :src="commentInfo.HeadIcon" alt="">
+                <img :src="commentInfo.HeadIcon|| $defaultHead" alt="">
             </div>
             <div class="commit-item-info" :style="{width: commitWidth}">
                 <div class="item-info-row1">

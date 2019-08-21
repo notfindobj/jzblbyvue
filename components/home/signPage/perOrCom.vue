@@ -1,7 +1,13 @@
 <template>
-    <div>
-        <div @click="goToRegister('register')">个人</div>
-        <div @click="goToRegister('comReg')">企业</div>
+    <div class="register-type">
+        <div @click="goToRegister('register')">
+            <i class="iconfont icon-geren"></i>
+            <p>个人</p>
+        </div>
+        <div @click="goToRegister('comReg')">
+            <i class="iconfont icon-company"></i>
+            <p>企业</p>
+        </div>
     </div>
 </template>
 <script>
@@ -13,3 +19,21 @@ export default {
     }
 }
 </script>
+<style lang="less" scoped>
+    .register-type {
+        display: flex;
+        justify-content: space-around;
+        >div  {
+            text-align: center;
+            cursor: pointer;
+            i {
+                font-size: 32px;
+                color: #ff3c00;
+            }
+            p {
+                font-size: 18px;
+                font-weight: bold;
+            }
+        }
+    }
+</style>

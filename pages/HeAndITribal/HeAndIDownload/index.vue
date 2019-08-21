@@ -1,7 +1,7 @@
 <template>
     <div class="download-box">
         <div class="download-box-con">
-            <ul class="head-boxs" v-show="headList && headList.length > 0">
+            <ul class="head-boxs head-boxs-two" v-show="headList && headList.length > 0">
                 <li :class="currentIndex === item.TypeId ? 'li-active' : ''" v-for="(item,index) in headList"
                     @click="change(item,item.TypeId)" :key="index" >
                     {{item.TypeName}}
@@ -126,5 +126,11 @@
                 }
             }
         }
+    }
+    .head-boxs-two{
+        position: sticky;
+        top: 40px;
+        z-index: 66;
+        border-top: 1px solid #eeeeee;
     }
 </style>

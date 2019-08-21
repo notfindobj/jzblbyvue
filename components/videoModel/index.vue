@@ -13,7 +13,7 @@
                <div class="details-box">
                  <div class="details-box-img">
                    <div class="details-box-img-img">
-                       <img :src="detaDetails.HeadIcon" style="width: 100%;height: 100%;" alt="">
+                       <img :src="detaDetails.HeadIcon || $defaultHead" style="width: 100%;height: 100%;" alt="">
                    </div>
                    <div class="details-box-img-right">
                      <p>{{detaDetails.NickName}}</p>

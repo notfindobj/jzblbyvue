@@ -48,7 +48,7 @@
             </h5>
             <ul class="he-and-i-introduction-bottom-list">
                 <li v-for="item in userInfo.TribeVisit" @click="jumpRoute(item)" :key="item.UserId" :title="item.NickName">
-                    <img  :src="item.HeadIcon" alt="用户头像">
+                    <img  :src="item.HeadIcon || $defaultHead" alt="用户头像">
                     <p>{{item.NickName}}</p>
                 </li>
             </ul>

@@ -10,6 +10,7 @@ const plugins={
         Object.keys(Filter).forEach(key => {
             Vue.filter(key, Filter[key])
         })
+        Vue.prototype.$defaultHead = require('../../assets/images/default.jpeg');
     }
 }
 import Small_Cards from '../../components/home/Small_Cards'

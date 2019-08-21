@@ -7,7 +7,7 @@
             <ul>
               <li v-for="(item,index) in followList" :key="index">
                 <div class="people-img" @click="jumpRoute(item)">
-                  <img :src="item.HeadIcon" alt="用户头像">
+                  <img :src="item.HeadIcon || $defaultHead" alt="用户头像">
                 </div>
                 <div class="people-introduction">
                   <p class="people-name">{{item.NickName}}</p>

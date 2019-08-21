@@ -12,7 +12,7 @@
             <div class="block-head" @mouseleave="hideWorks()">
                 <div class="block-head-left">
                     <div class="avatar" @click="goToPersonal(itemInfo)" @mouseenter="showWorks(itemInfo.UserId, itemInfo.ItemId)">
-                        <img :src="itemInfo.HeadIcon" alt="" >
+                        <img :src="itemInfo.HeadIcon|| $defaultHead" alt="" >
                     </div>
                     <div class="info">
                         <p class="name">{{ itemInfo.NickName }}</p>

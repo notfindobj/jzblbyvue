@@ -14,7 +14,7 @@
                     <li>欢迎您，来到建筑部落！</li>
                     <li class="Headportrait">
                         <div class="avatar" v-if="auth">
-                            <img :src="auth ? auth.HeadIcon : ''" alt="">
+                            <img :src="auth ? auth.HeadIcon :  $defaultHead" alt="">
                         </div>
                         <span class="sign-btn" v-if="!auth" @click="SignIn">登录</span>
                         <span class="sign-btn" v-if="!auth" @click="register">注册</span>

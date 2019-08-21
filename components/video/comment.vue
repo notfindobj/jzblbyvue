@@ -4,7 +4,7 @@
         <div class="comment">
             <div class="comment-head" v-if="isShowInput">
                 <div class="comment-avatar">
-                    <img :src="auth ? auth.HeadIcon : ''" alt="">
+                    <img :src="auth ? auth.HeadIcon :  $defaultHead" alt="">
                 </div>
                 <div class="comment-input-wrap" :style="{'width': width}">
                     <Input v-model="commentCon"/>

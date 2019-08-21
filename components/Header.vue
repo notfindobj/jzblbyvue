@@ -30,7 +30,7 @@
                 </ul>
                 <ul class="user">
                     <li class="user-info">
-                        <img :src="auth ? auth.HeadIcon : ''" alt="">
+                        <img :src="auth ? auth.HeadIcon : $defaultHead" alt="">
                         <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
                         <div class="user-name" v-else>
                             <span @click="enterCenter">{{auth.NickName}}</span>

@@ -40,7 +40,7 @@
                     <div class="video-content">
                         <div class="content-head">
                             <div class="avatar">
-                                <img :src="videoInfo.HeadIcon" alt="">
+                                <img :src="videoInfo.HeadIcon || $defaultHead" alt="">
                             </div>
                             <div class="head-center">
                                 <span class="nick-name">{{ videoInfo.NickName }}</span>

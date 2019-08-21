@@ -82,7 +82,7 @@
         <div class="main-right">
             <div class="right-top">
                 <div class="author-avatar">
-                    <img :src="detailInfo.HeadIcon" alt="">
+                    <img :src="detailInfo.HeadIcon || $defaultHead" alt="">
                 </div>
                 <span class="author-name">{{ detailInfo.NickName }}</span>
                 <Button type="primary" class="attention-btn" v-show="!detailInfo.IsFollow" @click="handleGz(true)">

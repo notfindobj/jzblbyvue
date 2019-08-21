@@ -23,7 +23,7 @@ export default {
             if (wordShow) {
                 if (ele.content === word) {
                     wordContent = ele.title
-                    wordContentHtml = `<img style="width: 25px;" src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
+                    wordContentHtml = `<img style="width: 25px;vertical-align: middle; " src=" http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${wordContent}_QQ.gif">`
                     wordShow = false
                 }
             }

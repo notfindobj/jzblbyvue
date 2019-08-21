@@ -1,7 +1,7 @@
 <template>
     <div class="reply-wrap">
         <div class="reply-box">
-            <img class="replay-avatar" :src="replyInfo.HeadIcon" alt="">
+            <img class="replay-avatar" :src="replyInfo.HeadIcon || $defaultHead" alt="">
             <div class="replay-content">
                 <div class="replay-info">
                     <p>

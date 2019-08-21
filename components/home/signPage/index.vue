@@ -53,6 +53,9 @@ export default {
         isItLoggedIn: function(newVal, oldVal) {
             this.oldvals = oldVal;
             this.isItLogged = newVal;
+            if (newVal === 'signIn') {
+                this.modalwidth = 400
+            }
         }
     },
     methods: {

@@ -201,7 +201,7 @@
                             <div class="text-box-content">
                                 <div class="text-box-content-had">
                                     <span class="text-box-content-had-img" @click="jumpRoute(item)">
-                                        <img :src="item.HeadIcon" alt="">
+                                        <img :src="item.HeadIcon || $defaultHead" alt="">
                                     </span>
                                 </div>
                                 <div class="text-box-content-name">{{item.NickName}}</div>

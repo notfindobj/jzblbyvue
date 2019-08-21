@@ -42,15 +42,15 @@
           <span><i>*</i>手机号码</span>
           <div class="submit-phone-con">
             <input type="text" v-model="customized.customizedMobile" >
-            <div>发送验证码</div>
+            <!-- <div>发送验证码</div> -->
           </div>
         </div>
-        <div class="submit-validation">
+        <!-- <div class="submit-validation">
           <span><i></i>验证码</span>
           <div class="submit-validation-con">
             <input type="text">
           </div>
-        </div>
+        </div> -->
         <div class="window-btn">
           <div @click="closeMask()">取消</div>
           <div @click="customMove">确定</div>

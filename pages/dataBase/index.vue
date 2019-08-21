@@ -68,9 +68,7 @@
         },
         async asyncData({ app, store, route }) {
             let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
-            console.log('baseSearchItem>>>..........', baseSearchItem)
             let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
-            console.log('baseSearchNav', baseSearchNav)
             baseSearchItem.Pagination.Page = 1;
             let showLayout = baseSearchNav.title !== '建筑规范';
             // 导航
