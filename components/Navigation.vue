@@ -13,10 +13,11 @@
                     </ul>
                     <li>欢迎您，来到建筑部落！</li>
                     <li class="Headportrait">
-                        <div class="avatar">
+                        <div class="avatar" v-if="auth">
                             <img :src="auth ? auth.HeadIcon : ''" alt="">
                         </div>
-                        <span v-if="!auth" @click="SignIn">登录</span>
+                        <span class="sign-btn" v-if="!auth" @click="SignIn">登录</span>
+                        <span class="sign-btn" v-if="!auth" @click="register">注册</span>
                         <div v-else style="display: inline-block;">
                             <span @click="enterCenter">{{auth.NickName}}</span>
                             <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
@@ -26,7 +27,7 @@
                 </ul>
                 <ul class="home-bar-content-right">
                     <li class="content">
-                         <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage"/>
+                        <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>
@@ -154,7 +155,12 @@
                 localStorage.setItem('region', name);
             },
             SignIn() {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+            },
+            register() {
                 this.$store.dispatch('SETUP', true)
+                this.$store.dispatch('LOGGEDIN', 'perOrCom');
             },
             async signOut() {
                 let msg = await logout();
@@ -276,6 +282,11 @@
     }
 </script>
 <style lang="less" scoped>
+    .sign-btn {
+        &:hover {
+            color: #FF3C00;
+        }
+    }
     .region-active {
         background: #FF3C00;
         color: #ffffff !important;
