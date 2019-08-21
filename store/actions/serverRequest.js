@@ -99,4 +99,8 @@ export const serverRequest = {
   async getQueryBtnData({commit}, params) {
     return await request.post(`Query/QueryBtnData`, params)
   },
+  // 获取要展示的搜索的按钮
+  async getQueryData({commit}, params) {
+    return await request.post(`Query/QueryData`, params)
+  }
 }

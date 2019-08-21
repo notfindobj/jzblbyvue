@@ -4,16 +4,14 @@
         <div class="home-bar">
             <div class="home-bar-content">
                 <ul class="home-bar-content-left" @mouseleave="switchRegionLeave">
-                    <li>欢迎您，来到建筑部落！</li>
-                    <li :class="isRegion ? 'region regionhover' : 'region'" @mouseenter="switchRegion">
+                     <li :class="isRegion ? 'region regionhover' : 'region'" @mouseenter="switchRegion">
                         <i class="icon iconfont">&#xe6ad;</i>
-                        <span>{{region}} [切换城市]</span>
+                        <span>{{region}}</span>
                     </li>
                     <ul v-show="isRegion" class="region-box" @mouseenter="switchRegion" @mouseleave="switchRegionLeave">
                         <li :class="region ===item ? 'region-active' : ''"  v-for="(item, index) in regionData" @click="switchCities(item)" :key="index">{{item}}</li>
                     </ul>
-                </ul>
-                <ul class="home-bar-content-right">
+                    <li>欢迎您，来到建筑部落！</li>
                     <li class="Headportrait">
                         <div class="avatar">
                             <img :src="auth ? auth.HeadIcon : ''" alt="">
@@ -23,6 +21,12 @@
                             <span @click="enterCenter">{{auth.NickName}}</span>
                             <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                         </div>
+                    </li>
+                    
+                </ul>
+                <ul class="home-bar-content-right">
+                    <li class="content">
+                         <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage"/>
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>
@@ -105,7 +109,8 @@
                     ,'山东', '安徽', '浙江', '福建', '湖北', '湖南', '广东', '广西', '江西', '四川', '海南', '贵州', '云南', '西藏',
                     '陕西', '甘肃', '青海', '宁夏', '新疆', '港澳', '台湾'
                 ],
-                region: ''
+                region: '',
+                searchpage: ''
             }
         },
         computed: {
@@ -251,6 +256,15 @@
                 }
                 // this.$router.push({ path: "/PersonalCenter" })
             },
+            goSearchPage () {
+                if (!this.searchpage) {
+                    this.$Message.error('搜索内容不能为空！');
+                    return false;
+                }
+                let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
+                window.open(routeData.href, '_blank');
+            },
+            // searchPage
             goAboutUs() {
                 this.$Message.error('开发中....')
                 // this.$router.push({ path: "/aboutUS" })
@@ -284,7 +298,6 @@
         width: 280px;
         background: #ffffff;
         top: 40px;
-        left: 154px;
         z-index: 1111;
         padding: 0 16px;
         border: 1px solid #dddddd;
@@ -324,16 +337,17 @@
                 width: 50%;
                 display: flex;
                 justify-content: flex-end;
-
                 &-out {
                     cursor: pointer;
                 }
                 > li.content {
                     padding: 0 30px;
                     cursor: pointer;
-
                     &:hover {
                         color: #FF3C00;
+                    }
+                    &:first-child {
+                        padding-right: 0;
                     }
                 }
                 .app-down {

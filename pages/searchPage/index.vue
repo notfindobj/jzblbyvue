@@ -71,7 +71,7 @@
     </div>
 </template>
 <script> 
-import {getQueryData, setFollow, delQueryData} from '../../service/clientAPI'
+import {setFollow, delQueryData} from '../../service/clientAPI'
 export default {
     layout: 'main',
     middleware: 'authenticated',
@@ -93,12 +93,27 @@ export default {
             TypeId: 0,
         }
         let historyList = await store.dispatch('getQueryHistory', queryData);
+        let searchItems = []
+        let searchData = ''
+        if (route.query.id) {
+            let searchDatas = {
+                QueryKey: searchTitle,
+                QueryValue: route.query.id,
+                TypeId: searchTop,
+                Page: 1,
+                Rows: 20
+            }
+            searchData = route.query.id
+            searchItems = await store.dispatch('getQueryData', searchDatas);
+        }
         return {
+            searchData,
             btnData,
             searchTop,
             historyList,
             twoSwitch,
-            searchTitle
+            searchTitle,
+            searchItems
         }
     },
     methods: {
@@ -140,7 +155,7 @@ export default {
                 Page: 1,
                 Rows: 20
             }
-            let msg = await getQueryData(queryData);
+            let msg = await this.$store.dispatch('getQueryData', queryData);
             if (msg) {
                 this.searchItems = msg;
             }

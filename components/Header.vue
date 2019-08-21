@@ -6,7 +6,6 @@
                 <div class="address">
                     <i class="icon iconfont">&#xe6ad;</i>
                     <span>上海</span>
-                    <span>[切换城市]</span>
                 </div>
                 <div class="nav-list">
                     <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
