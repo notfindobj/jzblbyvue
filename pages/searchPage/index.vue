@@ -1,5 +1,6 @@
 <template>
     <div class="search-main">
+        {{btnData}}
         <div class="search-main-bar">
             <div style="display:inline-block;width: 80%;">
                 <Input search enter-button="搜索" v-model="searchData" placeholder="" @keydown.enter.native="getQueryBtnDataList" @on-search="getQueryBtnDataList"/>

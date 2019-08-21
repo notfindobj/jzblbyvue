@@ -14,15 +14,16 @@
         <div class="sign-some">
             <p>
                 <span>没有账户，</span>
-                <span @click="goToRegister('register')" style="cursor: pointer;">免费注册</span>
+                <!-- <span @click="goToRegister('register')" style="cursor: pointer;">免费注册</span> -->
+                <span @click="goToRegister('perOrCom')" style="cursor: pointer;">免费注册</span>
             </p>
             <p @click="retrieve('retrieve')">忘记密码？</p>
         </div>
-        <!-- <div class="third-party">第三方登录</div>
+        <div class="third-party">第三方登录</div>
         <div class="third-party-iocn">
             <i class="icon iconfont" @click="handleLoginByWX">&#xe73b;</i>
             <i class="icon iconfont" @click="handleLoginByQQ">&#xe73e;</i>
-        </div> -->
+        </div>
         <!-- <div class="block-none">
             您好！此网站暂未对外开放，了解更多请联系：15121173536
         </div> -->

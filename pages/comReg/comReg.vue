@@ -2,13 +2,13 @@
      <div class="comreg">
         <Form :model="formLeft" :rules="rules" label-position="right" :label-width="120">
             <FormItem label="公司名称:" prop="name">
-                <Input v-model="formLeft.input1" style="width: 300px;"></Input>
+                <Input v-model="formLeft.input1"></Input>
             </FormItem>
             <FormItem label="公司简称:" prop="name">
-                <Input v-model="formLeft.input1" style="width: 300px;"></Input>
+                <Input v-model="formLeft.input1"></Input>
             </FormItem>
             <FormItem label="营业执照注册号:" prop="name">
-                <Input v-model="formLeft.input2" style="width: 300px;"></Input>
+                <Input v-model="formLeft.input2"></Input>
             </FormItem>
             <FormItem label="营业执照:" prop="name">
                 <div @click="changeFile" class="updataFile-camera ivu-icon ivu-icon-ios-camera">
@@ -16,7 +16,7 @@
                 </div>
             </FormItem>
             <FormItem label="营业期限:" prop="name">
-                <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 300px"></DatePicker>
+                <DatePicker type="daterange" placement="bottom-end" placeholder="Select date"></DatePicker>
             </FormItem>
             <FormItem>
                 <Button type="primary">提交</Button>
@@ -27,7 +27,7 @@
 <script>
 export default {
     layout: 'main',
-    // middleware: 'authenticated',
+    middleware: 'authenticated',
     data() {
         return {
             formLeft: {},
@@ -56,7 +56,6 @@ export default {
         }
     }
     .comreg {
-        width: 1000px;
         padding: 30px;
         background: #ffffff;
         margin-top: 20px;

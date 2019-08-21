@@ -3,13 +3,13 @@
         <Modal
             title="Title"
             v-model="showModal"
-            width="400"
+            :width="modalwidth"
             footer-hide
             :mask-closable="false"
             @on-visible-change="visibleChange"
             class-name="vertical-center-modal">
             <p slot="header" class="modal-header">
-                <i v-if="isItLogged === 'retrieve'" @click="goBack" class="icon iconfont icon-jiantou1 modal-header-jiantou"></i>
+                <i v-if="isItLogged !== 'signIn' && isItLogged !== 'perOrCom'" @click="goBack(oldvals)" class="icon iconfont icon-jiantou1 modal-header-jiantou"></i>
                 <span>{{setTitle(isItLogged)}}</span>
             </p>
             <div :is="isItLogged" class="modal-box"></div>
@@ -21,11 +21,16 @@ import { mapState, mapActions, mapGetters } from 'vuex'
 import signIn from './signIn'
 import register from './register'
 import retrieve from './retrieve'
+import perOrCom from './perOrCom'
+import comReg from './comReg'
+
 export default {
     data () {
         return {
             showModal:  false,
-            isItLogged: 'signIn'
+            modalwidth: 400,
+            isItLogged: 'signIn',
+            oldvals: 'signIn',
         }
     },
     computed: {
@@ -37,23 +42,27 @@ export default {
     components: {
         signIn,
         register,
-        retrieve
+        retrieve,
+        perOrCom,
+        comReg
     },
     watch: {
         showSign: function(newVal) {
             this.showModal = newVal
         },
-        isItLoggedIn: function(newVal) {
-            this.isItLogged = newVal
+        isItLoggedIn: function(newVal, oldVal) {
+            this.oldvals = oldVal;
+            this.isItLogged = newVal;
         }
     },
     methods: {
         visibleChange (val) {
             this.$store.dispatch('SETUP', val);
         },
-        goBack () {
-            this.isItLogged = 'signIn'
-            this.$store.dispatch('LOGGEDIN', 'signIn');
+        goBack (val) {
+            this.isItLogged = val || 'signIn';
+            this.modalwidth = 400;
+            this.$store.dispatch('LOGGEDIN', val);
         },
         setTitle (val) {
             let title = ''
@@ -62,12 +71,20 @@ export default {
                     title = "用户登录"
                     break;
                 case"register": 
-                    title = "用户注册"
+                    title = "个人用户注册"
                     break;
                 case"retrieve": 
                     title = "忘记密码"
                     break;
+                case"perOrCom": 
+                    title = "选择注册类型"
+                    break;
+                case"comReg": 
+                    this.modalwidth = 600
+                    title = "企业用户注册"
+                    break;
                 default:
+                    this.modalwidth = 400
                     title = "用户登录"
             }
             return title
