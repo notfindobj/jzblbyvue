@@ -233,21 +233,9 @@
                     text-align: center;
                     line-height: 71px;
                     cursor: pointer;
-
-                    &:nth-child(1) {
+                    &:hover {
                         color: #FF3C00;
                         position: relative;
-                        &:before {
-                            width: 2px;
-                            height: 30px;
-                            content: '';
-                            background: #D8D8D8;
-                            border-radius: 1px;
-                            position: absolute;
-                            right: -3px;
-                            top: 20px;
-                        }
-
                         &:after {
                             width: 30px;
                             height: 2px;
@@ -260,13 +248,21 @@
                             top: 50px;
                         }
                     }
-
-                    &:nth-child(2) {
-                        color: #333333;
+                    &:nth-child(1) {
+                        position: relative;
+                        &:before {
+                            width: 2px;
+                            height: 30px;
+                            content: '';
+                            background: #D8D8D8;
+                            border-radius: 1px;
+                            position: absolute;
+                            right: -3px;
+                            top: 20px;
+                        }
                     }
                 }
             }
-
             .box {
                 width: 100%;
                 border-radius: 4px;

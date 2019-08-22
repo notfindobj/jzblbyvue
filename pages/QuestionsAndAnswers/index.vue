@@ -72,7 +72,7 @@
                                         </div>
                                         <h3 class="item-question" @click="goDetail(item.QAId)">{{ item.QATitle }}</h3>
                                         <div class="item-answer">
-                                            <span>回答：</span>
+                                            <span v-show="item.LatestAnswer">回答：</span>
                                             <emotHtml class="beyond-quest" v-model="item.LatestAnswer"/>
                                         </div>
                                     </div>

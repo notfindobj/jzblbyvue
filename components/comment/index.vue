@@ -15,7 +15,9 @@
                 v-model="commentValue"
                 @on-change="onChange"
                 :rows="emotionRows" 
-                :placeholder="placeholder" />
+                :placeholder="placeholder"
+                @click.stop.native=""
+                />
             <div class="comment" @click.stop="">
                 <div class="comment-smile" >
                     <i class="iconfont icon-smile" @click="showEmotion"></i>
@@ -23,9 +25,7 @@
                     <!-- <i class="iconfont icon-tupian" @click="showImg"></i> -->
                 </div>
                 <div>
-                    <span class="comment-btn" @click="comment">
-                        {{btnText}}
-                    </span>
+                    <span class="comment-btn" @click="comment">{{btnText}}</span>
                 </div>
             </div>
         </div>

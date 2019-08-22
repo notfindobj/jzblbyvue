@@ -280,7 +280,8 @@
         width: 900px;
     }
     .quill-editor {
-        height: 318px;
+        max-height: 600px;
+        min-height: 310px;
         overflow-y: auto;
         border-radius: 0 0 4px 4px;
         border: 1px solid #d8d8d8;

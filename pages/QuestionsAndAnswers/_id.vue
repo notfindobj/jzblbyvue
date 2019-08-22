@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="editor-wrap">
-                <Input v-model="content" type="textarea" placeholder="写回答"/>
+                <Input v-model="content" type="textarea" placeholder="写回答" :autosize="{minRows: 3}"/>
             </div>
             <div style="position: relative;">
                 <div class="toolbar">
@@ -360,7 +360,7 @@
             }
 
             .quill-editor {
-                height: 136px;
+                min-height: 136px;
             }
 
             .ql-toolbar.ql-snow {

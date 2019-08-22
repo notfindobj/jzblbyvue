@@ -104,6 +104,7 @@
                 isLayout: true,
                 distanceBottom: 1000,
                 contentHeight: '',   // 评论列表的高度
+                getGetCommentsData: null,
                 modalConfig: {
                     isWxConfig: false
                 },
@@ -180,7 +181,7 @@
             } catch (error) {}
         },
         mounted() {
-            let _this = this
+            let _this = this;
             $(document).ready(function () {
                 _this.initLazy()
             });
@@ -301,9 +302,17 @@
                     ScopeType: 0
                 }
                 let commentMsg = await setComments(queryData)
-                await window.location.reload();
-                if (!commentMsg) {
-                    this.$set(row, 'commentss', row.commentss + 1)
+                if (commentMsg) {
+                    this.$set(row, 'commentss', row.commentss + 1);
+                    // 根据项目详情请求评论信息
+                    let Comment = {
+                        itemId: this.$route.query.id,
+                        ScopeType: 0
+                    }
+                    let msg = await this.$store.dispatch('getGetComments', Comment);
+                    if (msg) {
+                        this.getGetCommentsData = msg
+                    }
                 }
             },
             // 评论回复
