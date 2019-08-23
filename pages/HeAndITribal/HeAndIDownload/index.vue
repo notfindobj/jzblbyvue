@@ -129,7 +129,7 @@
     }
     .head-boxs-two{
         position: sticky;
-        top: 40px;
+        top: 100px;
         z-index: 66;
         border-top: 1px solid #eeeeee;
     }

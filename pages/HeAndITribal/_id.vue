@@ -213,7 +213,7 @@
             width: 100%;
             height: 40px;
             position: sticky;
-            top: 0;
+            top: 60px;
             z-index: 2;
             background: #ffffff;
             padding: 0 198px;

@@ -272,7 +272,7 @@ export default {
         background: #FFFFFF;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);
         position: sticky;
-        top: 0px;
+        top: 70px;
         .select-title {
             margin-top: 22px;
             padding: 0 10px;

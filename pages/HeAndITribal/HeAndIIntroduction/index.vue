@@ -102,7 +102,7 @@
         width: 100%;
         height: auto;
         position: sticky;
-        top: 50px;
+        top: 110px;
         &-top {
             height: 66px;
             padding: 10px 0;

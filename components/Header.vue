@@ -1,58 +1,56 @@
 <template>
-    <div>
-        <div class="header">
-            <div class="container">
-                <ul class="nav-list">
-                    <li>
-                        <img class="logo-img" @click="goHome" :src="loginImg" alt="建筑部落">
-                    </li>
-                    <li>
-                        <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
-                    </li>
-                    <li>
-                        <nuxt-link to="/attention">关注</nuxt-link>
-                    </li>
-                    <!-- <li>
-                        <nuxt-link to="/recommend">推荐</nuxt-link>
-                    </li> -->
-                    <li>
-                        <nuxt-link to="/videos">视频</nuxt-link>
-                    </li>
-                    <li>
-                        <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
-                    </li>
-                    <li>
-                        <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
-                    </li>
-                    <li>
-                        <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
-                    </li>
-                </ul>
-                <ul class="user">
-                    <li class="user-info">
-                        <img :src="auth ? auth.HeadIcon : $defaultHead" alt="">
-                        <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
-                        <div class="user-name" v-else>
-                            <span @click="enterCenter">{{auth.NickName}}</span>
-                            <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
-                        </div>
-                    </li>
-                    <li>
-                        <div class="online-map" @click="onlineMap">在线地图</div>
-                    </li>
-                    <li>
-                        <Dropdown class="right-select">
-                            <a href="javascript:void(0)">
-                                APP下载
-                                <Icon type="ios-arrow-down"></Icon>
-                            </a>
-                            <DropdownMenu slot="list">
-                                <DropdownItem disabled>功能开发中</DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                    </li>
-                </ul>
-            </div>
+    <div class="header">
+        <div class="container">
+            <ul class="nav-list">
+                <li>
+                    <img class="logo-img" @click="goHome" :src="loginImg" alt="建筑部落">
+                </li>
+                <li>
+                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
+                </li>
+                <li>
+                    <nuxt-link to="/attention">关注</nuxt-link>
+                </li>
+                <!-- <li>
+                    <nuxt-link to="/recommend">推荐</nuxt-link>
+                </li> -->
+                <li>
+                    <nuxt-link to="/videos">视频</nuxt-link>
+                </li>
+                <li>
+                    <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
+                </li>
+                <li>
+                    <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
+                </li>
+                <li>
+                    <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
+                </li>
+            </ul>
+            <ul class="user">
+                <li class="user-info">
+                    <img :src="auth ? auth.HeadIcon : $defaultHead" alt="">
+                    <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
+                    <div class="user-name" v-else>
+                        <span @click="enterCenter">{{auth.NickName}}</span>
+                        <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                    </div>
+                </li>
+                <li>
+                    <div class="online-map" @click="onlineMap">在线地图</div>
+                </li>
+                <li>
+                    <Dropdown class="right-select">
+                        <a href="javascript:void(0)">
+                            APP下载
+                            <Icon type="ios-arrow-down"></Icon>
+                        </a>
+                        <DropdownMenu slot="list">
+                            <DropdownItem disabled>功能开发中</DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -126,7 +124,9 @@
         height: 60px;
         background-color: #fff;
         border-bottom: 1px solid #F2F4F2;
-
+        position: sticky;
+        top: 0;
+        z-index: 1000;
         .container {
             width: 1200px;
             height: 100%;

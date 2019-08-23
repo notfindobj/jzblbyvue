@@ -227,3 +227,14 @@ export const setUserTheme = async params => {
 export const delQueryData = async params => {
   return await request.post(`Query/QueryDeleteHistory?strQueryIds=${params}`)
 }
+/***
+ * 公司相关
+ */
+// 获取企业注册公司类型接口
+export const getEntType = async params => {
+  return await request.get(`Account/GetEntType`)
+}
+//  企业用户注册接口
+export const registerEnterprise = async params => {
+  return await request.post(`Account/RegisterEnterprise`, params)
+}
