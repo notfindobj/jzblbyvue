@@ -35,7 +35,7 @@
                 </Col>
             </Row>
             <FormItem label="营业执照:" prop="BusLicImgId">
-                <div @click="changeFile('updataFile')" :class="companyAttr.BusLicImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${companyAttr.BusLicImg}');`">
+                <div @click="changeFile('updataFile')" :class="companyAttr.BusLicImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.BusLicImg)}');`">
                     <input ref="updataFile" type="file" @change="changeUpFile('updataFile')" style="display: none;">
                 </div>
             </FormItem>
@@ -53,12 +53,12 @@
             </Row>
             <FormItem label="身份证正反面:" prop="IDCardImgNegaId">
                 <div @click="changeFile('card')"
-                :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${companyAttr.IDCardImgPosi}');`"
+                :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgPosi)}');`"
                  >
                     <input ref="card" type="file" @change="changeUpFile('card')" style="display: none;">
                 </div>
                 <div  @click="changeFile('unCard')" 
-                :class="companyAttr.IDCardImgNegaId ? 'updataFile-cameras iconfont icon-shenfenzhengfanmian' : 'updataFile-camera iconfont icon-shenfenzhengfanmian'" :style="`background-image: url('${companyAttr.IDCardImgNega}');`">
+                :class="companyAttr.IDCardImgNegaId ? 'updataFile-cameras iconfont icon-shenfenzhengfanmian' : 'updataFile-camera iconfont icon-shenfenzhengfanmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgNega)}');`">
                     <input ref="unCard" type="file" @change="changeUpFile('unCard')" style="display: none;">
                 </div>
             </FormItem>
@@ -90,9 +90,20 @@
                 <Button type="primary" @click="registComUser('companyAttr')">提交</Button>
             </FormItem>
         </Form>
+        <Modal
+            v-model="modal10"
+            :footer-hide="true"
+            :header-hide="true"
+            width="400"
+            :mask-closable="false"
+            @on-cancel="onCancel"
+            class-name="vertical-center-modal">
+            <p class="Modalcenter">提交成功，请等待管理员审核!</p>
+        </Modal>
      </div>
 </template>
 <script>
+import {baseUrlRegExp} from '../../../plugins/untils/public'
 import {getEntType, registerEnterprise , uploadFile, getMobileCode} from '../../../service/clientAPI'
 import {validatePassCheck, validateIdentity} from '../../../plugins/untils/Verify'
 export default {
@@ -100,6 +111,7 @@ export default {
     middleware: 'authenticated',
     data() {
         return {
+            baseUrlRegExp,
             companyAttr: {
                 Business:[],
                 "CompanyName": "", // 公司名称 
@@ -164,10 +176,36 @@ export default {
             },
             isDisabled: false,
             enterButtonText: '获取验证码',
+            modal10: false
         }
     },
     mounted () {
         this.getEntTypeList();
+        if (localStorage.getItem('entInfo')) {
+            let entInfo = JSON.parse(localStorage.getItem('entInfo'));
+            this.companyAttr= {
+                Business:[entInfo.BusLicBegin, entInfo.BusLicEnd],
+                CompanyName: entInfo.CompanyName, // 公司名称 
+                CompanyProfile: entInfo.CompanyProfile,
+                BusLicRegNum: entInfo.BusLicRegNum,
+                BusLicImgId: entInfo.BusLicImgId,
+                BusLicImg: entInfo.BusLicImgSrc,
+                BusLicBegin: entInfo.BusLicBegin,
+                BusLicEnd:  entInfo.BusLicEnd,
+                IDCardImgPosi: entInfo.IDCardImgPosiSrc,
+                IDCardImgPosiId: entInfo.IDCardImgPosiId,
+                IDCardImgNega: entInfo.IDCardImgPosiSrc,
+                IDCardImgNegaId: entInfo.IDCardImgNegaId,
+                IDCardName: entInfo.IDCardName,
+                IDCordId: entInfo.IDCordId,
+                CompanyTypeId: entInfo.CompanyTypeId,
+                CellphoneNumber: entInfo.CellphoneNumber,
+                Password: '',
+                Authcode: '',
+            }
+
+        }
+        console.log(JSON.parse(localStorage.getItem('entInfo')))
     },
     methods: {
         // 获取验证码
@@ -212,6 +250,7 @@ export default {
             }   
         },
         registComUser (name) {
+            localStorage.removeItem('entInfo');
             this.$refs[name].validate(async (valid) => {
                 if (valid) {
                     let comUser = JSON.parse(JSON.stringify(this.companyAttr));
@@ -221,10 +260,16 @@ export default {
                     delete comUser.BusLicImg;
                     delete comUser.IDCardImgPosi;
                     delete comUser.IDCardImgNega;
-                    console.log(comUser);
                     let msg = await registerEnterprise(comUser);
+                    if (msg) {
+                        this.modal10 = true;
+                    }
                 }
             })
+        },
+        onCancel () {
+            this.$store.dispatch('LOGGEDIN', 'signIn');
+            this.$store.dispatch('SETUP', false)
         },
         changeUpFile (attr) {
             let item = event.target.files[0];
@@ -256,6 +301,20 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .Modalcenter {
+        font-weight: bold;
+        color: #FF3C00;
+        font-size: 20px;
+    }
+    .vertical-center-modal{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .ivu-modal{
+            top: 0;
+        }
+    }
     .getMobile {
         background: #FF3C00 !important;
         width: 100px;

@@ -1,7 +1,6 @@
 <template>
   <div class="download-box">
     <div class="download-box-con">
-      <!-- <Scroll :on-reach-bottom="handleReachBottom" height="600"> -->
         <div class="container">
           <div class="my-someing-box">
             <ul>
@@ -32,7 +31,6 @@
             </ul>
           </div>
         </div>
-      <!-- </Scroll> -->
     </div>
   </div>
 </template>

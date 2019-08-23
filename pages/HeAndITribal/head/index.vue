@@ -17,6 +17,13 @@
                 <p class="my-name">{{ userInfo.NickName }}
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
+                <div class="my-untils">
+                  <div :class="userInfo.IsFollow? 'my-follow-btn my-unfollow' : 'my-follow-btn my-follow'" @click="worksFocus(userInfo)">
+                    <i v-if="!userInfo.IsFollow" class="iconfont icon-jia"></i>
+                    <span>{{userInfo.IsFollow? '已关注' : '关注'}}</span>
+                  </div>
+                  <div class="my-chat-btn">私聊</div>
+                </div>
                 <p class="my-Introduction-con">{{ userInfo.Description }}</p>
             </div>
         </div>
@@ -24,7 +31,7 @@
 </template>
 
 <script>
-import {getALLTheme, getUserTheme, setUserTheme} from '../../../service/clientAPI'
+import {getALLTheme, getUserTheme, setUserTheme, setFollow} from '../../../service/clientAPI'
 export default {
     name: 'Head',
     components: {},
@@ -44,36 +51,7 @@ export default {
       return {
         tremeName: '...切换主题',
         userTheme: {},
-        theme_list: [
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          },
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          },
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          },
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          },
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          },
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          },
-          {
-            name: '炫彩紫',
-            url: '../../../assets/images/default_theme.png'
-          }
-        ]
+        theme_list: []
       }
     },
     created () {
@@ -81,6 +59,16 @@ export default {
       this.getUsere()
     },
     methods: {
+      async worksFocus(item) {
+        let queryData = {
+            UserId: item.UserId,
+            IsDelete: item.IsFollow
+        };
+        let collectionMsg = await setFollow(queryData)
+        if (collectionMsg) {
+            this.$set(item, 'IsFollow', !item.IsFollow)
+        }
+      },
       async getUsere () {
         let msg = await getUserTheme (this.userId);
         if (msg) {
@@ -103,6 +91,38 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .my-untils {
+      color: #FFFFFF;
+      display: flex;
+      text-align: center;
+      justify-content: center;
+      margin-bottom: 5px;
+      .icon-jia {
+        font-size: 14px;
+      }
+      .my-follow-btn {
+          padding: 5px 8px;
+          border-radius: 3px;
+          line-height: 20px;
+          cursor: pointer;
+          height: 30px;
+      }
+      .my-follow {
+         background: #ff3c00;
+      }
+      .my-unfollow {
+         background: #696e78;
+      }
+      .my-chat-btn {
+        height: 30px;
+        line-height: 20px;
+        margin-left: 15px;
+        background: #696e78;
+        padding: 5px 12px;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+    }
     .head-box {
         width: 100%;
         height: 254px;
@@ -162,10 +182,10 @@ export default {
                 top: 0;
 
                 .my-head-portrait {
-                    width: 110px;
-                    height: 110px;
+                    width: 100px;
+                    height: 100px;
                     border-radius: 50%;
-                    margin: 30px auto 10px;
+                    margin: 25px auto 10px;
                     overflow: hidden;
 
                     > img {

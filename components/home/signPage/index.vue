@@ -60,11 +60,16 @@ export default {
     },
     methods: {
         visibleChange (val) {
+            if (val === false) {
+                // 删除企业注册信息
+                localStorage.removeItem('entInfo');
+            }
             this.$store.dispatch('SETUP', val);
         },
         goBack (val) {
             this.isItLogged = val || 'signIn';
             this.modalwidth = 400;
+            localStorage.removeItem('entInfo');
             this.$store.dispatch('LOGGEDIN', val);
         },
         setTitle (val) {
@@ -81,6 +86,7 @@ export default {
                     break;
                 case"perOrCom": 
                     title = "选择注册类型"
+                    this.modalwidth = 400
                     break;
                 case"comReg": 
                     this.modalwidth = 700

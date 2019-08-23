@@ -1,8 +1,8 @@
 const axios = require('axios')
 import { Message } from 'iview'
 const qs = require('qs')
-// const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/' : 'http://192.168.10.19:8889/';
-const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/' : 'http://127.0.0.1:8889/';
+const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/' : 'http://192.168.10.19:8889/';
+// const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/' : 'http://127.0.0.1:8889/';
 const LocalAPI = axios.create();
 import createStore from '../store'
 const $store = createStore();

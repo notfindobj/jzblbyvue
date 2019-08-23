@@ -140,10 +140,10 @@
     .comment {
         position: relative;
         display: inline-block;
-        padding: 20px 90px;
+        padding: 20px 40px;
         top: 1px;
         background-color: #fff;
-        width: 93%;
+        width: 100%;
         .comment-head {
             display: flex;
             justify-content: space-between;

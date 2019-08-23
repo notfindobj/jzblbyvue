@@ -146,10 +146,21 @@
                 }
                 let msg = await login(postData);
                 if (msg) {
-                    this.$store.dispatch('LOGININ', msg);
-                    localStorage.setItem('LOGININ', JSON.stringify(msg))
-                    this.$store.dispatch('SETUP', false)
-                    this.$Message.success('登录成功！');
+                    // ApprovedType 0 审核中 1 不通过
+                    if (msg.ApprovedType === 0) {
+                        this.$Message.warning('您的企业账号还在审核中，请耐心等待！');
+                        return false
+                    } 
+                    if (msg.ApprovedType === 1) {
+                        localStorage.setItem('entInfo', JSON.stringify(msg.entInfo));
+                        this.$store.dispatch('LOGGEDIN', 'comReg');
+                        console.log(msg);
+                    } else {
+                        this.$store.dispatch('LOGININ', msg);
+                        localStorage.setItem('LOGININ', JSON.stringify(msg))
+                        this.$store.dispatch('SETUP', false)
+                        // this.$Message.success('登录成功！');
+                    }
                 }
             }
         }
