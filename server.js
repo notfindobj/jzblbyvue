@@ -2,13 +2,13 @@ const { Nuxt, Builder } = require('nuxt')
 const consola = require('consola')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const {configUrl} = require('./LocalEnv');
 const app = require('express')()
 // const timeout = require('connect-timeout')
 const session = require('express-session');
-const axios = require('axios')
-const qs = require('qs')
-
-const BaseUrl = process.env.NODE_ENV === 'production' ? 'http://www.api.jzbl.com/api/' : 'http://106.14.139.124:8099/api/';
+const axios = require('axios');
+const qs = require('qs');
+console.log('configUrl', configUrl)
 // Body parser，用来封装 req.body
 // app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ 
@@ -21,9 +21,6 @@ app.use(bodyParser.json({
 }));  //据需求更改limit大小
 app.use(cookieParser());
 axios.defaults.withCredentials = true;
-
-
-
 
 //  session 存储数据
 app.use(session({
@@ -79,7 +76,7 @@ app.use('/user/setUserInfo', function (req, res) {
 // 通过手机号码登录 POST /api/
 app.post('/front/mobileLogin', function (req, res) {
     let config = {
-        url: `${BaseUrl}Account/CheckLogin`,
+        url: `${configUrl.baseUrl}Account/CheckLogin`,
         withCredentials: true,
         method: 'post',
         headers: {
@@ -103,7 +100,7 @@ app.post('/front/mobileLogin', function (req, res) {
 // 微信登录
 app.post('/front/wxLogin', function (req, res) {
     let config = {
-        url: `${BaseUrl}Account/wx`,
+        url: `${configUrl.baseUrl}Account/wx`,
         withCredentials: true,
         method: 'get',
         params: req.body
@@ -123,11 +120,10 @@ app.post('/front/wxLogin', function (req, res) {
     })
 });
 
-
 // QQ登录
 app.post('/front/qqLogin', function (req, res) {
     let config = {
-        url: `${BaseUrl}Account/qq`,
+        url: `${configUrl.baseUrl}Account/qq`,
         withCredentials: true,
         method: 'get',
         headers: req.body.Authorization ? {
@@ -176,73 +172,11 @@ async function start() {
         await builder.build();
     }
     app.use(nuxt.render);
-    app.listen(8889);
+    app.listen(configUrl.serverPort);
     consola.ready({
-        message: `Server listening on http://127.0.0.1:8889 \n request:${BaseUrl}`,
+        message: `Server listening on ${configUrl.localUrl} \n request:${configUrl.baseUrl}`,
         badge: true
     })
 }
 
 start();
-// 
-// let data = [
-//     {
-//         "pK_PackingBillDetail": 0,
-//         "pK_PackingBillMain": 106277,
-//         "pK_PackageContainer": 13877,
-//         "containerName": "0KD1208H",
-//         "deviceNum": null,
-//         "pK_Inventory": 150,
-//         "invCode": "56008171",
-//         "invName": "助力器",
-//         "quantity": 7,
-//         "containerCode": "1712006833",
-//         "dock": null,
-//         "uniqueCode": null,
-//         "pK_Warehouse": null,
-//         "scanContentFir": null,
-//         "scanContentSec": null,
-//         "osTransportId": 2
-//     },
-//     {
-//         "pK_PackingBillDetail": 0,
-//         "pK_PackingBillMain": 98392,
-//         "pK_PackageContainer": 13583,
-//         "containerName": "0KD1208H",
-//         "deviceNum": null,
-//         "pK_Inventory": 150,
-//         "invCode": "56008171",
-//         "invName": "助力器",
-//         "quantity": 1,
-//         "containerCode": "1712006539",
-//         "dock": null,
-//         "uniqueCode": null,
-//         "pK_Warehouse": null,
-//         "scanContentFir": null,
-//         "scanContentSec": null,
-//         "osTransportId": 2
-//     }
-// ]
-// // invCode 零件编号, containerName 料箱型号
-// function setData (arr) {
-//     let obj = {}, dest = [];
-//     if (arr instanceof Array) {
-//         arr.forEach((ele, index) => {
-//             if (index === 0) {
-//                 dest.push(ele)
-//             } else {
-//                 let isP = true;
-//                 dest.forEach((element, index) => {
-//                     if (element.invCode === ele.invCode && element.containerName === ele.containerName) {
-//                             element.quantity += ele.quantity;
-//                         isP = false
-//                     };
-//                 })
-//                 if (isP) {
-//                     dest.push(ele);
-//                 }
-//             }
-//         })
-//         return dest;
-//     }
-// }

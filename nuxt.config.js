@@ -1,5 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');//css样式从js文件中分离出来,需要通过命令行安装 extract-text-webpack-plugin依赖包
 const webpack = require('webpack');
+const {configUrl} = require('./LocalEnv');
 module.exports = {
   /*
   ** Headers of the page
@@ -42,30 +43,23 @@ module.exports = {
     { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
+  server: {
+    port: configUrl.serverPort, // default: 3000
+    host: '0.0.0.0', // default: localhost
+  },
   env: {
-    baseUrl: process.env.BASE_URL || 'http://www.api.jzbl.com/api/',
-    withCredentials: true,
-    locURL: '127.0.0.1:8889',
-    fileBaseUrl: "http://www.pic.jzbl.com/",
+    baseUrl: configUrl.baseUrl,
+    fileBaseUrl: configUrl.fileBaseUrl,
   },
-  // 解决跨域
-  axios: {
-    debug: process.env._ENV !== "production",
-    //设置不同环境的请求地址
-    baseURL: process.env._ENV === "production" ? "http://www.api.jzbl.com/api/" : "http://www.jzbl.com/api/",
-    withCredentials: true,
-  },
-  proxy: [
-    [
-      '/api',
-      {
-        target: 'http://www.api.jzbl.com/api/', // api主机
+  proxy: {
+      port: 8889,
+      '/api': {
+        target: 'http://www.api.jzbl.com', // api主机
         withCredentials: true,
         changeOrigin: true,
         pathRewrite: { '^/api': '/' }
       }
-    ]
-  ],
+  },
   /*
   ** Customize the progress bar color
   */
@@ -74,6 +68,14 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    babel: {
+      presets({ isServer }) {
+        const targets = isServer ? { node: '10' } : { ie: '11' }
+        return [
+          [ require.resolve('@nuxt/babel-preset-app'), { targets } ]
+        ]
+      }
+    },
     // extractCSS: { allChunks: true },
     optimization: {
       splitChunks: {

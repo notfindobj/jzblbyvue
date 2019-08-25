@@ -1,15 +1,14 @@
 const axios = require('axios')
 import { Message } from 'iview'
 const qs = require('qs')
-const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/' : 'http://192.168.10.19:8889/';
-// const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/' : 'http://127.0.0.1:8889/';
+const {configUrl} = require('../LocalEnv');
 const LocalAPI = axios.create();
 import createStore from '../store'
 const $store = createStore();
 // POST 传参序列化
 LocalAPI.interceptors.request.use(
     config => {
-      config.baseURL = url;
+      config.baseURL = configUrl.localUrl;
       if (config.method === 'post') {
         let isSossion = config.data;
         if (isSossion) {

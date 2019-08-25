@@ -1,6 +1,6 @@
-import http from 'http'
-import https from 'https'
+const {configUrl} = require('../LocalEnv');
 export default {
+  baseURL: configUrl.baseUrl,
   // 自定义的请求头
   headers: {
     post: {

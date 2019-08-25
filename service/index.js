@@ -1,14 +1,10 @@
-import axios from 'axios'
-import { Message } from 'iview'
-import qs from 'qs'
-import config from './config'
-import createStore from '../store'
+import axios from 'axios';
+import { Message } from 'iview';
+import qs from 'qs';
+import config from './config';
+import createStore from '../store';
 const $store = createStore();
-// 判断是路由跳转还是 axios 请求
-// if (process.server) {
-  const url = process.env.NODE_ENV === 'production' ? 'http://www.api.jzbl.com/api/' : 'http://106.14.139.124:8099/api/';
-  config.baseURL = url
-// }
+
 const service = axios.create(config);
 service.defaults.withCredentials = true;
 // POST 传参序列化
