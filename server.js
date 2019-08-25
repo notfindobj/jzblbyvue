@@ -11,13 +11,13 @@ const qs = require('qs');
 console.log('configUrl', configUrl)
 // Body parser，用来封装 req.body
 // app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ 
+app.use(bodyParser.urlencoded({
     parameterLimit: 100000,
     limit: 1024 * 1024 * 10
 })); //根据需求更改limit大小
 app.use(bodyParser.json({
     parameterLimit: 100000,
-    limit: 1024 * 1024 * 10 
+    limit: 1024 * 1024 * 10
 }));  //据需求更改limit大小
 app.use(cookieParser());
 axios.defaults.withCredentials = true;
@@ -163,11 +163,11 @@ app.post('/api/logout', function (req, res) {
 
 // 我们用这些选项初始化 Nuxt.js：
 let config = require('./nuxt.config.js');
-const isProd = process.env.NODE_ENV === 'production';
+config.dev = process.env.NODE_ENV === 'development';
 
 async function start() {
     const nuxt = new Nuxt(config);
-    if (!isProd) {
+    if (config.dev) {
         const builder = new Builder(nuxt);
         await builder.build();
     }
