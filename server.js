@@ -8,7 +8,6 @@ const app = require('express')()
 const session = require('express-session');
 const axios = require('axios');
 const qs = require('qs');
-console.log('configUrl', configUrl)
 // Body parser，用来封装 req.body
 // app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -163,18 +162,19 @@ app.post('/api/logout', function (req, res) {
 
 // 我们用这些选项初始化 Nuxt.js：
 let config = require('./nuxt.config.js');
-config.dev = process.env.NODE_ENV === 'development';
+config.dev = process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'demo';
 
 async function start() {
     const nuxt = new Nuxt(config);
+    const { host, port } = nuxt.options.server
     if (config.dev) {
         const builder = new Builder(nuxt);
         await builder.build();
     }
     app.use(nuxt.render);
-    app.listen(configUrl.serverPort);
+    app.listen(port, host)
     consola.ready({
-        message: `Server listening on ${configUrl.localUrl} \n request:${configUrl.baseUrl}`,
+        message: `Server listening on http://${host}:${port} \n request:${configUrl.baseUrl}`,
         badge: true
     })
 }

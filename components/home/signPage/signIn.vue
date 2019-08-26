@@ -154,12 +154,11 @@
                     if (msg.ApprovedType === 1) {
                         localStorage.setItem('entInfo', JSON.stringify(msg.entInfo));
                         this.$store.dispatch('LOGGEDIN', 'comReg');
-                        console.log(msg);
                     } else {
                         this.$store.dispatch('LOGININ', msg);
                         localStorage.setItem('LOGININ', JSON.stringify(msg))
                         this.$store.dispatch('SETUP', false)
-                        // this.$Message.success('登录成功！');
+                        this.$Message.success('登录成功！');
                     }
                 }
             }
