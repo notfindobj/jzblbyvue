@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="cellPhone = !cellPhone">{{cellPhone ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" :style="`color:${cellPhone ? '#ff3c00' : ''}`"  @click="cellPhone = !cellPhone">{{cellPhone ?"编辑" : "收起"}}</div>
         </div>
         <!-- qq号 -->
         <div class="message-items message-items-text">
@@ -62,9 +62,9 @@
                         <div class="modifying-cancel" @click="cancelUnBindQQ">取消</div>
                     </div>
                 </div>
-            </div>
-            <div class="message-items-operation" v-if="!isBindQQ" @click="bindQQ">绑定</div>
-            <div class="message-items-operation" v-if="isBindQQ" @click="isShowUnBindQQ = true">解绑</div>
+            </div> 
+            <div class="message-items-operation" :style="`color:${!isBindQQ ? '#ff3c00' : ''}`"  v-if="!isBindQQ" @click="bindQQ">绑定</div>
+            <div class="message-items-operation" :style="`color:${isBindQQ ? '#3E85FF' : ''}`" v-if="isBindQQ" @click="isShowUnBindQQ = true">解绑</div>
         </div>
         <!-- 微信 -->
         <div class="message-items message-items-text">
@@ -87,8 +87,8 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="bindingWX" v-if="!isBindWX">绑定</div>
-            <div class="message-items-operation" v-if="isBindWX" @click="isShowUnBindWX = true">解绑</div>
+            <div class="message-items-operation" :style="`color:${!isBindWX ? '#ff3c00' : ''}`" @click="bindingWX" v-if="!isBindWX">绑定</div>
+            <div class="message-items-operation" :style="`color:${isBindWX ? '#3E85FF' : ''}`" v-if="isBindWX" @click="isShowUnBindWX = true">解绑</div>
         </div>
         <!-- 邮箱绑定 -->
         <!-- <div class="message-items message-items-text">

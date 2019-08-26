@@ -1,7 +1,7 @@
 <template>
     <div class="comment-item">
         <div class="comment-item-con">
-            <div class="item-avatar">
+            <div class="item-avatar" @click="goToPersonal(commentInfo)">
                 <img :src="commentInfo.HeadIcon|| $defaultHead" alt="">
             </div>
             <div class="commit-item-info" :style="{width: commitWidth}">
@@ -62,6 +62,15 @@
       }
     },
     methods: {
+       // 跳转部落
+      goToPersonal (row) {
+        this.$router.push({
+          name: 'HeAndITribal-id',
+          query: {
+            id: row.UserId
+          }
+        })
+      },
       clickReply() {
         if (this.$route.name === 'QuestionsAndAnswers-id') {
           this.replyInputWith = 460;
@@ -162,7 +171,7 @@
             width: 30px;
             height: 30px;
             background-color: #ccc;
-
+            cursor: pointer;
             img {
                 width: 100%;
                 height: 100%;

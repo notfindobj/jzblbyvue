@@ -56,7 +56,7 @@
                 <div class="foot-child">
                     <span @click="clickCollection(videoInfo)">
                       <i :class="videoInfo.itemOperateData.IsCollection ? 'icon iconfont active-tool icon-cc-star': 'icon iconfont  icon-favorite'"></i>
-                      <span :class="{ active: videoInfo.itemOperateData.IsCollection }">收藏</span>
+                      <span :class="{ active: videoInfo.itemOperateData.IsCollection}">收藏 {{videoInfo.itemOperateData.CollectionCount}}</span>
                     </span>
                 </div>
                 <div class="foot-child">
@@ -67,12 +67,12 @@
                 </div>
                 <div class="foot-child" @click="clickComment">
                     <i class="icon iconfont">&#xe664;</i>
-                    <span>评论</span>
+                    <span>评论 {{videoInfo.itemOperateData.CommentCount}}</span>
                 </div>
                 <div class="foot-child">
                   <span @click="clickLike(videoInfo)">
                     <i :class="videoInfo.itemOperateData.IsLike ? 'icon iconfont active-tool icon-like-b' : 'icon iconfont icon-dianzan1'"></i>
-                    <span :class="{ active: videoInfo.itemOperateData.IsLike }">点赞</span>
+                    <span :class="{ active: videoInfo.itemOperateData.IsLike }">点赞 {{videoInfo.itemOperateData.LikeCount}}</span>
                   </span>
                 </div>
             </div>

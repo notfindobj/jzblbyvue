@@ -139,7 +139,10 @@ export default {
         })
       },
       goDetail (id) {
-        // this.$router.push({name: 'QuestionsAndAnswers',query: {id: id}})
+       this.$router.push({
+            name: 'QuestionsAndAnswers-id',
+            params: { id }
+        })
       },
       // 点击点赞
       clickLike(index, flag) {

@@ -1,22 +1,9 @@
 <template>
     <div>
         <div class="container">
-            <div class="main-left">
-                <Input search enter-button v-model="keyword" @on-search="searchQA" placeholder="请输入要搜索内容"/>
-                <div class="select-block" v-for="item in labelList" :key="item.ModuleId">
-                    <p class="select-title">{{ item.FullName }}</p>
-                    <div class="select-list">
-                        <Button shape="circle" size="small" v-for="subItem in item.Labels" :key="subItem.ModuleId"
-                                :class="{selected: labelId === subItem.ModuleId}"
-                                @click="clickLabel(subItem.ModuleId)">
-                            {{ subItem.FullName }}
-                        </Button>
-                    </div>
-                </div>
-            </div>
             <div class="main-right">
                 <!-- 头部 -->
-                <div class="right-top">
+                <!-- <div class="right-top">
                     <div class='swiper-box'>
                         <div v-swiper:mySwiper="swiperOption">
                             <div class="swiper-wrapper">
@@ -40,7 +27,7 @@
                         </ul>
                         <nuxt-link class="bottom-link" to="/">更多话题等您参与>></nuxt-link>
                     </div>
-                </div>
+                </div> -->
                 <!-- 主内容区 -->
                 <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="content">
@@ -54,34 +41,35 @@
                         <div class="content-list">
                             <Spin size="large" fix v-if="spinShow"></Spin>
                             <div class="content-item" v-for="item in QAList" :key="item.QAId">
-                                <div class="item-left-box">
-                                    <span class="num">{{ item.ReplyCount }}</span>
-                                    <span>回答</span>
-                                </div>
-                                <div class="item-box">
-                                    <div class="item-info">
-                                        <div class="question-info">
-                                            <div @click="jumpRoute(item)">
-                                                <span class="avatar">
-                                                    <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
-                                                </span>
-                                                <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                                <div class="content-box"> 
+                                    <div class="item-left-box">
+                                        <span class="num">
+                                            <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
+                                        </span>
+                                    </div>
+                                    <div class="item-box">
+                                        <div class="item-info">
+                                            <div class="question-info">
+                                                <div @click="jumpRoute(item)"> 
+                                                    <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                                                </div>
+                                                <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
+                                                <span>{{item.LatestAnswerDate}}</span>
                                             </div>
-                                            <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
-                                            <span>{{item.LatestAnswerDate}}</span>
+                                            <h3 class="item-question" @click="goDetail(item.QAId)">{{item.QATitle }}</h3>
+                                            <div class="item-answer">
+                                                <span v-show="item.LatestAnswer">回答：</span>
+                                                <emotHtml class="beyond-quest" v-model="item.LatestAnswer"/>
+                                            </div>
                                         </div>
-                                        <h3 class="item-question" @click="goDetail(item.QAId)">{{ item.QATitle }}</h3>
-                                        <div class="item-answer">
-                                            <span v-show="item.LatestAnswer">回答：</span>
-                                            <emotHtml class="beyond-quest" v-model="item.LatestAnswer"/>
-                                        </div>
-                                    </div>
-                                    <div class="item-right">
-                                        <div class="img" @click="goDetail(item.QAId)">
-                                            <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                        <div class="item-right">
+                                            <div class="img" @click="goDetail(item.QAId)">
+                                                <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
+                                <proTools :itemTools="item"/>
                             </div>
                         </div>
                         <div class="page-box" v-if="total > 5">
@@ -89,6 +77,19 @@
                         </div>
                     </div>
                 </crollBox>
+            </div>
+            <div class="main-left">
+                <Input search enter-button v-model="keyword" @on-search="searchQA" placeholder="请输入要搜索内容"/>
+                <div class="select-block" v-for="item in labelList" :key="item.ModuleId">
+                    <p class="select-title">{{ item.FullName }}</p>
+                    <div class="select-list">
+                        <Button shape="circle" size="small" v-for="subItem in item.Labels" :key="subItem.ModuleId"
+                                :class="{selected: labelId === subItem.ModuleId}"
+                                @click="clickLabel(subItem.ModuleId)">
+                            {{ subItem.FullName }}
+                        </Button>
+                    </div>
+                </div>
             </div>
         </div>
         <ToTop></ToTop>
@@ -98,6 +99,7 @@
 <script>
 import { getQADataBy } from '../../service/clientAPI'
 import ToTop from '../../components/toTop'
+import proTools from '../../components/proTools'
 import crollBox from '../../components/crollBox'
 import { _throttle } from '../../plugins/untils/public'
 export default {
@@ -136,7 +138,8 @@ export default {
     },
     components: {
         ToTop,
-        crollBox
+        crollBox,
+        proTools
     },
     methods: {
         // 触底事件
@@ -259,6 +262,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .content-box {
+        display: flex;
+        justify-content: space-between;
+    }
     .container {
         width: 1200px;
         margin: 30px auto;
@@ -267,7 +274,7 @@ export default {
     }
     .main-left {
         width: 340px;
-        height: 879px;
+        max-height: 750px;
         padding: 20px;
         background: #FFFFFF;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);
@@ -405,11 +412,8 @@ export default {
 
             .content-item {
                 width: 100%;
-                height: 130px;
                 border-bottom: 1px solid #d8d8d8;
-                padding: 15px 20px;
-                display: flex;
-                justify-content: space-between;
+                padding: 15px 20px 0;
                 .item-left-box {
                     display: flex;
                     flex-direction: column;
@@ -420,7 +424,7 @@ export default {
                     border-radius: 4px;
                     background-image: linear-gradient(-135deg, #68B5F9 0%, #5488F8 100%);
                     color: #fff;
-
+                    overflow: hidden;
                     span {
                         font-size: 13px;
                     }
@@ -428,6 +432,13 @@ export default {
                     .num {
                         font-size: 16px;
                         line-height: 16px;
+                        display: inline-block;
+                        height: 100%;
+                        width: 100%;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                 }
                 .no-answer {

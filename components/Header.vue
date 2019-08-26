@@ -5,6 +5,9 @@
                 <li>
                     <img class="logo-img" @click="goHome" :src="loginImg" alt="建筑部落">
                 </li>
+                 <li>
+                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">资料库</nuxt-link>
+                </li>
                 <li>
                     <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
                 </li>
@@ -29,7 +32,7 @@
             </ul>
             <ul class="user">
                 <li class="user-info">
-                    <img :src="auth ? auth.HeadIcon : $defaultHead" alt="">
+                    <img  @click="enterCenter" :src="auth ? auth.HeadIcon : $defaultHead" alt="">
                     <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
                     <div class="user-name" v-else>
                         <span @click="enterCenter">{{auth.NickName}}</span>
@@ -151,11 +154,11 @@
             .nav-list {
                 display: flex;
                 align-items: center;
-                font-size: 16px;
+                font-size: 18px;
                 a {
                     display: inline-block;
                     height: 60px;
-                    margin: 0 20px;
+                    margin: 0 15px;
                     line-height: 60px;
 
                 }
@@ -169,10 +172,7 @@
                 }
                 li {
                     &:first-child {
-                        margin-right: 50px;
-                    }
-                    &:last-child {
-                        margin-left: 50px;
+                        margin-right: 30px;
                     }
                 }
             }
@@ -186,7 +186,7 @@
             .user {
                 display: flex;
                 align-items: center;
-                margin-left: 40px;
+                // margin-left: 40px;
                 cursor: pointer;
                 img {
                     width: 28px;

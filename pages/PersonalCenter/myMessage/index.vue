@@ -12,7 +12,7 @@
                 <div v-if="!modifying" class="modifying-head" @click="$refs.uploadType.click()">修改头像</div>
                 <input type="file" style="display:none;" ref="uploadType" @change="upHeaderImg">
             </div>
-            <div class="message-items-operation operation-label" @click="modifying = !modifying">{{modifying ?"编辑" :
+            <div class="message-items-operation operation-label" :style="`color:${modifying ? '#ff3c00' : ''}`" @click="modifying = !modifying">{{modifying ?"编辑" :
                 "收起"}}
             </div>
         </div>
@@ -35,7 +35,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="nickname = !nickname">{{nickname ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" :style="`color:${nickname ? '#ff3c00' : ''}`"  @click="nickname = !nickname">{{nickname ?"编辑" : "收起"}}</div>
         </div>
         <!-- 个人资料 -->
         <div class="message-items message-items-text">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="meansClick">{{means ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" :style="`color:${means ? '#ff3c00' : ''}`" @click="meansClick">{{means ?"编辑" : "收起"}}</div>
         </div>
         <!-- 教育信息 -->
         <!-- <div class="message-items message-items-text">
@@ -190,7 +190,7 @@
                     <Input style="width:230px" v-model="userLabelModel" search enter-button="添加" @on-search="addLabel" placeholder="请输入标签" />
                 </div>
             </div>
-            <div class="message-items-operation" @click="isLabel = !isLabel">{{isLabel ? '收起' : '编辑'}}</div>
+            <div class="message-items-operation" :style="`color:${!isLabel ? '#ff3c00' : ''}`" @click="isLabel = !isLabel">{{isLabel ? '收起' : '编辑'}}</div>
         </div>
         <!-- 职业信息 -->
         <div class="message-items message-items-text">
@@ -264,7 +264,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="clickCareer">{{career ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" :style="`color:${career ? '#ff3c00' : ''}`" @click="clickCareer">{{career ?"编辑" : "收起"}}</div>
         </div>
     </div>
 </template>

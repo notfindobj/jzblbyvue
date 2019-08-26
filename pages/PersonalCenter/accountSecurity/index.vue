@@ -37,7 +37,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" @click="account = !account">{{account ?"编辑" : "收起"}}</div>
+            <div class="message-items-operation" :style="`color:${account ? '#ff3c00' : ''}`" @click="account = !account">{{account ?"编辑" : "收起"}}</div>
         </div>
     </div>
 </template>

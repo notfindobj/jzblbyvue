@@ -60,23 +60,23 @@
                 <div class="foot-child">
                     <span @click="clickCollection(!itemInfo.itemOperateData.IsCollection)">
                       <i :class="itemInfo.itemOperateData.IsCollection ? 'icon iconfont active-tool icon-cc-star': 'icon iconfont  icon-favorite'"></i>
-                      <span :class="{ active: itemInfo.itemOperateData.IsCollection }">收藏</span>
+                      <span :class="{ active: itemInfo.itemOperateData.IsCollection}">收藏 {{itemInfo.itemOperateData.CollectionCount}}</span>
                     </span>
                 </div>
                 <div class="foot-child">
                     <span @click="textShare">
                         <i class="icon iconfont">&#xe6be;</i>
-                        <span>{{ itemInfo.itemOperateData.ShareCount }}</span>
+                        <span>{{ itemInfo.itemOperateData.ShareCount}}</span>
                     </span>
                 </div>
                 <div class="foot-child" @click="clickComment">
                     <i class="icon iconfont">&#xe664;</i>
-                    <span>评论</span>
+                    <span>评论 {{itemInfo.itemOperateData.CommentCount}}</span>
                 </div>
                 <div class="foot-child">
                   <span @click="clickLike(!itemInfo.itemOperateData.IsLike)">
                     <i :class="itemInfo.itemOperateData.IsLike ? 'icon iconfont active-tool icon-like-b' : 'icon iconfont icon-dianzan1'"></i>
-                    <span :class="{ active: itemInfo.itemOperateData.IsLike }">点赞</span>
+                    <span :class="{ active: itemInfo.itemOperateData.IsLike }">点赞 {{itemInfo.itemOperateData.LikeCount}}</span>
                   </span>
                 </div>
             </div>
