@@ -6,7 +6,7 @@
                     <img class="logo-img" @click="goHome" :src="loginImg" alt="建筑部落">
                 </li>
                  <li>
-                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">资料库</nuxt-link>
+                    <nuxt-link to="/HeAndITribal" @click.native="goList">资料库</nuxt-link>
                 </li>
                 <li>
                     <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
@@ -60,6 +60,7 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import { logout} from '../LocalAPI'
+import { setDemo } from '../LocalAPI'
   export default {
     data() {
       return {
@@ -74,6 +75,38 @@
         ...mapGetters(['isLogin'])
     },
     methods: {
+        // 点击一级分类
+        async goList(cate) {
+            if (!this.isLogin) {
+                return false
+            }
+            // 搜索页导航数据
+            let baseSearchNav = {
+                key: 'baseSearchNav',
+                value: {
+                    ClassTypeArrList: [{AttrKey: 'e5082f90-f590-4107-8d42-2d37897ef261', AttrValue: 'DesignLib'}],
+                    title: '示范区',
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchNav);
+            let msgs = await setDemo('baseSearchNav', baseSearchNav);
+            // 搜索页项目数据
+            let baseSearchItem = {
+                key: 'baseSearchItem',
+                value: {
+                    Pagination: {
+                        SortType: 1,
+                        KeyWords: "",
+                        Order: true,
+                        Page: 1,
+                        Rows: 32
+                    }
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchItem);
+            let msgss = await setDemo('baseSearchItem', baseSearchItem);
+            this.$router.push({ name: "dataBase"});
+        },
         enterCenter () {
             if (!this.isLogin) {
                 return false
