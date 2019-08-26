@@ -41,7 +41,7 @@
             </FormItem>
             <Row>
                 <Col span="12" style="padding-right:10px">
-                    <FormItem label="姓名:" prop="IDCardName">
+                    <FormItem label="经办人姓名:" prop="IDCardName">
                         <Input v-model="companyAttr.IDCardName"></Input>
                     </FormItem>
                 </Col>

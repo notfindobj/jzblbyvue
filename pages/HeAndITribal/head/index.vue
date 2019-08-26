@@ -17,7 +17,7 @@
                 <p class="my-name">{{ userInfo.NickName }}
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
-                <div class="my-untils">
+                <div class="my-untils" v-show="itIsMe">
                   <div :class="userInfo.IsFollow? 'my-follow-btn my-unfollow' : 'my-follow-btn my-follow'" @click="worksFocus(userInfo)">
                     <i v-if="!userInfo.IsFollow" class="iconfont icon-jia"></i>
                     <span>{{userInfo.IsFollow? '已关注' : '关注'}}</span>
@@ -45,7 +45,11 @@ export default {
       userId : {
         type: String,
         default: ''
-      }
+      },
+      itIsMe: {
+        type: Boolean,
+        default: false
+      },
     },
     data() {
       return {

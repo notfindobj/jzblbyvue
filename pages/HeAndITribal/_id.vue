@@ -1,7 +1,7 @@
 <template>
     <div class="he-and-i-tribal">
         <div class="he-and-i-tribal-content">
-            <heads :userInfo="tribeInfo" :userId="userId"/>
+            <heads :userInfo="tribeInfo" :userId="userId" :itIsMe="itIsMe"/>
             <div class="he-and-i-con-box">
                 <ul class="he-and-i-con-box-nav">
                     <li v-for="(item,index) in tribeInfo.MyOrOtherMeun" :key="item.id"
@@ -63,6 +63,7 @@
         data() {
             return {
                 currentIndex: 0,
+                itIsMe: false,
                 currentItem: '0',
                 headList: [],
                 dataList: [],
@@ -82,14 +83,26 @@
         },
         async asyncData({ store, query }) {
             let id = query.id ? query.id : store.getters.getToken.UserId;
+            let itIsMe = null
+            if (query.id === '' || query.id === store.getters.getToken.UserId) {
+                itIsMe = false;
+            } else {
+                itIsMe = true;
+            }
             const data = await store.dispatch('getTribeInfo', id);
             return {
                 userId: id,
+                itIsMe,
                 tribeInfo: data
             }
         },
         created () {
-            this.getTypeMeunList();
+            this.getTypeMeunList(); 
+            if (this.$route.query.id === undefined || this.$route.query.id === this.userInfoID) {
+                this.itIsMe = false;
+            }  else {
+                this.itIsMe = true;
+            }
         },
         methods: {
             onChangePage (num, type = 1) {
@@ -223,7 +236,7 @@
             > li {
                 flex: 1;
                 line-height: 40px;
-                font-size: 14px;
+                font-size: 16px;
                 color: #333333;
                 margin-right: 100px;
                 position: relative;

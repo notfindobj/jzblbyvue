@@ -442,7 +442,7 @@ export default {
                     margin-left: 24px;
                     max-width: 570px;
                     .item-question {
-                        font-size: 16px;
+                        font-size: 20px;
                         color: #333;
                         line-height: 14px;
                         cursor: pointer;

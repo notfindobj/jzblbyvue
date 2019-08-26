@@ -113,7 +113,7 @@
                 align-items: center;
                 justify-content: flex-start;
                 background: #ffffff;
-                font-size: 12px;
+                font-size: 14px;
                 color: #666666;
                 box-sizing: border-box;
                 border-bottom: 1px solid #D8D8D8;

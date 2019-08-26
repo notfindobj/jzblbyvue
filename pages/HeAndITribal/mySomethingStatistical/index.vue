@@ -83,7 +83,7 @@
       .head-boxs {
         height: 40px;
         line-height: 39px;
-        font-size: 12px;
+        font-size: 14px;
         color: #333333;
         background: #ffffff;
         text-indent: 19px;
