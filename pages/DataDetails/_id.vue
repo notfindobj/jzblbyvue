@@ -365,7 +365,6 @@
                     }
                     return false
                 }
-                
                 this.modalConfig.isWxConfig = false;
                 if (obj.type == 'Down') {
                     this.isShowDateDetailsDown = true;

@@ -4,7 +4,7 @@
             <video-item
                 v-for="(item, index) in videoList"
                 :key="item.TalkId"
-                :videoInfo="item"
+                :videoInfo="item || {}"
                 :index="index"
             ></video-item>
         </div>
@@ -41,6 +41,18 @@
                 isShowModal: false, // 是否显示弹框
                 videoInfo: {},  // 弹框视频的信息
                 watchIndex: '', // 当前视频的index
+            }
+        },
+        async asyncData({ store }) {
+            const data = await store.dispatch('getTalk', {
+                TalkType: 2,
+                Page: 0
+            })
+            console.log(data);
+            return {
+                data,
+                videoList: data.retModels,
+                total: data.paginationData.total
             }
         },
         methods: {
@@ -91,17 +103,6 @@
         mounted() {
             this.pageNum++;
             this.getList();
-        },
-        async asyncData({ store }) {
-            const data = await store.dispatch('getTalk', {
-                TalkType: 2,
-                Page: 0
-            })
-            return {
-                data,
-                videoList: data.retModels,
-                total: data.paginationData.total
-            }
         }
     }
 </script>

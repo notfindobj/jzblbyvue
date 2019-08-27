@@ -6,6 +6,7 @@
             @choseSome="getItemsBaseData"
             @choseSomeOne="choseSomeOne"
             @delItems="delItems"
+            :proNum="RspPaginationData.records"
         />
         <conten
             :RspItemDatas="RspItemDatas"

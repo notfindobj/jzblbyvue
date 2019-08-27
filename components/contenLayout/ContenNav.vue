@@ -7,7 +7,9 @@
                     {{item.ItemAttributesFullName}}
                     <img src="../../assets/images/sanjiao.png"/>
                 </li>
+               
             </ul>
+            <span class="proNum">共{{proNum}}个相关项目</span>
         </div>
         <div class="screening-nav">
             <!-- 面包屑 -->
@@ -45,7 +47,11 @@ import {mapGetters } from 'vuex'
 export default {
     name: 'contenNav',
     props: {
-      itemAttribute: {
+        proNum: {
+           type: Number,
+           default: 0
+        },
+        itemAttribute: {
             type: Array,
             required: true,
             default: function () {
@@ -98,6 +104,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .proNum {
+        color: #999;
+        font-size: 14px;
+    }
     .nav-box {
         width: 100%;
         height: auto;

@@ -3,6 +3,7 @@
         <div class="he-and-i-tribal-content">
             <heads :userInfo="tribeInfo" :userId="userId" :itIsMe="itIsMe"/>
             <div class="he-and-i-con-box">
+                <!-- 一级导航-->
                 <ul class="he-and-i-con-box-nav">
                     <li v-for="(item,index) in tribeInfo.MyOrOtherMeun" :key="item.id"
                         :class="currentIndex === index ? 'li-active' :''" @click="getTypeMeunList(item,index)">
@@ -11,13 +12,17 @@
                 </ul>
                 <div class="he-and-i-con-box-content">
                     <div class="he-and-i-con-box-content-left">
+                        <!-- 二级导航-->
+                        <ul class="head-boxs head-boxs-two" v-show="headList && headList.length > 0">
+                            <li :class="twoIndex === itemIndex ? 'li-active' : ''" v-for="(item, itemIndex) in headList" :key="itemIndex" 
+                                @click="changeTwo(item.TypeId, itemIndex)">
+                                {{item.TypeName}}
+                            </li>
+                        </ul>
                         <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                             <HeAndIDownload 
                                 v-if="PersonalCenter === 'HeAndIDownload'"
-                                :currentIndex="currentItem"
-                                :headList="headList" 
-                                :dataList="dataList" 
-                                @changeType="getList"/>
+                                :dataList="dataList"/>
                             <mySomethingStatistical
                                 v-if="PersonalCenter === 'mySomethingStatistical'"
                                 :followList="followList"
@@ -33,18 +38,15 @@
                 </div>
             </div>
         </div>
-        <ToTop></ToTop>
     </div>
 </template>
 <script>
-    import HeAndIContent from './HeAndIContent'
     import HeAndIIntroduction from './HeAndIIntroduction'
     import HeAndIDownload from './HeAndIDownload'
     import mySomethingStatistical from './mySomethingStatistical'
     import { mapState } from 'vuex'
     import Heads from './head'
     import crollBox from '../../components/crollBox'
-    import ToTop from '../../components/toTop'
     import { getTypeMeun , getFollowOrFans} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     export default {
@@ -52,20 +54,20 @@
         middleware: 'authenticated',
         name: 'PersonalCenter',
         components: {
-            HeAndIContent,
             HeAndIIntroduction,
             HeAndIDownload,
             mySomethingStatistical,
             Heads,
-            ToTop,
             crollBox
         },
         data() {
             return {
-                currentIndex: 0,
+                currentIndex: 0, // 一级高亮
+                twoIndex: 0, // 二级高亮
                 itIsMe: false,
+                IsFollow: true, // 粉丝加载
                 currentItem: '0',
-                headList: [],
+                headList: [], // 二级导航
                 dataList: [],
                 followList: [],
                 PersonalCenter: 'PersonalCenter',
@@ -105,17 +107,6 @@
             }
         },
         methods: {
-            onChangePage (num, type = 1) {
-                this.pageNum = num;
-                this.getList(num, type);
-                (function smoothscroll(){
-                    var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
-                    if (currentScroll > 0) {
-                        window.requestAnimationFrame(smoothscroll);
-                        window.scrollTo (0,currentScroll - (currentScroll/5));
-                    }
-                })();
-            },
             // 触底事件
             willReachBottom: _throttle (function () {
                 if (this.total === 1) {
@@ -127,63 +118,88 @@
                     return false;
                 }
                 this.pageNum++;
-                this.getList(undefined, 1);
+                if (this.PersonalCenter === 'HeAndIDownload') {
+                    this.getList(this.currentIndex, this.twoIndex, true);
+                } else {
+                    this.getfollowList(this.IsFollow, true)
+                }
             }, 1500),
-            // 选择二级菜单
-            getTypeMeunList (item, inx) {
+            // 点击一级菜单
+            async getTypeMeunList (item, inx) {
                 this.currentIndex = inx || 0;
+                this.twoIndex = 0;
                 this.pageNum = 1;
                 let queryData = {
                     typeId: inx || 0,
                     UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID
                 }
-                getTypeMeun(queryData).then(res => {
-                    this.headList = res.typeMenuButs;
+                let menuButs = await getTypeMeun(queryData);
+                if (menuButs) {
+                    this.headList = menuButs.typeMenuButs;
                     this.PersonalCenter = 'HeAndIDownload';
-                    this.getList();
-                })
+                    this.getList(inx);
+                }
             },
             changeComponents (index, count) {
                 this.currentIndex = null;
                 this.pageNum = 1;
+                this.headList =[];
                 let Components = ['mySomethingStatistical', 'mySomethingStatistical', 'HeAndIDownload'];
                 this.PersonalCenter = Components[index];
                 if (index === 0 || index === 1) {
-                    this.getfollowList(index)
+                    let isF = index === 0 ? true : false;
+                    this.getfollowList(isF)
+                } else {
+                    this.twoIndex = 0
+                    this.getList(0, 0);
                 }
             },
             // 获取关注数据
-            async getfollowList (index) {
+            async getfollowList (index, isCrool) {
+                this.IsFollow =index;
                 let query = {
-                    "IsFollow": index === 0 ? true : false,
+                    "IsFollow": this.IsFollow,
                     "page": this.pageNum,
                     "UserId": this.$route.query.id ? this.$route.query.id : this.userInfoID
                 }
                 let msg  = await getFollowOrFans(query);
                 if (msg) {
-                    // this.followList = this.followList.concat(msg.forFs);
-                    this.followList = msg.forFs;
-                    this.total = msg.paginationData.total;
-                    this.pageNum = msg.paginationData.page;
-                    this.records = msg.paginationData.records;
+                    if (msg.forFs instanceof Array) {
+                        if (isCrool) {
+                            this.followList = this.followList.concat(msg.forFs);
+                        } else {
+                            this.dataList = [];
+                            this.followList = msg.forFs;
+                        }
+                        this.total = msg.paginationData.total;
+                        this.pageNum = msg.paginationData.page;
+                        this.records = msg.paginationData.records;
+                    } else {
+                        this.dataList = [];
+                        this.total = 0;
+                        this.pageNum = 0;
+                        this.records = 0;
+                    }
+                    
+                    
                 }
             },
+            // 点击二级导航
+            changeTwo (id, index) {
+                this.twoIndex = index;
+                this.getList(this.currentIndex, id);
+            },
             // 获取发布数据
-            getList(id, index) {
-                if (index) {
-                    this.currentItem = index
-                } else {
-                     this.currentItem = '0'
-                }
+            getList(OneIndex, index, isScroll) {
                 this.$store.dispatch('getSelfOrOthertribeInfo', {
                     Page: this.pageNum,
                     Rows: 8,
-                    ItemTypeId: index || 0,
+                    ItemTypeId: index,
                     typeId: this.currentIndex,
                     UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID
                 }).then(res => {
                     if (res.retModels instanceof Array) {
-                        if (index) {
+                        if (isScroll) {
                             this.dataList = this.dataList.concat(res.retModels);
                         } else {
                             this.dataList = [];
@@ -192,6 +208,11 @@
                         this.total = res.paginationData.total;
                         this.pageNum = res.paginationData.page;
                         this.records = res.paginationData.records;
+                    } else {
+                        this.dataList = [];
+                        this.total = 0;
+                        this.pageNum = 0;
+                        this.records = 0
                     }
                 })
             }
@@ -199,6 +220,33 @@
     }
 </script>
 <style lang="less" scoped>
+    .head-boxs-two{
+        position: sticky;
+        top: 100px;
+        z-index: 66;
+        border-top: 1px solid #eeeeee;
+    }
+    .head-boxs {
+        padding-left: 15px;
+        height: 40px;
+        line-height: 39px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        background: #ffffff;
+        font-size: 14px;
+        color: #666666;
+        box-sizing: border-box;
+        border-bottom: 1px solid #D8D8D8;
+        > li {
+            margin-right: 20px;
+            cursor: pointer;
+        }
+        .li-active {
+            color: #FF3C00;
+        }
+    }
     .he-and-i-tribal {
         width: 100%;
         height: 100%;

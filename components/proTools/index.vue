@@ -1,7 +1,7 @@
 <template>
     <ul class="pro-tool">
         <li>
-            <span>
+            <span  @click="clickCollection(itemTools)">
                 <i class="icon iconfont icon-yidongappxiexiaoxi"></i>
                 <span>写问答</span>
             </span>
@@ -39,7 +39,12 @@ export default {
             type:Object,
             default: () => {}
         }
-    }
+    },
+    methods: {
+        clickCollection (row) {
+            console.log(row)
+        }
+    },
 }
 </script>
 <style lang="less" scoped>

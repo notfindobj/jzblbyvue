@@ -97,13 +97,6 @@
                     我要提问
                 </Button> -->
             </div>
-
-            <!-- <div class="block-btn">
-                <Button type="primary" class="big-btn" size="large">
-                    <i class="icon iconfont">&#xe60a;</i>
-                    我要提问
-                </Button>
-            </div> -->
         </div>
         <ToTop></ToTop>
     </div>

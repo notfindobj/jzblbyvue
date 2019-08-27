@@ -1,12 +1,6 @@
 <template>
     <div class="download-box">
         <div class="download-box-con">
-            <ul class="head-boxs head-boxs-two" v-show="headList && headList.length > 0">
-                <li :class="currentIndex === item.TypeId ? 'li-active' : ''" v-for="(item,index) in headList"
-                    @click="change(item,item.TypeId)" :key="index" >
-                    {{item.TypeName}}
-                </li>
-            </ul>
               <template v-for="(item, index) in dataList">
                   <ImageAndText v-if="item.TalkType !== 2" 
                       :textLength="9"
@@ -29,23 +23,12 @@
   import { setComments, setthumbsUp, setCollection, setFollow } from '../../../service/clientAPI'
   export default {
     layout: 'main',
-    data() {
-      return {
-        // currentIndex: '0'
-      }
-    },
     components: {
       ImageAndText,
       VideoItem
     },
     props: {
-      headList: Array,
       dataList: Array,
-      paginationData: Object,
-      currentIndex: {
-        type: String,
-        default: '0'
-      },
     },
     methods: {
       // 点击收藏
@@ -63,7 +46,6 @@
           this.$set(this.dataList, index, dataInfo);
         })
       },
-
       // 点击点赞
       clickLike(index, flag) {
         setthumbsUp({
@@ -77,19 +59,6 @@
           flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
           this.$set(this.dataList, index, itemInfo);
         })
-      },
-      handleReachBottom() {
-        if (this.paginationData.page < this.paginationData.total) {
-          this.$emit('reachBottom')
-        } else {
-          this.$Message.warning('已经到底了~')
-        }
-      },
-      change(item, inx) {
-        if (this.currentIndex !== inx) {
-          // this.currentIndex = inx;
-          this.$emit('changeType', item.TypeId, inx)
-        }
       }
     }
   }

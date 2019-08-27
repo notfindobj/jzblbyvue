@@ -2,32 +2,6 @@
     <div>
         <div class="container">
             <div class="main-right">
-                <!-- 头部 -->
-                <!-- <div class="right-top">
-                    <div class='swiper-box'>
-                        <div v-swiper:mySwiper="swiperOption">
-                            <div class="swiper-wrapper">
-                                <div class="swiper-slide" v-for="item in slideList" :key="item.Id">
-                                    <img :src="item.CoverImgUrl" alt="">
-                                </div>
-                            </div>
-                            <div class="swiper-pagination"></div>
-                        </div>
-                    </div>
-                    <div class='top-list'>
-                        <p class="list-title">
-                            <img :src="htzhIcon" alt="">
-                            <span>有趣话题等您参与</span>
-                        </p>
-                        <ul>
-                            <li v-for="item in recommentList" :key="item.QAId">
-                                <nuxt-link :to="{name: 'QuestionsAndAnswers-id', params: {id: item.QAId}}">{{ item.QATitle}}
-                                </nuxt-link>
-                            </li>
-                        </ul>
-                        <nuxt-link class="bottom-link" to="/">更多话题等您参与>></nuxt-link>
-                    </div>
-                </div> -->
                 <!-- 主内容区 -->
                 <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="content">
@@ -249,14 +223,11 @@ export default {
             Page: 1,
             Rows: 8
         };
-        const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment'), store.dispatch('getQAData', queryParams)])
-        // const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQARecomment')])
+        const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQAData', queryParams)])
         return {
             labelList: data[0].TypeLabels,
-            recommentList: data[1].RecommendQA,
-            slideList: data[1].SlideList,
-            QAList: data[2].QADatas,
-            total: data[2].paginationData.total
+            QAList: data[1].QADatas,
+            total: data[1].paginationData.total
         }
     }
 }
@@ -455,7 +426,6 @@ export default {
                     .item-question {
                         font-size: 20px;
                         color: #333;
-                        line-height: 14px;
                         cursor: pointer;
                         margin: 10px 0 ;
                     }
