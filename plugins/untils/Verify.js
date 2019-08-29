@@ -1,5 +1,6 @@
 var Reg = {
-	regPhone: /^1[34578][0-9]\d{8}$/
+	regPhone: /^1[34578][0-9]\d{8}$/,
+	regNum: /^[0-9]+.?[0-9]*$/
 }
 export const regText = params => {
 	return Reg.regPhone.test(params)
@@ -25,6 +26,17 @@ export const validateIdentity = (rule, value, callback) => {
 		callback();
 	}
 }; 
+// 只能是数字
+export const validateNum = (rule, value, callback) => {
+	let tit = IdentityCodeValid(value);
+	  if (value === '') {
+		  callback(new Error('选项不能为空'));
+	  } else if (!Reg.regNum.test(value)) {
+		  callback(new Error('选项必须是数字'));
+	  } else {
+		  callback();
+	  }
+  }; 
 function IdentityCodeValid(code, callback) {
 	let city = {
 		11: "北京",

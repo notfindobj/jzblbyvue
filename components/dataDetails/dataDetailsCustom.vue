@@ -9,51 +9,39 @@
         <div class="need-type">
           <span>类型：</span>
           <ul>
-            <li class="li-active">{{itemCustomizes.customizedTypeName}}</li>
+            <li v-for="(items, index) in itemCustomizes" :key="index" :class="customizesContentIndex  === index? 'li-active' : ''" @click="changeCustom(items, index)">{{items.customizedTypeName}}</li>
           </ul>
         </div>
         <div class="need-con">
           <span>定制说明</span>
         </div>
-        <p class="need-coc-box">{{itemCustomizes.customizedDescription}}</p>
-        <p class="need-price">预算金额：{{itemCustomizes.customizedMoney}}元/套</p>
+        <p class="need-coc-box">{{customizesContent.customizedDescription}}</p>
+        <p class="need-price">预算金额：{{customizesContent.customizedMoney}}元/套</p>
       </div>
       <div class="submit-custom">
-        <div class="submit-custom-title">
-          <span>提交同款定制</span>
-          <span>您选择后我们将尽快联系您！</span>
-          <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
-        </div>
-        <p class="submit-type">类型：<span>平面填色</span></p>
-        <div class="submit-describe">
-          <span><i>*</i>描述</span>
-          <textarea v-model="customized.customizedDescription"></textarea>
-        </div>
-        <div class="submit-budget">
-          <span><i>*</i>预算金额</span>
-          <div class="submit-budget-con">
-            <input type="text" v-model="customized.customizedCount">
-            <i>*</i>
-            <input type="text" :value="itemCustomizes.customizedMoney" disabled> 
-            <span>总计{{itemCustomizes.customizedMoney * customized.customizedCount}}元</span>
+          <div class="submit-custom-title">
+            <span>提交同款定制</span>
+            <span>您选择后我们将尽快联系您！</span>
+            <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
           </div>
-        </div>
-        <div class="submit-phone">
-          <span><i>*</i>手机号码</span>
-          <div class="submit-phone-con">
-            <input type="text" v-model="customized.customizedMobile" >
-            <!-- <div>发送验证码</div> -->
-          </div>
-        </div>
-        <!-- <div class="submit-validation">
-          <span><i></i>验证码</span>
-          <div class="submit-validation-con">
-            <input type="text">
-          </div>
-        </div> -->
+          <p class="submit-type">类型：<span>{{customizesContent.customizedTypeName}}</span></p>
+          <Form :model="customized" :rules="rules" :label-width="70" ref="customize">
+            <FormItem label="描述" prop="customizedDescription">
+              <Input type="textarea" v-model="customized.customizedDescription" placeholder="请填写定制需求..."></Input>
+            </FormItem>
+            <FormItem label="预算金额" prop="customizedMoney">
+              <div style="display: flex;" >
+                <Input v-model="customized.customizedMoney" placeholder="请填写" style="width:80px;"></Input> 
+                <span class="star">元</span>
+              </div>
+            </FormItem>
+            <FormItem label="手机号码" prop="customizedMobile">
+              <Input v-model="customized.customizedMobile" placeholder="请填写手机号码" style="width:200px;"></Input>
+            </FormItem>
+          </Form>
         <div class="window-btn">
           <div @click="closeMask()">取消</div>
-          <div @click="customMove">确定</div>
+          <div @click="customMove('customize')">确定</div>
         </div>
       </div>
     </div>
@@ -61,6 +49,7 @@
 </template>
 <script>
 import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientAPI'
+import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
   export default {
     name: 'detaDetailsCustom',
     props: {
@@ -73,6 +62,8 @@ import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientA
       return {
         currentNeedIndex:-1,
         itemCustomizes: {},
+        customizesContent: {},
+        customizesContentIndex: 0,
         customized: {
           customizedCount: 0,
           itemId: "",
@@ -80,6 +71,17 @@ import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientA
           customizedMoney: 0,
           customizedMobile: "",
           customizedDescription: ""
+        },
+        rules: {
+          customizedMobile: [
+              {required: true, validator: validatePassCheck, trigger: 'blur' }
+          ],
+          customizedDescription:[
+            {required: true, message: '描述不能为空', trigger: 'blur'}
+          ],
+          customizedMoney: [
+             {required: true, validator: validateNum, trigger: 'blur' }
+          ]
         }
       }
     },
@@ -89,6 +91,10 @@ import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientA
       this.getCustomize()
     },
     methods: {
+      changeCustom (row, index) {
+        this.customizesContentIndex = index;
+        this.customizesContent = row;
+      },
       choseNeedType (inx) {
         this.currentNeedIndex = inx
       },
@@ -96,21 +102,26 @@ import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientA
       async getCustomize() {
         let msg = await getCustomizeDataByItemId(this.itemId);
         if (msg) {
-          this.itemCustomizes = msg.itemCustomizes[0];
+          this.itemCustomizes = msg.itemCustomizes;
+          this.customizesContent = msg.itemCustomizes[0]
         }
       },
       // 定制回复
-      async customMove () {
-        this.customized.itemId = this.itemId;
-        this.customized.customizedTypeId = this.itemCustomizes.customizedTypeId;
-        this.customized.customizedMoney = Number(this.customized.customizedCount) * Number(this.itemCustomizes.customizedMoney);
-        let msg = await setReplyCustomize(this.customized)
-        if (msg) {
-          this.$Message.success('提交成功！');
-          setTimeout(() => {
-            this.closeMask()
-          }, 300)
-        }
+      async customMove (name) {
+        this.$refs[name].validate(async (valid) => {
+                if (valid) {
+                    this.customized.itemId = this.itemId;
+                    this.customized.customizedTypeId = this.customizesContent.customizedTypeId;
+                    this.customized.customizedMoney = this.customizesContent.customizedMoney;
+                    let msg = await setReplyCustomize(this.customized)
+                    if (msg) {
+                      this.$Message.success('提交成功！');
+                      setTimeout(() => {
+                        this.closeMask()
+                      }, 300)
+                    }
+                }
+            })
       },
       closeMask () {
         this.$emit('dataDetailsMaskClose',{type:'Custom'})
@@ -119,6 +130,13 @@ import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientA
   }
 </script>
 <style lang="less" scoped>
+  .star {
+    margin: 0 15px;
+    color: #FF3C00;
+    &-left {
+      margin-left: 15px;
+    }
+  }
   .mask{
     width: 100%;
     height: 100%;
@@ -188,6 +206,7 @@ import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientA
           align-items: flex-start;
           justify-content: center;
           margin-bottom: 34px;
+          cursor: pointer;
           >span{
             font-size: 14px;
             color: #333333;
