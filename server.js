@@ -150,14 +150,26 @@ app.post('/front/qqLogin', function (req, res) {
 
 // 发起 POST /api/logout 请求注销当前用户，并从 req.session 中移除
 app.post('/api/logout', function (req, res) {
-    delete res.clearCookie('adminToken');
+    let config = {
+        url: `${configUrl.baseUrl}Account/Loginout`,
+        withCredentials: true,
+        method: 'post',
+    }
     let response = {
         Success: true,
         Data: {},
         Msg: '退出成功！',
         Code: 200
     }
-    res.json(response);
+    axios(config).then(data => {
+        const token = data.data.Code;
+        if (data.data.Code === 200) {
+            delete res.clearCookie('adminToken');
+            res.json(response);
+        }
+    }, err => {
+        return res.json(err)
+    })
 })
 
 // 我们用这些选项初始化 Nuxt.js：

@@ -2,7 +2,7 @@
     <div class="reply-wrap">
         <div class="reply-box">
             <div class="comment-head">
-                <div class="comment-avatar">
+                <div class="comment-avatar" >
                     <img :src="$store.state.overas.auth.HeadIcon || $defaultHead" alt="">
                 </div>
                 <div class="reply-input-wrap" :style="{width: width + 'px'}">

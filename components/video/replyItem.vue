@@ -1,7 +1,7 @@
 <template>
     <div class="reply-wrap">
         <div class="reply-box">
-            <img class="replay-avatar" :src="replyInfo.HeadIcon || $defaultHead" alt="">
+            <img class="replay-avatar" @click="goToPersonal(replyInfo)" :src="replyInfo.HeadIcon || $defaultHead" alt="">
             <div class="replay-content">
                 <div class="replay-info">
                     <p>
@@ -58,6 +58,15 @@
     },
 
     methods: {
+       // 跳转部落
+      goToPersonal (row) {
+        this.$router.push({
+          name: 'HeAndITribal-id',
+          query: {
+            id: row.UserId
+          }
+        })
+      },
       // 点击回复
       clickReply() {
         this.isShowInput = !this.isShowInput;
@@ -116,6 +125,7 @@
             background-color: #F5F6F5;
 
             .replay-avatar {
+                cursor: pointer;
                 width: 20px;
                 height: 20px;
                 margin-right: 5px;

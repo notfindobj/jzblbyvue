@@ -108,6 +108,9 @@
 </script>
 
 <style lang="less" scoped>
+    .ivu-page {
+      text-align: center;
+    }
     .container {
         width: 1200px;
         margin: 30px auto;
