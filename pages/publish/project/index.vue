@@ -120,7 +120,7 @@
         <!-- 定制服务 -->
         <Modal v-model="serviceModal" width="594" title="提供定制服务"  class-name="service-box" >
             <div class="service-box-content">
-                <Form ref="serviceValidate" :model="serviceValidate" :label-width="80" >
+                <Form ref="serviceValidate" :model="serviceValidate" :rules="rulesValidate" :label-width="100" >
                     <FormItem label="定制类型:">
                         <template v-if="!isUpdateService" v-for="item in serviceList" >
                             <Button class="service-btn" size="small" :key="item.ItemDetailId"
@@ -134,20 +134,20 @@
                             <Button class="service-btn" size="small" type="primary" > {{ serviceName }} </Button>
                         </template>
                     </FormItem>
-                    <FormItem label="定制金额:">
+                    <FormItem label="定制金额:" prop="money">
                         <Input type="number" v-model="serviceValidate.money" placeholder="请选择"></Input>
                     </FormItem>
-                    <FormItem label="手机号码:">
+                    <FormItem label="手机号码:" prop="mobile">
                         <Input type="number" v-model="serviceValidate.mobile" placeholder="请输入11位手机号码"></Input>
                     </FormItem>
-                    <FormItem label="定制描述:">
+                    <FormItem label="定制描述:" prop="desc">
                         <Input v-model="serviceValidate.desc" type="textarea" :maxlength="500" :autosize="{minRows: 5,maxRows: 5}" placeholder="请填写0-500字定制描述"></Input>
                     </FormItem>
                 </Form>
             </div>
             <div slot="footer">
                 <Button @click="cancelService">取消</Button>
-                <Button type="primary" @click="clickModalConfirm()">确定</Button>
+                <Button type="primary" @click="clickModalConfirm('serviceValidate')">确定</Button>
             </div>
         </Modal>
     </div>
@@ -156,7 +156,7 @@
   import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
   import { mapGetters } from 'vuex'
   import {setDemo} from '../../../LocalAPI'
-  import {regText} from '../../../plugins/untils/Verify'
+  import {regText, validateNum, validatePassCheck} from '../../../plugins/untils/Verify'
   import { async } from 'q';
   export default {
     data() {
@@ -195,6 +195,17 @@
           money: '',
           mobile: '',
           desc: ''
+        },
+        rulesValidate: {
+          money: [
+            {required: true, validator: validateNum, trigger: 'blur' }
+          ],
+          mobile: [
+            {required: true, validator: validatePassCheck, trigger: 'blur' }
+          ],
+          desc: [
+            {required: true, message: '描述不能为空', trigger: 'blur'}
+          ]
         },
         spinShow: false,
         serviceList: [],

@@ -49,6 +49,7 @@ module.exports = {
     host: '0.0.0.0', // default: localhost
   },
   env: {
+    NODE_ENV: process.env.NODE_ENV,
     baseUrl: configUrl.baseUrl,
     fileBaseUrl: configUrl.fileBaseUrl,
   },

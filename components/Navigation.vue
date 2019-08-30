@@ -33,7 +33,7 @@
                     <li>
                         <Dropdown placement="bottom-start">
                             <a href="javascript:void(0)" class="app-down">
-                                APP下载
+                                消息提醒
                                 <Icon type="ios-arrow-down"></Icon>
                             </a>
                             <DropdownMenu slot="list">

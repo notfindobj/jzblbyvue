@@ -3,7 +3,7 @@
     <div class="mask-cons">
       <div class="need-custom">
         <div class="need-custom-title">
-          <span>我要同款定制</span>
+          <span>提供同款定制</span>
           <span>您选择后我们将尽快联系您！</span>
         </div>
         <div class="need-type">
@@ -20,7 +20,7 @@
       </div>
       <div class="submit-custom">
           <div class="submit-custom-title">
-            <span>提交同款定制</span>
+            <span>我要同款定制</span>
             <span>您选择后我们将尽快联系您！</span>
             <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
           </div>
@@ -74,13 +74,13 @@ import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
         },
         rules: {
           customizedMobile: [
-              {required: true, validator: validatePassCheck, trigger: 'blur' }
+            {required: true, validator: validatePassCheck, trigger: 'blur' }
           ],
           customizedDescription:[
             {required: true, message: '描述不能为空', trigger: 'blur'}
           ],
           customizedMoney: [
-             {required: true, validator: validateNum, trigger: 'blur' }
+            {required: true, validator: validateNum, trigger: 'blur' }
           ]
         }
       }

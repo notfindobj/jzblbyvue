@@ -380,12 +380,9 @@
                     this.paymentConfig = config;
                     this.downloadTime = setInterval(async () => {
                         let msg = await downloadFile(id);
-                        if (msg) {
-                            if (msg.Code === 200) {
-                                clearInterval(this.downloadTime)
-                            } else {
-                                return false
-                            }
+                        if (typeof(msg)=='string') {
+                            clearInterval(this.downloadTime);
+                            this.modalConfig.isWxConfig = false;
                             try {
                                 let name = msg.split('&')[1]
                                 var eleLink = document.createElement('a');
@@ -398,7 +395,7 @@
                                 // 然后移除
                                 document.body.removeChild(eleLink);
                             } catch (error) {
-                                
+                                console.log('下载出错')
                             }
                         }
                     }, 3000)

@@ -44,10 +44,12 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <a href="javascript:void(0)">
-                            APP下载
-                            <Icon type="ios-arrow-down"></Icon>
-                        </a>
+                        <Badge :count="100">
+                            <a href="javascript:void(0)" class="demo-badge">
+                                消息提醒
+                                <!-- <Icon type="ios-arrow-down"></Icon> -->
+                            </a>
+                        </Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem disabled>功能开发中</DropdownItem>
                         </DropdownMenu>
