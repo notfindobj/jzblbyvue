@@ -16,7 +16,7 @@
           <span>定制说明</span>
         </div>
         <p class="need-coc-box">{{customizesContent.customizedDescription}}</p>
-        <p class="need-price">预算金额：{{customizesContent.customizedMoney}}元/套</p>
+        <p class="need-price">报价金额：{{customizesContent.customizedMoney}}元/套</p>
       </div>
       <div class="submit-custom">
           <div class="submit-custom-title">
@@ -109,15 +109,21 @@ import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
       async customMove (name) {
         this.$refs[name].validate(async (valid) => {
                 if (valid) {
+                    // (Number(this.customized.customizedMoney) > Number(this.customizesContent.customizedMoney * 0.7 && Number(this.customized.customizedMoney) < Number(this.customizesContent.customizedMoney * 1.3)
                     this.customized.itemId = this.itemId;
                     this.customized.customizedTypeId = this.customizesContent.customizedTypeId;
-                    this.customized.customizedMoney = this.customizesContent.customizedMoney;
-                    let msg = await setReplyCustomize(this.customized)
-                    if (msg) {
-                      this.$Message.success('提交成功！');
-                      setTimeout(() => {
-                        this.closeMask()
-                      }, 300)
+                    let fM = Number(this.customizesContent.customizedMoney) * 0.7;
+                    let lM = Number(this.customizesContent.customizedMoney) * 1.3;
+                    if (this.customized.customizedMoney > fM && this.customized.customizedMoney < lM) {
+                      let msg = await setReplyCustomize(this.customized)
+                      if (msg) {
+                        this.$Message.success('提交成功！');
+                        setTimeout(() => {
+                          this.closeMask()
+                        }, 300)
+                      }
+                    } else {
+                      this.$Message.warning('预算金额必须在报价金额30%左右！');
                     }
                 }
             })
