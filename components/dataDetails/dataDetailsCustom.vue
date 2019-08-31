@@ -3,7 +3,7 @@
     <div class="mask-cons">
       <div class="need-custom">
         <div class="need-custom-title">
-          <span>提供同款定制</span>
+          <span>提供同款服务</span>
           <span>您选择后我们将尽快联系您！</span>
         </div>
         <div class="need-type">
@@ -20,7 +20,7 @@
       </div>
       <div class="submit-custom">
           <div class="submit-custom-title">
-            <span>我要同款定制</span>
+            <span>购买同款服务</span>
             <span>您选择后我们将尽快联系您！</span>
             <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
           </div>
@@ -65,7 +65,6 @@ import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
         customizesContent: {},
         customizesContentIndex: 0,
         customized: {
-          customizedCount: 0,
           itemId: "",
           customizedTypeId: "",
           customizedMoney: 0,
@@ -93,7 +92,7 @@ import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
     methods: {
       changeCustom (row, index) {
         this.customizesContentIndex = index;
-        this.customizesContent = row;
+        this.customizesContent = JSON.parse(JSON.stringify(row));
       },
       choseNeedType (inx) {
         this.currentNeedIndex = inx
@@ -103,7 +102,7 @@ import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
         let msg = await getCustomizeDataByItemId(this.itemId);
         if (msg) {
           this.itemCustomizes = msg.itemCustomizes;
-          this.customizesContent = msg.itemCustomizes[0]
+          this.customizesContent = JSON.parse(JSON.stringify(msg.itemCustomizes[0]))
         }
       },
       // 定制回复

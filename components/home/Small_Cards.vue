@@ -2,11 +2,15 @@
     <div class="cards" @click="viewItem(smallCardsDate)">
         <div class="cards-top">
             <div class="cards-top-bgimg">
+                <div class="works-introduce-view"  v-show="smallCardsDate.IsDownload || smallCardsDate.IsCustomize">
+                    <i v-if="smallCardsDate.IsDownload" class="iconfont icon-iconfontzhizuobiaozhun43" title="可下载"></i>
+                    <i v-if="smallCardsDate.IsCustomize" class="iconfont icon-3ding" title="可定制"></i>
+                </div>
                 <img :src="smallCardsDate.ItemTitleImg" alt="" width=100% height=100% >
             </div>
             <div class="cards-eye">
                 <div>
-                    <i class="iconfont icon-shangchuan"></i>
+                    <i class="iconfont icon-chakan"></i>
                     {{ smallCardsDate.Views }}
                 </div>
                 <div class="cards-eye-name" @click.stop="vivewCol(smallCardsDate)">
@@ -53,6 +57,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .works-introduce-view {
+        position: absolute;
+        color: #ff3c00;
+        i {
+            &::before {
+                font-size: 22px !important;
+            }
+        }
+    }
     .cards {
         position: relative;
         margin-top: 10px;
@@ -67,6 +80,7 @@ export default {
             &-bgimg {
                 width: 283px;
                 height: 194px;
+                position: relative;
                 // background-repeat: no-repeat;
                 // background-size: cover;
                 // object-fit: fill;

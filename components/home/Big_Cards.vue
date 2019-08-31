@@ -2,9 +2,12 @@
     <div class="cards">
         <div class="cards-top" @click="viewItem(bigCardsDate)">
             <div class="cards-top-bgimg">
+                <div class="works-introduce-view"  v-show="bigCardsDate.IsDownload || bigCardsDate.IsCustomize">
+                    <i v-if="bigCardsDate.IsDownload" class="iconfont icon-iconfontzhizuobiaozhun43" title="可下载"></i>
+                    <i v-if="bigCardsDate.IsCustomize" class="iconfont icon-3ding" title="可定制"></i>
+                </div>
                 <img :src="bigCardsDate.ItemTitleImg" alt="" width=100% height=100% >
             </div>
-            <!-- <div class="cards-top-bgimg" :style="`background-image: url(${bigCardsDate.ItemTitleImg})`"></div> -->
             <div class="cards-eye">
                 <div>
                     <i class="iconfont icon-shangchuan"></i>
@@ -46,6 +49,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .works-introduce-view {
+        position: absolute;
+        color: #ff3c00;
+        i {
+            &::before {
+                font-size: 26px !important;
+            }
+        }
+    }
     .cards {
         position: relative;
         margin-top: 5px;

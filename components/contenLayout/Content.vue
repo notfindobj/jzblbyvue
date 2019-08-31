@@ -23,11 +23,17 @@
                         </div>
                         <div class="works-introduce">
                             <p>{{items.ItemName}}</p>
-                            <div @click="jumpRoute(items)" >
-                                <div class="avatar-wrap">
-                                    <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                            <div>
+                                <div class="works-introduce-left" @click="jumpRoute(items)">
+                                    <span class="avatar-wrap">
+                                        <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
+                                    </span>
+                                    <span class="headPortrait">{{items.NickName}}</span>
                                 </div>
-                                <span class="headPortrait">{{items.NickName}}</span>
+                                <div class="works-introduce-view" v-show="items.IsDownload || items.IsCustomize">
+                                    <i v-if="items.IsDownload" class="iconfont icon-iconfontzhizuobiaozhun43" title="可下载"></i>
+                                    <i v-if="items.IsCustomize" class="iconfont icon-3ding" title="可定制"></i>
+                                </div>
                             </div>
                         </div>
                         <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"
@@ -186,6 +192,23 @@
   }
 </script>
 <style lang="less" scoped>
+    .works-introduce-view {
+        display: flex;
+        flex: 1;
+        justify-content: flex-end;
+        color: #FF3C00;
+        i {
+            display: inline-block;
+            &::before {
+                font-size: 20px;
+            }
+            &:last-child {
+                margin-left: 8px;
+                margin-right: 6px;
+            }
+        }
+        
+    }
     .clearfix() {
         &:before,
         &:after {
@@ -305,7 +328,10 @@
                 .works-introduce {
                     height: 66px;
                     padding: 8px 0 10px 6px;
-
+                    &-left {
+                        display: flex;
+                        align-items: center;
+                    }
                     > p {
                         width: 253px;
                         overflow: hidden;
@@ -315,26 +341,24 @@
                         color: #666666;
                         margin-bottom: 8px;
                     }
-
                     > div {
                         display: flex;
                         flex-direction: row;
                         justify-content: flex-start;
                         align-items: flex-start;
-
+                        align-items: center;
                         .avatar-wrap {
                             width: 20px;
                             height: 20px;
                             margin-right: 4px;
                             border-radius: 50%;
                             overflow: hidden;
-
+                            display: inline-block;
                             img {
                                 width: 20px;
                                 height: 20px;
                             }
                         }
-
                         > span {
                             font-size: 14px;
                             color: #333333;
