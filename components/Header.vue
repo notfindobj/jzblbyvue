@@ -44,14 +44,16 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <Badge :count="100">
-                            <a href="javascript:void(0)" class="demo-badge">
-                                消息提醒
-                                <!-- <Icon type="ios-arrow-down"></Icon> -->
-                            </a>
+                        <Badge :count="0">
+                            <a href="javascript:void(0)" class="demo-badge">消息提醒</a>
                         </Badge>
                         <DropdownMenu slot="list">
-                            <DropdownItem disabled>功能开发中</DropdownItem>
+                            <DropdownItem >
+                                <nuxt-link to="/Message/customized">评论消息</nuxt-link>
+                            </DropdownItem>
+                            <DropdownItem >
+                                <nuxt-link to="/Message/comment">定制消息</nuxt-link>
+                            </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </li>

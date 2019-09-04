@@ -1,19 +1,19 @@
 <template>
     <ul class="pro-tool">
         <li>
-            <span  @click="clickCollection(itemTools)">
+            <span  @click="goDetail(itemTools)">
                 <i class="icon iconfont icon-yidongappxiexiaoxi"></i>
                 <span>写问答</span>
             </span>
         </li>
         <li>
-            <span>
+            <span @click="goDetail(itemTools)">
                 <i class="icon iconfont">&#xe664;</i>
                 <span>评论 {{itemTools.ReplyCount}}</span>
             </span>
         </li>
         <li>
-            <span>
+            <span @click="Collection(itemTools)">
                 <i class="iconfont icon-cc-star"></i>
                 <span>收藏</span>
             </span>
@@ -25,7 +25,7 @@
             </span>
         </li>
         <li>
-            <span>
+            <span @click="liked(itemTools)">
                 <i class="iconfont icon-dianzan1"></i>
                 <span>点赞</span>
             </span>
@@ -41,8 +41,14 @@ export default {
         }
     },
     methods: {
-        clickCollection (row) {
-            console.log(row)
+        goDetail (row) {
+            this.$emit('goDetail', row.QAId);
+        },
+        Collection (row) {
+            this.$emit('collection', row);
+        },
+        liked (row) {
+            this.$emit('liked', row);
         }
     },
 }

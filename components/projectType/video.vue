@@ -28,13 +28,10 @@
                   </div>
                 </div>
                 <div class="block-head-right">
-                    <Dropdown placement="bottom-end" trigger="click">
-                        <a href="javascript:void(0)">
-                            <Icon type="ios-arrow-down"></Icon>
-                        </a>
-                        <DropdownMenu slot="list">
-                            <DropdownItem>帮上头条</DropdownItem>
-                            <DropdownItem>投诉</DropdownItem>
+                   <Dropdown placement="bottom-end" v-if="videoInfo.itemBindOperat">
+                        <a href="javascript:void(0)"><Icon type="ios-arrow-down"></Icon></a>
+                        <DropdownMenu slot="list" >
+                            <DropdownItem v-for="(items, indexs) in videoInfo.itemBindOperat.ItemOperatBtns" :key="indexs" @click.native="dropdownMenu(videoInfo, items, index)">{{items.OperatName}}</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </div>
@@ -125,6 +122,9 @@
       }
     },
     methods: {
+      dropdownMenu (row, item, index) {
+        this.$emit('clickMenu', row, item, index);
+      },
       // 获取项目和粉丝量
       async showWorks (id, ids, index) {
         this.isTool = ids;

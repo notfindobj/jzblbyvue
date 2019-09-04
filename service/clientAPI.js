@@ -227,6 +227,11 @@ export const setUserTheme = async params => {
 export const delQueryData = async params => {
   return await request.post(`Query/QueryDeleteHistory?strQueryIds=${params}`)
 }
+// 针对项目的操作
+export const ItemOperat = async params => {
+  return await request.post(`MyTribe/ItemOperat`, params)
+}
+
 /***
  * 公司相关
  */

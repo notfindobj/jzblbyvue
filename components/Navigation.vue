@@ -37,8 +37,12 @@
                                 <Icon type="ios-arrow-down"></Icon>
                             </a>
                             <DropdownMenu slot="list">
-                                <DropdownItem disabled>功能开发中</DropdownItem>
-                                <!-- <DropdownItem>炸酱面</DropdownItem> -->
+                                <DropdownItem >
+                                    <nuxt-link to="/Message/customized">评论消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem >
+                                    <nuxt-link to="/Message/comment">定制消息</nuxt-link>
+                                </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                     </li>

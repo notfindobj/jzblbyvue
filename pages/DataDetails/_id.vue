@@ -1,5 +1,6 @@
 <template>
     <div class="data-details-box">
+        {{detaDetails}}
         <div class="data-details-con-box">
             <div class="data-details-location">
                 <Breadcrumb separator=">" style="margin-bottom: 20px">
@@ -78,8 +79,6 @@
     import weixinBox from '../../components/weixin'
     import { mapGetters ,mapState} from 'vuex'
     import { setDemo } from '../../LocalAPI'
-    import axios from 'axios'
-    import qs from 'qs'
     import { async } from 'q';
 
     export default {

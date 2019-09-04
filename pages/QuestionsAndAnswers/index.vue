@@ -43,7 +43,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <proTools :itemTools="item"/>
+                                <proTools :itemTools="item" @goDetail="goDetail" @collection="collection"/>
                             </div>
                         </div>
                         <div class="page-box" v-if="total > 5">
@@ -116,6 +116,8 @@ export default {
         proTools
     },
     methods: {
+        // 点击收藏
+        collection(index, flag) {},
         // 触底事件
         willReachBottom: _throttle(function () {
             if (this.total === 1) {

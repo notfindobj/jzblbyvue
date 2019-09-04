@@ -40,13 +40,15 @@
                     </div>
                     <div class="upload-box" v-show="isShowUpload">
                         <h3>本地上传</h3>
-                        <p class="sub-title">共0张，还能上传9张</p>
+                        <p class="sub-title">共{{imgList.length}}张，还能上传{{3 - imgList.length}}张</p>
                         <div class="upload-main">
-                            <div class="img-item" v-for="(item, index) in imgList" :key="index" @click.stop="delImg(index)" >
-                                <img :src="item.smallImgUrl" alt="">
-                            </div>
+                           <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
+                              <div class="img-item" v-for="(item, index) in imgList" :key="index" @click.stop="delImg(index)" >
+                                  <img :src="item.smallImgUrl" alt="">
+                              </div>
+                           </draggable>
                             <v-upload
-                                v-show="imgList.length <= 9"
+                                v-show="imgList.length <= 3"
                                 class="upload"
                                 :uploadType="3"
                                 @uploadSuccess="uploadSuccess"
@@ -90,6 +92,7 @@
 
 <script>
   import Upload from '../../../components/publish/upload'
+    import draggable from 'vuedraggable'
   import { getQALabel, addLabel, releaseStatement } from '../../../service/clientAPI'
 
   export default {
@@ -145,7 +148,8 @@
     },
 
     components: {
-      'v-upload': Upload
+      'v-upload': Upload,
+      draggable
     },
     methods: {
       onEditorChange(e) {

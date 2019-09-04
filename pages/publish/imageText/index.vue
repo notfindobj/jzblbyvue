@@ -34,10 +34,12 @@
                 <h3>本地上传</h3>
                 <p class="sub-title">共{{imgList.length}}张，还能上传{{30 -imgList.length}}张</p>
                 <div class="upload-main">
-                    <div class="img-item" v-for="(item, index) in imgList" :key="index" >
-                      <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
-                      <img :src="item.smallImgUrl" alt="">
-                    </div>
+                    <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
+                       <div class="img-item" v-for="(item, index) in imgList" :key="index" >
+                        <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
+                        <img :src="item.smallImgUrl" alt="">
+                      </div>
+                    </draggable>
                     <v-upload
                         v-show="imgList.length < 30"
                         class="upload"
@@ -61,6 +63,7 @@
 <script>
   import Upload from '../../../components/publish/upload'
   import Emotion from '../../../components/Emotion/index'
+  import draggable from 'vuedraggable'
   import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
   export default {
     data() {
@@ -76,6 +79,7 @@
     },
     components: {
       'v-upload': Upload,
+      draggable,
       Emotion
     },
     mounted () {

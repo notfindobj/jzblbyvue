@@ -8,15 +8,16 @@
                     :itemInfo="item"
                     :index="index"
                     @clickCollection="clickCollection"
+                    @clickMenu="clickMenu"
                     @clickLike="clickLike"
                     @goToPersonal="goToPersonal"
-                    @goDetail="goDetail"
                 ></ImageAndText>
                 <VideoItem
                     :key="index"
                     v-if="item.TalkType === 2"
                     :videoInfo="item"
                     :index="index"
+                    @clickMenu="clickMenu"
                     @clickCollection="clickCollection"
                     @clickLike="clickLike"
                 ></VideoItem>
@@ -33,7 +34,7 @@ import VideoItem from '../../components/projectType/video'
 import crollBox from '../../components/crollBox'
 import ToTop from '../../components/toTop'
 import { _throttle } from '../../plugins/untils/public'
-import { setComments, setthumbsUp, setCollection, setFollow } from '../../service/clientAPI'
+import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat} from '../../service/clientAPI'
 export default {
     layout: 'main',
     middleware: 'authenticated',
@@ -65,12 +66,60 @@ export default {
         }
     },
     methods: {
-      debounce(fn, wait) {    
-          var timeout = null;    
-          return function() {        
-              if(timeout !== null)   clearTimeout(timeout);        
-              timeout = setTimeout(fn, wait);    
+      async clickMenu (row, item, index) {
+        let qieryData = {
+          "ItemId": row.ItemId,
+          "TalkType": row.TalkType,
+          "Follow": { // 关注
+            "UserId": row.UserId,
+            "IsDelete": row.IsFollow
+          },
+          "OperateId": item.OperateId,
+          "OperatValue": item.OperatValue
+        }
+        if (item.OperatValue !== "FollowThisUser" && item.OperatValue !== "UnfollowThisUser") {
+          qieryData.Follow = {}
+        }
+        if (item.OperatValue == "Delete" ) {
+            this.$Modal.confirm({
+                title: '删除项目',
+                content: '<p>请否确定删除项目!</p>',
+                onOk: async () => {
+                    let msg = await ItemOperat (qieryData);
+                    if (msg) { 
+                       if (item.OperatValue == "Delete") {
+                        this.dataList.splice(index, 1);
+                        return false
+                      }
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+            return false
+        }
+        let msg = await ItemOperat (qieryData);
+        if (msg) {
+          // 关注
+          if (item.OperatValue == "FollowThisUser") {
+            this.$set(row, 'IsFollow', !row.IsFollow);
+            this.$set(item, 'OperatName', '取消关注');
+            this.$set(item, 'OperatValue', 'UnfollowThisUser');
+            return false
           }
+          // 取消关注
+          if (item.OperatValue == "UnfollowThisUser") {
+            this.$set(row, 'IsFollow', !row.IsFollow);
+            this.$set(item, 'OperatName', '关注');
+            this.$set(item, 'OperatValue', 'FollowThisUser');
+            return false
+          }
+          if (item.OperatValue == "Delete") {
+            this.dataList.splice(index, 1);
+            return false
+          }
+        }
       },
       onChangePage (num, type = 1) {
           this.pageNum = num;
@@ -136,12 +185,6 @@ export default {
           query: {
             id: row.UserId
           }
-        })
-      },
-      goDetail (id) {
-       this.$router.push({
-            name: 'QuestionsAndAnswers-id',
-            params: { id }
         })
       },
       // 点击点赞

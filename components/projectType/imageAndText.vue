@@ -36,19 +36,19 @@
                   </div>
                 </div>
                 <div class="block-head-right">
-                    <Dropdown placement="bottom-end" trigger="click">
+                    <Dropdown placement="bottom-end" trigger="click" v-if="itemInfo.itemBindOperat">
                         <a href="javascript:void(0)"><Icon type="ios-arrow-down"></Icon></a>
-                        <DropdownMenu slot="list">
-                            <DropdownItem>帮上头条</DropdownItem>
-                            <DropdownItem>投诉</DropdownItem>
+                        <DropdownMenu slot="list" >
+                            <DropdownItem v-for="(items, indexs) in itemInfo.itemBindOperat.ItemOperatBtns" :key="indexs" @click.native="dropdownMenu(itemInfo, items, index)"> {{items.OperatName}}</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </div>
             </div>
             <!-- 内容 -->
             <div class="content" >
-                <p v-if="itemInfo.TalkType !== 3"><emotHtml v-model="itemInfo.TalkContent"/></p>
-                <div v-if="itemInfo.TalkType === 3" @click="goDetail(itemInfo.ItemId)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
+              <!--  v-if="itemInfo.TalkType === 3"  -->
+                <div @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
+                <p ><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
@@ -100,6 +100,7 @@
   import Comment from '../video/comment'
   import share from '../share'
   import {getRanNum} from '../../plugins/untils/public'
+  import {setDemo} from '../../LocalAPI'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow } from '../../service/clientAPI'
   var name = getRanNum(5)
   export default {
@@ -155,8 +156,46 @@
       this.initView()
     },
     methods: {
-      goDetail(id) {
-        this.$emit('goDetail', id);
+      dropdownMenu (row, item, index) {
+        this.$emit('clickMenu', row, item, index);
+      },
+      async goDetail(row) {
+        if (row.TalkType === 3) {
+          this.$router.push({
+              name: 'QuestionsAndAnswers-id',
+              params: {id: row.ItemId }
+          })
+        }
+        if (row.TalkType === 4) {
+           // 搜索页导航数据
+            let baseSearchNav = {
+                key: 'baseSearchNav',
+                value: {
+                    ClassTypeArrList: [],
+                    title: this.typeName,
+                    Id: row.ItemId,
+                    showLayout: this.showLayout
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchNav);
+            let msgs = await setDemo('baseSearchNav', baseSearchNav);
+            // 搜索页项目数据
+            let baseSearchItem = {
+                key: 'baseSearchItem',
+                value: {
+                    Pagination: {
+                        SortType: 1,
+                        KeyWords: "",
+                        Order: true,
+                        Page: 1,
+                        Rows: 32
+                    }
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchItem);
+            let msgss = await setDemo('baseSearchItem', baseSearchItem);
+            this.$router.push({name: "DataDetails-id", query: {id: row.ItemId}})
+        }
       },
       moveLeftClick(val) {
         if (val === 2) {

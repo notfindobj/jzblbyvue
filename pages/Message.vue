@@ -1,11 +1,11 @@
 <template>
     <div class="message">
         <ul class="message-left">
-            <li> <nuxt-link to="/Message/customized"></nuxt-link> <a href="">评论消息</a></li>
-            <li> <nuxt-link to="/Message/comment">定制消息</nuxt-link></a></li>
+            <li> <nuxt-link to="/Message/customized">评论消息</nuxt-link></li>
+            <li> <nuxt-link to="/Message/comment">定制消息</nuxt-link></li>
             <li> <a href="">系统消息</a></li>
         </ul>
-        <div>
+        <div class="message-right">
             <nuxt-child />
         </div>
     </div>
@@ -22,7 +22,37 @@ export default {
         margin: 0 auto;
         display: flex;
         &-left {
-            
+            width: 200px;
+            color: #666666;
+            max-height: 500px;
+            font-size: 16px;
+            background: #ffffff;
+            margin-right: 20px;
+            border-radius: 5px;
+            li {
+                height: 50px;
+                line-height: 50px;
+                text-align: center;
+                cursor: pointer;
+                a{
+                    display: inline-block;
+                    width: 100%;
+                    height: 100%;
+                }
+                // a:hover {
+                //    color: #ffffff;
+                //    background: #FF3C00;
+                // }
+                .nuxt-link-active {
+                    color: #ffffff;
+                    background: #FF3C00;
+                }
+            }
+        }
+        &-right {
+            flex: 1;
+            background: #ffffff;
+            min-height: 600px;
         }
     }
 </style>
