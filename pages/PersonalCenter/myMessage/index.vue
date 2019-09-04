@@ -280,7 +280,8 @@
         GetThisUserJobInfo,
         SetOrAddThisUserJobInfo,
         getQALabel,
-        addUserLabel
+        addUserLabel,
+        saveUserExpertise
     } from '../../../service/clientAPI'
     import { setHearImg } from '../../../LocalAPI'
     import { mapState, mapGetters} from 'vuex'
@@ -337,7 +338,6 @@
             this.getUserInfo();
             this.getUserExpertiseList();
             this.getThisUserJobInfoList();
-            this.getUserLabel()
         },
         methods: {
             // 上传头像
@@ -484,13 +484,6 @@
                     this.getUserInfo();
                 }
             },
-            // 个人擅长 GetUserExpertise
-            async getUserExpertiseList() {
-                let msg = await GetUserExpertise();
-                if (msg) {
-                    // console.log(msg)
-                }
-            },
             // 获取当前用户所有职业信息接口 GetThisUserJobInfo
             async getThisUserJobInfoList() {
                 let msg = await GetThisUserJobInfo();
@@ -552,22 +545,25 @@
              * 
              * 
              */
-            async getUserLabel () {
-                let queryData = {
-                    BelongTypes:"",
-                    page: 1,
-                    funModels: '1'
-                }
-                let msg = await getQALabel(queryData);
+             // 个人擅长 GetUserExpertise
+            async getUserExpertiseList() {
+                let msg = await GetUserExpertise();
                 if (msg) {
-                    this.userLabel = msg.labelData || [];
+                   this.userLabel = msg || [];
                 }
             },
             async addLabel () {
                 let msg  = await addUserLabel({LabelName:  this.userLabelModel});
                 if (msg) {
-                    this.userLabelModel = '';
-                    this.userLabel.push(msg)
+                    let q = {
+                        SortCode: 0,
+                        LabelId: msg.LabelId
+                    }
+                    let isadd = await saveUserExpertise(q)
+                    if (isadd) {
+                        this.userLabelModel = '';
+                        this.userLabel.push(msg)
+                    }
                 }
             }
         }

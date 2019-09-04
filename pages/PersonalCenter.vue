@@ -27,6 +27,12 @@
                         </nuxt-link>
                     </li>
                     <li>
+                        <nuxt-link to="/PersonalCenter/records">
+                            <i class="icon iconfont icon-shouhuodizhi"></i>
+                            交易记录
+                        </nuxt-link>
+                    </li>
+                    <li>
                         <nuxt-link to="/PersonalCenter/receivingAddress">
                             <i class="icon iconfont icon-shouhuodizhi"></i>
                             收货地址

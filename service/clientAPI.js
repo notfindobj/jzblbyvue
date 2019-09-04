@@ -1,5 +1,4 @@
 import request from './index'
-
 export const getMenu = async (params) => {
   return await request.get('Menu/GetMenuAll', params)
 }
@@ -12,18 +11,6 @@ export const loginByQQ = async () => {
 // 微信登录
 export const loginByWX = async () => {
   return await request.post('Account/Thirdparty_wx_binding?redirectUri=http://www.jzbl.com/wx')
-}
-
-// 微信登录获取用户信息
-export const getUserByWX = async (params) => {
-  const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/front/wxLogin' : 'http://127.0.0.1:8889/front/wxLogin';
-  return await request.post(url, params)
-}
-
-// 微信qq获取用户信息
-export const getUserByQQ = async (params) => {
-  const url = process.env.NODE_ENV === 'production' ? 'http://www.jzbl.com/front/qqLogin' : 'http://127.0.0.1:8889/front/qqLogin';
-  return await request.post(url, params)
 }
 
 // 获取验证码
@@ -123,6 +110,10 @@ export const getUserData = async params => {
 // 修改所有个人信息
 export const setUserData = async params => {
   return await request.post(`UserInfo/SetUserData`, params)
+}
+// 修改标签
+export const saveUserExpertise = async params => {
+  return await request.post(`UserInfo/SaveUserExpertise`, params)
 }
 // 获取收货地址
 export const getAddressData = async params => {

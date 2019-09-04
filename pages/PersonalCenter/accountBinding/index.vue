@@ -145,8 +145,8 @@
         SetChangeMobile,
         getMobileCode,
         getAccountBindInfo,
-        getUserByQQ
     } from '../../../service/clientAPI'
+    import {getUserByWX, getUserByQQ} from '../../../LocalAPI'
     import { mapState } from 'vuex'
 
     export default {

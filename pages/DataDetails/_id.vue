@@ -1,6 +1,5 @@
 <template>
     <div class="data-details-box">
-        {{detaDetails}}
         <div class="data-details-con-box">
             <div class="data-details-location">
                 <Breadcrumb separator=">" style="margin-bottom: 20px">

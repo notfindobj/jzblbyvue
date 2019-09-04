@@ -30,9 +30,8 @@
     </div>
 </template>
 <script>
-    import { lognIn, loginByQQ, loginByWX, getUserByWX, getUserByQQ } from '../../../service/clientAPI'
-    import { login } from '../../../LocalAPI'
-
+    import { lognIn, loginByQQ, loginByWX} from '../../../service/clientAPI'
+    import {getUserByWX, getUserByQQ, login } from '../../../LocalAPI'
     export default {
         data() {
             return {
