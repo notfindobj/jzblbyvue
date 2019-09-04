@@ -8,70 +8,51 @@
                     <div class="personal-left-header-name">{{userInfo.NickName}}</div>
                 </div>
                 <ul class="personal-left-nav">
-                    <li :class="PersonalCenter === 'myMessage' ? 'action' : ''" @click="personal('myMessage')">
-                        <span>
+                    <li>
+                        <nuxt-link to="/PersonalCenter/myMessage">
                             <i class="icon iconfont icon-icon-test"></i>
                             我的信息
-                        </span>
+                        </nuxt-link>
                     </li>
-                    <li :class="PersonalCenter === 'accountSecurity' ? 'action' : ''" @click="personal('accountSecurity')">
-                        <span>
+                    <li>
+                        <nuxt-link to="/PersonalCenter/accountSecurity">
                             <i class="icon iconfont icon-zhanghuanquan"></i>
                             账户安全
-                        </span>
+                        </nuxt-link>
                     </li>
-                    <li :class="PersonalCenter === 'accountBinding' ? 'action' : ''" @click="personal('accountBinding')">
-                        <span>
+                    <li>
+                        <nuxt-link to="/PersonalCenter/accountBinding">
                             <i class="icon iconfont icon-bangding"></i>
                             账户绑定
-                        </span>
+                        </nuxt-link>
                     </li>
-                    <li :class="PersonalCenter === 'receivingAddress' ? 'action' : ''" @click="personal('receivingAddress')">
-                        <span>
+                    <li>
+                        <nuxt-link to="/PersonalCenter/receivingAddress">
                             <i class="icon iconfont icon-shouhuodizhi"></i>
                             收货地址
-                        </span>
+                        </nuxt-link>
                     </li>
                 </ul>
             </div>
             <div class="personal-right">
-                <div :is="PersonalCenter"></div>
+                <nuxt-child />
             </div>
         </div>
 </template>
 <script>
-import myMessage from './myMessage'
-import accountSecurity from './accountSecurity'
-import accountBinding from './accountBinding'
-import receivingAddress from './receivingAddress'
 import { mapState, mapGetters } from 'vuex'
 export default {
     name: 'PersonalCenter',
-    components: {
-        myMessage,
-        accountSecurity,
-        accountBinding,
-        receivingAddress
-    },
+    middleware: 'message',
     computed: {
         ...mapState({
             userInfo: state => state.overas.auth
         }),
-    },
-    data () {
-        return {
-            PersonalCenter: 'myMessage'
-        }
-    },
-    methods: {
-        personal (val) {
-            this.PersonalCenter = val;
-        }
     }
 }
 </script>
 <style lang="less">
-    @import '../../assets/css/PersonalCenter/index.less';
+    @import '../assets/css/PersonalCenter/index.less';
     .personal-box {
         background: #F2F4F2;
     }
@@ -110,6 +91,15 @@ export default {
             &-nav {
                 line-height: 50px;
                 cursor: pointer;
+                a {
+                    display: inline-block;
+                    width: 100%;
+                    height: 100%;
+                }
+                .nuxt-link-active {
+                    color: #ffffff;
+                    background: #FF3C00;
+                }
             }
         }
         &-right {
@@ -118,9 +108,5 @@ export default {
             box-shadow: 0 0 4px 0 #c8c3c3;
             padding: 50px 50px 30px;
         }
-    }
-    .action {
-        background: #FF3C00;
-        color: #ffffff;
     }
 </style>
