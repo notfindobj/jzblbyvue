@@ -16,7 +16,7 @@
                             <Spin size="large" fix v-if="spinShow"></Spin>
                             <div class="content-item" v-for="item in QAList" :key="item.QAId">
                                 <div class="content-box"> 
-                                    <div class="item-left-box">
+                                    <div class="item-left-box"  @click="goToPersonal(item)">
                                         <span class="num">
                                             <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
                                         </span>
@@ -116,6 +116,15 @@ export default {
         proTools
     },
     methods: {
+        // 跳转部落
+        goToPersonal (row) {
+            this.$router.push({
+                name: 'HeAndITribal-id',
+                query: {
+                    id: row.UserWebEntity.UserId
+                }
+            })
+        },
         // 点击收藏
         collection(index, flag) {},
         // 触底事件
@@ -389,6 +398,7 @@ export default {
                 padding: 15px 20px 0;
                 .item-left-box {
                     display: flex;
+                    cursor: pointer;
                     flex-direction: column;
                     justify-content: center;
                     align-items: center;

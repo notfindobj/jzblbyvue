@@ -27,7 +27,7 @@
                     <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
                 </li>
                 <li>
-                    <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
+                    <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
                 </li>
             </ul>
             <ul class="user">

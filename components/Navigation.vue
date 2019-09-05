@@ -27,7 +27,7 @@
                 </ul>
                 <ul class="home-bar-content-right">
                     <li class="content">
-                        <Input suffix="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
+                        <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>

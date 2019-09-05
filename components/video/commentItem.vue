@@ -57,7 +57,7 @@
         isLast: false,
         showCount: 3,
         commitWidth: '96%',
-        replyInputWith: 850,
+        replyInputWith: 960,
         isLike: this.commentInfo.islikes
       }
     },
@@ -73,7 +73,7 @@
       },
       clickReply() {
         if (this.$route.name === 'QuestionsAndAnswers-id') {
-          this.replyInputWith = 460;
+          this.replyInputWith = 560;
         }
         this.isShowInput = !this.isShowInput;
         // if (this.commentInfo.IsCoutReply) {

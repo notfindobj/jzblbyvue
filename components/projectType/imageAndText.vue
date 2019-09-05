@@ -47,8 +47,8 @@
             <!-- 内容 -->
             <div class="content" >
               <!--  v-if="itemInfo.TalkType === 3"  -->
-                <div @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
-                <p ><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <div v-if="itemInfo.TalkTitle" @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
+                <p v-if="itemInfo.TalkContent"><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
@@ -161,10 +161,11 @@
       },
       async goDetail(row) {
         if (row.TalkType === 3) {
-          this.$router.push({
+           let routeData = this.$router.resolve({
               name: 'QuestionsAndAnswers-id',
               params: {id: row.ItemId }
           })
+          window.open(routeData.href, '_blank');
         }
         if (row.TalkType === 4) {
            // 搜索页导航数据
@@ -194,7 +195,14 @@
             }
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
-            this.$router.push({name: "DataDetails-id", query: {id: row.ItemId}})
+            // this.$router.push({name: "DataDetails-id", query: {id: row.ItemId}})
+            let routeData = this.$router.resolve({
+                name: 'DataDetails-id',
+                query: {id: row.ItemId }
+            })
+            window.open(routeData.href, '_blank');
+
+
         }
       },
       moveLeftClick(val) {

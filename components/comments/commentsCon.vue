@@ -147,7 +147,9 @@
         .comments-status-box {
             background: #ffffff;
             margin-bottom: 10px;
-
+            position: sticky;
+            top: 1px;
+            z-index: 66;
             .comments-box-status {
                 height: 50px;
                 padding: 0 10px;

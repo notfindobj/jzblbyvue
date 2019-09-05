@@ -87,6 +87,7 @@ export default {
         },
         comment () {
             this.$emit('commentValue');
+            this.commentValue = ""
         },
         showImg () {
             this.$refs.files.click()

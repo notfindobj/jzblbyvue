@@ -148,7 +148,6 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 10px;
-
             .comment-avatar {
                 width: 30px;
                 height: 30px;
