@@ -10,7 +10,6 @@
                     <Input
                         v-model="formValidate.title"
                         placeholder="请填写项目名称（举例：新中式景观廊架su模型）"
-                        size="large"
                         class="publish-input"
                     ></Input>
                     <span class="error-info" v-if="titleIsError">
@@ -82,7 +81,7 @@
         </div>
         <div class="submit-box">
             <p>
-                <Checkbox v-model="checked" class="checkbox" size="large"></Checkbox>
+                <Checkbox v-model="checked" class="checkbox" ></Checkbox>
                 我已仔细阅读并同意<span>《建筑部落用户协议》</span>
             </p>
             <Button type="primary" @click="handleSubmit('formValidate')">完成上传</Button>

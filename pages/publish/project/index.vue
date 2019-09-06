@@ -18,19 +18,19 @@
                     </div>
                 </FormItem>
                 <FormItem label="项目名称" prop="name">
-                    <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input" size="large" ></Input>
+                    <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input"></Input>
                 </FormItem>
                 <FormItem label="类型选择" class="type-select" prop="typeId">
                     <i v-for="item in menu.RetMenuData" :key="item.ItemAttributesId" >
-                        <Button size="large" v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
-                        <Button size="large" v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName, item.ItemSubAttributeCode)" >{{ item.ItemAttributesFullName }} </Button>
+                        <Button v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
+                        <Button v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName, item.ItemSubAttributeCode)" >{{ item.ItemAttributesFullName }} </Button>
                     </i>
                     <div class="attr-box" v-show="attrList">
                         <div class="attr-select-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" :key="item.id" >
                             <span v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" >
                                 {{ item.ItemValue }}
                             </span>
-                            <Select v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" v-model="item.ItemSubAttributeId" style="width:220px" size="large" >
+                            <Select v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" v-model="item.ItemSubAttributeId" style="width:220px" >
                                 <Option v-for="subItem in attrList[index].ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId" >
                                     {{ subItem.ItemAttributesFullName }}
                                 </Option>
@@ -57,7 +57,7 @@
                                 :on-remove="removeFile"
                                 style="display: inline-block;"
                             >
-                                <Button icon="ios-cloud-upload-outline" size="large">上传文件</Button>
+                                <Button icon="ios-cloud-upload-outline" >上传文件</Button>
                             </Upload>
                             <Upload
                                 ref="uploadFile"
@@ -70,20 +70,20 @@
                                 :on-remove="removeFile"
                                 style="display: inline-block;"
                             >
-                                <Button icon="ios-cloud-upload-outline" size="large">上传PDF文件</Button>
+                                <Button icon="ios-cloud-upload-outline" >上传PDF文件</Button>
                             </Upload>
                         </div>
                         <div class="attr-select-item attr-upload-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode === '[wjsc]'" :key="index" >
                              <span style="vertical-align: top;">
                                 收取费用
                             </span>
-                            <Input v-model="price" size="large" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 300px;" />
+                            <Input v-model="price" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 230px;" />
                             <span style="width: 20px;">元</span>
                         </div>
                     </div>
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
-                    <Button type="primary" v-for="(item, index) in serviceSelectList" :key="item.serviceId" size="small" style="margin-right: 10px;" @click="updateService(index)" >
+                    <Button type="primary" v-for="(item, index) in serviceSelectList" :key="item.serviceId" style="margin-right: 10px;" @click="updateService(index)" >
                         {{ item.name }}
                     </Button>
                     <span class="add-service-btn" @click="addService" v-show="this.serviceList.length > 0">
@@ -123,15 +123,15 @@
                 <Form ref="serviceValidate" :model="serviceValidate" :rules="rulesValidate" :label-width="100" >
                     <FormItem label="定制类型:">
                         <template v-if="!isUpdateService" v-for="item in serviceList" >
-                            <Button class="service-btn" size="small" :key="item.ItemDetailId"
+                            <Button class="service-btn" :key="item.ItemDetailId"
                                 v-if="item.ItemDetailId !== serviceValidate.serviceId"
                                 @click="selectSerice(item.ItemDetailId, item.ItemValue)" >
                                 {{ item.ItemValue }}
                             </Button>
-                            <Button class="service-btn" size="small" :key="item.ItemDetailId" v-else type="primary" > {{item.ItemValue }} </Button>
+                            <Button class="service-btn" :key="item.ItemDetailId" v-else type="primary" > {{item.ItemValue }} </Button>
                         </template>
                         <template v-if="isUpdateService">
-                            <Button class="service-btn" size="small" type="primary" > {{ serviceName }} </Button>
+                            <Button class="service-btn" type="primary" > {{ serviceName }} </Button>
                         </template>
                     </FormItem>
                     <FormItem label="定制金额:" prop="money">
@@ -639,14 +639,14 @@
             margin-left: 4px;
         }
         .upload-img-box {
-          height: 196px;
+          height: 150px;
           position: relative;
-          width: 260px;
+          width: 230px;
           background-size: cover;
           .upload-img-wrap {
             float: left;
-            width: 260px;
-            height: 196px;
+            width: 230px;
+            height: 150px;
             text-align: center;
             margin-right: 20px;
             cursor: pointer;
@@ -659,10 +659,10 @@
             }
             .upload-component {
                 position: relative;
-                height: 88px;
+                height: 60px;
                 a {
                     position: absolute;
-                    top: 40px;
+                    top: 20px;
                     left: 0;
                     right: 0;
                     margin: 0 auto;
@@ -671,7 +671,7 @@
                 }
                 i {
                     position: absolute;
-                    top: 40px;
+                    top: 20px;
                     left: 0;
                     right: 0;
                     margin: 0 auto;

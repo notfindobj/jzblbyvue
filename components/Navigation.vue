@@ -423,6 +423,10 @@
 
         &-logo {
             width: 137px;
+            img {
+                width: 137px;
+                height: 55px;
+            }
         }
     }
     .resource {

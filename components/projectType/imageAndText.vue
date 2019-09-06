@@ -15,8 +15,13 @@
                         <img :src="itemInfo.HeadIcon|| $defaultHead" alt="" >
                     </div>
                     <div class="info">
-                        <p class="name">{{ itemInfo.NickName }}</p>
-                        <p class="time">{{ itemInfo.CreateDate }}</p>
+                        <div>
+                          <p class="name">{{ itemInfo.NickName }}</p>
+                          <p class="time">{{ itemInfo.CreateDate }}</p>
+                        </div>
+                        <div class="info-lable">
+                          <span v-if="itemInfo.TalkType === 3">问答</span>
+                        </div>
                     </div>
                 </div>
                 <div class="tool-box" v-if="isTool === itemInfo.ItemId" @mouseleave="hideWorks()">
@@ -195,7 +200,6 @@
             }
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
-            // this.$router.push({name: "DataDetails-id", query: {id: row.ItemId}})
             let routeData = this.$router.resolve({
                 name: 'DataDetails-id',
                 query: {id: row.ItemId }
@@ -397,9 +401,9 @@
   }
 </script>
 <style lang="less">
-  .itemHide {
-    display: none;
-  }
+    .itemHide {
+      display: none;
+    }
     .view-left-move-del {
         cursor: pointer;
         position: fixed;
@@ -472,6 +476,21 @@
 </style>
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
+    .info {
+      display: flex;
+    }
+    .info-lable {
+      display: flex;
+      align-items: flex-end;
+      span {
+        margin-left: 10px;
+        margin-bottom: 5px;
+        color: #f55e02;
+        background-color: #ffe9da;
+        padding: 1px 5px;
+        border-radius: 2px;
+      }
+    }
     .active-tool {
       color: #ff3c00;
       // font-size: 17px;

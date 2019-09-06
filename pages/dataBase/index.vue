@@ -163,7 +163,7 @@
                     key: 'baseSearchItem',
                     value: {
                         Pagination: {
-                            SortType: 0,
+                            SortType: 1,
                             KeyWords: "",
                             Order: true,
                             Page: 1,
@@ -203,7 +203,7 @@
                     key: 'baseSearchItem',
                     value: {
                         Pagination: {
-                            SortType: 0,
+                            SortType: 1,
                             KeyWords: "",
                             Order: true,
                             Page: 1,
@@ -241,7 +241,7 @@
                     key: 'baseSearchItem',
                     value: {
                         Pagination: {
-                            SortType: 0,
+                            SortType: 1,
                             KeyWords: "",
                             Order: true,
                             Page: 1,
