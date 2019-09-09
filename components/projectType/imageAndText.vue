@@ -20,7 +20,9 @@
                           <p class="time">{{ itemInfo.CreateDate }}</p>
                         </div>
                         <div class="info-lable">
+                          <span v-if="itemInfo.TalkType === 1">图文</span>
                           <span v-if="itemInfo.TalkType === 3">问答</span>
+                          <span v-if="itemInfo.TalkType === 4">{{itemInfo.TypeName}}</span>
                         </div>
                     </div>
                 </div>
@@ -174,13 +176,22 @@
         }
         if (row.TalkType === 4) {
            // 搜索页导航数据
+           let showLayout = true 
+           if (row.TypeName === '文本' || row.TypeName === '建筑规范') {
+              showLayout = false
+            } else {
+              showLayout = true
+            }
             let baseSearchNav = {
                 key: 'baseSearchNav',
                 value: {
-                    ClassTypeArrList: [],
-                    title: this.typeName,
+                    ClassTypeArrList: [{
+                     AttrKey: row.ItemAttributesEntities[0].ItemAttributesId,
+                     AttrValue: row.ItemAttributesEntities[0].ItemSubAttributeId  
+                    }],
+                    title: row.TypeName,
                     Id: row.ItemId,
-                    showLayout: this.showLayout
+                    showLayout: showLayout
                 }
             }
             this.$store.dispatch('Serverstorage', baseSearchNav);

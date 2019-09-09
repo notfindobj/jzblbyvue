@@ -222,7 +222,10 @@ export const delQueryData = async params => {
 export const ItemOperat = async params => {
   return await request.post(`MyTribe/ItemOperat`, params)
 }
-
+// 针对项目的操作
+export const delComment = async params => {
+  return await request.get(`Comments/DeleteComment?commentsId=${params}`, )
+}
 /***
  * 公司相关
  */

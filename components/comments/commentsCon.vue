@@ -53,6 +53,7 @@
             :discussData="comments"
             @commentValue="discussValue"
             @somePraise="somePraise"
+            @delComment="delComment"
         />
     </div>
 </template>
@@ -115,6 +116,9 @@
       },
       discussValue(row, val) {
         this.$emit('discussValue', row, val)
+      },
+      delComment (row) {
+        this.$emit('delComment', row)
       },
       // 评论点赞
       somePraise(item) {

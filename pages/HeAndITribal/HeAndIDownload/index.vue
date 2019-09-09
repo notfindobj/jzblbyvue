@@ -8,6 +8,7 @@
                       :index="index" :key="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
+                      @clickMenu="clickMenu"
                   />
                   <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
                       @clickCollection="clickCollection"
@@ -20,7 +21,7 @@
 <script>
   import ImageAndText from '../../../components/projectType/imageAndText'
   import VideoItem from '../../../components/projectType/video'
-  import { setComments, setthumbsUp, setCollection, setFollow } from '../../../service/clientAPI'
+  import { setComments, setthumbsUp, setCollection, setFollow} from '../../../service/clientAPI'
   export default {
     layout: 'main',
     components: {
@@ -31,6 +32,9 @@
       dataList: Array,
     },
     methods: {
+      async clickMenu (row, item, index) {
+        this.$emit("clickMenu", row, item, index)
+      },
       // 点击收藏
       clickCollection(index, flag) {
         setCollection({

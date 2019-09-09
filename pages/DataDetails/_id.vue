@@ -45,6 +45,7 @@
                         @discussValue="discussValue"
                         @somePraise="somePraise"
                         @Forward="Forward"
+                        @delComment="delComments"
                     />
                 </div>
             </div>
@@ -72,7 +73,7 @@
     import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
     import commentsCon from '../../components/comments/commentsCon.vue'
     import share from '../../components/share'
-    import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile} from '../../service/clientAPI'
+    import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile, delComment} from '../../service/clientAPI'
     import dataDetailsCustom from '../../components/dataDetails/dataDetailsCustom.vue'
     import dateDetailsDown from '../../components/dataDetails/dateDetailsDown.vue'
     import weixinBox from '../../components/weixin'
@@ -226,6 +227,7 @@
                 let attrList = [];
                 let query = {};
                 let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                debugger
                 this.ItemAttributesEntities.forEach((item, attrIndex) => {
                     if (index >= attrIndex) {
                         query = item
@@ -312,6 +314,21 @@
                         this.getGetCommentsData = msg
                     }
                 }
+            },
+            async delComments (row) {
+                let msg = await delComment(row.CommentsId)
+                if (msg) {
+                    // 根据项目详情请求评论信息
+                    let Comment = {
+                        itemId: this.$route.query.id,
+                        ScopeType: 0
+                    }
+                    let msg = await this.$store.dispatch('getGetComments', Comment);
+                    if (msg) {
+                        this.getGetCommentsData = msg
+                    }
+                }
+                console.log('删除评论', row)
             },
             // 评论回复
             async discussValue(row, val) {

@@ -128,7 +128,7 @@ export default {
     return service({
       methods: 'delete',
       url,
-      params: data
+      data: data
     })
   },
   downFile (url, data ) {

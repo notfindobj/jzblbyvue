@@ -12,8 +12,10 @@
             </div>
             <div class="discuss-content"><emotHtml v-model="items.Message"/></div>
             <div class="discuss-footer">
+                <span v-if="items.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(items)">
+                    删除
+                </span>
                 <span class="discuss-footer-dianzan" @click="somePraise(items)">
-                    <i class="icon iconfont icon-dianzan1"></i>
                     点赞{{items.LikeCount}}
                 </span>
                 <span class="discuss-footer-pinglun" @click="setDiscuss(index)">
@@ -30,7 +32,7 @@
                     @commentValue="commentValue(items)"
                 />
             </div>
-            <template v-if="items.ReplyList.length > 0">
+            <template v-if="items.ReplyList && items.ReplyList.length > 0">
                 <div class="discuss-muchReply" v-show="!(muchReply.includes(index))">
                     <span class="discuss-muchReply-color">{{items.ReplyList[0].NickName}}</span>
                     等人
@@ -45,6 +47,9 @@
                         <emotHtml v-model="sub.Message"/>
                     </div>
                     <div class="discuss-reply-footer">
+                        <span class="discuss-reply-footer-shcnhu" @click="delComment(sub)">
+                            删除
+                        </span>
                         <span class="discuss-footer-dianzan" @click="somePraise(sub)">
                             <i class="icon iconfont icon-dianzan1"></i>
                             点赞{{sub.LikeCount}}
@@ -97,6 +102,10 @@ export default {
         },
         openMuchReply (index) {
             this.muchReply.includes(index) ? this.muchReply = this.muchReply.filter(n => n !== index) : this.muchReply.push(index)
+        },
+        // 删除评论
+        delComment (val) {
+            this.$emit('delComment', val)
         },
         // 评论
         commentValue (val) {
@@ -156,11 +165,22 @@ export default {
                     color: #FF3C00;
                 }
             }
+            &-shcnhu {
+                cursor: pointer;
+                display: none;
+                &:hover {
+                    color: #FF3C00;
+                }
+            }
             &-pinglun {
                 cursor: pointer;
                 &:hover {
                     color: #FF3C00;
                 }
+            }
+            &:hover &-shcnhu {
+                text-decoration: underline;
+                display: inline-block;
             }
         }
         &-comment {
@@ -202,6 +222,17 @@ export default {
                     &:hover {
                         color: #FF3C00;
                     }
+                }
+                &-shcnhu {
+                    cursor: pointer;
+                    display: none;
+                    &:hover {
+                        color: #FF3C00;
+                    }
+                }
+                &:hover &-shcnhu {
+                    text-decoration: underline;
+                    display: inline-block;
                 }
             }
             &-comment {

@@ -267,10 +267,6 @@
                 // this.$router.push({ path: "/PersonalCenter" })
             },
             goSearchPage () {
-                if (!this.searchpage) {
-                    this.$Message.error('搜索内容不能为空！');
-                    return false;
-                }
                 let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
                 window.open(routeData.href, '_blank');
             },

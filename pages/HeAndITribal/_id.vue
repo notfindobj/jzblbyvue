@@ -22,6 +22,7 @@
                         <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                             <HeAndIDownload 
                                 v-if="PersonalCenter === 'HeAndIDownload'"
+                                @clickMenu="clickMenu"
                                 :dataList="dataList"/>
                             <mySomethingStatistical
                                 v-if="PersonalCenter === 'mySomethingStatistical'"
@@ -47,7 +48,7 @@
     import { mapState } from 'vuex'
     import Heads from './head'
     import crollBox from '../../components/crollBox'
-    import { getTypeMeun , getFollowOrFans} from '~/service/clientAPI'
+    import { getTypeMeun , getFollowOrFans, ItemOperat} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     export default {
         layout: 'main',
@@ -107,6 +108,61 @@
             }
         },
         methods: {
+            async clickMenu (row, item, index) {
+                let qieryData = { 
+                    "ItemId": row.ItemId,
+                    "TalkType": row.TalkType,
+                    "Follow": { // 关注
+                        "UserId": row.UserId,
+                        "IsDelete": row.IsFollow
+                    },
+                    "OperateId": item.OperateId,
+                        "OperatValue": item.OperatValue
+                }
+                if (item.OperatValue !== "FollowThisUser" && item.OperatValue !== "UnfollowThisUser") {
+                    qieryData.Follow = {}
+                }
+                if (item.OperatValue == "Delete" ) {
+                        this.$Modal.confirm({
+                            title: '删除项目',
+                            content: '<p>请否确定删除项目!</p>',
+                            onOk: async () => {
+                                let msg = await ItemOperat (qieryData);
+                                if (msg) { 
+                                if (item.OperatValue == "Delete") {
+                                    this.dataList.splice(index, 1);
+                                    return false
+                                }
+                                }
+                            },
+                            onCancel: () => {
+                                return false
+                            }
+                        });
+                        return false
+                    }
+                    let msg = await ItemOperat (qieryData);
+                    if (msg) {
+                        // 关注
+                        if (item.OperatValue == "FollowThisUser") {
+                            this.$set(row, 'IsFollow', !row.IsFollow);
+                            this.$set(item, 'OperatName', '取消关注');
+                            this.$set(item, 'OperatValue', 'UnfollowThisUser');
+                            return false
+                        }
+                        // 取消关注
+                        if (item.OperatValue == "UnfollowThisUser") {
+                            this.$set(row, 'IsFollow', !row.IsFollow);
+                            this.$set(item, 'OperatName', '关注');
+                            this.$set(item, 'OperatValue', 'FollowThisUser');
+                            return false
+                        }
+                        if (item.OperatValue == "Delete") {
+                            this.dataList.splice(index, 1);
+                            return false
+                        }
+                    }
+                },
             // 触底事件
             willReachBottom: _throttle (function () {
                 if (this.total === 1) {
