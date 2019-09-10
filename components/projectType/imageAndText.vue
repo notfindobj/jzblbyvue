@@ -314,7 +314,8 @@
       },
       // 跳转部落
       goToPersonal (row) {
-        this.$emit('goToPersonal', row)
+        let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
+        window.open(routeData.href, '_blank');
       },
       // 关注
       async worksFocus(item) {

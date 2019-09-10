@@ -10,7 +10,6 @@
                     @clickCollection="clickCollection"
                     @clickMenu="clickMenu"
                     @clickLike="clickLike"
-                    @goToPersonal="goToPersonal"
                 ></ImageAndText>
                 <VideoItem
                     :key="index"
@@ -176,15 +175,6 @@ export default {
           dataInfo.itemOperateData.IsCollection = flag;
           flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
           this.$set(this.dataList, index, dataInfo);
-        })
-      },
-      // 跳转部落
-      goToPersonal (row) {
-        this.$router.push({
-          name: 'HeAndITribal-id',
-          query: {
-            id: row.UserId
-          }
         })
       },
       // 点击点赞

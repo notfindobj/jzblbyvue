@@ -14,37 +14,39 @@
                         </Menu>
                         <div class="content-list">
                             <Spin size="large" fix v-if="spinShow"></Spin>
-                            <div class="content-item" v-for="item in QAList" :key="item.QAId">
-                                <div class="content-box"> 
-                                    <div class="item-left-box"  @click="goToPersonal(item)">
-                                        <span class="num">
-                                            <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
-                                        </span>
-                                    </div>
-                                    <div class="item-box">
-                                        <div class="item-info">
-                                            <div class="question-info">
-                                                <div @click="jumpRoute(item)"> 
-                                                    <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                            <template  v-if="QAList.length > 0" >
+                                <div class="content-item" v-for="item in QAList" :key="item.QAId">
+                                    <div class="content-box"> 
+                                        <div class="item-left-box"  @click="goToPersonal(item)">
+                                            <span class="num">
+                                                <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
+                                            </span>
+                                        </div>
+                                        <div class="item-box">
+                                            <div class="item-info">
+                                                <div class="question-info">
+                                                    <div @click="jumpRoute(item)"> 
+                                                        <span class="author">{{ item.UserWebEntity.NickName }}</span>
+                                                    </div>
+                                                    <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
+                                                    <span>{{item.LatestAnswerDate}}</span>
                                                 </div>
-                                                <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
-                                                <span>{{item.LatestAnswerDate}}</span>
+                                                <h3 class="item-question" @click="goDetail(item.QAId)">{{item.QATitle }}</h3>
+                                                <div class="item-answer">
+                                                    <span v-show="item.LatestAnswer">回答：</span>
+                                                    <emotHtml class="beyond-quest" v-model="item.LatestAnswer"/>
+                                                </div>
                                             </div>
-                                            <h3 class="item-question" @click="goDetail(item.QAId)">{{item.QATitle }}</h3>
-                                            <div class="item-answer">
-                                                <span v-show="item.LatestAnswer">回答：</span>
-                                                <emotHtml class="beyond-quest" v-model="item.LatestAnswer"/>
-                                            </div>
-                                        </div>
-                                        <div class="item-right">
-                                            <div class="img" @click="goDetail(item.QAId)">
-                                                <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                            <div class="item-right">
+                                                <div class="img" @click="goDetail(item.QAId)">
+                                                    <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
                                 <proTools :itemTools="item" @goDetail="goDetail" @collection="collection"/>
                             </div>
+                            </template>
                         </div>
                         <div class="page-box" v-if="total > 5">
                             <Page :total="total" :page-size="pageSize" @on-change="handlePageChange"/>
@@ -191,7 +193,7 @@ export default {
             }
         },
         // 获取问答数据
-        async getQAData(row, type) {
+        async getQAData(type) {
             this.spinShow = true;
             const data = await this.$store.dispatch('getQAData', {
                 KeyWord: '',
@@ -203,7 +205,7 @@ export default {
             if (data) {
                 if (type === 1) {
                     this.QAList = [];
-                    this.QAList = data.QADatas;
+                    this.QAList = data.QADatas || [];
                 } else {
                     this.QAList = this.QAList.concat(data.QADatas);
                 }
@@ -219,7 +221,7 @@ export default {
             this.isSearch = false;
             this.pageNum = 1;
             this.QAList = []
-            this.getQAData();
+            this.getQAData(1);
         },
         // HeAndITribal路由跳转
         jumpRoute(items) {

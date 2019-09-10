@@ -3,8 +3,8 @@
         <div class="public-block" :class="{'comment-active': isShowComment}">
             <div class="block-head">
                 <div class="block-head-left" @mouseleave="hideWorks()">
-                    <div class="avatar" @click="goToPersonal(videoInfo)" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)">
-                        <img :src="videoInfo.HeadIcon|| $defaultHead" alt="">
+                    <div class="avatar" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)">
+                        <img @click="goToPersonal(videoInfo)" :src="videoInfo.HeadIcon|| $defaultHead" alt="">
                     </div>
                     <div class="info">
                         <p class="name">{{ videoInfo.NickName }}</p>
@@ -44,6 +44,7 @@
                         <div class="video" @click.stop="">
                           <videos 
                           :itemVideo="videoInfo.Imgs[0]" 
+                          
                           :detaDetails="videoInfo" />
                         </div>
                     </div>
@@ -148,7 +149,8 @@
       },
       // 跳转部落
       goToPersonal (row) {
-        this.$emit('goToPersonal', row)
+        let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
+        window.open(routeData.href, '_blank');
       },
       // 关注
       async worksFocus(item) {
