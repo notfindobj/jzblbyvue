@@ -6,8 +6,7 @@
                 <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="content">
                         <Menu mode="horizontal" theme="light" :active-name="menuIndex" class="tabs" @on-select="selectMenu">
-                            <MenuItem name="0"> 最近回答</MenuItem>
-                            <MenuItem name="3"> 等待回答</MenuItem>
+                            <MenuItem name="5"> 最近问答</MenuItem>
                             <MenuItem name="1"> 本周最热</MenuItem>
                             <MenuItem name="2"> 本月最热</MenuItem>
                             <MenuItem name="4" v-show="isSearch"> 搜索</MenuItem>
@@ -25,7 +24,7 @@
                                         <div class="item-box">
                                             <div class="item-info">
                                                 <div class="question-info">
-                                                    <div @click="jumpRoute(item)"> 
+                                                    <div @click="goToPersonal(item)"> 
                                                         <span class="author">{{ item.UserWebEntity.NickName }}</span>
                                                     </div>
                                                     <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
@@ -44,7 +43,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                <proTools :itemTools="item" @goDetail="goDetail" @collection="collection"/>
+                                <proTools 
+                                :itemTools="item" 
+                                @goDetail="goDetail"
+                                @liked="liked"
+                                 @collection="collection"/>
                             </div>
                             </template>
                         </div>
@@ -73,7 +76,7 @@
 </template>
 
 <script>
-import { getQADataBy } from '../../service/clientAPI'
+import { getQADataBy, setCollection, setthumbsUp} from '../../service/clientAPI'
 import ToTop from '../../components/toTop'
 import proTools from '../../components/proTools'
 import crollBox from '../../components/crollBox'
@@ -100,7 +103,7 @@ export default {
                 }
             },
             QAList: [],     // 问答列表
-            menuIndex: '0', // 当前菜单的name值
+            menuIndex: '5', // 当前菜单的name值
             pageNum: 1,     // 分页当前页
             keyword: '',    // 搜索关键字
             labelId: '',    // 选择标签的id
@@ -128,7 +131,31 @@ export default {
             })
         },
         // 点击收藏
-        collection(index, flag) {},
+        collection(row) {
+            let flag = !row.itemOperateData.IsCollection
+            setCollection({
+                ItemId: row.QAId,
+                ItemName: row.QATitle,
+                ItemTitleImg: '',
+                IsDelete: !flag,
+                TalkType: "3"
+            }).then(() => {
+                row.itemOperateData.IsCollection = flag;
+                flag ? row.itemOperateData.CollectionCount += 1 : row.itemOperateData.CollectionCount -= 1;
+            })
+        },
+        liked (row) {
+            let flag = !row.itemOperateData.IsLike
+            setthumbsUp({
+                ItemId: row.QAId,
+                LikeType: 1,
+                CommentsId: '',
+                IsDelete: !flag
+            }).then(() => {
+                row.itemOperateData.IsLike = flag;
+                flag ? row.itemOperateData.LikeCount += 1 : row.itemOperateData.LikeCount -= 1;
+            })
+        },
         // 触底事件
         willReachBottom: _throttle(function () {
             if (this.total === 1) {
@@ -232,7 +259,7 @@ export default {
         const queryParams = {
             KeyWord: '',
             LabelID: '',
-            TalkType: '',
+            TalkType: 5,
             Page: 1,
             Rows: 8
         };
@@ -388,6 +415,8 @@ export default {
 
             .tabs {
                 margin-bottom: 25px;
+                position: sticky;
+                top: 60px;
             }
 
             .content-list {

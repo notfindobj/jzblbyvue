@@ -162,11 +162,6 @@
                     itemInfo.itemOperateData.IsLike = flag;
                     flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
                     this.$set(this.attentionList, index, itemInfo);
-
-                    // // 如果是点击的弹框中的，就更新videoInfo
-                    // if (this.isShowModal) {
-                    //   this.$set(this.videoInfo, 'itemOperateData', itemInfo.itemOperateData)
-                    // }
                 })
             },
             // 获取数据

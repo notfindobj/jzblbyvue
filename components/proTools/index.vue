@@ -13,9 +13,9 @@
             </span>
         </li>
         <li>
-            <span @click="Collection(itemTools)">
-                <i class="iconfont icon-cc-star"></i>
-                <span>收藏</span>
+            <span @click="Collection(itemTools)" :class="itemTools.itemOperateData.IsCollection ? 'active-tool' : ''">
+                <i :class="itemTools.itemOperateData.IsCollection ? 'icon iconfont icon-cc-star': 'icon iconfont  icon-favorite'"></i>
+                <span>收藏{{itemTools.itemOperateData.CollectionCount || ''}}</span>
             </span>
         </li>
         <li>
@@ -25,9 +25,9 @@
             </span>
         </li>
         <li>
-            <span @click="liked(itemTools)">
-                <i class="iconfont icon-dianzan1"></i>
-                <span>点赞</span>
+            <span @click="liked(itemTools)" :class="itemTools.itemOperateData.IsLike ? 'active-tool' : ''">
+                <i :class="itemTools.itemOperateData.IsLike ? 'icon iconfont active-tool icon-like-b' : 'icon iconfont icon-dianzan1'"></i>
+                <span>点赞{{itemTools.itemOperateData.LikeCount || ''}}</span>
             </span>
         </li>
     </ul>
@@ -54,6 +54,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .active-tool {
+        color: #ff3c00;
+    }
     .pro-tool {
         font-size: 14px;
         display: flex;

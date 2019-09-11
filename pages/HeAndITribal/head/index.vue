@@ -11,7 +11,7 @@
                 </Dropdown>
             </div>
             <div class="my-Introduction">
-                <div class="my-head-portrait">
+                <div class="my-head-portrait" @click="enterCenter">
                     <img :src="userInfo.HeadIcon || $defaultHead" alt=".">
                 </div>
                 <p class="my-name">{{ userInfo.NickName }}
@@ -63,6 +63,9 @@ export default {
       this.getUsere()
     },
     methods: {
+      enterCenter () {
+          this.$router.push({ name: "PersonalCenter" });
+      },
       async worksFocus(item) {
         let queryData = {
             UserId: item.UserId,
@@ -189,6 +192,7 @@ export default {
                     width: 100px;
                     height: 100px;
                     border-radius: 50%;
+                    cursor: pointer;
                     margin: 25px auto 10px;
                     overflow: hidden;
 

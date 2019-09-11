@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="editor-wrap">
-                <Input v-model="content" type="textarea" placeholder="写回答" :autosize="{minRows: 3}"/>
+                <Input v-model="content" ref="autofocus" type="textarea" placeholder="写回答" :autosize="{minRows: 3}"/>
             </div>
             <div style="position: relative;">
                 <div class="toolbar">
@@ -133,6 +133,11 @@
             'v-comment': Comment
         },
         methods: {
+            initIview () {
+                this.$nextTick(()=>{
+                    this.$refs.autofocus.focus()
+                })
+            },
             moveLeftClick(val) {
                 if (val === 2) {
                     if (this.itemLength - 1 === this.itemIndex) {
@@ -288,13 +293,13 @@
         created() {
             this.mathId = this.getRanNum();
             this.getComment();
+            this.initIview()
         },
         mounted () {
             this.initView()
         },
         async asyncData({ store, params }) {
             const data = await store.dispatch('getQADetail', params.id);
-
             return {
                 detailInfo: data
             }

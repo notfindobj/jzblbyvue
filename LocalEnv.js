@@ -23,9 +23,9 @@ exports.configUrl = {
             return 'http://www.jzbl.com/'
         } else {
         // 本地环境
-            return 'http://127.0.0.1:8889'
+            // return 'http://127.0.0.1:8889'
             // return 'http://www.jzbl.com/'
-            // return 'http://192.168.10.7:8889'
+            return 'http://192.168.10.7:8889'
         }
     })(),
     serverPort: (() => {

@@ -730,12 +730,14 @@
         .editor-wrap {
             width: 770px;
         }
-        .quill-editor {
-            max-height: 700px;
+        /deep/ .quill-editor {
             min-height: 320px;
             overflow-y: auto;
             border-radius: 0 0 4px 4px;
             border: 1px solid #d8d8d8;
+             input {
+              caret-color: #ff3c00;
+            }
         }
     }
     .service-type-name {

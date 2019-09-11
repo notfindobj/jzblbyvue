@@ -566,5 +566,18 @@
       padding: 12px 0;
       color: #000000;
       cursor: pointer;
+      display: inline-block;
+      position: relative;
+      &:hover {
+        &::after {
+          display: inline-block;
+          position: absolute;
+          content: "";
+          border-bottom: 1px solid #333;
+          width: 100%;
+          left: 0;
+          bottom: 0px;
+        }
+      }
     }
 </style>
