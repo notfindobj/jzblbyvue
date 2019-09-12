@@ -53,6 +53,7 @@
                     :isShowLoading="isLoadingComment"
                     :isShowInput="false"
                     @submitReplay="submitReplay"
+                    @delComments="delComments"
                     @submitLike="submitLike"
                 ></v-comment>
 
@@ -85,13 +86,15 @@
                     <img :src="detailInfo.HeadIcon || $defaultHead" alt="">
                 </div>
                 <span class="author-name">{{ detailInfo.NickName }}</span>
-                <Button type="primary" class="attention-btn" v-show="!detailInfo.IsFollow" @click="handleGz(true)">
-                    <Icon class="icon-add" type="ios-add" size="24"/>
-                    关注
-                </Button>
-                <Button class="attention-btn" v-show="detailInfo.IsFollow" @click="handleGz(false)">
-                    取消关注
-                </Button>
+               <div v-if="userInfoID != detailInfo.UserId">
+                    <Button type="primary" class="attention-btn" v-show="!detailInfo.IsFollow" @click="handleGz(true)">
+                        <Icon class="icon-add" type="ios-add" size="24"/>
+                        关注
+                    </Button>
+                    <Button class="attention-btn" v-show="detailInfo.IsFollow" @click="handleGz(false)">
+                        取消关注
+                    </Button>
+               </div>
                 <!-- <Button type="primary" class="big-btn" size="large" ghost>
                     <i class="icon iconfont">&#xe60a;</i>
                     我要提问
@@ -107,8 +110,8 @@
     import Emotion from '../../components/Emotion/index'
     import Comment from '../../components/video/comment'
     import ToTop from '../../components/toTop'
-    import { setComments, setFollow } from '../../service/clientAPI'
-
+    import { setComments, setFollow, delComment} from '../../service/clientAPI'
+    import { mapState } from 'vuex'
     export default {
         layout: 'main',
         data() {
@@ -127,12 +130,23 @@
                 isRight: false,
             }
         },
+        computed: {
+            ...mapState({
+                userInfoID: state => state.overas.auth.UserId
+            })
+        },
         components: {
             Emotion,
             ToTop,
             'v-comment': Comment
         },
         methods: {
+            async delComments (row) {
+                let msg = await delComment(row.CommentsId)
+                if (msg) {
+                    this.getComment()
+                }
+            },
             initIview () {
                 this.$nextTick(()=>{
                     this.$refs.autofocus.focus()
@@ -173,12 +187,10 @@
                     this.$set(this.detailInfo, 'IsFollow', flag)
                 })
             },
-
             // 选择表情
             handleEmotion(item) {
                 this.content += `[${ item.content }]`
             },
-
             // 评论
             submitComment() {
                 if (!this.content) {
@@ -216,7 +228,6 @@
                     this.getComment();
                 })
             },
-
             // 点赞回复
             submitLike(obj) {
                 setthumbsUp({
@@ -226,7 +237,6 @@
                     IsDelete: !obj.flag
                 })
             },
-
             // 获取评论
             getComment() {
                 this.$store.dispatch('getGetComments', {

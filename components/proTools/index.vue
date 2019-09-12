@@ -3,15 +3,15 @@
         <li>
             <span  @click="goDetail(itemTools)">
                 <i class="icon iconfont icon-yidongappxiexiaoxi"></i>
-                <span>写问答</span>
+                <span>写问答{{itemTools.ReplyCount}}</span>
             </span>
         </li>
-        <li>
+        <!-- <li>
             <span @click="goDetail(itemTools)">
                 <i class="icon iconfont">&#xe664;</i>
                 <span>评论 {{itemTools.ReplyCount}}</span>
             </span>
-        </li>
+        </li> -->
         <li>
             <span @click="Collection(itemTools)" :class="itemTools.itemOperateData.IsCollection ? 'active-tool' : ''">
                 <i :class="itemTools.itemOperateData.IsCollection ? 'icon iconfont icon-cc-star': 'icon iconfont  icon-favorite'"></i>

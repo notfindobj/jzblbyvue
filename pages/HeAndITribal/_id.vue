@@ -65,6 +65,7 @@
             return {
                 currentIndex: 0, // 一级高亮
                 twoIndex: 0, // 二级高亮
+                twoId: 0,
                 itIsMe: false,
                 IsFollow: true, // 粉丝加载
                 currentItem: '0',
@@ -93,6 +94,10 @@
                 itIsMe = true;
             }
             const data = await store.dispatch('getTribeInfo', id);
+            let Trid = {
+                "UserId": id
+            }
+            await store.dispatch('TribeVisiting', Trid);
             return {
                 userId: id,
                 itIsMe,
@@ -175,7 +180,7 @@
                 }
                 this.pageNum++;
                 if (this.PersonalCenter === 'HeAndIDownload') {
-                    this.getList(this.currentIndex, this.twoIndex, true);
+                    this.getList(this.currentIndex, this.twoId, true);
                 } else {
                     this.getfollowList(this.IsFollow, true)
                 }
@@ -184,6 +189,7 @@
             async getTypeMeunList (item, inx) {
                 this.currentIndex = inx || 0;
                 this.twoIndex = 0;
+                this.twoId = 0
                 this.pageNum = 1;
                 let queryData = {
                     typeId: inx || 0,
@@ -243,6 +249,7 @@
             // 点击二级导航
             changeTwo (id, index) {
                 this.twoIndex = index;
+                this.twoId = id
                 this.getList(this.currentIndex, id);
             },
             // 获取发布数据

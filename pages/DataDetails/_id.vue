@@ -328,7 +328,6 @@
                         this.getGetCommentsData = msg
                     }
                 }
-                console.log('删除评论', row)
             },
             // 评论回复
             async discussValue(row, val) {
@@ -343,6 +342,15 @@
                 let commentMsg = await setComments(queryData)
                 if (commentMsg) {
                     this.$Message.success('回复成功！')
+                    // 根据项目详情请求评论信息
+                    let Comment = {
+                        itemId: this.$route.query.id,
+                        ScopeType: 0
+                    }
+                    let msg = await this.$store.dispatch('getGetComments', Comment);
+                    if (msg) {
+                        this.getGetCommentsData = msg
+                    }
                 }
             },
             // 关注

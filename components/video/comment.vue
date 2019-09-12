@@ -31,6 +31,7 @@
                     :key="item.CommentsId"
                     :commentInfo="item"
                     @submitReplay="submitReplay"
+                    @delComment="delComment"
                     v-if="index < showCount"
                 ></comment-item>
             </div>
@@ -101,6 +102,9 @@
       'comment-item': CommentItem
     },
     methods: {
+      delComment (row) {
+        this.$emit('delComments', row)
+      },
       // 选择表情
       handleEmotion(item) {
         this.commentCon += `[${ item.content }]`

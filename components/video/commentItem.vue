@@ -11,6 +11,9 @@
                 </div>
                 <div class="comment-content"><emotHtml v-model="commentInfo.Message"/></div>
                 <p class="opera-row">
+                    <span v-if="commentInfo.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(commentInfo)">
+                        删除
+                    </span>
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
@@ -27,6 +30,7 @@
             v-if="index < showCount"
             :replyInfo="item"
             @submitReplay="replyToo"
+            @delComment="delComment"
         ></reply-item>
         <p class="show-more" v-show="commentInfo.ReplyList.length > 3 && !isLast" @click="showMore">
             查看更多>>
@@ -62,6 +66,10 @@
       }
     },
     methods: {
+       // 删除评论
+        delComment (val) {
+            this.$emit('delComment', val)
+        },
        // 跳转部落
       goToPersonal (row) {
         this.$router.push({
@@ -207,11 +215,17 @@
             text-align: right;
             margin-top: 5px;
             cursor: pointer;
-
             i {
                 font-size: 12px;
             }
-
+            .discuss-footer-shcnhu {
+                cursor: pointer;
+                display: none;
+            }
+            &:hover .discuss-footer-shcnhu{
+              display: inline-block;
+              color: #FF3C00;
+            }
             .line-col {
                 margin: 0 4px;
             }

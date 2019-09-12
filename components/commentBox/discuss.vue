@@ -14,6 +14,9 @@
                 <emotHtml v-model="items.Message"/>
             </div>
             <div class="discuss-footer">
+                <span v-if="items.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(items)">
+                    删除
+                </span>
                 <span class="discuss-footer-dianzan" @click="somePraise(items)" :style="`color:${items.islikes ? '#FF3C00;' : ''} `">
                     <i v-if="items.islikes" class="icon iconfont icon-like-b"></i>
                     <i v-else class="icon iconfont icon-dianzan1"></i>
@@ -48,6 +51,9 @@
                         <emotHtml v-model="sub.Message"/>
                     </div>
                     <div class="discuss-reply-footer">
+                        <span v-if="items.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(items)">
+                            删除
+                        </span>
                         <span class="discuss-footer-dianzan" @click="somePraise(sub)" :style="`color:${sub.islikes ? '#FF3C00;' : ''} `">
                             <i v-if="sub.islikes" class="icon iconfont icon-like-b"></i>
                             <i v-else class="icon iconfont icon-dianzan1"></i>
@@ -102,6 +108,10 @@ export default {
         openMuchReply (index) {
             this.muchReply.includes(index) ? this.muchReply = this.muchReply.filter(n => n !== index) : this.muchReply.push(index)
         },
+        // 删除评论
+        delComment (val) {
+            this.$emit('delComment', val)
+        },
         // 评论
         commentValue (val) {
             this.$emit('commentValue', val, this.muchReplyVlaue)
@@ -117,6 +127,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .discuss-footer-shcnhu {
+        cursor: pointer;
+        display: none;
+        &:hover {
+            display: inline-block;
+            color: #FF3C00;
+        }
+    }
     .clickDiscuss {
         color: #FF3C00;
     }

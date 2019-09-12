@@ -4,7 +4,7 @@
             <div class="works-info">
                 <img @click="goPersonalCenter" :src="detaDetails.HeadIcon|| $defaultHead" alt="">
                 <p class="works-name">{{detaDetails.NickName}}</p>
-                <div :class="detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
+                <div v-if="userInfoID != detaDetails.UserId" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
             <div class="data-info">
                 <p class="data-name">项目信息</p>
@@ -30,6 +30,7 @@
     </div>
 </template>
 <script>
+  import { mapState } from 'vuex'
   export default {
     name: 'detaDetailsRight',
     props: {
@@ -52,6 +53,11 @@
       return {
         isShowIcon: false,
       }
+    },
+    computed: {
+        ...mapState({
+            userInfoID: state => state.overas.auth.UserId
+        })
     },
     created() {
       this.isShowIcon = this.attribute.length <= 4

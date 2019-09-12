@@ -96,6 +96,7 @@
             @submitComment="submitComment"
             @submitReplay="submitReplay"
             @submitLike="submitLike"
+            @delComments="delComments"
         ></v-comment>
         <share :config="configModal"/>
     </div>
@@ -108,7 +109,7 @@
   import share from '../share'
   import {getRanNum} from '../../plugins/untils/public'
   import {setDemo} from '../../LocalAPI'
-  import { setComments, setthumbsUp, getUserProAndFans, setFollow } from '../../service/clientAPI'
+  import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment} from '../../service/clientAPI'
   var name = getRanNum(5)
   export default {
     name: name,
@@ -163,6 +164,12 @@
       this.initView()
     },
     methods: {
+      async delComments (row) {
+        let msg = await delComment(row.CommentsId)
+        if (msg) {
+            this.getComment()
+        }
+      },
       dropdownMenu (row, item, index) {
         this.$emit('clickMenu', row, item, index);
       },
@@ -360,7 +367,7 @@
       getComment() {
         this.$store.dispatch('getGetComments', {
           ItemId: this.itemInfo.ItemId,
-          ScopeType: 2
+          ScopeType: this.itemInfo.TalkType === 4 ? 0 : this.itemInfo.TalkType
         }).then(res => {
           this.isLoadingComment = false;
           this.commentList = res;
@@ -377,7 +384,7 @@
           IsReply: false,
           Message: content,
           ItemImgSrc: '',
-          ScopeType: 2
+          ScopeType: this.itemInfo.TalkType === 4 ? 0 : this.itemInfo.TalkType
         }).then(res => {
           this.$Message.success('评论成功');
           this.getComment();
@@ -393,7 +400,7 @@
           IsReply: true,
           Message: params.content,
           ItemImgSrc: '',
-          ScopeType: 2
+          ScopeType: this.itemInfo.TalkType === 4 ? 0 : this.itemInfo.TalkType
         }).then(res => {
           // this.$Message.success('评论成功');
           this.getComment();
@@ -529,6 +536,7 @@
       border-radius: 3px;
       color: #666666;
       box-shadow: 0px 1px 6px #bbbbbb;
+      z-index: 1;
       &-top {
         display: flex;
         justify-content: space-around;

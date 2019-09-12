@@ -83,6 +83,7 @@
             @submitComment="submitComment"
             @submitReplay="submitReplay"
             @submitLike="submitLike"
+            @delComments="delComments"
         />
         <share :config="configModal"/>
     </div>
@@ -91,7 +92,7 @@
 <script>
   import share from '../share'
   import Comment from '../video/comment'
-  import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow} from '../../service/clientAPI'
+  import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow, delComment} from '../../service/clientAPI'
   export default {
     props: {
       videoInfo: {
@@ -123,6 +124,12 @@
       }
     },
     methods: {
+      async delComments (row) {
+        let msg = await delComment(row.CommentsId)
+        if (msg) {
+            this.getComment()
+        }
+      },
       dropdownMenu (row, item, index) {
         this.$emit('clickMenu', row, item, index);
       },
@@ -282,6 +289,7 @@
     border-radius: 3px;
     color: #666666;
     box-shadow: 0px 1px 6px #bbbbbb;
+    z-index: 1;
     &-top {
       display: flex;
       justify-content: space-around;

@@ -9,10 +9,12 @@
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
                       @clickMenu="clickMenu"
+                      @delComments="delComments"
                   />
                   <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
+                      @delComments="delComments"
                   />
               </template>
         </div>
@@ -21,7 +23,7 @@
 <script>
   import ImageAndText from '../../../components/projectType/imageAndText'
   import VideoItem from '../../../components/projectType/video'
-  import { setComments, setthumbsUp, setCollection, setFollow} from '../../../service/clientAPI'
+  import {setthumbsUp, setCollection, setFollow} from '../../../service/clientAPI'
   export default {
     layout: 'main',
     components: {
@@ -34,6 +36,10 @@
     methods: {
       async clickMenu (row, item, index) {
         this.$emit("clickMenu", row, item, index)
+      },
+      // 删除评论
+      delComments (val) {
+          this.$emit('delComment', val)
       },
       // 点击收藏
       clickCollection(index, flag) {
@@ -50,7 +56,7 @@
           this.$set(this.dataList, index, dataInfo);
         })
       },
-      // 点击点赞
+      // 点击点赞 
       clickLike(index, flag) {
         setthumbsUp({
           ItemId: this.dataList[index].ItemId,

@@ -11,6 +11,9 @@
                     <span class="reply-time">{{ replyInfo.CreateDate }}</span>
                 </div>
                 <p class="opera-row">
+                    <span v-if="replyInfo.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(replyInfo)">
+                        删除
+                    </span>
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>
@@ -58,6 +61,10 @@
     },
 
     methods: {
+      // 删除评论
+      delComment (val) {
+          this.$emit('delComment', val)
+      },
        // 跳转部落
       goToPersonal (row) {
         this.$router.push({
@@ -157,7 +164,14 @@
                     text-align: right;
                     margin-top: 10px;
                     cursor: pointer;
-
+                  .discuss-footer-shcnhu {
+                        cursor: pointer;
+                        display: none;
+                    }
+                    &:hover .discuss-footer-shcnhu{
+                      display: inline-block;
+                      color: #FF3C00;
+                    }
                     i {
                         font-size: 12px;
                     }
