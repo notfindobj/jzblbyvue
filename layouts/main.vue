@@ -4,7 +4,6 @@
         <Header/>
         <nuxt/>
         <Foot/>
-        <ToTop/>
     </div>
 </template>
 

@@ -23,7 +23,7 @@
                     ></VideoItem>
                 </template>
             </div>
-            <!-- <ToTop :isShowToTop="false"></ToTop> -->
+            <ToTop ></ToTop>
             <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         </crollBox>
     </div>
@@ -32,7 +32,7 @@
 <script>
     import ImageAndText from '../../components/projectType/imageAndText'
     import VideoItem from '../../components/projectType/video'
-    // import ToTop from '../../components/toTop'
+    import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
     import { _throttle } from '../../plugins/untils/public'
     import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat } from '../../service/clientAPI'
@@ -52,7 +52,8 @@
         components: {
             ImageAndText,
             VideoItem,
-            crollBox
+            crollBox,
+            ToTop
         },
         methods: {
             async clickMenu (row, item, index) {

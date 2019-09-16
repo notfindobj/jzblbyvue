@@ -83,9 +83,10 @@
                     </div>
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
-                    <Button type="primary" v-for="(item, index) in serviceSelectList" :key="item.serviceId" style="margin-right: 10px;" @click="updateService(index)" >
+                    <Tag type="border"  closable color="error" v-for="(item, index) in serviceSelectList" :key="item.serviceId" style="margin-right: 10px;" @on-close="handleClose(item,index)" @click.native="updateService(index)">{{ item.name }}</Tag>
+                    <!-- <Button type="primary" v-for="(item, index) in serviceSelectList" :key="item.serviceId" style="margin-right: 10px;" @click="updateService(index)" >
                         {{ item.name }}
-                    </Button>
+                    </Button> -->
                     <span class="add-service-btn" @click="addService" v-show="this.serviceList.length > 0">
                         <Icon type="md-add" size="12"/>
                         添加定制服务
@@ -125,7 +126,7 @@
                         <template v-if="!isUpdateService" v-for="item in serviceList" >
                             <Button class="service-btn" :key="item.ItemDetailId"
                                 v-if="item.ItemDetailId !== serviceValidate.serviceId"
-                                @click="selectSerice(item.ItemDetailId, item.ItemValue)" >
+                                @click.native="selectSerice(item.ItemDetailId, item.ItemValue)" >
                                 {{ item.ItemValue }}
                             </Button>
                             <Button class="service-btn" :key="item.ItemDetailId" v-else type="primary" > {{item.ItemValue }} </Button>
@@ -257,12 +258,18 @@
         }
       }
     },
-
     mounted() {
       this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
     },
-
     methods: {
+      handleClose (row, index) {
+        let obj = {
+          ItemDetailId: row.serviceId,
+          ItemValue: row.name
+        }
+        this.serviceList.push(obj)
+        this.serviceSelectList.splice(index, 1);
+      },
       // 项目缩略图
       enteUpload (val) {
         if (val) {

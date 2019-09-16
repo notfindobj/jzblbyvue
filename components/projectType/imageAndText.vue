@@ -367,7 +367,7 @@
       getComment() {
         this.$store.dispatch('getGetComments', {
           ItemId: this.itemInfo.ItemId,
-          ScopeType: this.itemInfo.TalkType === 4 ? 0 : this.itemInfo.TalkType
+          ScopeType: this.setTalkType(this.itemInfo.TalkType)
         }).then(res => {
           this.isLoadingComment = false;
           this.commentList = res;
@@ -384,7 +384,7 @@
           IsReply: false,
           Message: content,
           ItemImgSrc: '',
-          ScopeType: this.itemInfo.TalkType === 4 ? 0 : this.itemInfo.TalkType
+          ScopeType: this.setTalkType(this.itemInfo.TalkType)
         }).then(res => {
           this.$Message.success('评论成功');
           this.getComment();
@@ -400,7 +400,7 @@
           IsReply: true,
           Message: params.content,
           ItemImgSrc: '',
-          ScopeType: this.itemInfo.TalkType === 4 ? 0 : this.itemInfo.TalkType
+          ScopeType: this.setTalkType(this.itemInfo.TalkType)
         }).then(res => {
           // this.$Message.success('评论成功');
           this.getComment();
@@ -415,6 +415,16 @@
           CommentsId: obj.commentsId,
           IsDelete: !obj.flag
         })
+      },
+      setTalkType (val) {
+        let type = val;
+        if (val === 4 ) {
+          type = 0
+        } 
+        if (val === 1) {
+          type = 2
+        }
+        return type
       }
     }
   }

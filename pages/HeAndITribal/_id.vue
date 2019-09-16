@@ -39,6 +39,7 @@
                 </div>
             </div>
         </div>
+         <ToTop ></ToTop>
     </div>
 </template>
 <script>
@@ -47,6 +48,7 @@
     import mySomethingStatistical from './mySomethingStatistical'
     import { mapState } from 'vuex'
     import Heads from './head'
+    import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
     import { getTypeMeun , getFollowOrFans, ItemOperat} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
@@ -59,7 +61,8 @@
             HeAndIDownload,
             mySomethingStatistical,
             Heads,
-            crollBox
+            crollBox,
+            ToTop
         },
         data() {
             return {
