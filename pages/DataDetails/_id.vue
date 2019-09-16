@@ -271,11 +271,16 @@
                     ItemId: item.ItemId,
                     CommentsId: item.CommentsId,
                     LikeType: 0,
-                    IsDelete: !item.IsCoutReply
+                    IsDelete: item.islikes
                 }
                 let msg = await setthumbsUp(queryData);
-                // console.log(item)
                 if (msg) {
+                    if (item.islikes) {
+                        this.$set(item, 'LikeCount', item.LikeCount - 1)
+                    } else {
+                        this.$set(item, 'LikeCount', item.LikeCount + 1)
+                    }
+                    this.$set(item, 'islikes', !item.islikes)
                 }
             },
             // 收藏

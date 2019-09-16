@@ -70,7 +70,7 @@
           {
           "Money": value.Price,
           "ItemId": value.ItemId,
-          "IsDebug": true
+          "IsDebug": false
         }
         let msg = null;
         // 微信

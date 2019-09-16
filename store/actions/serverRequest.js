@@ -106,5 +106,9 @@ export const serverRequest = {
   // 获取要展示的搜索的按钮
   async TribeVisiting({commit}, params) {
     return await request.post(`MyTribe/TribeVisiting`, params)
-  }
+  },
+  // 获取要展示的消息
+  async getNews({commit}, params) {
+    return await request.get(`LConnection/GetMessage`, params)
+  },
 }

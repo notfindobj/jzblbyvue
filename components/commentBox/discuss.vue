@@ -17,7 +17,7 @@
                 <span v-if="items.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(items)">
                     删除
                 </span>
-                <span class="discuss-footer-dianzan" @click="somePraise(items)" :style="`color:${items.islikes ? '#FF3C00;' : ''} `">
+                <span class="icon iconfont discuss-footer-dianzan" @click="somePraise(items)" :style="`color:${items.islikes ? '#FF3C00;' : ''} `">
                     <i v-if="items.islikes" class="icon iconfont icon-like-b"></i>
                     <i v-else class="icon iconfont icon-dianzan1"></i>
                     点赞{{items.LikeCount}}
@@ -54,7 +54,7 @@
                         <span v-if="items.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(items)">
                             删除
                         </span>
-                        <span class="discuss-footer-dianzan" @click="somePraise(sub)" :style="`color:${sub.islikes ? '#FF3C00;' : ''} `">
+                        <span class="icon iconfont discuss-footer-dianzan" @click="somePraise(sub)" :style="`color:${sub.islikes ? '#FF3C00;' : ''} `">
                             <i v-if="sub.islikes" class="icon iconfont icon-like-b"></i>
                             <i v-else class="icon iconfont icon-dianzan1"></i>
                             点赞{{sub.LikeCount}}

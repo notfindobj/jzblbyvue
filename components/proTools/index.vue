@@ -3,7 +3,7 @@
         <li>
             <span  @click="goDetail(itemTools)">
                 <i class="icon iconfont icon-yidongappxiexiaoxi"></i>
-                <span>写问答{{itemTools.ReplyCount}}</span>
+                <span>回答{{itemTools.ReplyCount}}</span>
             </span>
         </li>
         <!-- <li>

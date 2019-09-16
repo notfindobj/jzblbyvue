@@ -28,7 +28,7 @@
                                                         <span class="author">{{ item.UserWebEntity.NickName }}</span>
                                                     </div>
                                                     <span class="tags" v-for="labelItem in item.Labels" :key="labelItem.ModuleId">{{ labelItem.FullName }}</span>
-                                                    <span>{{item.LatestAnswerDate}}</span>
+                                                    <span>{{item.CreateDate}}</span>
                                                 </div>
                                                 <h3 class="item-question" @click="goDetail(item.QAId)">{{item.QATitle }}</h3>
                                                 <div class="item-answer">

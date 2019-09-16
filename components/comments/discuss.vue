@@ -3,7 +3,7 @@
         <div class="discuss" v-for="(items, index) in discussData" :key="index">
             <div class="discuss-title" >
                 <div class="discuss-title-headIcon">
-                    <img :src="items.HeadIcon || $defaultHead" alt="">
+                    <img :src="items.HeadIcon || $defaultHead" alt="" @click="goPersonalCenter(items)">
                 </div>
                 <div class="discuss-title-content">
                     <p class="discuss-title-content-name">{{items.NickName}}</p>
@@ -103,6 +103,15 @@ export default {
         openMuchReply (index) {
             this.muchReply.includes(index) ? this.muchReply = this.muchReply.filter(n => n !== index) : this.muchReply.push(index)
         },
+        // 点击头像，去个人中心
+        goPersonalCenter(item) {
+            this.$router.push({
+            name: 'HeAndITribal-id',
+                query: {
+                    id: item.UserId
+                }
+            })
+        },
         // 删除评论
         delComment (val) {
             this.$emit('delComment', val)
@@ -134,6 +143,7 @@ export default {
                 overflow: hidden;
                 background: #abc;
                 img {
+                    cursor: pointer;
                     height: 100%;
                     width: 100%;
                 }
