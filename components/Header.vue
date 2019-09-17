@@ -45,14 +45,14 @@
                 <li>
                     <Dropdown class="right-select">
                         <Badge :count="0">
-                            <a href="javascript:void(0)" class="demo-badge">消息提醒</a>
+                            <a href="javascript:void(0)" class="demo-badge">消息提醒<Badge :count="allMessage"></Badge></a>
                         </Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem >
-                                <nuxt-link to="/Message/customized">评论消息</nuxt-link>
+                                <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                             <DropdownItem >
-                                <nuxt-link to="/Message/comment">定制消息</nuxt-link>
+                                <nuxt-link to="/Message/comment">定制消息<Badge v-if="Message.dingzhi && Message.dingzhi.MsgCount > 0" :count="Message.dingzhi.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -63,13 +63,14 @@
 </template>
 <script>
   import { mapState, mapGetters } from 'vuex'
-  import { logout} from '../LocalAPI'
-import { setDemo } from '../LocalAPI'
+  import { logout, setDemo} from '../LocalAPI'
   export default {
     data() {
       return {
         loginImg: require('../assets/images/top_logo.png'),
-        searchpage: ''
+        searchpage: '',
+        allMessage: 0,
+        Message: {}
       }
     },
     computed: {
@@ -78,7 +79,24 @@ import { setDemo } from '../LocalAPI'
         }),
         ...mapGetters(['isLogin'])
     },
+    created () {
+        this.getMessage()
+    },
+    asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
+        return {
+            asd: "23132132"
+        }
+    },
     methods: {
+        async getMessage () {
+            let msg = await this.$store.dispatch('getNews');
+            if (msg) {
+                this.Message = msg
+                Object.keys(msg).forEach(item =>{
+                    this.allMessage += msg[item].MsgCount;
+                })
+            }
+        },
         // 点击一级分类
         async goList(cate) {
             if (!this.isLogin) {

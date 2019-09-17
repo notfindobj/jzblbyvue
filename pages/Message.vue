@@ -1,9 +1,8 @@
 <template>
     <div class="message">
         <ul class="message-left">
-            <li> <nuxt-link to="/Message/customized">评论消息{{message.pinglun.MsgCount}}</nuxt-link></li>
-            <li> <nuxt-link to="/Message/comment">定制消息{{message.dingzhi.MsgCount}}</nuxt-link></li>
-            <!-- <li> <a href="">系统消息</a></li> -->
+            <li> <nuxt-link to="/Message/customized">评论消息{{message.pinglun.MsgCount || ""}}</nuxt-link></li>
+            <li> <nuxt-link to="/Message/comment">定制消息{{message.dingzhi.MsgCount || ""}}</nuxt-link></li>
         </ul>
         <div class="message-right">
             <nuxt-child />
