@@ -64,6 +64,7 @@
   import Upload from '../../../components/publish/upload'
   import Emotion from '../../../components/Emotion/index'
   import draggable from 'vuedraggable'
+  import { _debounce } from '../../../plugins/untils/public'
   import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
   export default {
     data() {
@@ -105,7 +106,7 @@
       },
 
       // 发布
-      clickPublish() {
+      clickPublish:_debounce(function () {
         if (!this.content) {
           this.$Message.warning('发布内容不能为空');
           return false;
@@ -124,8 +125,7 @@
         }).catch(err => {
           console.log(err, '发布图文')
         })
-      },
-
+      }, 300),
       // 隐藏弹出框
       hiddenModal() {
         // this.isShowUpload = false;

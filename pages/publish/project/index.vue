@@ -47,16 +47,19 @@
                                 ref="uploadFile"
                                 v-if="item.EnCode === '[wjsc]'"
                                 :action="baseUrl + 'Upload/DataUpload?uploadType=6'"
-                                :headers="{
-                                  Authorization: token
-                                }"
-                                :format="['zip', 'rar']"
-                                :on-format-error="handleFormatError"
-                                :before-upload="clearUpload"
-                                :on-success="uploadSuccess"
-                                :on-remove="removeFile"
-                                style="display: inline-block;"
-                            >
+                                  :headers="{
+                                    Authorization: token
+                                  }"
+                                  :format="['zip', 'rar']"
+                                  :max-size="51200"
+                                  :on-format-error="handleFormatError"
+                                  :before-upload="clearUpload"
+                                  :on-success="uploadSuccess"
+                                  :on-remove="removeFile"
+                                  :on-exceeded-size="handleMaxSize"
+                                 
+                                  style="display: inline-block;"
+                              >
                                 <Button icon="ios-cloud-upload-outline" >上传文件</Button>
                             </Upload>
                             <Upload
@@ -157,6 +160,7 @@
   import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
   import { mapGetters } from 'vuex'
   import {setDemo} from '../../../LocalAPI'
+  import { _debounce } from '../../../plugins/untils/public'
   import {regText, validateNum, validatePassCheck} from '../../../plugins/untils/Verify'
   import { async } from 'q';
   export default {
@@ -262,6 +266,12 @@
       this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
     },
     methods: {
+      handleMaxSize (file) {
+        this.$Notice.warning({
+              title: file.name,
+              desc: '文件' + file.name + '过大, 不能超多 50M.'
+          });
+      },
       handleClose (row, index) {
         let obj = {
           ItemDetailId: row.serviceId,
@@ -465,7 +475,7 @@
         this.serviceModal = false;
       },
       // 点击完成上传
-      clickSubmit() {
+      clickSubmit:_debounce(function () {
         this.$refs['formValidate'].validate(valid => {
           if (!this.formValidate.name) {
             this.$Message.warning('请填写项目名称');
@@ -521,7 +531,7 @@
           }
           this.sendPost(attributesList);
         })
-      },
+      }, 300),
       // 发送请求
       sendPost(attributesList) {
         let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];

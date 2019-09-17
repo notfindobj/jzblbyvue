@@ -91,7 +91,8 @@
 
 <script>
   import Upload from '../../../components/publish/upload'
-    import draggable from 'vuedraggable'
+  import draggable from 'vuedraggable'
+  import { _debounce } from '../../../plugins/untils/public'
   import { getQALabel, addLabel, releaseStatement } from '../../../service/clientAPI'
 
   export default {
@@ -168,7 +169,7 @@
         }
       },
       // 点击提交
-      handleSubmit(name) {
+      handleSubmit: _debounce(function (name) {
         let that = this;
         this.$refs[name].validate(() => {
           if (!this.formValidate.title.trim()) {
@@ -208,8 +209,7 @@
             console.log(err, '发布问答')
           })
         }
-      },
-
+      }, 300),
       // 获取标签
       async getLabel() {
         const data = await getQALabel({

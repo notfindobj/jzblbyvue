@@ -58,6 +58,7 @@
   import Upload from '../../../components/publish/uploadVideo'
   import Emotion from '../../../components/Emotion/index'
   import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
+  import { _debounce } from '../../../plugins/untils/public'
 
   export default {
     data() {
@@ -110,8 +111,8 @@
       },
 
       // 发布视频
-      clickSubmit() {
-        if (!this.content) {
+      clickSubmit: _debounce(function () {
+         if (!this.content) {
           this.$Message.warning('发布内容不能为空');
           return false;
         }
@@ -133,8 +134,7 @@
         }).catch(err => {
           console.log(err, '发布图文')
         })
-      },
-
+      }, 300),
       // 选择是否公开
       selectIsPublic(name) {
         this.publishMode = name;
