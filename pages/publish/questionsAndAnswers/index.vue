@@ -209,7 +209,7 @@
             console.log(err, '发布问答')
           })
         }
-      }, 300),
+      }, 1000),
       // 获取标签
       async getLabel() {
         const data = await getQALabel({

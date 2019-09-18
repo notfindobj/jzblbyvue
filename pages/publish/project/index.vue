@@ -531,7 +531,7 @@
           }
           this.sendPost(attributesList);
         })
-      }, 300),
+      }, 1000),
       // 发送请求
       sendPost(attributesList) {
         let [ItemFilePath, ItemFileName, PdfModel] = ['', '', ''];

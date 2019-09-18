@@ -35,13 +35,14 @@
                             <a href="javascript:void(0)" class="app-down">
                                 消息提醒
                                 <Icon type="ios-arrow-down"></Icon>
+                                <Badge :count="allMessage"></Badge>
                             </a>
                             <DropdownMenu slot="list">
                                 <DropdownItem >
-                                    <nuxt-link to="/Message/customized">评论消息</nuxt-link>
+                                    <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem >
-                                    <nuxt-link to="/Message/comment">定制消息</nuxt-link>
+                                    <nuxt-link to="/Message/comment">定制消息<Badge v-if="Message.dingzhi && Message.dingzhi.MsgCount > 0" :count="Message.dingzhi.MsgCount"></Badge></nuxt-link>
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
@@ -115,7 +116,9 @@
                     '陕西', '甘肃', '青海', '宁夏', '新疆', '港澳', '台湾'
                 ],
                 region: '',
-                searchpage: ''
+                searchpage: '',
+                allMessage: 0,
+                Message: {}
             }
         },
         computed: {
@@ -129,6 +132,7 @@
             LevelMenu
         },
         mounted() {
+            this.getMessage()
             this.region = localStorage.getItem('region') || '上海';
             if (sessionStorage.getItem('searchIndex')) {
                 this.searchTitle = sessionStorage.getItem('searchIndex') * 1;
@@ -146,6 +150,15 @@
             this.menuData = menuDatas.RetMenuData || [];
         },
         methods: {
+            async getMessage () {
+                let msg = await this.$store.dispatch('getNews');
+                if (msg) {
+                    this.Message = msg
+                    Object.keys(msg).forEach(item =>{
+                        this.allMessage += msg[item].MsgCount;
+                    })
+                }
+            },
             switchRegion () {
                 this.isRegion = true;
             },

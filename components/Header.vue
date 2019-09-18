@@ -44,9 +44,7 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <Badge :count="0">
-                            <a href="javascript:void(0)" class="demo-badge">消息提醒<Badge :count="allMessage"></Badge></a>
-                        </Badge>
+                        <a href="javascript:void(0)" class="demo-badge">消息提醒 <Icon type="ios-arrow-down"></Icon><Badge :count="allMessage"></Badge></a>
                         <DropdownMenu slot="list">
                             <DropdownItem >
                                 <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
@@ -79,7 +77,7 @@
         }),
         ...mapGetters(['isLogin'])
     },
-    created () {
+    mounted () {
         this.getMessage()
     },
     asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {

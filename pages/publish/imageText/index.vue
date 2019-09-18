@@ -125,7 +125,7 @@
         }).catch(err => {
           console.log(err, '发布图文')
         })
-      }, 300),
+      }, 1000),
       // 隐藏弹出框
       hiddenModal() {
         // this.isShowUpload = false;

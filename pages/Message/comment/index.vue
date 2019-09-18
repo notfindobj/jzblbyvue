@@ -7,7 +7,7 @@
                     <span class="MsgCount-all"  @click="signMessage(customized.Msg, 2)">全部设为已读</span>
                </div>
                <div>
-                   <span @click="signMessage(customized.Msg, 1)">全部删除</span>
+                   <span class="MsgCount-all-del" @click="signMessage(customized.Msg, 1)">全部删除</span>
                </div>
             </div>
             <ul class="customized-content">
@@ -108,13 +108,20 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.flex-content {
-    justify-content: center;
-    align-items: center;
-    display: flex;
-}
-.MsgCount-all {
+    .flex-content {
+        justify-content: center;
+        align-items: center;
+        display: flex;
+    }
+    .MsgCount-all {
       margin-left: 20px;
+      cursor: pointer;
+      &-del {
+          
+      }
+      &:hover {
+          color: #ff3c00;
+      }
     }
     .customized-yuan-color {
         background: #ff3c00 !important;

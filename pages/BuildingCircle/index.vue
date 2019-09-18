@@ -22,7 +22,7 @@
                 ></VideoItem>
             </template>
         </div>
-        <ToTop :isShowToTop="false"></ToTop>
+        <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
     </crollBox>
 </template>

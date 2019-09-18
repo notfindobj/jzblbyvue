@@ -134,7 +134,7 @@
         }).catch(err => {
           console.log(err, '发布图文')
         })
-      }, 300),
+      }, 1000),
       // 选择是否公开
       selectIsPublic(name) {
         this.publishMode = name;

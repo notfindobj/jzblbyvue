@@ -15,9 +15,9 @@
                             <img :src="items.ItemTitleImg" alt="">
                             <div class="works-like">
                                 <p><i class="icon iconfont icon-chakan"></i>{{items.Views}}</p>
-                                <p>
-                                    <i class="icon iconfont icon-favorite" v-show="!items.IsCollections" @click.stop="clickCollections(true, index)" ></i>
-                                    <i class="icon iconfont"  style="color: #ff3c00; margin-right: 8px;" v-show="items.IsCollections" @click.stop="clickCollections(false, index)" >&#xe69d;</i>收藏
+                                <p @click.stop="clickCollections(!items.IsCollections, index)">
+                                    <i :class="items.IsCollections ? 'iconfont icon-cc-star icon-color':'iconfont icon-favorite' "></i> 
+                                    收藏
                                 </p>
                             </div>
                         </div>
@@ -31,8 +31,8 @@
                                     <span class="headPortrait">{{items.NickName}}</span>
                                 </div>
                                 <div class="works-introduce-view" v-show="items.IsDownload || items.IsCustomize">
-                                    <i v-if="items.IsDownload" class="iconfont icon-iconfontzhizuobiaozhun43" title="可下载"></i>
-                                    <i v-if="items.IsCustomize" class="iconfont icon-3ding" title="可定制"></i>
+                                    <i v-if="items.IsDownload" @click="viewItem(items)" class="iconfont icon-iconfontzhizuobiaozhun43" title="可下载"></i>
+                                    <i v-if="items.IsCustomize" @click="viewItem(items)"  class="iconfont icon-3ding" title="可定制"></i>
                                 </div>
                             </div>
                         </div>
@@ -199,6 +199,7 @@
         color: #FF3C00;
         i {
             display: inline-block;
+            cursor: pointer;
             &::before {
                 font-size: 24px;
                 font-weight: bold;
@@ -304,11 +305,12 @@
                         position: absolute;
                         left: 0;
                         bottom: 0;
-
                         > p {
                             font-size: 12px;
                             color: #FFFFFF;
-
+                            .icon-color {
+                                color: #FF3C00;
+                            }
                             > i {
                                 font-size: 14px;
                                 color: #ffffff;
@@ -514,20 +516,17 @@
                         font-size: 20px;
                         font-weight: bold;
                         color: #333333;
-                        padding-bottom: 90px;
+                        height: 130px;;
                         margin-bottom: 14px;
                         border-bottom: 1px solid #D9D9D9;
                         cursor: pointer;
                     }
-
                     .works-list-con {
                         display: flex;
                         flex-direction: row;
                         align-items: center;
                         justify-content: space-between;
-
                         .works-name {
-                            margin-right: 236px;
                             display: flex;
                             flex-direction: row;
                             align-items: center;
@@ -546,19 +545,16 @@
 
                             }
                         }
-
                         .works-list-con-box {
                             display: flex;
                             flex-direction: row;
                             align-items: center;
                             justify-content: center;
-
                             i {
                                 font-size: 14px;
                                 color: #666666;
                                 margin-right: 4px;
                             }
-
                             span {
                                 font-size: 12px;
                                 color: #666666;
@@ -581,7 +577,6 @@
                     left: 160px;
                     top: 0px;
                     display: none;
-
                     > img {
                         cursor: pointer;
                         display: block;
@@ -591,31 +586,26 @@
                         background: red;
                         margin: 0 auto 10px;
                     }
-
                     > p {
                         font-size: 14px;
                         color: #333333;
                         margin-bottom: 8px;
                         text-align: center;
                     }
-
                     .works-con-introduce {
                         height: 40px;
                         // margin-bottom: 12px;
                         display: flex;
                         flex-direction: row;
                         position: relative;
-
                         > li {
                             flex: 1;
-
                             > p {
                                 &:nth-child(1) {
                                     font-size: 12px;
                                     color: #999999;
                                     text-align: center;
                                 }
-
                                 &:nth-child(2) {
                                     font-size: 12px;
                                     color: #333333;
@@ -623,7 +613,6 @@
                                 }
                             }
                         }
-
                         &:before {
                             width: 2px;
                             height: 20px;
@@ -636,7 +625,6 @@
                             transform: translateX(-50%);
                         }
                     }
-
                     .btn-group-box {
                         cursor: pointer;
                         height: 21px;
