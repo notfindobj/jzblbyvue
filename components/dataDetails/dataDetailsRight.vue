@@ -95,7 +95,7 @@
 </script>
 <style lang="less" scoped>
     .btn-group-Price {
-      font-size: 12px;
+      font-size: 16px;
       color: #666666;
     }
     .data-details-right {

@@ -96,11 +96,11 @@
             } else {
                 itIsMe = true;
             }
-            const data = await store.dispatch('getTribeInfo', id);
             let Trid = {
                 "UserId": id
             }
             await store.dispatch('TribeVisiting', Trid);
+            const data = await store.dispatch('getTribeInfo', id);
             return {
                 userId: id,
                 itIsMe,

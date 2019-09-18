@@ -241,3 +241,7 @@ export const registerEnterprise = async params => {
 export const setMessage = async params => {
   return await request.post(`LConnection/SetMessage`, params)
 }
+// 获取定制详情
+export const getCustomizeInfo = async params => {
+  return await request.get(`LConnection/GetCustomizeInfo`, params)
+}

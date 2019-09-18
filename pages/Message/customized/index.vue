@@ -16,7 +16,7 @@
                    <div class="customized-content-title">
                        <div>
                            <span :class="item.ReadStatu === 1 ? 'customized-yuan customized-yuan-color': 'customized-yuan'"></span>
-                           <span>【新用户福利】免费查询品牌是否受保护</span>
+                           <span>【{{item.MsgTitle}}】</span>
                            <span>{{item.CreateDate}}</span>
                        </div>
                        <div class="customized-content-title-right">

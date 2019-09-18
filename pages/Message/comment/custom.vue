@@ -9,14 +9,14 @@
         <div class="need-type">
           <span>类型：</span>
           <ul>
-            <li v-for="(items, index) in itemCustomizes" :key="index" :class="customizesContentIndex  === index? 'li-active' : ''" @click="changeCustom(items, index)">{{items.customizedTypeName}}</li>
+            <li class="li-active'">{{authorCustom.customizedTypeName}}</li>
           </ul>
         </div>
         <div class="need-con">
           <span>定制说明</span>
         </div>
-        <p class="need-coc-box">{{customizesContent.customizedDescription}}</p>
-        <p class="need-price">报价金额：{{customizesContent.customizedMoney}}元/套</p>
+        <p class="need-coc-box">{{authorCustom.customizedDescription}}</p>
+        <p class="need-price">报价金额：{{authorCustom.customizedMoney}}元/套</p>
       </div>
       <div class="submit-custom">
           <div class="submit-custom-title">
@@ -24,108 +24,56 @@
             <span>您选择后我们将尽快联系您！</span>
             <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
           </div>
-          <p class="submit-type">类型：<span>{{customizesContent.customizedTypeName}}</span></p>
-          <Form :model="customized" :rules="rules" :label-width="70" ref="customize">
+          <p class="submit-type">类型：<span>{{otherCustom.customizedTypeName}}</span></p>
+          <Form :model="otherCustom" :label-width="70" ref="customize">
             <FormItem label="描述" prop="customizedDescription">
-              <Input type="textarea" v-model="customized.customizedDescription" placeholder="请填写定制需求..."></Input>
+              <Input type="textarea" disabled v-model="otherCustom.customizedDescription" placeholder="请填写定制需求..."></Input>
             </FormItem>
             <FormItem label="预算金额" prop="customizedMoney">
               <div style="display: flex;" >
-                <Input v-model="customized.customizedMoney" placeholder="请填写" style="width:80px;"></Input> 
+                <Input disabled v-model="otherCustom.customizedMoney" placeholder="请填写" style="width:80px;"></Input> 
                 <span class="star">元</span>
               </div>
             </FormItem>
             <FormItem label="手机号码" prop="customizedMobile">
-              <Input v-model="customized.customizedMobile" placeholder="请填写手机号码" style="width:200px;"></Input>
+              <Input disabled v-model="otherCustom.customizedMobile" placeholder="请填写手机号码" style="width:200px;"></Input>
             </FormItem>
           </Form>
-        <div class="window-btn">
-          <div @click="closeMask()">取消</div>
-          <div @click="customMove('customize')">确定</div>
-        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import {getCustomizeDataByItemId, setReplyCustomize} from '../../service/clientAPI'
-import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
+import {getCustomizeInfo} from '../../../service/clientAPI'
   export default {
     name: 'detaDetailsCustom',
     props: {
-      itemId: {
-        type: String,
-        default: ''
+      customId: {
+        type: Object,
+        default: () => {}
       }
     },
     data() {
       return {
-        currentNeedIndex:-1,
-        itemCustomizes: {},
-        customizesContent: {},
-        customizesContentIndex: 0,
-        customized: {
-          itemId: "",
-          customizedTypeId: "",
-          customizedMoney: 0,
-          customizedMobile: "",
-          customizedDescription: ""
-        },
-        rules: {
-          customizedMobile: [
-            {required: true, validator: validatePassCheck, trigger: 'blur' }
-          ],
-          customizedDescription:[
-            {required: true, message: '描述不能为空', trigger: 'blur'}
-          ],
-          customizedMoney: [
-            {required: true, validator: validateNum, trigger: 'blur' }
-          ]
-        }
+        otherCustom: {},
+        authorCustom: {}
       }
-    },
-    created() {
     },
     mounted () {
       this.getCustomize()
     },
     methods: {
-      changeCustom (row, index) {
-        this.customizesContentIndex = index;
-        this.customizesContent = JSON.parse(JSON.stringify(row));
-      },
-      choseNeedType (inx) {
-        this.currentNeedIndex = inx
-      },
       // 获取定制数据
       async getCustomize() {
-        let msg = await getCustomizeDataByItemId(this.itemId);
-        if (msg) {
-          this.itemCustomizes = msg.itemCustomizes;
-          this.customizesContent = JSON.parse(JSON.stringify(msg.itemCustomizes[0]))
+        let query ={
+          itemId:this.customId.itemId,
+          customizeId: this.customId.customizeId
         }
-      },
-      // 定制回复
-      async customMove (name) {
-        this.$refs[name].validate(async (valid) => {
-                if (valid) {
-                    this.customized.itemId = this.itemId;
-                    this.customized.customizedTypeId = this.customizesContent.customizedTypeId;
-                    let fM = Number(this.customizesContent.customizedMoney) * 0.7;
-                    let lM = Number(this.customizesContent.customizedMoney) * 1.3;
-                    if (this.customized.customizedMoney > fM && this.customized.customizedMoney < lM) {
-                      let msg = await setReplyCustomize(this.customized)
-                      if (msg) {
-                        this.$Message.success('提交成功！');
-                        setTimeout(() => {
-                          this.closeMask()
-                        }, 300)
-                      }
-                    } else {
-                      this.$Message.warning('预算金额必须在报价金额30%左右！');
-                    }
-                }
-            })
+        let msg = await getCustomizeInfo(query);
+        if (msg) {
+          this.otherCustom = msg.otherCustomizeData;
+          this.authorCustom = msg.authorCustomizeData;
+        }
       },
       closeMask () {
         this.$emit('dataDetailsMaskClose',{type:'Custom'})
@@ -148,7 +96,7 @@ import {validatePassCheck, validateNum} from '../../plugins/untils/Verify'
     position: fixed;
     left: 0px;
     top: 0px;
-    z-index: 999;
+    z-index: 1999;
     .mask-cons{
       width: 1100px;
       height: 435px;

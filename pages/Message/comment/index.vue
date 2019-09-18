@@ -11,34 +11,41 @@
                </div>
             </div>
             <ul class="customized-content">
-                <li v-for="(item, index) in customized.Msg" :key="index" @click="signMessage(item, 2)">
+                <li v-for="(item, index) in customized.Msg" :key="index">
                    <div class="customized-content-title">
-                       <div>
-                           <span :class="item.ReadStatu === 1 ? 'customized-yuan customized-yuan-color': 'customized-yuan'"></span>
-                           <span>【新用户福利】免费查询品牌是否受保护</span>
-                           <span>{{item.CreateDate}}</span>
+                       <div class="flex-content">
+                            <span :class="item.ReadStatu === 1 ? 'customized-yuan customized-yuan-color': 'customized-yuan'"></span>
+                            <span class="MsgTitle">{{item.MsgTitle}}</span>
+                            <span class="CreateDate">{{item.CreateDate}}</span>
                        </div>
                        <div class="customized-content-title-right">
                            <span class="customized-content-title-right-del" @click="signMessage(item, 1, index)" >删除</span>
-                           <span v-if="item.ReadStatu === 1" @click="signMessage(item, 2)">标记为已读</span>
-                           <span v-else>已读</span>
+                           <span class="customized-content-title-right-reader" v-if="item.ReadStatu === 1" @click="signMessage(item, 2)">标记为已读</span>
+                           <span  v-else>已读</span>
                        </div>
                    </div>
-                   <div class="customized-content-detailed">
+                   <div class="customized-content-detailed" @click="viewCustom(item)">
                       {{item.MsgContext}}
                    </div>
                 </li>
             </ul>
+            <Custom v-if="isCustom" :customId="customId" @dataDetailsMaskClose="dataDetailsMaskClose"/>
         </div>
     </div>
 </template>
 <script>
 import {setMessage} from "../../../service/clientAPI"
+import Custom from "./custom"
 export default {
     data () {
         return {
-            customized: {}
+            customized: {},
+            customId: {},
+            isCustom: false
         }
+    },
+    components: {
+        Custom
     },
     async asyncData({route, store}) {
         let msgType = {
@@ -51,6 +58,13 @@ export default {
         }
     },
     methods: {
+        viewCustom(row) {
+            this.isCustom = true;
+            this.customId = row.DataIds
+        },
+        dataDetailsMaskClose () {
+            this.isCustom = false;
+        },
         async signMessage (id, type, index) {
             let OpId = ""
             if (id.constructor  === Object) {
@@ -94,6 +108,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.flex-content {
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
 .MsgCount-all {
       margin-left: 20px;
     }
@@ -102,8 +121,8 @@ export default {
     }
     .customized-yuan {
         display: inline-block;
-        width: 15px;
-        height: 15px;
+        width: 12px;
+        height: 12px;
         border-radius: 50%;
         background: #dddddd;
     }
@@ -141,6 +160,15 @@ export default {
                 &-right {
                     &-del {
                         display: none;
+                        &:hover {
+                            color: #ff3c00;
+                        }
+                    }
+                    &-reader {
+                        cursor: pointer;
+                        &:hover {
+                            color: #ff3c00;
+                        }
                     }
                 }
                 &:hover &-right-del{
@@ -149,8 +177,12 @@ export default {
                 }
             }
             &-detailed {
+                cursor: pointer;
                 line-height: 30px;
                 padding: 0 20px;
+                &:hover{
+                    color: #ff3c00;
+                }
             }
         }
     }
