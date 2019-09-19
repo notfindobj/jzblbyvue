@@ -11,8 +11,6 @@
                     <div class="comment-tool">
                         <div>
                             <i class="icon iconfont icon-face" @click.stop="isShowEmotion = !isShowEmotion">&#xe64e;</i>
-                            <!-- <i class="icon iconfont icon-photo">&#xe61a;</i> -->
-                            <!-- <i class="icon iconfont icon-tags">&#xe610;</i> -->
                         </div>
                         <Button type="primary" @click="handleComment">评论</Button>
                     </div>
@@ -88,7 +86,7 @@
     },
     mounted() {
       if (this.$route.name === 'HeAndITribal-id') {
-        this.width = '780px';
+        this.width = '765px';
         this.right = '335px';
       }
     },

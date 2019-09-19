@@ -193,6 +193,7 @@ export default {
                     height: 100px;
                     border-radius: 50%;
                     cursor: pointer;
+                    background: #f5a623;
                     margin: 25px auto 10px;
                     overflow: hidden;
 

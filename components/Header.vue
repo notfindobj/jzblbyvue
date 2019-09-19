@@ -44,7 +44,7 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <a href="javascript:void(0)" class="demo-badge">消息提醒 <Icon type="ios-arrow-down"></Icon><Badge :count="allMessage"></Badge></a>
+                        <Badge :count="allMessage" class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem >
                                 <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
@@ -173,6 +173,9 @@
 }
 </script>
 <style lang="less" scoped>
+   .bottom-start-mess {
+        font-size: 26px;
+    }
     .user-info {
         display: flex;
     }

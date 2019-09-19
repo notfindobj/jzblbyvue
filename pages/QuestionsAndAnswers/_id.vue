@@ -82,7 +82,7 @@
         </div>
         <div class="main-right">
             <div class="right-top">
-                <div class="author-avatar">
+                <div class="author-avatar"  @click="goToPersonal(detailInfo)">
                     <img :src="detailInfo.HeadIcon || $defaultHead" alt="">
                 </div>
                 <span class="author-name">{{ detailInfo.NickName }}</span>
@@ -141,6 +141,16 @@
             'v-comment': Comment
         },
         methods: {
+            // 跳转部落
+            goToPersonal (row) {
+                debugger
+                this.$router.push({
+                    name: 'HeAndITribal-id',
+                    query: {
+                        id: row.UserId
+                    }
+                })
+            },
             async delComments (row) {
                 let msg = await delComment(row.CommentsId)
                 if (msg) {

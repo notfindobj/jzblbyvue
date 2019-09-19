@@ -21,31 +21,31 @@
                     <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input"></Input>
                 </FormItem>
                 <FormItem label="类型选择" class="type-select" prop="typeId">
-                    <i v-for="item in menu.RetMenuData" :key="item.ItemAttributesId" >
+                    <i v-for="item in menu.RetMenuData" :key="'typeId'+item.ItemAttributesId" >
                         <Button v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
                         <Button v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName, item.ItemSubAttributeCode)" >{{ item.ItemAttributesFullName }} </Button>
                     </i>
                     <div class="attr-box" v-show="attrList">
-                        <div class="attr-select-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" :key="item.id" >
-                            <span v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" >
-                                {{ item.ItemValue }}
+                        <div class="attr-select-item" v-for="(item, index) in queryAttrList" v-if="item.ItemAttributesFullName !== '[文件上传]' && item.ItemAttributesFullName !== '[PDF文件上传]'" :key="item.ItemAttributesId+index" >
+                            <span v-if="item.ItemAttributesFullName !== '[文件上传]' && item.ItemAttributesFullName !== '[PDF文件上传]'" >
+                                {{ item.ItemAttributesFullName }}
                             </span>
-                            <Select v-if="item.EnCode !== '[wjsc]' && item.EnCode !== '[pdfwjsc]'" v-model="item.ItemSubAttributeId" style="width:220px" >
-                                <Option v-for="subItem in attrList[index].ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId" >
+                            <Select v-if="item.ItemAttributesFullName !== '[文件上传]' && item.ItemAttributesFullName !== '[PDF文件上传]'" v-model="item.ItemSubAttributeId" style="width:220px" >
+                                <Option v-for="subItem in item.ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId" >
                                     {{ subItem.ItemAttributesFullName }}
                                 </Option>
                             </Select>
                         </div>
-                        <div class="attr-select-item attr-upload-item" v-for="item in queryAttrList" v-if="item.EnCode === '[wjsc]' || item.EnCode === '[pdfwjsc]'" :key="item.id" >
-                            <span v-if="item.EnCode === '[wjsc]'" style="vertical-align: top;" >
+                        <div class="attr-select-item attr-upload-item" v-for="item in queryAttrList" v-if="item.ItemAttributesFullName === '[文件上传]' || item.ItemAttributesFullName === '[PDF文件上传]'" :key="item.ItemAttributesId+'select'" >
+                            <span v-if="item.ItemAttributesFullName === '[文件上传]'" style="vertical-align: top;" >
                                 文件上传
                             </span>
-                            <span v-if="item.EnCode === '[pdfwjsc]'" style="vertical-align: top;" >
+                            <span v-if="item.ItemAttributesFullName === '[PDF文件上传]'" style="vertical-align: top;" >
                                 PDF上传
                             </span>
                             <Upload
                                 ref="uploadFile"
-                                v-if="item.EnCode === '[wjsc]'"
+                                v-if="item.ItemAttributesFullName === '[文件上传]'"
                                 :action="baseUrl + 'Upload/DataUpload?uploadType=6'"
                                   :headers="{
                                     Authorization: token
@@ -64,7 +64,7 @@
                             </Upload>
                             <Upload
                                 ref="uploadFile"
-                                v-if="item.EnCode === '[pdfwjsc]'"
+                                v-if="item.ItemAttributesFullName === '[PDF文件上传]'"
                                 :action="baseUrl + 'Upload/DataUpload?uploadType=4'"
                                 :headers="{ Authorization: token }"
                                 accept=".pdf"
@@ -76,7 +76,7 @@
                                 <Button icon="ios-cloud-upload-outline" >上传PDF文件</Button>
                             </Upload>
                         </div>
-                        <div class="attr-select-item attr-upload-item" v-for="(item, index) in queryAttrList" v-if="item.EnCode === '[wjsc]'" :key="index" >
+                        <div class="attr-select-item attr-upload-item" v-for="(item, index) in queryAttrList" v-if="item.ItemAttributesFullName === '[文件上传]'" :key="index+'vertical'" >
                              <span style="vertical-align: top;">
                                 收取费用
                             </span>
@@ -86,10 +86,7 @@
                     </div>
                 </FormItem>
                 <FormItem label="定制服务" class="make-service">
-                    <Tag type="border"  closable color="error" v-for="(item, index) in serviceSelectList" :key="item.serviceId" style="margin-right: 10px;" @on-close="handleClose(item,index)" @click.native="updateService(index)">{{ item.name }}</Tag>
-                    <!-- <Button type="primary" v-for="(item, index) in serviceSelectList" :key="item.serviceId" style="margin-right: 10px;" @click="updateService(index)" >
-                        {{ item.name }}
-                    </Button> -->
+                    <Tag type="border"  closable color="error" v-for="(item, index) in serviceSelectList" :key="index+item.serviceId" style="margin-right: 10px;" @on-close="handleClose(item,index)" @click.native="updateService(index)">{{ item.name }}</Tag>
                     <span class="add-service-btn" @click="addService" v-show="this.serviceList.length > 0">
                         <Icon type="md-add" size="12"/>
                         添加定制服务
@@ -112,8 +109,8 @@
         </div>
         <div class="submit-box">
             <p>
-                <Checkbox class="checkbox" size="large" v-model="isAgree"></Checkbox>
-                我已仔细阅读并同意<span>《建筑部落用户协议》</span>
+                <Checkbox class="checkbox" size="large" v-model="isAgree">我已仔细阅读并同意</Checkbox>
+                <span>《建筑部落用户协议》</span>
             </p>
             <Button type="primary" @click="clickSubmit">完成上传</Button>
         </div>
@@ -127,12 +124,12 @@
                 <Form ref="serviceValidate" :model="serviceValidate" :rules="rulesValidate" :label-width="100" >
                     <FormItem label="定制类型:">
                         <template v-if="!isUpdateService" v-for="item in serviceList" >
-                            <Button class="service-btn" :key="item.ItemDetailId"
+                            <Button class="service-btn" :key="'btn'+item.ItemDetailId"
                                 v-if="item.ItemDetailId !== serviceValidate.serviceId"
                                 @click.native="selectSerice(item.ItemDetailId, item.ItemValue)" >
                                 {{ item.ItemValue }}
                             </Button>
-                            <Button class="service-btn" :key="item.ItemDetailId" v-else type="primary" > {{item.ItemValue }} </Button>
+                            <Button class="service-btn" :key="'service'+item.ItemDetailId" v-else type="primary" > {{item.ItemValue }} </Button>
                         </template>
                         <template v-if="isUpdateService">
                             <Button class="service-btn" type="primary" > {{ serviceName }} </Button>
@@ -382,6 +379,7 @@
         this.typyString = type;
         this.serviceSelectList = [];
         getProjectType(id).then(res => {
+          console.log(res)
           this.queryAttrList = res;
           this.formValidate.typeId = id;
           this.typeName = name;
@@ -492,7 +490,7 @@
 
           let attributesList = [];
           for (let i in this.queryAttrList) {
-            if (this.queryAttrList[i].EnCode === '[wjsc]' || this.queryAttrList[i].EnCode === '[pdfwjsc]') {
+            if (this.queryAttrList[i].ItemAttributesFullName === '[文件上传]' || this.queryAttrList[i].ItemAttributesFullName === '[PDF文件上传]') {
               continue;
             }
             if (this.queryAttrList[i].ItemSubAttributeId) {
@@ -635,10 +633,9 @@
     },
 
     async asyncData() {
-      const data = await Promise.all([getMenu(), getProjectType('')]);
+      const data = await getMenu();
       return {
-        menu: data[0],
-        typeList: data[1]
+        menu: data
       }
     }
   }

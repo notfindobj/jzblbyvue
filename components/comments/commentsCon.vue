@@ -188,7 +188,7 @@
                     color: #666666;
 
                     > i {
-                        font-size: 12px;
+                        font-size: 16px;
                         margin-right: 5px;
                     }
                 }

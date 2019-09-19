@@ -570,7 +570,6 @@
     }
 </script>
 <style lang="less" scoped>
-    
     .message {
         &-items {
             padding-bottom: 30px;

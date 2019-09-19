@@ -81,7 +81,7 @@ export const addLabel = async data => {
 
 // 获取所有项目类型
 export const getProjectType = async parentId => {
-  return await request.post(`Menu/GetDataByTypeId?parentId=${ parentId }`)
+  return await request.post(`Menu/GetDataALLByTypeId?moduleId=${ parentId }`)
 }
 
 // 根据类型获取定制服务

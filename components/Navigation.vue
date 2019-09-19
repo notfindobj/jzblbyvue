@@ -32,11 +32,7 @@
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>
                         <Dropdown placement="bottom-start">
-                            <a href="javascript:void(0)" class="app-down">
-                                消息提醒
-                                <Icon type="ios-arrow-down"></Icon>
-                                <Badge :count="allMessage"></Badge>
-                            </a>
+                            <Badge :count="allMessage" class-name="badge-sty"><i class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
                             <DropdownMenu slot="list">
                                 <DropdownItem >
                                     <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
@@ -132,7 +128,9 @@
             LevelMenu
         },
         mounted() {
-            this.getMessage()
+            if (this.auth) {
+                this.getMessage()
+            }
             this.region = localStorage.getItem('region') || '上海';
             if (sessionStorage.getItem('searchIndex')) {
                 this.searchTitle = sessionStorage.getItem('searchIndex') * 1;
@@ -235,7 +233,7 @@
                 if (!this.isLogin) {
                     return false
                 }
-                this.$router.push({ path: "/PersonalCenter" });
+                this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
             },
             // 百度搜索
             onSearch() {
@@ -295,6 +293,15 @@
     }
 </script>
 <style lang="less" scoped>
+    .badge-sty {
+        top: 5px;
+        line-height: 10px;
+        height: 13px;
+        border-radius: 5px;
+    }
+    .bottom-start-mess {
+        font-size: 26px;
+    }
     .sign-btn {
         &:hover {
             color: #FF3C00;

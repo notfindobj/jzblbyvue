@@ -34,11 +34,22 @@
                     </FormItem>
                 </Col>
             </Row>
-            <FormItem label="营业执照:" prop="BusLicImgId">
-                <div @click="changeFile('updataFile')" :class="companyAttr.BusLicImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.BusLicImg)}');`">
-                    <input ref="updataFile" type="file" @change="changeUpFile('updataFile')" style="display: none;">
-                </div>
-            </FormItem>
+            <Row>
+                <Col span="12" style="padding-right:10px">
+                    <FormItem label="营业执照:" prop="BusLicImgId">
+                        <div @click="changeFile('updataFile')" :class="companyAttr.BusLicImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.BusLicImg)}');`">
+                            <input ref="updataFile" type="file" @change="changeUpFile('updataFile', 10)" style="display: none;">
+                        </div>
+                    </FormItem>
+                </Col>
+                <Col span="12" style="padding-right:10px">
+                    <FormItem label="营业LOGO:" prop="BusLicImgId">
+                        <div @click="changeFile('updataFile')" :class="companyAttr.CompanyImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.CompanyImg)}');`">
+                            <input ref="updataFile" type="file" @change="changeUpFile('logo', 11)" style="display: none;">
+                        </div>
+                    </FormItem>
+                </Col>
+            </Row>
             <Row>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="经办人姓名:" prop="IDCardName">
@@ -55,11 +66,11 @@
                 <div @click="changeFile('card')"
                 :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgPosi)}');`"
                  >
-                    <input ref="card" type="file" @change="changeUpFile('card')" style="display: none;">
+                    <input ref="card" type="file" @change="changeUpFile('card', 9)" style="display: none;">
                 </div>
                 <div  @click="changeFile('unCard')" 
                 :class="companyAttr.IDCardImgNegaId ? 'updataFile-cameras iconfont icon-shenfenzhengfanmian' : 'updataFile-camera iconfont icon-shenfenzhengfanmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgNega)}');`">
-                    <input ref="unCard" type="file" @change="changeUpFile('unCard')" style="display: none;">
+                    <input ref="unCard" type="file" @change="changeUpFile('unCard', 9)" style="display: none;">
                 </div>
             </FormItem>
             <Row>
@@ -125,6 +136,8 @@ export default {
                 "IDCardImgPosiId": "", // 身份证正面上传图片Id
                 "IDCardImgNega": "", // 身份证反面上传图片Id
                 "IDCardImgNegaId": "", // 身份证反面上传图片Id
+                "CompanyImgId": "", // 身份证Logo
+                "CompanyImg": "", // 身份证Logo
                 "IDCardName": "", // 身份证姓名
                 "IDCordId": "", // 身份证号码
                 "CompanyTypeId": "", // 公司类型Id
@@ -200,6 +213,8 @@ export default {
                 IDCordId: entInfo.IDCordId,
                 CompanyTypeId: entInfo.CompanyTypeId,
                 CellphoneNumber: entInfo.CellphoneNumber,
+                CompanyImgId: entInfo.CompanyImgId,
+                CompanyImg: entInfo.CompanyImgSrc,
                 Password: '',
                 Authcode: '',
             }
@@ -271,7 +286,7 @@ export default {
             this.$store.dispatch('LOGGEDIN', 'signIn');
             this.$store.dispatch('SETUP', false)
         },
-        changeUpFile (attr) {
+        changeUpFile (attr, type = 9) {
             let item = event.target.files[0];
             if (!/\.(gif|jpg|jpeg|png|GIF|JPG|PNG)$/.test(item.name)) {    
                 alert("图片类型必须是.gif,jpeg,jpg,png中的一种");    
@@ -279,7 +294,7 @@ export default {
             } 
             let data = new FormData();
             data.append('files', item)
-            uploadFile(data, 9).then(res => {
+            uploadFile(data, type).then(res => {
                 if (attr === 'updataFile') {
                     this.companyAttr.BusLicImgId = res.fileId
                     this.companyAttr.BusLicImg = res.fileUrl
@@ -291,6 +306,10 @@ export default {
                 if (attr === 'unCard') {
                     this.companyAttr.IDCardImgNegaId = res.fileId
                     this.companyAttr.IDCardImgNega = res.fileUrl
+                }
+                if (attr === 'logo') {
+                    this.companyAttr.CompanyImgId = res.fileId
+                    this.companyAttr.CompanyImg = res.fileUrl
                 }
 
             }).catch(err => {
