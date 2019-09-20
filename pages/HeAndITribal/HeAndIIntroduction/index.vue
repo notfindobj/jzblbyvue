@@ -75,7 +75,7 @@
     },
     methods: {
         enterCenter () {
-            this.$router.push({ name: "PersonalCenter" });
+            this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.userInfo.UserId}});
         },
         change(inx, count) {
             this.currentIndex = inx;

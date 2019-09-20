@@ -131,7 +131,7 @@
             if (!this.isLogin) {
                 return false
             }
-            this.$router.push({ path: "/PersonalCenter" });
+            this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
         },
         // 在线地图
         onlineMap() {
@@ -153,10 +153,6 @@
             this.$router.push({ name: "searchPage" });
         },
         goSearchPage () {
-            if (!this.searchpage) {
-                this.$Message.error('搜索内容不能为空！');
-                return false;
-            }
             let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
             window.open(routeData.href, '_blank');
         },

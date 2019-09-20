@@ -379,7 +379,6 @@
         this.typyString = type;
         this.serviceSelectList = [];
         getProjectType(id).then(res => {
-          console.log(res)
           this.queryAttrList = res;
           this.formValidate.typeId = id;
           this.typeName = name;
@@ -498,7 +497,7 @@
                 AttributesId: '',
                 ItemId: '',
                 TypeId: this.formValidate.typeId,
-                ItemAttributesId: this.queryAttrList[i].id,
+                ItemAttributesId: this.queryAttrList[i].ItemAttributesId,
                 ItemSubAttributeId: this.queryAttrList[i].ItemSubAttributeId,
                 sort: i
               };

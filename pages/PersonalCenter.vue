@@ -3,36 +3,36 @@
             <div class="personal-left">
                 <div class="personal-left-header">
                     <div class="personal-left-header-img">
-                        <img :src="userInfo.HeadIcon || $defaultHead" alt="" width="100px;">
+                        <img :src="GetUserData.HeadIconSrc || $defaultHead" alt="" width="100px;">
                     </div>
-                    <div class="personal-left-header-name">{{userInfo.NickName}}</div>
+                    <div class="personal-left-header-name">{{GetUserData.Nickname}}</div>
                 </div>
                 <ul class="personal-left-nav">
                     <li>
-                        <nuxt-link to="/PersonalCenter/myMessage">
+                        <nuxt-link :to="'/PersonalCenter/myMessage/'+userId">
                             <i class="icon iconfont icon-icon-test"></i>
-                            我的信息
+                            {{isItMe ? '我的信息' : 'TA的信息'}}
                         </nuxt-link>
                     </li>
-                    <li>
+                    <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/accountSecurity">
                             <i class="icon iconfont icon-zhanghuanquan"></i>
                             账户安全
                         </nuxt-link>
                     </li>
-                    <li>
+                    <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/accountBinding">
                             <i class="icon iconfont icon-bangding"></i>
                             账户绑定
                         </nuxt-link>
-                    </li>
-                    <li>
+                    </li >
+                    <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/records">
                             <i class="icon iconfont icon-shouhuodizhi"></i>
                             交易记录
                         </nuxt-link>
-                    </li>
-                    <li>
+                    </li >
+                    <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/receivingAddress">
                             <i class="icon iconfont icon-shouhuodizhi"></i>
                             收货地址
@@ -47,6 +47,7 @@
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import { getUserData } from '../service/clientAPI'
 export default {
     name: 'PersonalCenter',
     middleware: 'message',
@@ -54,7 +55,42 @@ export default {
         ...mapState({
             userInfo: state => state.overas.auth
         }),
-    }
+    },
+    data () {
+        return {
+            userId: '',
+            isItMe: true,
+            GetUserData: {
+                HeadIconSrc: '',
+                NickName: ''
+            }
+        }
+    },
+    created () {
+        let query = {
+            userId: this.userInfo.UserId
+        }
+        this.userId = this.userInfo.UserId
+        if (this.$route.params.userId) {
+            if (this.userInfo.UserId === this.$route.params.userId) {
+                this.isItMe = true;
+            } else {
+                this.isItMe = false;
+            }
+            this.userId = this.$route.params.userId
+            query.userId = this.$route.params.userId
+        }
+        this.getUserInfo(query);
+    },
+    methods: {
+        // 个人资料
+        async getUserInfo(value) {
+            let msg = await getUserData(value);
+            if (msg) {
+                this.GetUserData = msg;
+            }
+        },
+    },
 }
 </script>
 <style lang="less">

@@ -6,20 +6,20 @@
                 <span class="message-items-left-label left-label">头像</span>
             </div>
             <div class="message-items-right">
-                <div class="message-items-right-header">
-                    <img :src="Identity.HeadIcon || $defaultHead" alt="" width="100px;">
+                <div class="message-items-right-header"  @click="goToPersonal(GetUserData)">
+                    <img :src="GetUserData.HeadIconSrc || $defaultHead" alt="" width="100px;">
                 </div>
                 <div v-if="!modifying" class="modifying-head" @click="$refs.uploadType.click()">修改头像</div>
                 <input type="file" style="display:none;" ref="uploadType" @change="upHeaderImg">
             </div>
-            <div class="message-items-operation operation-label" :style="`color:${modifying ? '#ff3c00' : ''}`" @click="modifying = !modifying">{{modifying ?"编辑" :
+            <div v-if="isItMe" class="message-items-operation operation-label" :style="`color:${modifying ? '#ff3c00' : ''}`" @click="modifying = !modifying">{{modifying ?"编辑" :
                 "收起"}}
             </div>
         </div>
         <!-- 昵称 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
-                <span class="message-items-left-label">昵称</span>
+                <span class="message-items-left-label">{{EntCode === 2 ? '昵称' : '公司简称'}}</span>
             </div>
             <div class="message-items-right">
                 <span v-if="nickname">{{userInfo.Nickname}}</span>
@@ -35,19 +35,19 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" :style="`color:${nickname ? '#ff3c00' : ''}`"  @click="nickname = !nickname">{{nickname ?"编辑" : "收起"}}</div>
+            <div v-if="isItMe" class="message-items-operation" :style="`color:${nickname ? '#ff3c00' : ''}`"  @click="nickname = !nickname">{{nickname ?"编辑" : "收起"}}</div>
         </div>
         <!-- 个人资料 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
-                <span class="message-items-left-label">个人资料</span>
+                <span class="message-items-left-label">{{EntCode === 2 ? '个人资料' : '公司资料'}}</span>
             </div>
             <div class="message-items-right">
                 <!-- <span v-if="means">未完善完全</span> -->
                 <div class="message-items-right-edit">
                     <div class="means">
                         <div class="means-left">
-                            <span class="means-left-label">真实姓名：</span>
+                            <span class="means-left-label">{{EntCode === 2 ? '真实姓名：' : '公司全称：'}}</span>
                             <span v-if="means">{{userInfo.RealName}}</span>
                             <Input v-else type="text" style="width: 160px;" v-model="GetUserData.RealName"
                                    size="small"/>
@@ -74,7 +74,7 @@
                             </span>
                         </div>
                     </div>
-                    <div class="means">
+                    <div class="means" v-if="EntCode === 2">
                         <div class="means-left">
                             <span class="means-left-label">性别：</span>
                             <span v-if="means">{{userInfo.Gender === 1 ? '男' : '女'}}</span>
@@ -93,12 +93,11 @@
                             </Select>
                         </div>
                     </div>
-                    <div class="means">
-                        <div>
+                    <div class="means" v-if="EntCode === 2">
+                        <div >
                             <span class="means-left-label">生日：</span>
                             <span v-if="means">{{userInfo.Birthday}}</span>
-                            <DatePicker v-else style="width:160px" v-model="GetUserData.Birthday" format="yyyy/MM/dd"
-                                        type="date" placeholder="Select date"></DatePicker>
+                            <DatePicker v-else style="width:160px" v-model="GetUserData.Birthday" format="yyyy/MM/dd" type="date" placeholder="Select date"></DatePicker>
                         </div>
                     </div>
                     <div class="means">
@@ -115,7 +114,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" :style="`color:${means ? '#ff3c00' : ''}`" @click="meansClick">{{means ?"编辑" : "收起"}}</div>
+            <div v-if="isItMe" class="message-items-operation" :style="`color:${means ? '#ff3c00' : ''}`" @click="meansClick">{{means ?"编辑" : "收起"}}</div>
         </div>
         <!-- 教育信息 -->
         <!-- <div class="message-items message-items-text">
@@ -176,7 +175,7 @@
         <!-- 个人擅长 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
-                <span class="message-items-left-label">个人擅长</span>
+                <span class="message-items-left-label">{{EntCode === 2 ? '个人擅长' : '公司擅长'}}</span>
             </div>
             <div class="message-items-right">
                 <span>
@@ -190,10 +189,10 @@
                     <Input style="width:230px" v-model="userLabelModel" search enter-button="添加" @on-search="addLabel" placeholder="请输入标签" />
                 </div>
             </div>
-            <div class="message-items-operation" :style="`color:${!isLabel ? '#ff3c00' : ''}`" @click="isLabel = !isLabel">{{isLabel ? '收起' : '编辑'}}</div>
+            <div v-if="isItMe" class="message-items-operation" :style="`color:${!isLabel ? '#ff3c00' : ''}`" @click="isLabel = !isLabel">{{isLabel ? '收起' : '编辑'}}</div>
         </div>
         <!-- 职业信息 -->
-        <div class="message-items message-items-text">
+        <div v-if="EntCode === 2"  class="message-items message-items-text">
             <div class="message-items-left">
                 <span class="message-items-left-label">职业信息</span>
             </div>
@@ -264,7 +263,7 @@
                     </div>
                 </div>
             </div>
-            <div class="message-items-operation" :style="`color:${career ? '#ff3c00' : ''}`" @click="clickCareer">{{career ?"编辑" : "收起"}}</div>
+            <div v-if="isItMe" class="message-items-operation" :style="`color:${career ? '#ff3c00' : ''}`" @click="clickCareer">{{career ?"编辑" : "收起"}}</div>
         </div>
     </div>
 </template>
@@ -289,6 +288,7 @@
     export default {
         data() {
             return {
+                isItMe: true,
                 modifying: true,
                 nickname: true,
                 means: true,
@@ -299,6 +299,7 @@
                 city: [],
                 count: [],
                 province: [],
+                EntCode: 2, // 1 企业2 个人
                 GetUserData: {
                     RealName: "",
                     Gender: '0',
@@ -308,7 +309,8 @@
                     ProvinceArea: "",
                     CityArea: "",
                     CountyArea: "",
-                    Nickname: ''
+                    Nickname: '',
+                    HeadIconSrc:''
                 },
                 userInfo: {},
                 expertiseList: [],
@@ -326,7 +328,8 @@
                 },
                 JurisdiInfo: {},
                 userLabel: [],
-                userLabelModel: ''
+                userLabelModel: '',
+                userId:''
             }
         },
         computed: {
@@ -334,12 +337,29 @@
                 Identity: state => state.overas.auth
             }),
         },
-        created() {
-            this.getUserInfo();
-            this.getUserExpertiseList();
-            this.getThisUserJobInfoList();
+        mounted() {
+            let query = {
+                userId: this.Identity.UserId
+            }
+            this.userId = this.Identity.UserId
+            if (this.$route.params.userId) {
+                if (this.Identity.UserId === this.$route.params.userId) {
+                    this.isItMe = true;
+                } else {
+                    this.isItMe = false;
+                }
+                query.userId = this.$route.params.userId
+                this.userId = this.$route.params.userId
+            }
+            this.getUserInfo(query);
+            this.getUserExpertiseList(query);
+            this.getThisUserJobInfoList(query);
         },
         methods: {
+            goToPersonal (row) {
+                let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: this.userId} });
+                window.open(routeData.href, '_blank');
+            },
             // 上传头像
             async upHeaderImg(event) {
                 let file = event.target.files;
@@ -360,11 +380,13 @@
                 }
             },
             // 个人资料
-            async getUserInfo() {
-                let msg = await getUserData();
+            async getUserInfo(value) {
+                let msg = await getUserData(value);
                 if (msg) {
+                    this.EntCode = msg.EntCode;
                     this.userInfo = msg;
                     this.GetUserData = {
+                        HeadIconSrc: msg.HeadIconSrc,
                         Nickname: msg.Nickname,
                         RealName: msg.RealName,
                         Gender: msg.Gender,
@@ -485,8 +507,8 @@
                 }
             },
             // 获取当前用户所有职业信息接口 GetThisUserJobInfo
-            async getThisUserJobInfoList() {
-                let msg = await GetThisUserJobInfo();
+            async getThisUserJobInfoList(value) {
+                let msg = await GetThisUserJobInfo(value);
                 if (msg) {
                     if (msg.jobInfos) {
                         let val = msg.jobInfos[0]
@@ -546,8 +568,8 @@
              * 
              */
              // 个人擅长 GetUserExpertise
-            async getUserExpertiseList() {
-                let msg = await GetUserExpertise();
+            async getUserExpertiseList(value) {
+                let msg = await GetUserExpertise(value);
                 if (msg) {
                    this.userLabel = msg || [];
                 }
