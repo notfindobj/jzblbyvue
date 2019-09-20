@@ -168,6 +168,8 @@
         created() {
             try {
                 let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                console.log(showLayout)
+                debugger
                 if (showLayout.title === '文本') {
                     this.isLayout = false
                 } else if (showLayout.showLayout === 'false') {

@@ -503,8 +503,10 @@
               };
               attributesList.push(attrItem);
             } else {
-              this.$Message.warning('属性选择不完整');
-              return false;
+              if (this.queryAttrList[i].ItemSubAttributeCode !== 'dfgf') {
+                this.$Message.warning('属性选择不完整');
+                return false;
+              }
             }
           }
 
@@ -538,8 +540,7 @@
             ItemFileName: this.typeFile.fileName,
             ItemFilePath: this.typeFile.packageOrPdfUrl
           }
-        }
-        if (this.typeFile && this.typeName === '文本') {
+        } else if (this.typeFile && this.typeName === '文本') {
           this.showLayout = false
           PdfModel = {
             ItemFileName: this.typeFile.fileName,

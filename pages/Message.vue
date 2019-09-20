@@ -12,7 +12,7 @@
 <script>
 export default {
     layout: 'main',
-    middleware: 'message',
+    middleware: ['message', 'authenticated'],
     async asyncData({route, store}) {
         let msg = await store.dispatch('getNews');
         return {
