@@ -79,8 +79,8 @@
                 <li @click="goVideo">视频</li>
                 <li @click="goQuestion">问答</li>
                 <li @click="goBuilding">建筑圈</li>
-                <li @click="goHeAndI">建筑游学</li>
-                <li @click="goAboutUs">建筑书店</li>
+                <!-- <li @click="goHeAndI">建筑游学</li> -->
+                <!-- <li @click="goAboutUs">建筑书店</li> -->
                 <li @click="goMytribe">我的部落</li>
             </ul>
             <!-- <div class="main-nav-publish" @click="publish">发布</div> -->
@@ -120,8 +120,7 @@
         computed: {
             ...mapState({
                 auth: state => state.overas.auth
-            }),
-            ...mapGetters(['isLogin'])
+            })
         },
         components: {
             signPage,
@@ -230,9 +229,6 @@
                 window.open('https://map.51240.com/zhongguo__map/')
             },
             enterCenter () {
-                if (!this.isLogin) {
-                    return false
-                }
                 this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
             },
             // 百度搜索
@@ -241,10 +237,8 @@
                 window.open(`https://www.baidu.com/s?ie=UTF-8&wd=${ this.baiduData }`)
             },
             publish() {
-                if (this.isLogin) {
-                    let routeData = this.$router.resolve({ name: "publish-imageText" });
-                    window.open(routeData.href, '_blank');
-                }
+                let routeData = this.$router.resolve({ name: "publish-imageText" });
+                window.open(routeData.href, '_blank');
             },
             goAttention() {
                 this.$router.push({ path: "/attention" })
@@ -253,31 +247,23 @@
                 this.$router.push({ path: "/recommend" })
             },
             goVideo() {
-                if (!this.isLogin) {
-                    return false
-                }
                 this.$router.push({ path: "/videos" })
             },
             goQuestion() {
-                if (!this.isLogin) {
-                    return false
-                }
                 this.$router.push({ path: "/QuestionsAndAnswers" })
             },
             goBuilding() {
-                if (!this.isLogin) {
-                    return false
-                }
                 this.$router.push({ path: "/BuildingCircle" })
             },
             goHeAndI() {
                 this.$Message.error('开发中....')
-                if (!this.isLogin) {
-                    return false
-                }
-                // this.$router.push({ path: "/PersonalCenter" })
             },
             goSearchPage () {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
                 window.open(routeData.href, '_blank');
             },

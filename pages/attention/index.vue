@@ -22,6 +22,9 @@
                         @clickMenu="clickMenu"
                     ></VideoItem>
                 </template>
+                <div v-if="attentionList.length <= 0" class="attentionListSty">
+                    暂无关注数据
+                </div>
             </div>
             <ToTop ></ToTop>
             <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -196,6 +199,10 @@
 </script>
 
 <style lang="less" scoped>
+    .attentionListSty {
+        text-align: center;
+        font-size: 20px;
+    }
     .ivu-page {
         text-align: center;
     }

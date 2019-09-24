@@ -100,12 +100,27 @@
                             <DatePicker v-else style="width:160px" v-model="GetUserData.Birthday" format="yyyy/MM/dd" type="date" placeholder="Select date"></DatePicker>
                         </div>
                     </div>
+                    <div class="means" v-if="EntCode !== 2">
+                        <div >
+                            <span class="means-left-label">公司邮箱：</span>
+                            <span v-if="means">{{userInfo.Email}}</span>
+                            <Input v-else type="text" style="width: 180px;" v-model="GetUserData.Email"
+                                   size="small"/>
+                        </div>
+                    </div>
+                    <div class="means" v-if="EntCode !== 2">
+                        <div >
+                            <span class="means-left-label">公司电话：</span>
+                            <span v-if="means">{{userInfo.Telephone}}</span>
+                            <Input v-else type="text" style="width: 180px;" v-model="GetUserData.Telephone"
+                                   size="small"/>
+                        </div>
+                    </div>
                     <div class="means">
                         <div class="means-textarea">
-                            <span class="means-left-label">个人简介：</span>
+                            <span class="means-left-label">{{EntCode === 2 ? '个人简介：' : '公司简介：'}}</span>
                             <span v-if="means">{{userInfo.Description}}</span>
-                            <Input v-else type="textarea" :rows="4" v-model="GetUserData.Description"
-                                   placeholder="Enter something..."/>
+                            <Input v-else type="textarea" :rows="4" v-model="GetUserData.Description" placeholder="Enter something..."/>
                         </div>
                     </div>
                     <div v-if="!means" class="message-items-right-save">
@@ -301,6 +316,8 @@
                 province: [],
                 EntCode: 2, // 1 企业2 个人
                 GetUserData: {
+                    Email: "",
+                    Telephone: "",
                     RealName: "",
                     Gender: '0',
                     Birthday: "",
@@ -390,6 +407,8 @@
                         Nickname: msg.Nickname,
                         RealName: msg.RealName,
                         Gender: msg.Gender,
+                        Telephone: msg.Telephone,
+                        Email: msg.Email,
                         Birthday: msg.Birthday,
                         Description: msg.Description,
                         Emotional: msg.EmotionalStateId + '|' + msg.EmotionalState,
@@ -420,6 +439,8 @@
                 let queryData = {}
                 try {
                     queryData = {
+                        Email: this.GetUserData.Email,
+                        Telephone: this.GetUserData.Telephone,
                         RealName: this.GetUserData.RealName,
                         Gender: this.GetUserData.Gender,
                         Birthday: this.GetUserData.Birthday,

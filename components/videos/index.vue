@@ -1,8 +1,11 @@
 <template>
     <div class="test_two_box">
-        <video :id="videoRef" :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
-            <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
-        </video>
+       <div class="video-box">
+            <video :id="videoRef" :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
+                <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
+            </video>
+            <div class="video-img" @mouseover="videoMouseover" @mouseout="videoMouseout" @click="play" @dblclick="dbPlay"></div>
+       </div>
         <videoModel 
         :attr="isShowViewBox"
         v-if="isShowViewBox"
@@ -134,8 +137,28 @@ export default {
             this[this.videoCon].currentTime(this.itemVideo.videoTime);
             this[this.videoCon].play();
         },
-        clickEnlarge () {
-            console.log('asdsdasd')
+        play () {
+            if (!this[this.videoCon].paused()) {
+                this[this.videoCon].pause()
+            } else {
+                this[this.videoCon].play()
+            }
+            
+        },
+        dbPlay () {
+            this[this.videoCon].play();
+            this.isShowViewBox = !this.isShowViewBox;
+            this.stop()
+            this.itemVideo.videoTime = this[this.videoCon].currentTime();
+            this.itemVideo.videoId = this.videoRef
+            this[this.videoCon].pause()
+        },
+        videoMouseout () {
+            this[this.videoCon].controls
+            console.log('开始播放22', this[this.videoCon].controls());
+        },
+        videoMouseover () {
+            console.log('开始播放11', this[this.videoCon].controls()); 
         },
         // 收藏
         async Collection(item, domId) {
@@ -247,7 +270,21 @@ export default {
 };
 </script>
 <style lang="less" scoped>
-
+.video-box {
+    position: relative;
+    video {
+        display: inline-block;
+        vertical-align: baseline;
+    }
+    .video-img {
+        position: absolute;
+        top: 0;
+        bottom: 60PX;
+        width: 100%;
+        background-size: 100% 100%;
+		cursor:pointer
+    }
+}
 .video-js .vjs-big-play-button {
     /* 这里的样式重写 */
 }

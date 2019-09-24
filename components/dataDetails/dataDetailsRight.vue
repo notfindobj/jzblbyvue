@@ -23,8 +23,14 @@
                    @click="unAnddown()"></i>
             </div>
             <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
-                <div v-if="detaDetails.IsDownload" @click="immediatelyDown(detaDetails)">立即下载 <span class="btn-group-Price">￥{{detaDetails.Price}}</span></div>
-                <div v-if="detaDetails.IsCustomized" @click="customthis()">同款定制</div>
+                <div v-if="detaDetails.IsDownload" @click="immediatelyDown(detaDetails)">
+                  <p>立即下载</p>
+                  <p><span class="btn-group-Price">￥{{detaDetails.Price}}</span></p>
+                </div>
+                <div v-if="detaDetails.IsCustomized" @click="customthis()"> 
+                  <p>同款定制</p> 
+                  <p><span class="btn-group-Price">￥{{detaDetails.FirCusPri}}</span></p>
+                </div>
             </div>
         </div>
     </div>
@@ -237,12 +243,11 @@
                     flex: 1;
                     font-size: 22px;
                     text-align: center;
-                    line-height: 71px;
                     cursor: pointer;
                     &:hover {
                         color: #FF3C00;
-                        position: relative;
-                        &:after {
+                        position: relative; 
+                        p:after {
                             width: 30px;
                             height: 2px;
                             content: '';
@@ -251,20 +256,20 @@
                             position: absolute;
                             // right: 70px;
                             left: 42%;
-                            top: 50px;
+                            top: 30px;
                         }
                     }
                     &:nth-child(1) {
                         position: relative;
                         &:before {
                             width: 2px;
-                            height: 30px;
+                            height: 60px;
                             content: '';
                             background: #D8D8D8;
                             border-radius: 1px;
                             position: absolute;
                             right: -3px;
-                            top: 20px;
+                            top: 5px;
                         }
                     }
                 }

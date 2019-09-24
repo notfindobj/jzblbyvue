@@ -51,7 +51,7 @@
                                     Authorization: token
                                   }"
                                   :format="['zip', 'rar']"
-                                  :max-size="51200"
+                                  :max-size="102400"
                                   :on-format-error="handleFormatError"
                                   :before-upload="clearUpload"
                                   :on-success="uploadSuccess"
@@ -266,7 +266,7 @@
       handleMaxSize (file) {
         this.$Notice.warning({
               title: file.name,
-              desc: '文件' + file.name + '过大, 不能超多 50M.'
+              desc: '文件' + file.name + '过大, 不能超过 100M.'
           });
       },
       handleClose (row, index) {
@@ -503,13 +503,16 @@
               };
               attributesList.push(attrItem);
             } else {
-              if (this.queryAttrList[i].ItemSubAttributeCode !== 'dfgf') {
+              if (this.queryAttrList[i].ItemSubAttributeCode !== 'dfgf' && this.queryAttrList[i].ItemSubAttributeCode !== 'gjgf') {
                 this.$Message.warning('属性选择不完整');
                 return false;
               }
             }
           }
-
+          if (attributesList.length <= 0) {
+            this.$Message.warning('属性最少选择一项！');
+            return false;
+          }
           if (['示范区', 'SU模型', '平面', '文本', '建筑规范'].includes(this.typeName)) {
             if (!this.typeFile) {
               this.$Message.warning('请上传文件');

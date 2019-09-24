@@ -39,7 +39,7 @@
         middleware: 'authenticated',
         head() {
             return {
-                title: `资源库-示范区`,
+                title: `资源库`,
                 meta: [
                     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
                     { hid: 'about', name: 'about', content: "关于我们" }
@@ -61,7 +61,8 @@
                 currentWorks: '',
                 isFinished: true,   // 判断请求是否完成
                 pageNum: 1,
-                isLast: false
+                isLast: false,
+                titleName: "示范区"
             }
         },
         computed: {
@@ -147,6 +148,7 @@
             },
             //一级菜单
             async getItemsBaseData(row) {
+                console.log(row)
                 this.showLayout = row.ItemAttributesFullName !== '建筑规范';
                 // 搜索页导航数据
                 let baseSearchNav = {

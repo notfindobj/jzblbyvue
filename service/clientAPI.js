@@ -245,3 +245,7 @@ export const setMessage = async params => {
 export const getCustomizeInfo = async params => {
   return await request.get(`LConnection/GetCustomizeInfo`, params)
 }
+// 获取项目价格 
+export const getItemPrice = async params => {
+  return await request.get(`MyTribe/GetItemPrice?itemId=${params}`)
+}

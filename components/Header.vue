@@ -98,6 +98,8 @@
         // 点击一级分类
         async goList(cate) {
             if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
                 return false
             }
             // 搜索页导航数据
@@ -128,9 +130,6 @@
             this.$router.push({ name: "dataBase"});
         },
         enterCenter () {
-            if (!this.isLogin) {
-                return false
-            }
             this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
         },
         // 在线地图

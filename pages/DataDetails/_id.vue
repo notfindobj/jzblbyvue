@@ -125,7 +125,6 @@
             dataDetailsPDFLeft
         },
         computed: {
-            ...mapGetters(['isLogin']),
             ...mapGetters(['getSessionStorage']),
             ...mapState({
                 auth: state => state.overas.auth
@@ -143,7 +142,6 @@
                 Id: baseSearchNav.Id
             }
             let getBaseDataDetail = await store.dispatch('getBaseDataDetails', itemData);
-            
             // 根据项目详情请求评论信息
             let Comment = {
                 itemId: getBaseDataDetail.ItemEntity.ItemId,

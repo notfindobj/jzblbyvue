@@ -66,6 +66,8 @@
             // 点击二级分类
             async clickFullName(pre, type, ch) {
                 if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
                     return false
                 }
                 // 搜索页导航数据
@@ -103,6 +105,8 @@
             // 点击一级分类
             async goList(cate) {
                 if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
                     return false
                 }
                 // 搜索页导航数据

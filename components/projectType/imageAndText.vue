@@ -45,7 +45,7 @@
                 <div class="block-head-right">
                     <Dropdown placement="bottom-end" trigger="click" v-if="itemInfo.itemBindOperat">
                         <a href="javascript:void(0)"><Icon type="ios-arrow-down"></Icon></a>
-                        <DropdownMenu slot="list" >
+                        <DropdownMenu slot="list">
                             <DropdownItem v-for="(items, indexs) in itemInfo.itemBindOperat.ItemOperatBtns" :key="indexs" @click.native="dropdownMenu(itemInfo, items, index)"> {{items.OperatName}}</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -373,7 +373,6 @@
           this.commentList = res;
         })
       },
-      
       // 评论
       submitComment(content) {
         this.isLoadingComment = true;
@@ -587,14 +586,15 @@
       display: inline-block;
       position: relative;
       &:hover {
+        color: #ff3c00;
         &::after {
           display: inline-block;
           position: absolute;
           content: "";
-          border-bottom: 1px solid #333;
+          border-bottom: 1px solid #ff3c00;
           width: 100%;
           left: 0;
-          bottom: 0px;
+          bottom: 15px;
         }
       }
     }

@@ -59,7 +59,6 @@
 <script>
   export default {
     name: 'HeAndIIntroduction',
-    components: {},
     props: {
       userInfo: {
         type: Object,

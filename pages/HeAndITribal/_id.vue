@@ -50,7 +50,7 @@
     import Heads from './head'
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
-    import { getTypeMeun , getFollowOrFans, ItemOperat} from '~/service/clientAPI'
+    import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     export default {
         layout: 'main',
@@ -81,6 +81,9 @@
                 isLast: false,
                 records: 0,
                 total: 0,   // 总页数
+                resetPriceS: {},
+                rulePrice: {},
+                resetValue: ''
             }
         },
         computed: {
@@ -117,6 +120,10 @@
         },
         methods: {
             async clickMenu (row, item, index) {
+                if (item.OperateId === 'szjg') {
+                    this.resetPrice(row, item, index)
+                    return false
+                }
                 let qieryData = { 
                     "ItemId": row.ItemId,
                     "TalkType": row.TalkType,
@@ -125,7 +132,7 @@
                         "IsDelete": row.IsFollow
                     },
                     "OperateId": item.OperateId,
-                        "OperatValue": item.OperatValue
+                    "OperatValue": item.OperatValue
                 }
                 if (item.OperatValue !== "FollowThisUser" && item.OperatValue !== "UnfollowThisUser") {
                     qieryData.Follow = {}
@@ -170,7 +177,42 @@
                             return false
                         }
                     }
-                },
+            },
+            // 重新设置价格
+            async resetPrice (row, item, index) {
+                let msg = await getItemPrice(row.ItemId);
+                if (msg) {
+                    this.$Modal.confirm({
+                        onOk: async () => {
+                            let qieryData = { 
+                                "ItemId": row.ItemId,
+                                "TalkType": row.TalkType,
+                                "OperateObj": this.resetValue,
+                                "OperateId": item.OperateId,
+                                "OperatValue": item.OperatValue
+                            }
+                            let msg = await ItemOperat (qieryData);
+                            if (msg) {
+                                this.resetValue = ''
+                            }
+                        },
+                        render: (h) => {
+                            return h('Input', {
+                                props: {
+                                    value: this.resetValue,
+                                    autofocus: true,
+                                    placeholder: `原价为${msg},请设置新的价格（元）`
+                                },
+                                on: {
+                                    input: (val) => {
+                                        this.resetValue = val;
+                                    }
+                                }
+                            })
+                        }
+                    })
+                }
+            },
             // 触底事件
             willReachBottom: _throttle (function () {
                 if (this.total === 1) {

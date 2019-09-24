@@ -11,8 +11,9 @@ export default function ({store, from, route, redirect}) {
      // 如果用户未经过身份验证
     if (!store.state.overas.auth) {
       redirect('/')
-      // app.$router.push.push({name: "index"})
-      Message.warning('请登陆后操作！');
+      store.dispatch('SETUP', true);
+      store.dispatch('LOGGEDIN', 'signIn');
+      // Message.warning('请登陆后操作！');
     }
   }
 }
