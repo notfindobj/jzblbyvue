@@ -1,5 +1,5 @@
 <template>
-    <div class="view-box-model" @click="handleClose" >
+    <div class="view-box-model" @click="handleClose">
         <div class="view-box" @click.stop>
              <div id="view">
                 <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">
@@ -9,7 +9,7 @@
              <div class="close-box" @click="handleClose">
                 <Icon type="ios-close-circle-outline" size="36" color="#fff"/>
             </div>
-             <div class="view-box-right">
+             <div class="view-box-right " @selectstart="selectstart">
                <div class="details-box">
                  <div class="details-box-img">
                    <div class="details-box-img-img">
@@ -83,6 +83,9 @@ export default {
         this.initVideo();
     },
     methods: {
+        selectstart () {
+            return false
+        },
         async getCommentsList () {
             let queryData = {
                 ItemId: this.detaDetails.ItemId,
@@ -301,7 +304,7 @@ export default {
         justify-content: center;
         align-items: center;
         top: -14px;
-        right: -14px;
+        right: 16px;
         width: 28px;
         height: 28px;
         border-radius: 50%;
@@ -336,6 +339,12 @@ export default {
     .view-box-right {
         width: 330px;
         background: #F5F6F5;
+        width: 300px;
+        background: #F5F6F5;
+        // -webkit-user-select:none;
+        // -moz-user-select:none;
+        // -ms-user-select:none;
+        // user-select:none;
     }
     .details-box {
             background: #ffffff;

@@ -187,31 +187,76 @@
                             let qieryData = { 
                                 "ItemId": row.ItemId,
                                 "TalkType": row.TalkType,
-                                "OperateObj": this.resetValue,
+                                "OperateObj": JSON.stringify(msg),
                                 "OperateId": item.OperateId,
                                 "OperatValue": item.OperatValue
                             }
-                            let msg = await ItemOperat (qieryData);
-                            if (msg) {
-                                this.resetValue = ''
+                            let msgs = await ItemOperat (qieryData);
+                            if (msgs) {
+                                
                             }
                         },
                         render: (h) => {
-                            return h('Input', {
-                                props: {
-                                    value: this.resetValue,
-                                    autofocus: true,
-                                    placeholder: `原价为${msg},请设置新的价格（元）`
-                                },
-                                on: {
-                                    input: (val) => {
-                                        this.resetValue = val;
-                                    }
-                                }
-                            })
+                            let ItemCustomizes = [];
+                            if (msg.ItemCustomizes.length > 0) {
+                                msg.ItemCustomizes.forEach(ele => {
+                                    ItemCustomizes.push(
+                                        h("TabPane", {props: {label: ele.customizedTypeName, tab: "tab2-1"}}, [
+                                            h("div", { class: ["dowPics"]}, `该定制服务原价格为${ele.customizedMoney}元`),
+                                            h('Input', {
+                                                props: {
+                                                    value: "",
+                                                    autofocus: true,
+                                                    placeholder: `修改新的价格（元）`
+                                                },
+                                                on: {
+                                                    input: (val) => {
+                                                        ele.customizedMoney = val;
+                                                    }
+                                                }
+                                            })
+                                        ])
+                                    )
+                                })
+                            }
+                            return h("Tabs", {props: {name : "tab1"}}, [
+                                h("TabPane", 
+                                    {
+                                        style: {
+                                            display: msg.ItemPic ? "inline-block" : "none"
+                                        },
+                                        props: {label: "修改下载价格", tab: "tab1"}
+                                    }, [
+                                    h("div", {class: ["dowPics"]}, `该项目原下载价格为${msg.ItemPic.dowPic}元`),
+                                    h('Input', {
+                                        props: {
+                                            value: "",
+                                            autofocus: true,
+                                            placeholder: '修改新的下载价格（元）'
+                                        },
+                                        on: {
+                                            input: (val) => {
+                                                msg.ItemPic.dowPic = val;
+                                            }
+                                        }
+                                    })
+                                ]),
+                                h("TabPane", 
+                                    {   
+                                        style: {
+                                            display: msg.ItemCustomizes.length > 0 ? "inline-block" : "none"
+                                        },
+                                        props: {label: "修改定制价格", tab: "tab1"}
+                                    }, [
+                                    h("Tabs", {props: {name : "tab2-1"}}, ItemCustomizes) 
+                                ])
+                            ])
                         }
                     })
                 }
+            },
+            setResetPr () {
+                
             },
             // 触底事件
             willReachBottom: _throttle (function () {
@@ -328,6 +373,9 @@
     }
 </script>
 <style lang="less" scoped>
+    .dowPics {
+        margin: 20px 0;
+    }
     .head-boxs-two{
         position: sticky;
         top: 100px;

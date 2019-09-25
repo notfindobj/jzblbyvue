@@ -87,7 +87,7 @@ app.post('/front/mobileLogin', function (req, res) {
         const token = data.data.Data;
         if (token) {
             res.cookie('adminToken', token, {
-                maxAge: 60000 * 60 * 30
+                maxAge: 3600 * 1000 * 24 * 30
             })
         }
         return res.json(data.data)
@@ -109,7 +109,7 @@ app.post('/front/wxLogin', function (req, res) {
             const token = data.data.Data;
             if (token) {
                 res.cookie('adminToken', token, {
-                    maxAge: 60000 * 60 * 30
+                    maxAge: 3600 * 1000 * 24 * 30
                 })
             }
         }
@@ -138,7 +138,7 @@ app.post('/front/qqLogin', function (req, res) {
             const token = data.data.Data;
             if (token) {
                 res.cookie('adminToken', token, {
-                    maxAge: 60000 * 60 * 30
+                    maxAge: 3600 * 1000 * 24 * 30
                 })
             }
         }

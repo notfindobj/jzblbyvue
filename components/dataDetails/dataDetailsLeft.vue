@@ -304,6 +304,10 @@
     .view-box-right {
         width: 300px;
         background: #F5F6F5;
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
     }
 
     #view {

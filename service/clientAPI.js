@@ -247,5 +247,5 @@ export const getCustomizeInfo = async params => {
 }
 // 获取项目价格 
 export const getItemPrice = async params => {
-  return await request.get(`MyTribe/GetItemPrice?itemId=${params}`)
+  return await request.get(`MyTribe/GetItemPrices?itemId=${params}`)
 }

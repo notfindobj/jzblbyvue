@@ -388,7 +388,7 @@
                             // 然后移除
                             document.body.removeChild(eleLink);
                        } catch (error) {
-                         console.log('下载出错');
+                            console.log('下载出错');
                        }
                     }
                     return false

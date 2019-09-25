@@ -282,7 +282,11 @@ export default {
         bottom: 60PX;
         width: 100%;
         background-size: 100% 100%;
-		cursor:pointer
+        cursor:pointer;
+        -webkit-user-select:none;
+        -moz-user-select:none;
+        -ms-user-select:none;
+        user-select:none;
     }
 }
 .video-js .vjs-big-play-button {
