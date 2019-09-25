@@ -3,7 +3,7 @@
         <div class="discuss" v-for="(items, index) in discussData" :key="index">
             <div class="discuss-title" >
                 <div class="discuss-title-headIcon">
-                    <img :src="items.HeadIcon || $defaultHead" alt="">
+                    <img :src="items.HeadIcon" alt="">
                 </div>
                 <div class="discuss-title-content">
                     <p class="discuss-title-content-name">{{items.NickName}}</p>

@@ -3,7 +3,7 @@
         <div class="reply-box">
             <div class="comment-head">
                 <div class="comment-avatar" >
-                    <img :src="$store.state.overas.auth.HeadIcon || $defaultHead" alt="">
+                    <img :src="$store.state.overas.auth.HeadIcon " alt="">
                 </div>
                 <div class="reply-input-wrap" :style="{width: width + 'px'}">
                     <Input v-model="replyCon"/>

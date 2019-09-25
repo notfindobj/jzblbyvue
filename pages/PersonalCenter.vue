@@ -3,7 +3,7 @@
             <div class="personal-left">
                 <div class="personal-left-header">
                     <div class="personal-left-header-img">
-                        <img :src="GetUserData.HeadIconSrc || $defaultHead" alt="" width="100px;">
+                        <img :src="GetUserData.HeadIconSrc " alt="" width="100px;">
                     </div>
                     <div class="personal-left-header-name">{{GetUserData.Nickname}}</div>
                 </div>

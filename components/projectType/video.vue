@@ -4,7 +4,7 @@
             <div class="block-head">
                 <div class="block-head-left" @mouseleave="hideWorks()">
                     <div class="avatar" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)">
-                        <img @click="goToPersonal(videoInfo)" :src="videoInfo.HeadIcon|| $defaultHead" alt="">
+                        <img @click="goToPersonal(videoInfo)" :src="videoInfo.HeadIcon" alt="">
                     </div>
                     <div class="info">
                         <p class="name">{{ videoInfo.NickName }}</p>

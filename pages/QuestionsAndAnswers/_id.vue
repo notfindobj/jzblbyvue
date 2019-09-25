@@ -83,7 +83,7 @@
         <div class="main-right">
             <div class="right-top">
                 <div class="author-avatar"  @click="goToPersonal(detailInfo)">
-                    <img :src="detailInfo.HeadIcon || $defaultHead" alt="">
+                    <img :src="detailInfo.HeadIcon " alt="">
                 </div>
                 <span class="author-name">{{ detailInfo.NickName }}</span>
                <div v-if="userInfoID != detailInfo.UserId">

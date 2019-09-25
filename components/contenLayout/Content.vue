@@ -38,7 +38,7 @@
                         </div>
                         <div :class="currentWorks === items.ItemId ? 'works-active' : ''" class="works-con"
                              @mouseleave="hideWorks(items)">
-                            <img :src="UserProAndFans.HeadIcon || $defaultHead" alt=""
+                            <img :src="UserProAndFans.HeadIcon" alt=""
                                  @click="jumpRoute(UserProAndFans)">
                             <p>{{UserProAndFans.NickName || items.NickName}}</p>
                             <ul class="works-con-introduce">
@@ -73,7 +73,7 @@
                                 <div class="works-list-con">
                                     <div class="works-name" @click="jumpRoute(items)">
                                         <div class="avatar-wrap">
-                                            <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon|| $defaultHead" alt="">
+                                            <img class="headPortrait" @mouseenter="showWorks(items)" :src="items.HeadIcon" alt="">
                                         </div>
                                         <span>{{items.NickName}}</span>
                                     </div>

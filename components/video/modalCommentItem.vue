@@ -1,7 +1,7 @@
 <template>
     <div class="comment-item" @click="isShowEmotion = false">
         <div class="commenter-avatar">
-            <img :src="commentInfo.HeadIcon|| $defaultHead" alt="">
+            <img :src="commentInfo.HeadIcon" alt="">
         </div>
         <div class="comment-info">
             <p class="comment-nickname">{{ commentInfo.NickName }}</p>
@@ -35,7 +35,7 @@
             </div>
             <div class="reply-comment-box" v-show="isShowInput">
                 <div class="reply-avatar-wrap">
-                    <img :src="$store.state.overas.auth.HeadIcon || $defaultHead" alt="">
+                    <img :src="$store.state.overas.auth.HeadIcon " alt="">
                 </div>
                 <div class="reply-input-box">
                     <Input size="small" v-model="inputContent" style="width: 240px;"/>

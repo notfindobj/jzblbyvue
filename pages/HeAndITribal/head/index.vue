@@ -12,7 +12,7 @@
             </div>
             <div class="my-Introduction">
                 <div class="my-head-portrait" @click="enterCenter(userInfo)">
-                    <img :src="userInfo.HeadIcon || $defaultHead" alt=".">
+                    <img :src="userInfo.HeadIcon " alt=".">
                 </div>
                 <p class="my-name">{{ userInfo.NickName }}
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->

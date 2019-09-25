@@ -7,7 +7,7 @@
             </div>
             <div class="message-items-right">
                 <div class="message-items-right-header"  @click="goToPersonal(GetUserData)">
-                    <img :src="GetUserData.HeadIconSrc || $defaultHead" alt="" width="100px;">
+                    <img :src="GetUserData.HeadIconSrc " alt="" width="100px;">
                 </div>
                 <div v-if="!modifying" class="modifying-head" @click="$refs.uploadType.click()">修改头像</div>
                 <input type="file" style="display:none;" ref="uploadType" @change="upHeaderImg">

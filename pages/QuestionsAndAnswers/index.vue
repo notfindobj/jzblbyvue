@@ -18,7 +18,7 @@
                                     <div class="content-box"> 
                                         <div class="item-left-box"  @click="goToPersonal(item)">
                                             <span class="num">
-                                                <img :src="item.UserWebEntity.HeadIcon || $defaultHead" alt="头像">
+                                                <img :src="item.UserWebEntity.HeadIcon " alt="头像">
                                             </span>
                                         </div>
                                         <div class="item-box">

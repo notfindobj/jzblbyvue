@@ -18,7 +18,7 @@
                 <div>
                     <div class="search-item" v-for="(items, index) in searchItems" :key="index">
                         <div class="search-item-left">
-                            <img :src="items.HeadIcon || $defaultHead" alt="" @click="jumpRoute(items)">
+                            <img :src="items.HeadIcon " alt="" @click="jumpRoute(items)">
                         </div>
                         <div class="search-item-right">
                             <div>

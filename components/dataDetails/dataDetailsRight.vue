@@ -2,7 +2,7 @@
     <div class="data-details-right">
         <div class="data-details-right-con">
             <div class="works-info">
-                <img @click="goPersonalCenter" :src="detaDetails.HeadIcon|| $defaultHead" alt="">
+                <img @click="goPersonalCenter" :src="detaDetails.HeadIcon" alt="">
                 <p class="works-name">{{detaDetails.NickName}}</p>
                 <div v-if="userInfoID != detaDetails.UserId" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
