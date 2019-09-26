@@ -4,14 +4,14 @@
               <template v-for="(item, index) in dataList">
                   <ImageAndText v-if="item.TalkType !== 2" 
                       :textLength="9"
-                      :itemInfo="item" 
+                      :itemInfo.sync="item" 
                       :index="index" :key="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
                       @clickMenu="clickMenu"
                       @delComments="delComments"
                   />
-                  <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo="item" :index="index"
+                  <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo.sync="item" :index="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
                       @delComments="delComments"

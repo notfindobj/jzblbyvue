@@ -115,6 +115,10 @@ export const setUserData = async params => {
 export const saveUserExpertise = async params => {
   return await request.post(`UserInfo/SaveUserExpertise`, params)
 }
+// 删除用户标签
+export const delUserExpertise = async params => {
+  return await request.post(`UserInfo/DeleteUserExpertiseLabel`, params)
+}
 // 获取收货地址
 export const getAddressData = async params => {
   return await request.get(`UserInfo/GetThisALLUserShippingAddress`, params)
@@ -248,4 +252,20 @@ export const getCustomizeInfo = async params => {
 // 获取项目价格 
 export const getItemPrice = async params => {
   return await request.get(`MyTribe/GetItemPrices?itemId=${params}`)
+}
+// 获取职业类型
+export const getCareerData = async params => {
+  return await request.get(`UserInfo/GetCareerData`, params)
+}
+// 获取职业类型
+export const getCareerTyepInfo = async params => {
+  return await request.get(`UserInfo/GetCareerOrTyepInfo?userId=${params}`)
+}
+// 设置职业类型
+export const setCareerTyepInfo = async params => {
+  return await request.post(`UserInfo/SetCareerData?ids=${params}`)
+}
+// 删除职业类型
+export const delareerTyepInfo = async params => {
+  return await request.get(`UserInfo/DeleteCareerData/${params}`)
 }

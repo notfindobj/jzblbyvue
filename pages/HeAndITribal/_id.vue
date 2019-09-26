@@ -255,9 +255,6 @@
                     })
                 }
             },
-            setResetPr () {
-                
-            },
             // 触底事件
             willReachBottom: _throttle (function () {
                 if (this.total === 1) {

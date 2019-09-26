@@ -7,7 +7,7 @@
                     <span class="MsgCount-all" @click="signMessage(customized.Msg, 2)">全部设为已读</span>
                </div>
                <div>
-                   <span @click="signMessage(customized.Msg, 1)">全部删除</span>
+                   <span class="MsgCount-all-del"  @click="signMessage(customized.Msg, 1)">全部删除</span>
                </div>
             </div>
            
@@ -20,7 +20,7 @@
                            <span>{{item.CreateDate}}</span>
                        </div>
                        <div class="customized-content-title-right">
-                           <span class="customized-content-title-right-del" @click="signMessage(item, 1)" >删除</span>
+                           <span class="customized-content-title-right-del" @click="signMessage(item, 1, index)" >删除</span>
                            <span v-if="item.ReadStatu === 1" @click="signMessage(item, 2)">标记为已读</span>
                            <span v-else>已读</span>
                        </div>
@@ -50,14 +50,13 @@ export default {
         }
     },
     methods: {
-        async signMessage (id, type) {
+        async signMessage (id, type, index) {
             let OpId = ""
             if (id.constructor  === Object) {
                 OpId = id.OpId
             }
             if (id.constructor === Array) {
                 let opIdArr = []
-                debugger
                 id.forEach(items => {
                    opIdArr.push(items.OpId);
                 })
@@ -67,27 +66,48 @@ export default {
                 OpId: OpId,
                 OpType:type
             }
-            let msg = await setMessage(queryData);
-            if (msg) {
-                if (id.constructor  === Object) {
-                    if (type == 2) {
-                        this.$set(id, "ReadStatu", 0)
+            let title =""
+            let content = "是否全部"
+            title = type === 2 ? "阅读消息": "删除消息"
+            content= id.constructor  === Object ? "是否" : "是否全部"
+            if (id.constructor  === Object && type == 2) {
+                let msg = await setMessage(queryData);
+                if (msg) {
+                   this.$set(id, "ReadStatu", 0)
+                } 
+            } else {
+                this.$Modal.confirm({
+                    title: title,
+                    content: `<p>${content+title}</p>`,
+                    onOk: async () => {
+                        let msg = await setMessage(queryData);
+                        if (msg) {
+                            if (id.constructor  === Object) {
+                                if (type == 2) {
+                                    this.$set(id, "ReadStatu", 0)
+                                }
+                                if (type == 1) {
+                                    this.customized.Msg.splice(index, 1)
+                                }
+                            }
+                            if (id.constructor === Array) {
+                                let msgType = {
+                                    page: 1,
+                                    msgType: 0
+                                }
+                                let m = await this.$store.dispatch('getNews', msgType);
+                                if (m) {
+                                    this.customized = m.pinglun
+                                }
+                            }
+                        } 
+                    },
+                    onCancel: () => {
+                        return false
                     }
-                    if (type == 1) {
-                        this.customized.Msg.splice(index, 1)
-                    }
-                }
-                if (id.constructor === Array) {
-                    let msgType = {
-                        page: 1,
-                        msgType: 0
-                    }
-                    let m = await this.$store.dispatch('getNews', msgType);
-                    if (m) {
-                        this.customized = m.pinglun
-                    }
-                }
+                });
             }
+            
         }
     },
     
@@ -99,6 +119,18 @@ export default {
     }
     .customized-yuan-color {
         background: #ff3c00 !important;
+    }
+    .MsgCount-all {
+        &-del {
+            cursor: pointer;
+            &:hover {
+                color: #ff3c00;
+            }
+        }
+        cursor: pointer;
+        &:hover {
+            color: #ff3c00;
+        }
     }
     .customized-yuan {
         display: inline-block;

@@ -49,8 +49,7 @@
                         <div class="means-left">
                             <span class="means-left-label">{{EntCode === 2 ? '真实姓名：' : '公司全称：'}}</span>
                             <span v-if="means">{{userInfo.RealName}}</span>
-                            <Input v-else type="text" style="width: 160px;" v-model="GetUserData.RealName"
-                                   size="small"/>
+                            <Input v-else type="text" style="width: 160px;" v-model="GetUserData.RealName" :disabled="EntCode === 2 ? false : true" size="small"/>
                         </div>
                         <div class="means-right">
                             <span class="means-left-label">所在地：</span>
@@ -187,6 +186,34 @@
             </div>
             <div class="message-items-operation" @click="educational = !educational">{{educational ?"编辑" : "收起"}}</div>
         </div> -->
+        <!-- 职业类型  -->
+        <div class="message-items message-items-text">
+            <div class="message-items-left">
+                <span class="message-items-left-label">{{EntCode === 2 ? '职业类型' : '公司类型'}}</span>
+            </div>
+            <div class="message-items-right">
+                <span v-if="EntCode === 2">
+                    <div v-if="careerTyep.length > 0">
+                        <Tag type="dot" v-for="(items, index) in careerTyep" closable color="success" class="userLabel-label"  :key="index" :name="items.delId" @on-close="delUserTyepLabel">{{items.label}}</Tag>
+                    </div>
+                    <span v-else>
+                        <span class="message-items-right-fill">马上填写</span>
+                        <span>自己的职业类型，让大家全方位了解你！</span>
+                    </span>
+                </span>
+                <span v-if="EntCode !== 2">
+                    <Tag v-if="careerTyep" type="dot" color="success" class="userLabel-label" >{{careerTyep}}</Tag>
+                </span>
+                <div class="message-items-right-edit" v-if="iscareer">
+                    <Cascader :data="careerList" v-model="careerData" style="width:200px"></Cascader>
+                </div>
+                <div v-if="iscareer" class="message-items-right-save">
+                    <div class="modifying-head" @click="setCareerTyepList()">保存</div>
+                    <div class="modifying-cancel" @click="iscareer = !iscareer">取消</div>
+                </div>
+            </div>
+            <div v-if="isItMe && EntCode === 2" class="message-items-operation" :style="`color:${!iscareer ? '#ff3c00' : ''}`" @click="iscareer = !iscareer">{{iscareer ? '收起' : '编辑'}}</div>
+        </div>
         <!-- 个人擅长 -->
         <div class="message-items message-items-text">
             <div class="message-items-left">
@@ -194,7 +221,7 @@
             </div>
             <div class="message-items-right">
                 <span>
-                    <Button v-if="userLabel.length > 0" class="userLabel-label" v-for="(items, index) in userLabel" :key="index" icon="ios-add" size="small">{{items.LabelName}}</Button>
+                    <Tag type="dot" v-if="userLabel.length > 0" v-for="(items, index) in userLabel" closable color="success" class="userLabel-label"  :key="index" :name="items.LabelId" @on-close="delUserLabel">{{items.LabelName}}</Tag>
                     <span v-else>
                         <span class="message-items-right-fill">马上填写</span>
                         <span>自己的标签，让大家全方位了解你！</span>
@@ -206,15 +233,15 @@
             </div>
             <div v-if="isItMe" class="message-items-operation" :style="`color:${!isLabel ? '#ff3c00' : ''}`" @click="isLabel = !isLabel">{{isLabel ? '收起' : '编辑'}}</div>
         </div>
-        <!-- 职业信息 -->
+        <!-- 工作经历 -->
         <div v-if="EntCode === 2"  class="message-items message-items-text">
             <div class="message-items-left">
-                <span class="message-items-left-label">职业信息</span>
+                <span class="message-items-left-label">工作经历</span>
             </div>
             <div class="message-items-right">
                 <div v-if="!JurisdiInfo.CompanyName">
                     <span class="message-items-right-fill">马上填写</span>
-                    <span>你的职业信息，让他人更好的了解你，与更多的同事在建筑部落相遇！</span>
+                    <span>你的工作经历，让他人更好的了解你，与更多的同事在建筑部落相遇！</span>
                 </div>
                 <div v-if="JurisdiInfo.CompanyName || !career" class="message-items-right-edit">
                     <div class="means">
@@ -295,7 +322,12 @@
         SetOrAddThisUserJobInfo,
         getQALabel,
         addUserLabel,
-        saveUserExpertise
+        saveUserExpertise,
+        getCareerData,
+        getCareerTyepInfo,
+        setCareerTyepInfo,
+        delareerTyepInfo,
+        delUserExpertise
     } from '../../../service/clientAPI'
     import { setHearImg } from '../../../LocalAPI'
     import { mapState, mapGetters} from 'vuex'
@@ -310,6 +342,7 @@
                 educational: true,
                 career: true,
                 isLabel: false,
+                iscareer: false,
                 Privacy: [],
                 city: [],
                 count: [],
@@ -346,13 +379,20 @@
                 JurisdiInfo: {},
                 userLabel: [],
                 userLabelModel: '',
-                userId:''
+                userId:'',
+                careerList: [],
+                careerTyep: "",
+                careerData: []
             }
         },
         computed: {
             ...mapState({
                 Identity: state => state.overas.auth
             }),
+        },
+        created () {
+            this.getCareerDataList()
+            this.getCareerTyepList()
         },
         mounted() {
             let query = {
@@ -373,6 +413,81 @@
             this.getThisUserJobInfoList(query);
         },
         methods: {
+            async getCareerTyepList () {
+                let msg = await getCareerTyepInfo(this.Identity.UserId);
+                if (msg) {
+                    debugger
+                    if (this.EntCode === 2) {
+                        this.careerTyep = msg.DelCareers || [];
+                    } else {
+                        this.careerTyep = msg.EntTypeName;
+                    }
+                    
+                }
+            },
+            async getCareerDataList () {
+                let msg = await getCareerData();
+                if (msg) {
+                    this.careerList = msg.Careers;
+                }
+            },
+            // 添加类型
+            async setCareerTyepList () {
+                if (this.careerTyep.length  > 2) {
+                    this.$Message.warning('职业类型最多只能添加三个！')
+                    return false
+                }
+                let ids = []
+                this.careerTyep.forEach(ele => {
+                    ids.push(ele.value)
+                })
+                ids.push(this.careerData[1])
+                let types = Array.from(new Set(ids))
+                if (ids.length  > types.length) {
+                    this.$Message.warning('职业类型选择不能重复！')
+                    return false
+                }
+                let msg =await setCareerTyepInfo(types.join(','))
+                if (msg) {
+                    this.careerData= []
+                    this.getCareerTyepList()
+                }
+            },
+            // 删除职业类型
+            async delUserTyepLabel (e, name) {
+                this.$Modal.confirm({
+                    title: '删除标签',
+                    content: '<p>请否确定职业类型标签!</p>',
+                    onOk: async () => {
+                        let msg = await delareerTyepInfo(name);
+                        if (msg) { 
+                            this.getCareerTyepList()
+                        }
+                    },
+                    onCancel: () => {
+                        return false
+                    }
+                });
+            },
+            // 删除标签
+            async delUserLabel (e, name) {
+                this.$Modal.confirm({
+                    title: '删除标签',
+                    content: '<p>请否确定删除标签!</p>',
+                    onOk: async () => {
+                        let msg = await delUserExpertise({LabelId: name});
+                        if (msg) { 
+                            let query = {
+                                userId: this.Identity.UserId
+                            }
+                            this.getUserExpertiseList(query)
+                        }
+                    },
+                    onCancel: () => {
+                        return false
+                    }
+                });
+            },
             goToPersonal (row) {
                 let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: this.userId} });
                 window.open(routeData.href, '_blank');
@@ -508,9 +623,7 @@
                     if (this.JurisdiInfo.ProvinceAreaId) {
                         this.onTwoChange(this.JurisdiInfo.CountyAreaId + '|' + this.JurisdiInfo.CountyName);
                     }
-               } catch (error) {
-                   
-               }
+               } catch (error) {}
             },
             // 个人资料  END
             async setNickName() {
@@ -583,11 +696,6 @@
                     this.Jurisdi = msg.respOperatPrivacy;
                 }
             },
-            /**
-             * 
-             * 
-             * 
-             */
              // 个人擅长 GetUserExpertise
             async getUserExpertiseList(value) {
                 let msg = await GetUserExpertise(value);
@@ -605,7 +713,7 @@
                     let isadd = await saveUserExpertise(q)
                     if (isadd) {
                         this.userLabelModel = '';
-                        this.userLabel.push(msg)
+                        this.getUserExpertiseList({userId: this.$route.params.userId});
                     }
                 }
             }
@@ -637,6 +745,14 @@
                 width: 100%;
                 .userLabel-label {
                     margin-left: 10px;
+                    height: 25px;
+                    line-height: 25px;
+                    .ivu-tag-dot-inner {
+                        margin-right: 5px;
+                    }
+                    .ivu-icon-ios-close {
+                        margin-left: 5px !important;
+                    }
                     &:first-child {
                         margin-left: 0;
                     }

@@ -4,6 +4,10 @@
             <Icon type="ios-arrow-up" color="#fff" size="30"/>
         </div>
         <div class="content pushObj"  @click="goPublish">发布</div>
+        <!-- <div class="content my-tribe"  @click="goPublish">
+            <p>我的</p>
+            <p>部落</p>
+        </div> -->
     </div>
 </template>
 <script>
@@ -71,6 +75,14 @@ export default {
         top: 156px;
         background-color: #ff3c00;
         border-radius: 50%;
+    }
+    .my-tribe {
+        top: 207px;
+        background-color: #ff3c00;
+        border-radius: 50%; 
+        font-size: 12px;
+        line-height: 20px;
+        padding-top: 5px;
     }
     .ivu-icon-ios-arrow-up {
         color: #ff3c00 !important;

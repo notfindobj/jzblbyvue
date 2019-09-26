@@ -2,19 +2,19 @@
     <div class="he-and-i-introduction">
         <ul class="he-and-i-introduction-top">
             <li @click="change(0, userInfo.DataCounts.Fol)" :class="currentIndex === 0 ? 'li-active' : ''">
-                <p class="item-count">{{ userInfo.DataCounts.Fol }}</p>
+                <p class="item-count" v-if="userInfo.DataCounts">{{ userInfo.DataCounts.Fol }}</p>
                 <p class="item-name">关注</p>
             </li>
             <li @click="change(1, userInfo.DataCounts.Fan)" :class="currentIndex === 1 ? 'li-active' : ''">
-                <p class="item-count">{{ userInfo.DataCounts.Fan }}</p>
+                <p class="item-count" v-if="userInfo.DataCounts">{{ userInfo.DataCounts.Fan }}</p>
                 <p class="item-name">粉丝</p>
             </li>
             <li @click="change(2, userInfo.DataCounts.Pro)" :class="currentIndex === 2 ? 'li-active' : ''">
-                <p class="item-count">{{ userInfo.DataCounts.Pro }}</p>
+                <p class="item-count" v-if="userInfo.DataCounts">{{ userInfo.DataCounts.Pro }}</p>
                 <p class="item-name">项目</p>
             </li>
             <li>
-                <p class="item-count">{{ userInfo.DataCounts.Pop }}</p>
+                <p class="item-count" v-if="userInfo.DataCounts">{{ userInfo.DataCounts.Pop }}</p>
                 <p class="item-name">人气</p>
             </li>
         </ul>
@@ -23,7 +23,8 @@
                 <span class="title-name">资料简介</span>
                 <span class="edit-my-introduction" @click="enterCenter" v-if="userInfo.IsEdit">编辑个人资料></span>
             </h5>
-            <ul class="my-introduction-list">
+            <!-- 个人显示 -->
+            <ul class="my-introduction-list" v-if="userInfo.userTypes && userInfo.userTypes.UserType === 2">
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">电话：</span>
@@ -31,10 +32,38 @@
                 </li>
                 <li>
                     <i class="icon iconfont"></i>
-                    <span class="list-name">生日：</span>
+                    <span class="list-name">擅长：</span>
+                    <span class="list-con">{{userInfo.Expertise}}</span>
+                </li>
+                <li>
+                    <i class="icon iconfont"></i>
+                    <span class="list-name">工龄：</span>
                     <span class="list-con">{{userInfo.Birthday}}</span>
                 </li>
                 <li>
+                    <i class="icon iconfont"></i>
+                    <span class="list-name">所在地：</span>
+                    <span class="list-con">{{userInfo.Location}}</span>
+                </li>
+            </ul>
+            <!-- 公司显示 -->
+            <ul class="my-introduction-list" v-else>
+                <li>
+                    <i class="icon iconfont"></i>
+                    <span class="list-name">名称：</span>
+                    <span class="list-con">{{userInfo.NickName}}</span>
+                </li>
+                <li>
+                    <i class="icon iconfont"></i>
+                    <span class="list-name">地址：</span>
+                    <span class="list-con">{{userInfo.Birthday}}</span>
+                </li>
+                <li>
+                    <i class="icon iconfont"></i>
+                    <span class="list-name">电话：</span>
+                    <span class="list-con">{{userInfo.Expertise}}</span>
+                </li>
+                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">擅长：</span>
                     <span class="list-con">{{userInfo.Expertise}}</span>
@@ -74,7 +103,8 @@
     },
     methods: {
         enterCenter () {
-            this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.userInfo.UserId}});
+            let routeData = this.$router.resolve({ name: 'PersonalCenter-myMessage-userId', params: { userId: this.userInfo.UserId} });
+            window.open(routeData.href, '_blank');
         },
         change(inx, count) {
             this.currentIndex = inx;
@@ -162,7 +192,7 @@
         }
 
         &-center {
-            height: 169px;
+            height: 200px;
             background: #ffffff;
             box-shadow: 0 1px 1px 0 rgba(0, 0, 0, 0.15);
             margin-bottom: 16px;
@@ -190,7 +220,6 @@
                 }
             }
             .my-introduction-list {
-                height: 100px;
                 padding: 15px 15px 5px;
 
                 > li {
@@ -206,9 +235,10 @@
                     }
 
                     .list-name {
-                        width: 36px;
+                        width: 48px;
                         font-size: 12px;
                         color: #666666;
+                        text-align: right;
                         margin-right: 5px;
                     }
 

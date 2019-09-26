@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="message-items-right-save">
-                        <div class="modifying-head">更改密码</div>
+                        <div class="modifying-head" @click="setUserPwd">更改密码</div>
                         <div class="modifying-cancel">取消</div>
                     </div>
                 </div>
@@ -57,6 +57,23 @@ export default {
         }
     },
     methods: {
+        async setUserPwd () {
+            let queruys = {
+                    mobile: this.userMobile.mobile,
+                    mobileVerifyCode: this.userMobile.MobileVerifyCode,
+                    newPwd: this.userMobile.NewPwd,
+                    affirmNewPwd: this.userMobile.NewPwd
+                }
+                let msg = await ResetPwd(queruys)
+                if (msg) {
+                    this.$Message.success('密码修改成功！');
+                    this.userMobile ={
+                        mobile: "",
+                        MobileVerifyCode: "",
+                        NewPwd: ""
+                    }
+                }
+        },
         getMobileCodeData () {
             let queryData  = {
                 MobileNumber: this.userMobile.mobile,
@@ -65,7 +82,7 @@ export default {
             }
             let msg = getMobileCode(queryData);
             if (msg) {
-                // this.$Message.success("验证码已发送！");
+                this.$Message.success("验证码已发送！");
                 this.setTiming()
             }
         },

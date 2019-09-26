@@ -81,26 +81,46 @@ export default {
                 OpId: OpId,
                 OpType:type
             }
-            let msg = await setMessage(queryData);
-            if (msg) {
-                if (id.constructor  === Object) {
-                    if (type == 2) {
-                        this.$set(id, "ReadStatu", 0)
+            let title =""
+            let content = "是否全部"
+            title = type === 2 ? "阅读消息": "删除消息"
+            content= id.constructor  === Object ? "是否" : "是否全部"
+            if (id.constructor  === Object && type == 2) {
+                let msg = await setMessage(queryData);
+                if (msg) {
+                   this.$set(id, "ReadStatu", 0)
+                } 
+            } else {
+                this.$Modal.confirm({
+                    title: title,
+                    content: `<p>${content}</p>`,
+                    onOk: async () => {
+                        let msg = await setMessage(queryData);
+                        if (msg) {
+                            if (id.constructor  === Object) {
+                                if (type == 2) {
+                                    this.$set(id, "ReadStatu", 0)
+                                }
+                                if (type == 1) {
+                                    this.customized.Msg.splice(index, 1)
+                                }
+                            }
+                            if (id.constructor === Array) {
+                                let msgType = {
+                                    page: 1,
+                                    msgType: 1
+                                }
+                                let m = await this.$store.dispatch('getNews', msgType);
+                                if (m) {
+                                    this.customized = m.dingzhi
+                                }
+                            }
+                        }
+                    },
+                    onCancel: () => {
+                        return false
                     }
-                    if (type == 1) {
-                        this.customized.Msg.splice(index, 1)
-                    }
-                }
-                if (id.constructor === Array) {
-                    let msgType = {
-                        page: 1,
-                        msgType: 1
-                    }
-                    let m = await this.$store.dispatch('getNews', msgType);
-                    if (m) {
-                        this.customized = m.dingzhi
-                    }
-                }
+                });
             }
         }
     },
@@ -116,8 +136,12 @@ export default {
     .MsgCount-all {
       margin-left: 20px;
       cursor: pointer;
+      cursor: pointer;
       &-del {
-          
+            cursor: pointer;
+            &:hover {
+                color: #ff3c00;
+            }
       }
       &:hover {
           color: #ff3c00;

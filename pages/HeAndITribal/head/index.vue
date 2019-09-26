@@ -17,6 +17,11 @@
                 <p class="my-name">{{ userInfo.NickName }}
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
+                <p class="my-TypeNames" v-if="userInfo.userTypes" v-html="setLabel(userInfo.userTypes.TypeNames)"></p>
+                <div class="expertise-box" v-if="userInfo.Expertise">
+                  <p>擅长：</p>
+                  <p class="my-Expertise" v-html="setLabel(userInfo.Expertise)"></p>
+                </div>
                 <div class="my-untils" v-show="itIsMe">
                   <div :class="userInfo.IsFollow? 'my-follow-btn my-unfollow' : 'my-follow-btn my-follow'" @click="worksFocus(userInfo)">
                     <i v-if="!userInfo.IsFollow" class="iconfont icon-jia"></i>
@@ -59,10 +64,29 @@ export default {
       }
     },
     created () {
+      console.log(this.userInfo)
       this.getALLThemeList();
       this.getUsere()
     },
     methods: {
+      setLabel (str) {
+        let lHtml = ''
+        let labelArr = []
+        let reg = RegExp(/,/);
+        if(reg.exec(str)){
+          labelArr = str.split(',')
+        } else {
+          labelArr = [str]
+        }
+        if (labelArr.length > 0) {
+          labelArr.forEach(ele => {
+            lHtml += `
+              <span class="labelClass">${ele}</span>
+            `
+          })
+        }
+        return lHtml
+      },
       enterCenter (row) {
         this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: row.UserId}});
       },
@@ -97,13 +121,36 @@ export default {
     }
 }
 </script>
+<style lang="less">
+  .labelClass {
+      background: #ffffff; 
+      color: #ff3c00;
+      padding: 5px 6px;
+      border-radius: 3px;
+    }
+</style>
 <style lang="less" scoped>
+    .expertise-box {
+      color: #FFFFFF;
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+    }
+    .my-Expertise , .my-TypeNames{
+      text-align: center;
+      height: 25px;
+      line-height: 25px;
+      font-size: 12px;
+      margin-top: 10px;
+      color: #FFFFFF;
+    }
     .my-untils {
       color: #FFFFFF;
       display: flex;
       text-align: center;
       justify-content: center;
       margin-bottom: 5px;
+      margin-top: 10px;
       .icon-jia {
         font-size: 14px;
       }
@@ -132,14 +179,14 @@ export default {
     }
     .head-box {
         width: 100%;
-        height: 254px;
+        height: 300px;
         margin-bottom: 16px;
         background: transparent;
         position: relative;
 
         .head-con {
             width: 100%;
-            height: 254px;
+            height: 300px;
             padding: 0 215px;
             position: absolute;
             left: 0px;
@@ -214,6 +261,7 @@ export default {
                 .my-Introduction-con {
                     height: calc(~"100% - 200px");
                     text-align: center;
+                    margin-top: 10px;
                     font-size: 12px;
                     color: #FFFFFF;
                     overflow: hidden;

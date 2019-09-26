@@ -15,7 +15,7 @@
             </div>
             <div class="he-and-i-con-box-content-right" :class="{'fixed-right': scrollTop >= 390}">
                 <HeAndIIntroduction
-                    :userInfo="userInfo"
+                    :userInfo.sync="userInfo"
                     @changeComponents="changeComponents"
                     @seeMore="seeMore"
                 />
