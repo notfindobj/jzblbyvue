@@ -227,7 +227,6 @@
                 let attrList = [];
                 let query = {};
                 let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
-                debugger
                 this.ItemAttributesEntities.forEach((item, attrIndex) => {
                     if (index >= attrIndex) {
                         query = item
@@ -244,9 +243,12 @@
                     value: dataBase
                     
                 }
-                this.$store.dispatch('Serverstorage', baseSearchNav);
-                this.$router.push({ name: "dataBase"});
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
+                this.$store.dispatch('Serverstorage', baseSearchNav);
+                // this.$router.push({ name: "dataBase"});
+                let routeData = this.$router.resolve({ name: 'dataBase'});
+                window.open(routeData.href, '_blank');
+                
             },
             initLazy() {
                 $("img[data-original]").lazyload()

@@ -120,7 +120,8 @@
         computed: {
             ...mapState({
                 auth: state => state.overas.auth
-            })
+            }),
+            ...mapGetters(['isLogin'])
         },
         components: {
             signPage,

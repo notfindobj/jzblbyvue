@@ -111,4 +111,12 @@ export const serverRequest = {
   async getNews({commit}, params) {
     return await request.get(`LConnection/GetMessage`, params)
   },
+  // 获取系统说明文档菜单
+  async getSysExpMenu({commit}, params) {
+    return await request.get(`Common/GetSysExpMenu`, params)
+  },
+  // 获取系统说明文档
+  async getSysExp({commit}, params) {
+    return await request.get(`Common/GetSysExpDetail?itemDetailId=${params}`)
+  },
 }

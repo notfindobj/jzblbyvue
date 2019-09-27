@@ -18,14 +18,6 @@
 <script>
   export default {
     name: 'aboutUs',
-    components: {
-    },
-    data () {
-      return {
-      }
-    },
-    methods: {
-    }
   }
 </script>
 <style lang="less" scoped>
@@ -46,39 +38,7 @@
       padding: 20px 0;
       border-bottom: 1px dashed #EEEEEE;
       margin-bottom: 20px;
-      >p{
-        font-size: 14px;
-        color: #151515;
-        letter-spacing: 0;
-        line-height: 25px;
-        margin-bottom: 25px;
-        &:last-child{
-          margin-bottom: 0;
-        }
-        .about-us{
-          font-size: 18px;
-          font-weight: 500;
-        }
-      }
-    }
-    .abuout-other{
-      padding: 20px 0;
-      >p{
-        font-size: 14px;
-        color: #151515;
-        letter-spacing: 0;
-        line-height: 25px;
-        margin-bottom: 25px;
-      }
-      .about-us-img{
-        width: 100%;
-        height: 360px;
-        >img{
-          display: inline-block;
-          width: 100%;
-          height: 100%;
-        }
-      }
+     
     }
   }
 </style>

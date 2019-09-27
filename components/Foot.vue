@@ -9,8 +9,8 @@
                     关于
                 </div>
                 <ul class="foot-color">
-                    <li>关于我们</li>
-                    <li>联系我们</li>
+                    <li><nuxt-link to="/other/60d70719-3567-4acc-99bd-330ebef0472d">关于我们</nuxt-link></li>
+                    <li><nuxt-link to="/other/339c4898-8e12-4b61-afb0-0c4b3442389c">联系我们</nuxt-link></li>
                 </ul>
             </div>
             <div style="width:450px;">
@@ -24,9 +24,9 @@
             <div style="width:150px;">
                 <div>帮助中心</div>
                 <ul class="foot-color">
-                    <li>如何发布</li>
-                    <li>登录异常</li>
-                    <li>意见反馈</li>
+                    <li><nuxt-link to="/other/46813b6d-9534-44bd-9739-d48b6079d9c1">如何发布</nuxt-link></li>
+                    <li><nuxt-link to="/other/5c527259-a41e-44eb-aa46-6371cc86dd20">登录异常</nuxt-link></li>
+                    <li><nuxt-link to="/other/feedback">意见反馈</nuxt-link></li>
                 </ul>
             </div>
             <div>
@@ -85,6 +85,11 @@ export default {
         > li {
             width: 24.2%;
             display: inline-block;
+            a{
+                &:hover {
+                    color: #ff3c00;
+                }
+            }
         }
     }
     .foot-color {
@@ -92,6 +97,11 @@ export default {
         margin-top: 8px;
         > li {
             line-height: 20px;
+            a{
+                &:hover {
+                    color: #ff3c00;
+                }
+            }
         }
     }
     .code-img {

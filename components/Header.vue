@@ -78,11 +78,8 @@
         ...mapGetters(['isLogin'])
     },
     mounted () {
-        this.getMessage()
-    },
-    asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
-        return {
-            asd: "23132132"
+        if (this.auth) {
+            this.getMessage()
         }
     },
     methods: {

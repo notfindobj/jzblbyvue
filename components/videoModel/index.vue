@@ -1,15 +1,15 @@
 <template>
-    <div class="view-box-model" @click="handleClose">
+    <div class="view-box-model" @click="handleClose" @keyup.enter="handleClose">
         <div class="view-box" @click.stop>
              <div id="view">
                 <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">
                     <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
                 </video>
              </div>
-             <div class="close-box" @click="handleClose">
+             <div class="close-box" @click="handleClose"  @keyup.enter="handleClose">
                 <Icon type="ios-close-circle-outline" size="36" color="#fff"/>
             </div>
-             <div class="view-box-right " @selectstart="selectstart">
+             <div class="view-box-right" @selectstart="selectstart">
                <div class="details-box">
                  <div class="details-box-img">
                    <div class="details-box-img-img">

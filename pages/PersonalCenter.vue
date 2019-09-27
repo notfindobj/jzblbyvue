@@ -3,7 +3,8 @@
             <div class="personal-left">
                 <div class="personal-left-header">
                     <div class="personal-left-header-img">
-                        <img :src="GetUserData.HeadIconSrc " alt="" width="100px;">
+                        <img v-if="isItMe" :src="userInfo.HeadIcon " alt="" width="100px;">
+                        <img v-else :src="GetUserData.HeadIconSrc " alt="" width="100px;">
                     </div>
                     <div class="personal-left-header-name">{{GetUserData.Nickname}}</div>
                 </div>

@@ -17,7 +17,7 @@
                 <p class="my-name">{{ userInfo.NickName }}
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
-                <p class="my-TypeNames" v-if="userInfo.userTypes" v-html="setLabel(userInfo.userTypes.TypeNames)"></p>
+                <p class="my-TypeNames" v-if="userInfo.userTypes && userInfo.userTypes.TypeNames" v-html="setLabel(userInfo.userTypes.TypeNames)"></p>
                 <div class="expertise-box" v-if="userInfo.Expertise">
                   <p>擅长：</p>
                   <p class="my-Expertise" v-html="setLabel(userInfo.Expertise)"></p>
@@ -123,10 +123,10 @@ export default {
 </script>
 <style lang="less">
   .labelClass {
-      background: #ffffff; 
-      color: #ff3c00;
-      padding: 5px 6px;
+      color: #fff;
+      padding: 3px 6px;
       border-radius: 3px;
+      border: 1px solid #fff;
     }
 </style>
 <style lang="less" scoped>
