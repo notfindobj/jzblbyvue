@@ -18,3 +18,8 @@ Vue.filter('NumFormat', function (value) {
   if (!value) return '0';
   return Number(value).toFixed(0);
 })
+//根据日期获得工作年限
+Vue.filter('NumFormat', function (value) {
+  if (!value) return '0';
+  return Number(value).toFixed(0);
+})

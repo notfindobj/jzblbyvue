@@ -1,12 +1,12 @@
 <template>
-    <div class="view-box-model" @click="handleClose" @keyup.enter="handleClose">
+    <div v-transfer-dom class="view-box-model" @click="handleClose" @keyup.esc="handleClose()" tabindex='1'>
         <div class="view-box" @click.stop>
              <div id="view">
                 <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">
                     <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
                 </video>
              </div>
-             <div class="close-box" @click="handleClose"  @keyup.enter="handleClose">
+             <div class="close-box" @click="handleClose">
                 <Icon type="ios-close-circle-outline" size="36" color="#fff"/>
             </div>
              <div class="view-box-right" @selectstart="selectstart">
@@ -81,8 +81,19 @@ export default {
     },
     mounted() { 
         this.initVideo();
+        document.addEventListener('keydown', this.EscClose);
+    },
+    beforeDestroy () {
+        document.removeEventListener('keydown', this.EscClose);
     },
     methods: {
+        EscClose (e) {
+            if (!this.configShare.isModal) {
+                if (e.keyCode === 27) {
+                    this.handleClose()
+                }
+            }
+        },
         selectstart () {
             return false
         },

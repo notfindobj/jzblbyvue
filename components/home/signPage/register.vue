@@ -21,6 +21,7 @@
                 <Input v-model="registeredItem.passWordAgain" size="large" type="password" placeholder="再次输入密码"/>
             </FormItem> -->
             <FormItem>
+                <!-- <Checkbox v-model="registeredItem.isAgree">我已阅读并同意 <nuxt-link to="/agreement/register">用户协议</nuxt-link> </Checkbox> -->
                 <Checkbox v-model="registeredItem.isAgree">我已阅读并同意用户协议</Checkbox>
             </FormItem>
             <FormItem>

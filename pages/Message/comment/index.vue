@@ -82,9 +82,9 @@ export default {
                 OpType:type
             }
             let title =""
-            let content = "是否全部"
-            title = type === 2 ? "阅读消息": "删除消息"
-            content= id.constructor  === Object ? "是否" : "是否全部"
+            let content = "删除消息后不可恢复，确定要删除嘛？"
+            title = type === 2 ? "阅读消息": "删除消息， "
+            // content= id.constructor  === Object ? content : content
             if (id.constructor  === Object && type == 2) {
                 let msg = await setMessage(queryData);
                 if (msg) {

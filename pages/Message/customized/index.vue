@@ -67,9 +67,9 @@ export default {
                 OpType:type
             }
             let title =""
-            let content = "是否全部"
+            let content = ""
             title = type === 2 ? "阅读消息": "删除消息"
-            content= id.constructor  === Object ? "是否" : "是否全部"
+            content= type === 2 ? `确定全部阅读消息？` : `删除消息后不可恢复，确定要删除嘛？`
             if (id.constructor  === Object && type == 2) {
                 let msg = await setMessage(queryData);
                 if (msg) {
@@ -78,7 +78,7 @@ export default {
             } else {
                 this.$Modal.confirm({
                     title: title,
-                    content: `<p>${content+title}</p>`,
+                    content: `<p>${content}</p>`,
                     onOk: async () => {
                         let msg = await setMessage(queryData);
                         if (msg) {

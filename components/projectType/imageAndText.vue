@@ -160,6 +160,13 @@
     created () {
       this.mathId = getRanNum(7);
     },
+    watch: {
+      itemInfo: function () {
+        this[this.ViewerIndex].destroy();
+        this.mathId = getRanNum(7);
+        setTimeout(this.initView, 500);
+      }
+    },
     mounted () {
       this.initView()
     },

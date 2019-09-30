@@ -2,6 +2,7 @@
     <div class="head-box">
         <img class="theme-bg" :src="userTheme.Src" alt="">
         <div class="head-con">
+          {{isItMe}}
             <div class="theme-show" v-show="userTheme.IsSelf">
                 <Dropdown placement="bottom-end" divided trigger="click" >
                     <a href="javascript:void(0)" class="theme-title">{{tremeName}}</a>
@@ -17,7 +18,10 @@
                 <p class="my-name">{{ userInfo.NickName }}
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
-                <p class="my-TypeNames" v-if="userInfo.userTypes && userInfo.userTypes.TypeNames" v-html="setLabel(userInfo.userTypes.TypeNames)"></p>
+                <div class="expertise-box">
+                  <p>{{isItMe ? "职业：" : "公司："}}</p>
+                  <p class="my-TypeNames" v-if="userInfo.userTypes && userInfo.userTypes.TypeNames" v-html="setLabel(userInfo.userTypes.TypeNames)"></p>
+                </div>
                 <div class="expertise-box" v-if="userInfo.Expertise">
                   <p>擅长：</p>
                   <p class="my-Expertise" v-html="setLabel(userInfo.Expertise)"></p>
@@ -37,9 +41,10 @@
 
 <script>
 import {getALLTheme, getUserTheme, setUserTheme, setFollow} from '../../../service/clientAPI'
+import { mapState, mapGetters} from 'vuex'
+
 export default {
     name: 'Head',
-    components: {},
     props: {
       userInfo: {
         type: Object,
@@ -56,15 +61,27 @@ export default {
         default: false
       },
     },
+    computed: {
+      ...mapState({
+          Identity: state => state.overas.auth
+      })
+    },
     data() {
       return {
+        isItMe: true,
         tremeName: '...切换主题',
         userTheme: {},
         theme_list: []
       }
     },
     created () {
-      console.log(this.userInfo)
+      if (this.$route.query.id) {
+          if (this.Identity.UserId === this.$route.query.id) {
+              this.isItMe = true;
+          } else {
+              this.isItMe = false;
+          }
+      }
       this.getALLThemeList();
       this.getUsere()
     },
@@ -155,11 +172,11 @@ export default {
         font-size: 14px;
       }
       .my-follow-btn {
-          padding: 5px 8px;
-          border-radius: 3px;
-          line-height: 20px;
-          cursor: pointer;
-          height: 30px;
+            padding: 3px 8px;
+            border-radius: 3px;
+            line-height: 18px;
+            cursor: pointer;
+            height: 26px;
       }
       .my-follow {
          background: #ff3c00;
@@ -168,18 +185,18 @@ export default {
          background: #696e78;
       }
       .my-chat-btn {
-        height: 30px;
-        line-height: 20px;
+        height: 26px;
+        line-height: 18px;
         margin-left: 15px;
         background: #696e78;
-        padding: 5px 12px;
+        padding: 3px 10px;
         border-radius: 3px;
         cursor: pointer;
       }
     }
     .head-box {
         width: 100%;
-        height: 300px;
+        height: 330px;
         margin-bottom: 16px;
         background: transparent;
         position: relative;
