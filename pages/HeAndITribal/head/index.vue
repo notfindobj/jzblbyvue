@@ -2,7 +2,6 @@
     <div class="head-box">
         <img class="theme-bg" :src="userTheme.Src" alt="">
         <div class="head-con">
-          {{isItMe}}
             <div class="theme-show" v-show="userTheme.IsSelf">
                 <Dropdown placement="bottom-end" divided trigger="click" >
                     <a href="javascript:void(0)" class="theme-title">{{tremeName}}</a>
@@ -19,7 +18,7 @@
                   <!-- <i :class="my_introduction.sex === 0 ? 'icon iconfont' : 'icon iconfont'"></i> -->
                 </p>
                 <div class="expertise-box">
-                  <p>{{isItMe ? "职业：" : "公司："}}</p>
+                  <p>{{isItMe ? "职业：" : "类型："}}</p>
                   <p class="my-TypeNames" v-if="userInfo.userTypes && userInfo.userTypes.TypeNames" v-html="setLabel(userInfo.userTypes.TypeNames)"></p>
                 </div>
                 <div class="expertise-box" v-if="userInfo.Expertise">
@@ -272,7 +271,7 @@ export default {
                     text-align: center;
                     font-size: 22px;
                     color: #FFFFFF;
-                    margin-bottom: 10px;
+                    // margin-bottom: 10px;
                 }
 
                 .my-Introduction-con {
