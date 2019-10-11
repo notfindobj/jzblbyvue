@@ -8,6 +8,10 @@ export const overallActions ={
     LOGGEDIN ({ commit, state }, params) {
         commit("SETLOGGEDIN", params)
     },
+    // 首页全局搜索
+    SEARCHDATA({ commit, state }, params) {
+        commit("setsearchData", params)
+    },
     // 设置cookie
     LOGININ ({ commit, state }, params) {
         commit("setAuth", params)

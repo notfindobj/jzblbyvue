@@ -56,7 +56,7 @@
                     </div>
                     <div class="main-content-left-search">
                         <Input v-model="searchData" style="width:450px;" size="large" @keydown.enter.native="searchBaseData">
-                            <Select slot="prepend" v-model="searchTitle" style="width:100px">
+                            <Select slot="prepend" v-model="searchNav" style="width:100px">
                                 <Option v-for="(items, indexs) in menuData" :value="indexs" :key="indexs">{{items.ItemAttributesFullName}} </Option>
                             </Select>
                             <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">
@@ -100,7 +100,6 @@
                 isAd: false,
                 isRegion: false,
                 searchData: '',
-                searchTitle: '',
                 baiduData: '',
                 loginIng: require('../assets/images/top_logo.png'),
                 menuData: [],
@@ -119,7 +118,8 @@
         },
         computed: {
             ...mapState({
-                auth: state => state.overas.auth
+                auth: state => state.overas.auth,
+                searchNav: state => state.overas.searchNav,
             }),
             ...mapGetters(['isLogin'])
         },
@@ -133,9 +133,9 @@
             }
             this.region = localStorage.getItem('region') || '上海';
             if (sessionStorage.getItem('searchIndex')) {
-                this.searchTitle = sessionStorage.getItem('searchIndex') * 1;
+                this.$store.dispatch('SEARCHDATA', sessionStorage.getItem('searchIndex') * 1);
                 this.searchData = sessionStorage.getItem('searchKeyWords');
-            }
+            }   
             this.isIndex = this.$route.name === 'index';
         },
         watch: {
@@ -187,15 +187,15 @@
                 }
             },
             async searchBaseData() {
-                if (!this.searchTitle && this.searchTitle !== 0) {
+                if (!this.searchNav && this.searchNav !== 0) {
                     this.$Message.warning('请先选择资源库类型~');
                     return false;
                 }
                 let baseSearchNav = {
                     key: 'baseSearchNav',
                     value: {
-                        ClassTypeArrList: [{AttrKey: this.menuData[this.searchTitle].ItemAttributesId, AttrValue: this.menuData[this.searchTitle].ItemSubAttributeCode}],
-                        title: this.menuData[this.searchTitle].ItemAttributesFullName,
+                        ClassTypeArrList: [{AttrKey: this.menuData[this.searchNav].ItemAttributesId, AttrValue: this.menuData[this.searchNav].ItemSubAttributeCode}],
+                        title: this.menuData[this.searchNav].ItemAttributesFullName,
                     }
                 }
                 this.$store.dispatch('Serverstorage', baseSearchNav);
@@ -218,7 +218,7 @@
                 if (this.$route.name === "dataBase") {
                     // let routeData = this.$router.resolve({ name: 'dataBase'});
                     this.$router.push({ name: "dataBase"});
-                    sessionStorage.setItem('searchIndex', this.searchTitle);
+                    sessionStorage.setItem('searchIndex', this.searchNav);
                     sessionStorage.setItem('searchKeyWords', this.searchData);
                     window.location.reload();
                 } else {

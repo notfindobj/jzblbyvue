@@ -14,6 +14,9 @@ export const overallMutation = {
   setWxRegister(state, param) {
     state.wxRegister = param
   },
+  setsearchData(state, param) {
+    state.searchNav = param
+  },
   // 存储数据
   setSessionStorage (state, row) {
     state.sessionStorage[row.key] = row.value;

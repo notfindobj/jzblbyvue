@@ -1,10 +1,10 @@
 <template>
     <div class="picture">
         <div>
-
+            left 
         </div>
         <div>
-
+            right
         </div>
     </div>
 </template>
@@ -12,6 +12,11 @@
 export default {
     name: "picture",
     layout: 'main',
+    data () {
+        return {
+            
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

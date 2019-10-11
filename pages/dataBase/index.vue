@@ -148,7 +148,8 @@
             },
             //一级菜单
             async getItemsBaseData(row) {
-                console.log(row)
+                this.$store.dispatch('SEARCHDATA', row.Sort-1);
+                sessionStorage.setItem('searchIndex', row.Sort-1);
                 this.showLayout = row.ItemAttributesFullName !== '建筑规范';
                 // 搜索页导航数据
                 let baseSearchNav = {
