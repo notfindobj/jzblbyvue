@@ -269,3 +269,7 @@ export const setCareerTyepInfo = async params => {
 export const delareerTyepInfo = async params => {
   return await request.get(`UserInfo/DeleteCareerData/${params}`)
 }
+//获取资金账户
+export const getFundAccount = async params => {
+  return await request.post(`Account/FundAccount`, params)
+}

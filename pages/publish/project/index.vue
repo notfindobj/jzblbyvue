@@ -110,7 +110,7 @@
         <div class="submit-box">
             <p>
                 <Checkbox class="checkbox" size="large" v-model="isAgree">我已仔细阅读并同意</Checkbox>
-                <span>《建筑部落用户协议》</span>
+                <span @click="ViewProtocol">《建筑部落用户发布协议》</span>
             </p>
             <Button type="primary" @click="clickSubmit">完成上传</Button>
         </div>
@@ -263,6 +263,11 @@
       this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
     },
     methods: {
+      ViewProtocol (row) {
+        this.$store.dispatch('SETUP', false)
+        let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
+        window.open(routeData.href, '_blank');
+      },
       handleMaxSize (file) {
         this.$Notice.warning({
               title: file.name,

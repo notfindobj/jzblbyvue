@@ -114,6 +114,7 @@
     import { mapState } from 'vuex'
     export default {
         layout: 'main',
+        middleware: 'authenticated',
         data() {
             return {
                 fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
@@ -143,7 +144,6 @@
         methods: {
             // 跳转部落
             goToPersonal (row) {
-                debugger
                 this.$router.push({
                     name: 'HeAndITribal-id',
                     query: {

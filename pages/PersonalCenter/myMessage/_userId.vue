@@ -195,7 +195,7 @@
             <div class="message-items-right">
                 <span v-if="EntCode === 2">
                     <div v-if="careerTyep.length > 0">
-                        <Tag type="dot" v-for="(items, index) in careerTyep" closable color="success" class="userLabel-label"  :key="index" :name="items.delId" @on-close="delUserTyepLabel">{{items.label}}</Tag>
+                        <Tag type="dot" v-for="(items, index) in careerTyep" :closable="isItMe" color="success" class="userLabel-label"  :key="index" :name="items.delId" @on-close="delUserTyepLabel">{{items.label}}</Tag>
                     </div>
                     <span v-else>
                         <span class="message-items-right-fill">马上填写</span>
@@ -222,7 +222,7 @@
             </div>
             <div class="message-items-right">
                 <span>
-                    <Tag type="dot" v-if="userLabel.length > 0" v-for="(items, index) in userLabel" closable color="success" class="userLabel-label"  :key="index" :name="items.LabelId" @on-close="delUserLabel">{{items.LabelName}}</Tag>
+                    <Tag type="dot" v-if="userLabel.length > 0" v-for="(items, index) in userLabel" :closable="isItMe" color="success" class="userLabel-label"  :key="index" :name="items.LabelId" @on-close="delUserLabel">{{items.LabelName}}</Tag>
                     <span v-else>
                         <span class="message-items-right-fill">马上填写</span>
                         <span>自己的标签，让大家全方位了解你！</span>

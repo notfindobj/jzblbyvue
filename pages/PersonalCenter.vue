@@ -15,6 +15,12 @@
                             {{isItMe ? '我的信息' : 'TA的信息'}}
                         </nuxt-link>
                     </li>
+                    <!-- <li v-if="isItMe">
+                        <nuxt-link to="/PersonalCenter/capital">
+                            <i class="icon iconfont icon-zhanghuanquan"></i>
+                            资金账户
+                        </nuxt-link>
+                    </li> -->
                     <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/accountSecurity">
                             <i class="icon iconfont icon-zhanghuanquan"></i>
@@ -27,12 +33,12 @@
                             账户绑定
                         </nuxt-link>
                     </li >
-                    <li v-if="isItMe">
+                    <!-- <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/records">
                             <i class="icon iconfont icon-shouhuodizhi"></i>
                             交易记录
                         </nuxt-link>
-                    </li >
+                    </li > -->
                     <li v-if="isItMe">
                         <nuxt-link to="/PersonalCenter/receivingAddress">
                             <i class="icon iconfont icon-shouhuodizhi"></i>

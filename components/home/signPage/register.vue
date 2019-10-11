@@ -21,8 +21,8 @@
                 <Input v-model="registeredItem.passWordAgain" size="large" type="password" placeholder="再次输入密码"/>
             </FormItem> -->
             <FormItem>
-                <!-- <Checkbox v-model="registeredItem.isAgree">我已阅读并同意 <nuxt-link to="/agreement/register">用户协议</nuxt-link> </Checkbox> -->
-                <Checkbox v-model="registeredItem.isAgree">我已阅读并同意用户协议</Checkbox>
+                <Checkbox v-model="registeredItem.isAgree">我已阅读并同意 <span @click="ViewProtocol">用户协议</span> </Checkbox>
+                <!-- <Checkbox v-model="registeredItem.isAgree">我已阅读并同意用户协议</Checkbox> -->
             </FormItem>
             <FormItem>
                 <Button type="primary" size="large" class="desabled-btn" @click="register">注册</Button>
@@ -69,6 +69,11 @@
     },
 
     methods: {
+      ViewProtocol (row) {
+        this.$store.dispatch('SETUP', false)
+        let routeData = this.$router.resolve({ name: 'other-id', params: { id: "32a258cf-ce5a-4fef-b301-0a9d37c02e22"} });
+        window.open(routeData.href, '_blank');
+      },
       // 获取验证码
       async getMobile() {
         let queruys = {

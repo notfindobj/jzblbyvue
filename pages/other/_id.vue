@@ -39,32 +39,6 @@ export default {
     data () {
       return {
         contentHtml: "",
-        navList:[
-            {
-                type:'/other/aboutUs',
-                name:'关于我们',
-            },
-            {
-                type:'/other/contactUs',
-                name:'联系我们',
-            },
-            {
-                type:'/other/disclaimer',
-                name:'免责声明',
-            },
-            {
-                type:'/other/toPublish',
-                name:'如何发布',
-            },
-            {
-                type:'/other/unableToLogIn',
-                name:'登录异常',
-            },
-            {
-                type:'/other/feedback',
-                name:'意见反馈',
-            }
-        ],
         currentIndex:0,
         aboutUsTopInfo:{
           title:'越了解，越爱',
@@ -123,7 +97,8 @@ export default {
     }
     .nav-box{
         width: 200px;
-        height: 300px;
+        position: sticky;
+        top: 65px;
         margin-right: 16px;
         background: #ffffff;
         box-shadow: 0 0 4px 0 rgba(0,0,0,0.15);

@@ -82,7 +82,7 @@
         <div class="submit-box">
             <p>
                 <Checkbox v-model="checked" class="checkbox" ></Checkbox>
-                我已仔细阅读并同意<span>《建筑部落用户协议》</span>
+                我已仔细阅读并同意<span @click="ViewProtocol">《建筑部落用户发布协议》</span>
             </p>
             <Button type="primary" @click="handleSubmit('formValidate')">完成上传</Button>
         </div>
@@ -152,6 +152,11 @@
       draggable
     },
     methods: {
+      ViewProtocol (row) {
+        this.$store.dispatch('SETUP', false)
+        let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
+        window.open(routeData.href, '_blank');
+      },
       onEditorChange(e) {
         this.formValidate.content = e.html;
       },
