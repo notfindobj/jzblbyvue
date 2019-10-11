@@ -9,50 +9,11 @@
             <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
         </div>
         <div style="width：800px" id="detaDetails" v-html="detaDetails.ItemContentBefore"></div>
-        <!-- <div class="view-box-model" v-show="isShowViewBox">
-           <div class="view-box">
-             <div class="view-left-move" @mouseenter="mousemoveLeft(1)" @mouseleave="mousemoveRight" >
-               <img :class="!isLeft ? 'isHide' : 'isShow'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(1)" width="50px" alt="">
-             </div>
-             <div class="view-right-move" @mouseenter="mousemoveLeft(2)" @mouseleave="mousemoveRight">
-               <img :class="!isRight ? 'isHide moveRight' : 'isShow moveRight'" src="../../assets/images/leftButton.png"  @click="moveLeftClick(2)" width="50px" alt="">
-             </div>
-             <div id="view"></div>
-             <div class="view-box-right">
-               <div class="details-box">
-                 <div class="details-box-img">
-                   <div class="details-box-img-img"></div>
-                   <div class="details-box-img-right">
-                     <p>{{detaDetails.ItemName}}</p>
-                     <p>发布日期：{{detaDetails.CreateDate}}</p>
-                   </div>
-                 </div>
-                 <ul>
-                   <li class="details-box-list" v-for="(items, index) in attribute" :key="index">
-                     <span class="details-box-list-title">{{items.ItemAttributesFullName}}</span>
-                     <span class="details-box-list-content">{{items.ItemSubAttributeFullName}}</span>
-                   </li>
-                 </ul>
-               </div>
-               <commentsCon
-                 :publish="detaDetails"
-                 :comments="[]"
-                 @thumbsUp="thumbsUp"
-                 @Collection="Collection"
-                 @commentValue="commentValue"
-               />
-               <discuss/>
-             </div>
-           </div>
-         </div> -->
     </div>
 </template>
 <script>
   import Viewer from 'viewerjs';
   import 'viewerjs/dist/viewer.css';
-  import discuss from '../comments/discuss'
-  import commentsCon from '../comments/commentsCon'
-  import { setthumbsUp, setCollection, getComments, setComments } from '../../service/clientAPI'
   import { async } from 'q';
 
   export default {
@@ -92,17 +53,12 @@
         isBtnSile: false
       }
     },
-    components: {
-      discuss,
-      commentsCon
-    },
     asyncData() {
     },
     created() {
     },
     mounted() {
       this.initView()
-      // this.initViewButton()
     },
     methods: {
       initView() {
@@ -174,49 +130,6 @@
               this.Viewer.prev()
             }
           }
-        }
-      },
-      // 项目点赞
-      async thumbsUp(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          LikeType: 1,
-          IsDelete: item.islikes
-        }
-        let thumbsUpMsg = await setthumbsUp(queryData);
-        if (item.islikes) {
-          this.$set(item, 'likes', item.likes - 1)
-        } else {
-          this.$set(item, 'likes', item.likes + 1)
-        }
-        this.$set(item, 'islikes', !item.islikes)
-      },
-      // 收藏
-      async Collection(item) {
-        let queryData = {
-          ItemId: item.ItemId,
-          TalkType: 4,
-          IsDelete: item.iscollections
-        }
-        let collectionMsg = await setCollection(queryData)
-        if (item.iscollections) {
-          this.$set(item, 'collections', item.collections - 1)
-        } else {
-          this.$set(item, 'collections', item.collections + 1)
-        }
-        this.$set(item, 'iscollections', !item.iscollections)
-      },
-      //评论
-      async commentValue(row, val) {
-        let queryData = {
-          ItemId: row.ItemId,
-          IsReply: false,
-          Message: val,
-          ScopeType: 0
-        }
-        let commentMsg = await setComments(queryData)
-        if (!commentMsg) {
-          this.$set(row, 'commentss', row.commentss + 1)
         }
       },
       mousemoveLeft() {

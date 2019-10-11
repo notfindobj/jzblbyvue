@@ -107,7 +107,6 @@
     .data-details-right {
         width: 340px;
         background-color: #F2F4F2;
-
         .data-details-right-con {
             width: 100%;
             height: 100%;
@@ -277,7 +276,6 @@
             .box {
                 width: 100%;
                 border-radius: 4px;
-                // height: 1077px;
             }
         }
 

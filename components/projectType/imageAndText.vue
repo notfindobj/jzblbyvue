@@ -53,9 +53,9 @@
             </div>
             <!-- 内容 -->
             <div class="content" >
-              <!--  v-if="itemInfo.TalkType === 3"  -->
                 <div v-if="itemInfo.TalkTitle" @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
-                <p v-if="itemInfo.TalkContent"><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <p v-if ="itemInfo.TalkContent && itemInfo.TalkType === 1" @click="goPictureDetails(itemInfo)" class="detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <p v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
@@ -180,6 +180,13 @@
       dropdownMenu (row, item, index) {
         this.$emit('clickMenu', row, item, index);
       },
+      goPictureDetails (row) {
+        let routeData = this.$router.resolve({
+              name: 'pictureDetails-id',
+              params: {id: row.ItemId }
+          })
+        window.open(routeData.href, '_blank');
+      },
       async goDetail(row) {
         if (row.TalkType === 3) {
            let routeData = this.$router.resolve({
@@ -230,8 +237,6 @@
                 query: {id: row.ItemId }
             })
             window.open(routeData.href, '_blank');
-
-
         }
       },
       moveLeftClick(val) {
@@ -436,6 +441,9 @@
   }
 </script>
 <style lang="less">
+    .detail-picture {
+      cursor: pointer;
+    }
     .itemHide {
       display: none;
     }
