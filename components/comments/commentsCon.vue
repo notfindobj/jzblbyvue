@@ -49,7 +49,6 @@
         <!-- 评论信息 -->
         <discuss
             class="comment-scroll"
-            :style="{height: contentHeight}"
             :discussData="comments"
             @commentValue="discussValue"
             @somePraise="somePraise"
@@ -126,15 +125,12 @@
       },
       goTodetails(inx) {
         alert(inx)
-      },
-      upload() {
-        alert(1)
-      }
     },
     mounted() {
       this.contentHeight = document.documentElement.clientHeight - 460 + 'px';
     }
   }
+}
 </script>
 <style lang="less" scoped>
     .comment-box {
@@ -146,8 +142,6 @@
     }
     .comments-box {
         width: 100%;
-        /*height: 100%;*/
-
         .comments-status-box {
             background: #ffffff;
             margin-bottom: 10px;

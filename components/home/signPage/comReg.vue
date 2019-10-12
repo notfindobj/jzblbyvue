@@ -44,8 +44,8 @@
                 </Col>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="企业LOGO:" >
-                        <div @click="changeFile('updataFile')" :class="companyAttr.CompanyImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.CompanyImg)}');`">
-                            <input ref="updataFile" type="file" @change="changeUpFile('logo', 11)" style="display: none;">
+                        <div @click="changeFile('logo')" :class="companyAttr.CompanyImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.CompanyImg)}');`">
+                            <input ref="logo" type="file" @change="changeUpFile('logo', 11)" style="display: none;">
                         </div>
                     </FormItem>
                 </Col>
