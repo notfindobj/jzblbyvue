@@ -29,7 +29,7 @@
             </Row>
             <Row>
                 <Col span="16" style="padding-right:10px">
-                    <FormItem label="营业执照号:" prop="BusLicRegNum">
+                    <FormItem label="营业执照证照编号:" prop="BusLicRegNum">
                         <Input v-model="companyAttr.BusLicRegNum"></Input>
                     </FormItem>
                 </Col>
@@ -62,7 +62,7 @@
                     </FormItem>
                 </Col>
             </Row>
-            <FormItem label="身份证正反面:" prop="IDCardImgNegaId">
+            <FormItem label="经办人身份证:" prop="IDCardImgNegaId">
                 <div @click="changeFile('card')"
                 :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgPosi)}');`"
                  >

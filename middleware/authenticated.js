@@ -1,5 +1,3 @@
-import { Message } from 'iview'
-// {route,store, req, res, redirect}
 export default function ({store, from, route, redirect}) {
   // console.log(app)
   let isClient = process.client;
@@ -13,7 +11,6 @@ export default function ({store, from, route, redirect}) {
       redirect('/')
       store.dispatch('SETUP', true);
       store.dispatch('LOGGEDIN', 'signIn');
-      // Message.warning('请登陆后操作！');
     }
   }
 }

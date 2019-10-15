@@ -53,6 +53,7 @@ import ToTop from '../../components/toTop'
 export default {
     name: "pictureBox",
     layout: 'main',
+    middleware: 'authenticated',
     components: {
         commentsCon,
         ToTop
@@ -64,7 +65,6 @@ export default {
             ScopeType: 2
         }
         const cmsg = await store.dispatch('getGetComments', queryData);
-        
         return {
             detailInfo: data,
             commentsData: cmsg
@@ -116,9 +116,6 @@ export default {
                     },
                     build: function () {
                         console.log('build')
-                    },
-                    built: function () {
-                        console.log('built')
                     },
                     view: function (e) {
                         _this.itemLength = document.querySelectorAll('.viewer-list > li').length;

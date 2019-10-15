@@ -27,10 +27,13 @@ service.interceptors.response.use(
   res => {
     // 服务器端
     if (process.server) {
+      console.log('服务器端', res.data.Code)
       if (res.data.Code === 200) {
         return res.data.Data
       } else if (res.data.Code === 500) {
         return {statusCode: 500, message: 'You need back to login again'}
+      } else if (res.data.Code === 101) {
+        return {statusCode: 500, message: 'You need back '+res.data.Code}
       }
     }
     // 客户端
@@ -42,7 +45,12 @@ service.interceptors.response.use(
         return res.data.Data
       } else if (res.data.Code === 6001) {
         return res.data
-      } else {
+      }else if (res.data.Code === 101) {
+        setTimeout(() => {
+          window.location.href="http://www.jzbl.com"
+        }, 300)
+      }
+      else {
         Message.warning(res.data.Msg);
         // return res.data.Data
       }

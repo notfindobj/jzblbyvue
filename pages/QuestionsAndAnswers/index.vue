@@ -215,7 +215,7 @@ export default {
             if (msg) {
                 this.isSearch = true;
                 this.QAList = msg.QADatas;
-                this.total = msg.paginationData.total;
+                this.total = msg.paginationData.total || 0;
                 this.spinShow = false;
             }
         },
@@ -263,11 +263,11 @@ export default {
             Page: 1,
             Rows: 8
         };
-        const data = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQAData', queryParams)])
+        const [dlist, qdata] = await Promise.all([store.dispatch('getQASearchTag'), store.dispatch('getQAData', queryParams)]);
         return {
-            labelList: data[0].TypeLabels,
-            QAList: data[1].QADatas,
-            total: data[1].paginationData.total
+            labelList: dlist.TypeLabels|| [],
+            QAList: qdata.QADatas|| [],
+            total: qdata.paginationData ? qdata.paginationData.total : 0
         }
     }
 }

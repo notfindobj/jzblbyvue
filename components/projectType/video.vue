@@ -38,13 +38,12 @@
             </div>
             <!-- 视频内容 -->
             <div class="content">
-                <p><emotHtml v-model="videoInfo.TalkTitle"/></p>
+                <p  @click="goPictureDetails(videoInfo)" class="detail-picture"><emotHtml v-model="videoInfo.TalkTitle"/></p>
                 <div class="video-wrap" v-if="videoInfo.Imgs.length > 0">
                     <div class="photo-wrap">
                         <div class="video" @click.stop="">
                           <videos 
                           :itemVideo="videoInfo.Imgs[0]" 
-                          
                           :detaDetails="videoInfo" />
                         </div>
                     </div>
@@ -124,6 +123,13 @@
       }
     },
     methods: {
+      goPictureDetails (row) {
+        let routeData = this.$router.resolve({
+              name: 'videoDetails-id',
+              params: {id: row.ItemId }
+          })
+        window.open(routeData.href, '_blank');
+      },
       async delComments (row) {
         let msg = await delComment(row.CommentsId)
         if (msg) {
@@ -278,6 +284,9 @@
   .active-tool {
     color: #ff3c00;
   }
+  .detail-picture {
+      cursor: pointer;
+    }
     .tool-box {
     display: inline-block;
     position: absolute;

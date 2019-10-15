@@ -133,7 +133,7 @@
         },
         computed: {
             ...mapState({
-                userInfoID: state => state.overas.auth.UserId
+                userInfoID: state => state.overas.auth? state.overas.auth.UserId: ""
             })
         },
         components: {

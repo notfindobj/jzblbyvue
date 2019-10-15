@@ -130,7 +130,7 @@ export default {
                 });
                 }            
             );
-            },
+        },
         closVideoModel (row) {
             this.move()
             this.isShowViewBox = !this.isShowViewBox

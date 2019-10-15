@@ -49,11 +49,10 @@
                 TalkType: 2,
                 Page: 0
             })
-            console.log(data);
             return {
                 data,
                 videoList: data.retModels,
-                total: data.paginationData.total
+                total: data.paginationData ? data.paginationData.total : 0
             }
         },
         methods: {

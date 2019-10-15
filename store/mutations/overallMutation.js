@@ -13,6 +13,7 @@ export const overallMutation = {
   },
   setWxRegister(state, param) {
     state.wxRegister = param
+    state.showSign = true
   },
   setsearchData(state, param) {
     state.searchNav = param
