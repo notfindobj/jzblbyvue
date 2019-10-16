@@ -150,7 +150,8 @@
         },
         goSearchPage () {
             let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
-            window.open(routeData.href, '_blank');
+            let templateWin = window.open('about:blank')
+            templateWin.location.href = routeData.href;
         },
         async signOut() {
             let msg = await logout();

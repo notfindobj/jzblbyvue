@@ -247,7 +247,8 @@
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 // this.$router.push({ name: "dataBase"});
                 let routeData = this.$router.resolve({ name: 'dataBase'});
-                window.open(routeData.href, '_blank');
+                let templateWin = window.open('about:blank')
+                templateWin.location.href = routeData.href;
                 
             },
             initLazy() {

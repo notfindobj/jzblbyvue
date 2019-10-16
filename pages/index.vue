@@ -435,7 +435,8 @@
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({ name: 'dataBase'});
-            window.open(routeData.href, '_blank');
+            let templateWin = window.open('about:blank')
+            templateWin.location.href = routeData.href;
         },
         async viewItem(row, item, val) {
             if (!this.isLogin) {
@@ -471,7 +472,8 @@
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
-            window.open(routeData.href, '_blank');
+            let templateWin = window.open('about:blank')
+            templateWin.location.href = routeData.href;
         },
         // 路由跳转
         jumpRoute(items) {

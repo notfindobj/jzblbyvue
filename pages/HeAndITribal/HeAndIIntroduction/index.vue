@@ -104,7 +104,8 @@
     methods: {
         enterCenter () {
             let routeData = this.$router.resolve({ name: 'PersonalCenter-myMessage-userId', params: { userId: this.userInfo.UserId} });
-            window.open(routeData.href, '_blank');
+            let templateWin = window.open('about:blank')
+            templateWin.location.href = routeData.href;
         },
         change(inx, count) {
             this.currentIndex = inx;
@@ -117,7 +118,8 @@
                 return false;
             }
             let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
-            window.open(routeData.href, '_blank');
+            let templateWin = window.open('about:blank')
+            templateWin.location.href = routeData.href;
         },
         seeMore () {
             this.$emit('seeMore')

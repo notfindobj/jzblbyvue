@@ -266,7 +266,8 @@
       ViewProtocol (row) {
         this.$store.dispatch('SETUP', false)
         let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       },
       handleMaxSize (file) {
         this.$Notice.warning({

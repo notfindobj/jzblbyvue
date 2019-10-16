@@ -293,7 +293,8 @@
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
                 let routeData = this.$router.resolve({ name: 'DataDetails-id', query: { id: item.ItemId } });
-                window.open(routeData.href, '_blank');
+                let templateWin = window.open('about:blank')
+                templateWin.location.href = routeData.href;
             },
             // 获取项目和粉丝量
             async showWorks(user) {

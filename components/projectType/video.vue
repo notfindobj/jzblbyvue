@@ -128,7 +128,8 @@
               name: 'videoDetails-id',
               params: {id: row.ItemId }
           })
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       },
       async delComments (row) {
         let msg = await delComment(row.CommentsId)
@@ -163,7 +164,8 @@
       // 跳转部落
       goToPersonal (row) {
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       },
       // 关注
       async worksFocus(item) {

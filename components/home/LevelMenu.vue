@@ -100,10 +100,12 @@
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 let routeData = this.$router.resolve({ name: 'dataBase'});
-                window.open(routeData.href, '_blank');
+                let templateWin = window.open('about:blank')
+                templateWin.location.href = routeData.href;
             },
             // 点击一级分类
             async goList(cate) {
+                debugger
                 if (!this.isLogin) {
                     this.$store.dispatch('SETUP', true);
                     this.$store.dispatch('LOGGEDIN', 'signIn');
@@ -135,7 +137,8 @@
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 let routeData = this.$router.resolve({ name: 'dataBase'});
-                window.open(routeData.href, '_blank');
+                let templateWin = window.open('about:blank')
+                templateWin.location.href = routeData.href;
             }
         }
     }

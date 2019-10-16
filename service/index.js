@@ -47,10 +47,13 @@ service.interceptors.response.use(
         return res.data
       }else if (res.data.Code === 101) {
         setTimeout(() => {
-          window.location.href="http://www.jzbl.com"
+          if (window.location.href !== "http://www.jzbl.com/") {
+            window.location.href="http://www.jzbl.com"
+          } else {
+            Message.warning(res.data.Msg);
+          }
         }, 300)
-      }
-      else {
+      } else {
         Message.warning(res.data.Msg);
         // return res.data.Data
       }

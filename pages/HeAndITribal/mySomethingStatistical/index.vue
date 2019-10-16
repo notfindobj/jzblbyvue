@@ -67,7 +67,8 @@
           return false;
         }
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       }
     }
   }

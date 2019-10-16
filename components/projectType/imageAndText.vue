@@ -185,7 +185,8 @@
               name: 'pictureDetails-id',
               params: {id: row.ItemId }
           })
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       },
       async goDetail(row) {
         if (row.TalkType === 3) {
@@ -193,7 +194,8 @@
               name: 'QuestionsAndAnswers-id',
               params: {id: row.ItemId }
           })
-          window.open(routeData.href, '_blank');
+          let templateWin = window.open('about:blank')
+          templateWin.location.href = routeData.href;
         }
         if (row.TalkType === 4) {
            // 搜索页导航数据
@@ -236,7 +238,8 @@
                 name: 'DataDetails-id',
                 query: {id: row.ItemId }
             })
-            window.open(routeData.href, '_blank');
+            let templateWin = window.open('about:blank')
+            templateWin.location.href = routeData.href;
         }
       },
       moveLeftClick(val) {
@@ -334,7 +337,8 @@
       // 跳转部落
       goToPersonal (row) {
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       },
       // 关注
       async worksFocus(item) {

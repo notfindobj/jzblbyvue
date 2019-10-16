@@ -72,7 +72,8 @@
       ViewProtocol (row) {
         this.$store.dispatch('SETUP', false)
         let routeData = this.$router.resolve({ name: 'other-id', params: { id: "32a258cf-ce5a-4fef-b301-0a9d37c02e22"} });
-        window.open(routeData.href, '_blank');
+        let templateWin = window.open('about:blank')
+        templateWin.location.href = routeData.href;
       },
       // 获取验证码
       async getMobile() {
