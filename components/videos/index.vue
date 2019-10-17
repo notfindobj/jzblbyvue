@@ -154,11 +154,10 @@ export default {
             this[this.videoCon].pause()
         },
         videoMouseout () {
-            this[this.videoCon].controls
-            console.log('开始播放22', this[this.videoCon].controls());
+            this[this.videoCon].controls()
         },
         videoMouseover () {
-            console.log('开始播放11', this[this.videoCon].controls()); 
+            this[this.videoCon].controls()
         },
         // 收藏
         async Collection(item, domId) {

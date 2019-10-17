@@ -162,7 +162,6 @@ app.post('/api/logout', function (req, res) {
         Code: 200
     }
     axios(config).then(data => {
-        const token = data.data.Code;
         if (data.data.Code === 200) {
             delete res.clearCookie('adminToken');
             res.json(response);

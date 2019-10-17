@@ -27,7 +27,6 @@ service.interceptors.response.use(
   res => {
     // 服务器端
     if (process.server) {
-      console.log('服务器端', res.data.Code)
       if (res.data.Code === 200) {
         return res.data.Data
       } else if (res.data.Code === 500) {
@@ -46,13 +45,14 @@ service.interceptors.response.use(
       } else if (res.data.Code === 6001) {
         return res.data
       }else if (res.data.Code === 101) {
-        setTimeout(() => {
-          if (window.location.href !== "http://www.jzbl.com/") {
-            window.location.href="http://www.jzbl.com"
+          $store.dispatch('LOGININ', null);
+          sessionStorage.removeItem("LOGININ");
+          delCookie("adminToken")
+          if (window.location.href !== "http://jzbl.com/") {
+            window.location.href="http://jzbl.com"
           } else {
             Message.warning(res.data.Msg);
           }
-        }, 300)
       } else {
         Message.warning(res.data.Msg);
         // return res.data.Data
@@ -63,7 +63,19 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
+//取cookies     
+function getCookie(name){
+  let arr = document.cookie.match(new RegExp("(^| )" + name + "=([^;]*)(;|$)"));
+  if (arr != null) return unescape(arr[2]); 
+  return null;
+}
+//删除cookie
+function delCookie(name){
+  var exp = new Date();
+  exp.setTime(exp.getTime() - 1);
+  var cval = getCookie(name);
+  if (cval != null) document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
+}
 export default {
   post (url, data) {
     console.log('post request url', url)

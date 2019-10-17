@@ -60,8 +60,8 @@ export default {
         };
         let getTalks = await store.dispatch('getTalk', queryData);
         return {
-          dataList: getTalks.retModels,
-          total: getTalks.paginationData.total
+          dataList: getTalks.retModels || [],
+          total: getTalks.paginationData ? getTalks.paginationData.total : 0
         }
     },
     methods: {
@@ -153,7 +153,7 @@ export default {
           if (data) {
             if (type === 1) {
               this.dataList = [];
-              this.dataList = data.retModels;
+              this.dataList = data.retModels || [];
             } else {
               this.dataList = this.dataList.concat(data.retModels);
             }

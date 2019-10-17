@@ -79,7 +79,6 @@
             // parent: document.getElementById('view'),
             // container: document.getElementById('view'),
             show: function (e) {
-              console.log('aaaaaaaaaaaaaa')
               _this.isShowViewBox = true;
             },
             ready: function () {

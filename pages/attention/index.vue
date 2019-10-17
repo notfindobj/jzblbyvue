@@ -191,8 +191,8 @@
                 Rows: 10
             });
             return {
-                attentionList: data.retModels,
-                total: data.paginationData.total
+                attentionList: data.retModels || [],
+                total: data.paginationData?data.paginationData.total : 0
             }
         }
     }

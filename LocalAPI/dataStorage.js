@@ -6,6 +6,7 @@ const LocalAPI = axios.create();
 import createStore from '../store'
 const $store = createStore();
 // POST 传参序列化
+LocalAPI.defaults.withCredentials = true;
 LocalAPI.interceptors.request.use(
     config => {
       config.baseURL = configUrl.localUrl;
@@ -43,7 +44,7 @@ LocalAPI.interceptors.response.use(
       return Promise.reject(error)
     }
   )
-LocalAPI.defaults.withCredentials = true;
+
 export default {
     post (url, data) {
       return LocalAPI({

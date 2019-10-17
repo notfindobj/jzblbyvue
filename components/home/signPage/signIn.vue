@@ -66,30 +66,6 @@
                 }
                 loginByQQ().then(res => {
                     const qqWindow = this.loginAtQQ(res, 1);
-                    // const interId = setInterval(() => {
-                    //     const code = localStorage.getItem('code');
-                    //     const state = localStorage.getItem('state');
-                    //     if (code && state) {
-                    //         qqWindow.close();
-                    //         getUserByQQ({
-                    //             code,
-                    //             state
-                    //         }).then(res => {
-                    //             if (!res.token) {
-                    //                 this.$store.dispatch('WXREGISTER', res);
-                    //                 this.goToRegister('register');
-                    //             } else {
-                    //                 localStorage.removeItem('code');
-                    //                 localStorage.removeItem('state');
-                    //                 this.$store.dispatch('LOGININ', res);
-                    //                 localStorage.setItem('LOGININ', JSON.stringify(res))
-                    //                 this.$store.dispatch('SETUP', false)
-                    //                 this.$Message.success('登录成功');
-                    //             }
-                    //         });
-                    //         clearInterval(interId);
-                    //     }
-                    // }, 200)
                 })
             },
             // 微信登录
@@ -100,29 +76,6 @@
                 }
                 loginByWX().then(res => {
                     const wxWindow = this.loginAtQQ(res, 2);
-                    // const interId = setInterval(() => {
-                    //     const code = localStorage.getItem('code');
-                    //     const state = localStorage.getItem('state');
-                    //     if (code && state) {
-                    //         getUserByWX({
-                    //             code,
-                    //             state
-                    //         }).then(res => {
-                    //             if (!res.token) {
-                    //                 this.$store.dispatch('WXREGISTER', res);
-                    //                 this.goToRegister('register');
-                    //             } else {
-                    //                 localStorage.removeItem('code');
-                    //                 localStorage.removeItem('state');
-                    //                 this.$store.dispatch('LOGININ', res);
-                    //                 localStorage.setItem('LOGININ', JSON.stringify(res))
-                    //                 this.$store.dispatch('SETUP', false)
-                    //                 this.$Message.success('登录成功');
-                    //             }
-                    //         });
-                    //         clearInterval(interId);
-                    //     }
-                    // }, 200)
                 })
             },
             // 打开登录窗口 type 1 qq登录 2 微信登录

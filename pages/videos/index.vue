@@ -51,7 +51,7 @@
             })
             return {
                 data,
-                videoList: data.retModels,
+                videoList: data.retModels||[],
                 total: data.paginationData ? data.paginationData.total : 0
             }
         },
