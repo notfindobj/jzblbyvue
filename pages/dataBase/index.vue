@@ -34,7 +34,7 @@
     import { getBaseData, getUserProAndFans, setFollow, setCollection } from '../../service/clientAPI'
     import { mapGetters } from 'vuex'
     import { setDemo } from '../../LocalAPI'
-    import { _throttle ,scrollToTop} from '../../plugins/untils/public'
+    import { _throttle ,scrollToTop, analogJump} from '../../plugins/untils/public'
     export default {
         middleware: 'authenticated',
         head() {
@@ -293,8 +293,7 @@
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
                 let routeData = this.$router.resolve({ name: 'DataDetails-id', query: { id: item.ItemId } });
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
             },
             // 获取项目和粉丝量
             async showWorks(user) {

@@ -80,7 +80,7 @@
     import { mapGetters ,mapState} from 'vuex'
     import { setDemo } from '../../LocalAPI'
     import { async } from 'q';
-
+    import { analogJump } from '../../plugins/untils/public'
     export default {
         name: 'datadetail',
         middleware: 'authenticated',
@@ -245,8 +245,7 @@
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 // this.$router.push({ name: "dataBase"});
                 let routeData = this.$router.resolve({ name: 'dataBase'});
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
                 
             },
             initLazy() {

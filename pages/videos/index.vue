@@ -49,10 +49,16 @@
                 TalkType: 2,
                 Page: 0
             })
-            return {
-                data,
-                videoList: data.retModels||[],
-                total: data.paginationData ? data.paginationData.total : 0
+            if (data) {
+                return {
+                    videoList: data.retModels || [],
+                    total: data.paginationData ? data.paginationData.total : 0
+                }
+            } else {
+                return {
+                    videoList:[],
+                    total: 0
+                }
             }
         },
         methods: {

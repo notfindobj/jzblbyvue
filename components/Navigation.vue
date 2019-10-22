@@ -85,7 +85,7 @@
             </ul>
             <!-- <div class="main-nav-publish" @click="publish">发布</div> -->
         </div>
-        <signPage></signPage>
+        <signPage />
     </div>
 </template>
 <script>
@@ -94,6 +94,7 @@
     import { getMenu } from '../service/clientAPI'
     import { mapState, mapGetters } from 'vuex'
     import { logout, setDemo} from '../LocalAPI'
+    import {analogJump } from '../plugins/untils/public'
     export default {
         data() {
             return {
@@ -239,8 +240,7 @@
             },
             publish() {
                 let routeData = this.$router.resolve({ name: "publish-imageText" });
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
             },
             goAttention() {
                 this.$router.push({ path: "/attention" })
@@ -267,8 +267,7 @@
                     return false
                 }
                 let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
             },
             // searchPage
             goAboutUs() {

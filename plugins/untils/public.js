@@ -103,3 +103,15 @@ export function scrollToTop() {
         }
     })();
 }
+export function analogJump (href) {
+    let hta = document.createElement('a');
+    hta.setAttribute('href', href);
+    hta.setAttribute('target', '_blank');
+    hta.setAttribute('id', 'startTelMedicine');
+    // 防止反复添加
+    if(document.getElementById('startTelMedicine')) {
+        document.body.removeChild(document.getElementById('startTelMedicine'));
+    }
+    document.body.appendChild(hta);
+    hta.click();
+}

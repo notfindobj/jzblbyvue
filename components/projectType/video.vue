@@ -91,6 +91,7 @@
 <script>
   import share from '../share'
   import Comment from '../video/comment'
+  import { analogJump } from '../../plugins/untils/public'
   import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow, delComment} from '../../service/clientAPI'
   export default {
     props: {
@@ -128,8 +129,7 @@
               name: 'videoDetails-id',
               params: {id: row.ItemId }
           })
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       async delComments (row) {
         let msg = await delComment(row.CommentsId)
@@ -164,8 +164,7 @@
       // 跳转部落
       goToPersonal (row) {
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       // 关注
       async worksFocus(item) {

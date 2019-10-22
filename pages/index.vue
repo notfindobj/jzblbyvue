@@ -299,6 +299,7 @@
 <script>
   import LevelMenu from '../components/home/LevelMenu'
   import {setDemo} from '../LocalAPI'
+  import { analogJump } from '../plugins/untils/public'
   import { mapGetters} from 'vuex'
   export default {
     head: {
@@ -338,13 +339,14 @@
         }
     },
     computed: {
+         // 判断是否是最后一页数据
         ...mapGetters(['isLogin']),
-        // 判断是否是最后一页数据
     },
     components: {
         LevelMenu
     },
     async asyncData({ app, store }) {
+        let [menuData, homeData] = await Promise.all([store.dispatch('getMenu'), store.dispatch('getHomeData')]);
         let sfq = {};
         let lps = {};
         let xgts = {};
@@ -352,7 +354,6 @@
         let zts = {};
         let pms = {};
         let webs = {};
-        let menuData = await store.dispatch('getMenu');
         menuData.RetMenuData.forEach(element => {
             if (element.ItemAttributesFullName === '示范区') {
                 sfq = element
@@ -376,7 +377,6 @@
                 webs = element
             }
         });
-        let homeData = await store.dispatch('getHomeData');
         return {
             sfq,
             lps,
@@ -435,8 +435,7 @@
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({ name: 'dataBase'});
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         },
         async viewItem(row, item, val) {
             if (!this.isLogin) {
@@ -472,8 +471,7 @@
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         },
         // 路由跳转
         jumpRoute(items) {

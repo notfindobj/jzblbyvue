@@ -14,9 +14,6 @@ module.exports = {
       { name: 'renderer', content: 'webkit' },
       { hid: 'description', name: 'description', content: '建筑部落' }
     ],
-    link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
-    ],
     script: [
       { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
       { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
@@ -41,7 +38,6 @@ module.exports = {
   plugins: [
     { src: '~plugins/my-theme/index', ssr: true },
     { src: "~plugins/vue-swiper.js", ssr: false },
-    // { src: "~plugins/jquery.lazyload.min.js", ssr: false },
     { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],

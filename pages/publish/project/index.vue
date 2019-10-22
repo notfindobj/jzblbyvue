@@ -25,69 +25,66 @@
                         <Button v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
                         <Button v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName, item.ItemSubAttributeCode)" >{{ item.ItemAttributesFullName }} </Button>
                     </i>
-                    <div class="attr-box" v-show="attrList">
-                        <div class="attr-select-item" v-for="(item, index) in queryAttrList" v-if="item.ItemAttributesFullName !== '[文件上传]' && item.ItemAttributesFullName !== '[PDF文件上传]'" :key="item.ItemAttributesId+index" >
-                            <span v-if="item.ItemAttributesFullName !== '[文件上传]' && item.ItemAttributesFullName !== '[PDF文件上传]'" >
-                                {{ item.ItemAttributesFullName }}
-                            </span>
-                            <Select v-if="item.ItemAttributesFullName !== '[文件上传]' && item.ItemAttributesFullName !== '[PDF文件上传]'" v-model="item.ItemSubAttributeId" style="width:220px" >
-                                <Option v-for="subItem in item.ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId" >
-                                    {{ subItem.ItemAttributesFullName }}
-                                </Option>
-                            </Select>
-                        </div>
-                        <div class="attr-select-item attr-upload-item" v-for="item in queryAttrList" v-if="item.ItemAttributesFullName === '[文件上传]' || item.ItemAttributesFullName === '[PDF文件上传]'" :key="item.ItemAttributesId+'select'" >
-                            <span v-if="item.ItemAttributesFullName === '[文件上传]'" style="vertical-align: top;" >
-                                文件上传
-                            </span>
-                            <span v-if="item.ItemAttributesFullName === '[PDF文件上传]'" style="vertical-align: top;" >
-                                PDF上传
-                            </span>
-                            <Upload
-                                ref="uploadFile"
-                                v-if="item.ItemAttributesFullName === '[文件上传]'"
-                                :action="baseUrl + 'Upload/DataUpload?uploadType=6'"
-                                  :headers="{
-                                    Authorization: token
-                                  }"
-                                  :format="['zip', 'rar']"
-                                  :max-size="102400"
-                                  :on-format-error="handleFormatError"
+                    <div class="attr-box" v-show="queryAttrList.length > 0">
+                      <template  v-for="(item, index) in queryAttrList" >
+                          <div class="attr-select-item" v-if="item.ValueSource ==='SingleSel'" :key="item.ItemAttributesId+index" >
+                              <span >
+                                  {{ item.ItemAttributesFullName }}
+                              </span>
+                              <Select v-model="item.ItemSubAttributeId" style="width:220px" >
+                                  <Option v-for="subItem in item.ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId" >
+                                      {{ subItem.ItemAttributesFullName }}
+                                  </Option>
+                              </Select>
+                          </div>
+                          <div class="attr-select-item attr-upload-item" v-if="item.ValueSource === 'FileUpload' || item.ValueSource === 'PDFFileUpload'" :key="item.ItemAttributesId+'select'" >
+                              <span style="vertical-align: top;" >
+                                  {{ item.ItemAttributesFullName }}
+                              </span>
+                              <Upload
+                                  ref="uploadFile"
+                                  v-if="item.ValueSource === 'FileUpload'"
+                                  :action="baseUrl + 'Upload/DataUpload?uploadType=6'"
+                                    :headers="{
+                                      Authorization: token
+                                    }"
+                                    :format="['zip', 'rar']"
+                                    :max-size="102400"
+                                    :on-format-error="handleFormatError"
+                                    :before-upload="clearUpload"
+                                    :on-success="uploadSuccess"
+                                    :on-remove="removeFile"
+                                    :on-exceeded-size="handleMaxSize"
+                                    style="display: inline-block;"
+                                >
+                                  <Button icon="ios-cloud-upload-outline" >上传文件</Button>
+                              </Upload>
+                              <Upload
+                                  ref="uploadFile"
+                                  v-if="item.ValueSource === 'PDFFileUpload'"
+                                  :action="baseUrl + 'Upload/DataUpload?uploadType=4'"
+                                  :headers="{ Authorization: token }"
+                                  accept=".pdf"
                                   :before-upload="clearUpload"
                                   :on-success="uploadSuccess"
                                   :on-remove="removeFile"
-                                  :on-exceeded-size="handleMaxSize"
-                                 
-                                  style="display: inline-block;"
-                              >
-                                <Button icon="ios-cloud-upload-outline" >上传文件</Button>
-                            </Upload>
-                            <Upload
-                                ref="uploadFile"
-                                v-if="item.ItemAttributesFullName === '[PDF文件上传]'"
-                                :action="baseUrl + 'Upload/DataUpload?uploadType=4'"
-                                :headers="{ Authorization: token }"
-                                accept=".pdf"
-                                :before-upload="clearUpload"
-                                :on-success="uploadSuccess"
-                                :on-remove="removeFile"
-                                style="display: inline-block;"
-                            >
+                                  style="display: inline-block;">
                                 <Button icon="ios-cloud-upload-outline" >上传PDF文件</Button>
-                            </Upload>
-                        </div>
-                        <div class="attr-select-item attr-upload-item" v-for="(item, index) in queryAttrList" v-if="item.ItemAttributesFullName === '[文件上传]'" :key="index+'vertical'" >
+                              </Upload>
+                          </div>
+                          <div class="attr-select-item attr-upload-item" v-if="item.ValueSource === 'FileUpload'" :key="index+'vertical'" >
                              <span style="vertical-align: top;">
                                 收取费用
                             </span>
                             <Input v-model="price" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 230px;" />
                             <span style="width: 20px;">元</span>
                         </div>
+                      </template>
                     </div>
                 </FormItem>
-                <FormItem label="定制服务" class="make-service">
+                <FormItem label="定制服务" class="make-service" v-show="this.serviceList.length > 0">
                     <Tag type="border"  closable color="error" v-for="(item, index) in serviceSelectList" :key="index+item.serviceId" style="margin-right: 10px;" @on-close="handleClose(item,index)" @click.native="updateService(index)">{{ item.name }}</Tag>
-                    <span class="add-service-btn" @click="addService" v-show="this.serviceList.length > 0">
+                    <span class="add-service-btn" @click="addService">
                         <Icon type="md-add" size="12"/>
                         添加定制服务
                     </span>
@@ -157,7 +154,7 @@
   import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
   import { mapGetters } from 'vuex'
   import {setDemo} from '../../../LocalAPI'
-  import { _debounce } from '../../../plugins/untils/public'
+  import { _debounce, analogJump } from '../../../plugins/untils/public'
   import {regText, validateNum, validatePassCheck} from '../../../plugins/untils/Verify'
   import { async } from 'q';
   export default {
@@ -192,13 +189,13 @@
             { required: true, message: ' ', trigger: 'blur' }
           ]
         },
-        serviceValidate: {
+        serviceValidate: {// 定制服务
           serviceId: '',
           money: '',
           mobile: '',
           desc: ''
         },
-        rulesValidate: {
+        rulesValidate: {// 定制服务rules
           money: [
             {required: true, validator: validateNum, trigger: 'blur' }
           ],
@@ -210,7 +207,7 @@
           ]
         },
         spinShow: false,
-        serviceList: [],
+        serviceList: [], // 定制服务类型
         editorOption: {
           modules: {
             toolbar: {
@@ -266,8 +263,7 @@
       ViewProtocol (row) {
         this.$store.dispatch('SETUP', false)
         let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       handleMaxSize (file) {
         this.$Notice.warning({
@@ -344,7 +340,6 @@
         this.serviceValidate = temporaryObj;
         this.isUpdateService = true;
         this.serviceModal = true;
-
       },
 
       // 选择图片
@@ -495,7 +490,7 @@
 
           let attributesList = [];
           for (let i in this.queryAttrList) {
-            if (this.queryAttrList[i].ItemAttributesFullName === '[文件上传]' || this.queryAttrList[i].ItemAttributesFullName === '[PDF文件上传]') {
+            if (this.queryAttrList[i].ValueSource === 'FileUpload' || this.queryAttrList[i].ValueSource === 'PDFFileUpload') {
               continue;
             }
             if (this.queryAttrList[i].ItemSubAttributeId) {

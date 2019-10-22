@@ -86,7 +86,8 @@
 </template>
 
 <script>
-  export default {
+import { analogJump } from '../../../plugins/untils/public'
+export default {
     name: 'HeAndIIntroduction',
     props: {
       userInfo: {
@@ -104,8 +105,7 @@
     methods: {
         enterCenter () {
             let routeData = this.$router.resolve({ name: 'PersonalCenter-myMessage-userId', params: { userId: this.userInfo.UserId} });
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         },
         change(inx, count) {
             this.currentIndex = inx;
@@ -118,8 +118,7 @@
                 return false;
             }
             let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         },
         seeMore () {
             this.$emit('seeMore')

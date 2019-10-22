@@ -331,6 +331,7 @@
         delUserExpertise
     } from '../../../service/clientAPI'
     import { setHearImg } from '../../../LocalAPI'
+    import { analogJump } from '../../../plugins/untils/public'
     import { mapState, mapGetters} from 'vuex'
 
     export default {
@@ -491,8 +492,7 @@
             },
             goToPersonal (row) {
                 let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: this.userId} });
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
             },
             // 上传头像
             async upHeaderImg(event) {

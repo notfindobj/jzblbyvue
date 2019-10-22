@@ -72,6 +72,7 @@
 </template>
 <script> 
 import {setFollow, delQueryData} from '../../service/clientAPI'
+import { analogJump } from '../../plugins/untils/public'
 export default {
     layout: 'main',
     middleware: 'authenticated',
@@ -178,8 +179,7 @@ export default {
                 return false;
             }
             let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: { id: items.UserId } });
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         },
     }
 }

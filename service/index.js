@@ -32,7 +32,7 @@ service.interceptors.response.use(
       } else if (res.data.Code === 500) {
         return {statusCode: 500, message: 'You need back to login again'}
       } else if (res.data.Code === 101) {
-        return {statusCode: 500, message: 'You need back '+res.data.Code}
+        // $router.push({name: "index"})
       }
     }
     // 客户端
@@ -47,11 +47,10 @@ service.interceptors.response.use(
       }else if (res.data.Code === 101) {
           $store.dispatch('LOGININ', null);
           sessionStorage.removeItem("LOGININ");
-          delCookie("adminToken")
-          if (window.location.href !== "http://jzbl.com/") {
-            window.location.href="http://jzbl.com"
-          } else {
-            Message.warning(res.data.Msg);
+          delCookie("adminToken");
+          Message.warning(res.data.Msg);
+          if (window.location.href !== "https://www.jzbl.com/") {
+            window.location.href="https://www.jzbl.com"
           }
       } else {
         Message.warning(res.data.Msg);
@@ -78,7 +77,6 @@ function delCookie(name){
 }
 export default {
   post (url, data) {
-    console.log('post request url', url)
     let tooken = '';
     if (process.server) {
       if ($store.state.overas.auth) {
@@ -101,7 +99,6 @@ export default {
   },
 
   postFile (url, data) {
-    console.log('post request url', url)
     let tooken = '';
     if (process.server) {
       if ($store.state.overas.auth) {
@@ -125,7 +122,6 @@ export default {
   },
 
   get (url, data) {
-    console.log('get request url', url)
     let tooken = '';
     if (process.server) {
       if ($store.state.overas.auth) {
@@ -147,7 +143,6 @@ export default {
     })
   },
   delete (url, data) {
-    console.log('delete request url', url)
     return service({
       methods: 'delete',
       url,

@@ -60,8 +60,9 @@
     </div>
 </template>
 <script>
-  import { mapState, mapGetters } from 'vuex'
-  import { logout, setDemo} from '../LocalAPI'
+import { mapState, mapGetters } from 'vuex'
+import { logout, setDemo} from '../LocalAPI'
+import {analogJump } from '../plugins/untils/public'
   export default {
     data() {
       return {
@@ -150,8 +151,7 @@
         },
         goSearchPage () {
             let routeData = this.$router.resolve({ name: 'searchPage', query: { id: this.searchpage } });
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         },
         async signOut() {
             let msg = await logout();

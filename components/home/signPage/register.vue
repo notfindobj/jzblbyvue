@@ -38,7 +38,7 @@
 </template>
 <script>
   import { getMobileCode, registerUser } from '../../../service/clientAPI'
-
+  import {analogJump } from '../../../plugins/untils/public'
   export default {
     data() {
       return {
@@ -72,8 +72,7 @@
       ViewProtocol (row) {
         this.$store.dispatch('SETUP', false)
         let routeData = this.$router.resolve({ name: 'other-id', params: { id: "32a258cf-ce5a-4fef-b301-0a9d37c02e22"} });
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       // 获取验证码
       async getMobile() {

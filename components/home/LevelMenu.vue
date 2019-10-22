@@ -34,7 +34,7 @@
     </div>
 </template>
 <script>
-    import { _debounce } from '../../plugins/untils/public'
+    import { _debounce, analogJump } from '../../plugins/untils/public'
     import { mapGetters, mapState } from 'vuex'
     import { setDemo } from '../../LocalAPI'
     export default { 
@@ -100,8 +100,7 @@
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 let routeData = this.$router.resolve({ name: 'dataBase'});
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
             },
             // 点击一级分类
             async goList(cate) {
@@ -137,8 +136,7 @@
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 let routeData = this.$router.resolve({ name: 'dataBase'});
-                let templateWin = window.open('about:blank')
-                templateWin.location.href = routeData.href;
+                analogJump(routeData.href);
             }
         }
     }

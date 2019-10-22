@@ -92,7 +92,7 @@
 <script>
   import Upload from '../../../components/publish/upload'
   import draggable from 'vuedraggable'
-  import { _debounce } from '../../../plugins/untils/public'
+  import { _debounce, analogJump } from '../../../plugins/untils/public'
   import { getQALabel, addLabel, releaseStatement } from '../../../service/clientAPI'
 
   export default {
@@ -155,8 +155,7 @@
       ViewProtocol (row) {
         this.$store.dispatch('SETUP', false)
         let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       onEditorChange(e) {
         this.formValidate.content = e.html;

@@ -107,7 +107,7 @@
   import 'viewerjs/dist/viewer.css';
   import Comment from '../video/comment'
   import share from '../share'
-  import {getRanNum} from '../../plugins/untils/public'
+  import {getRanNum, analogJump} from '../../plugins/untils/public'
   import {setDemo} from '../../LocalAPI'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment} from '../../service/clientAPI'
   var name = getRanNum(5)
@@ -185,8 +185,7 @@
               name: 'pictureDetails-id',
               params: {id: row.ItemId }
           })
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       async goDetail(row) {
         if (row.TalkType === 3) {
@@ -194,8 +193,7 @@
               name: 'QuestionsAndAnswers-id',
               params: {id: row.ItemId }
           })
-          let templateWin = window.open('about:blank')
-          templateWin.location.href = routeData.href;
+          analogJump(routeData.href);
         }
         if (row.TalkType === 4) {
            // 搜索页导航数据
@@ -238,8 +236,7 @@
                 name: 'DataDetails-id',
                 query: {id: row.ItemId }
             })
-            let templateWin = window.open('about:blank')
-            templateWin.location.href = routeData.href;
+            analogJump(routeData.href);
         }
       },
       moveLeftClick(val) {
@@ -337,8 +334,7 @@
       // 跳转部落
       goToPersonal (row) {
         let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
-        let templateWin = window.open('about:blank')
-        templateWin.location.href = routeData.href;
+        analogJump(routeData.href);
       },
       // 关注
       async worksFocus(item) {
