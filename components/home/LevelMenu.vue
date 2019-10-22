@@ -104,7 +104,6 @@
             },
             // 点击一级分类
             async goList(cate) {
-                debugger
                 if (!this.isLogin) {
                     this.$store.dispatch('SETUP', true);
                     this.$store.dispatch('LOGGEDIN', 'signIn');
