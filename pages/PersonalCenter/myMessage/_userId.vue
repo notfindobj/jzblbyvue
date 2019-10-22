@@ -418,7 +418,6 @@
             async getCareerTyepList () {
                 let msg = await getCareerTyepInfo(this.Identity.UserId);
                 if (msg) {
-                    debugger
                     if (this.EntCode === 2) {
                         this.careerTyep = msg.DelCareers || [];
                     } else {

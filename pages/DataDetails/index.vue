@@ -79,7 +79,6 @@
     import weixinBox from '../../components/weixin'
     import { mapGetters ,mapState} from 'vuex'
     import { setDemo } from '../../LocalAPI'
-    import { async } from 'q';
     import { analogJump } from '../../plugins/untils/public'
     export default {
         name: 'datadetail',
@@ -131,16 +130,17 @@
             }),
         },
         async asyncData({ app, store, route }) {
-            let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
-            let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
             // 项目数据
             let itemData = {
-                reqItemList: {
-                    ClassTypeArrList: baseSearchNav.ClassTypeArrList,
-                    Pagination: baseSearchItem.Pagination,
-                },
-                Id: baseSearchNav.Id
+                reqItemList: {},
+                Id: route.query.id
             }
+            try {
+                let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
+                let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
+                itemData.reqItemList.ClassTypeArrList = baseSearchNav.ClassTypeArrList
+                itemData.reqItemList.Pagination = baseSearchItem.Pagination
+            } catch (error) {}
             let getBaseDataDetail = await store.dispatch('getBaseDataDetails', itemData);
             // 根据项目详情请求评论信息
             let Comment = {
@@ -153,7 +153,6 @@
                 NextItemId: getBaseDataDetail.NextItemId,
             }
             return {
-                itemData,
                 getBaseDataDetail,
                 PdfInfo: getBaseDataDetail.PdfInfo,
                 detaDetails: getBaseDataDetail.ItemEntity,
@@ -164,18 +163,11 @@
             }
         },
         created() {
-            try {
-                let showLayout = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
-                if (showLayout.title === '文本') {
-                    this.isLayout = false
-                } else if (showLayout.showLayout === 'false') {
-                    this.isLayout = false
-                } else if (showLayout.showLayout === 'true') {
-                    this.isLayout =  true
-                } else {
-                    this.isLayout = showLayout.showLayout
-                }
-            } catch (error) {}
+            if (this.$route.query.layout === 'false') {
+                this.isLayout = false
+            } else if (this.$route.query.layout === 'true') {
+                this.isLayout =  true
+            }
         },
         mounted() {
             let _this = this;
@@ -217,8 +209,8 @@
                     }
                     this.$store.dispatch('Serverstorage', baseSearch);
                     let msgs = await setDemo('baseSearchNav', baseSearch);
-                    this.$router.push({ name: "DataDetails-id", query: { id: val } })
-                    location.reload()
+                    let routeData = this.$router.resolve({ name: "DataDetails", query: { id: val, layout: this.isLayout} });
+                    window.location.href = routeData.href;
                 } catch (error) {}
             },
             async clickCate(index) {
@@ -243,7 +235,6 @@
                 }
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
                 this.$store.dispatch('Serverstorage', baseSearchNav);
-                // this.$router.push({ name: "dataBase"});
                 let routeData = this.$router.resolve({ name: 'dataBase'});
                 analogJump(routeData.href);
                 

@@ -278,12 +278,12 @@
             },
             // 查看详情
             async viewItem(item) {
+                let layout = null
                 let baseSearch = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
-                baseSearch.Id = item.ItemId
                 if (baseSearch.title === '文本' || baseSearch.title === '建筑规范') {
-                    baseSearch.showLayout = false
+                    layout = false
                 } else {
-                    baseSearch.showLayout = this.showLayout;
+                    layout = this.showLayout;
                 }
                 // 搜索页导航数据
                 let baseSearchNav = {
@@ -292,7 +292,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
-                let routeData = this.$router.resolve({ name: 'DataDetails-id', query: { id: item.ItemId } });
+                let routeData = this.$router.resolve({ name: 'DataDetails', query: { id: item.ItemId , layout: layout } });
                 analogJump(routeData.href);
             },
             // 获取项目和粉丝量

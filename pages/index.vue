@@ -339,7 +339,6 @@
         }
     },
     computed: {
-         // 判断是否是最后一页数据
         ...mapGetters(['isLogin']),
     },
     components: {
@@ -448,9 +447,7 @@
                 key: 'baseSearchNav',
                 value: {
                     ClassTypeArrList: [{AttrKey: row.ItemAttributesId, AttrValue: row.ItemSubAttributeCode}],
-                    title: row.ItemAttributesFullName,
-                    Id: item.ItemId,
-                    showLayout: val === 'jzList' || val === 'wbList' ? false: true
+                    title: row.ItemAttributesFullName
                 }
             }
             this.$store.dispatch('Serverstorage', baseSearchNav);
@@ -470,7 +467,7 @@
             }
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
-            let routeData = this.$router.resolve({ name: 'DataDetails-id', query: {id: item.ItemId}});
+            let routeData = this.$router.resolve({ name: 'DataDetails', query: {id: item.ItemId, layout: val === 'jzList' || val === 'wbList' ? false: true}});
             analogJump(routeData.href);
         },
         // 路由跳转

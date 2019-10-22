@@ -207,12 +207,9 @@
                 key: 'baseSearchNav',
                 value: {
                     ClassTypeArrList: [{
-                     AttrKey: row.ItemAttributesEntities[0].ItemAttributesId,
-                     AttrValue: row.ItemAttributesEntities[0].ItemSubAttributeId  
-                    }],
-                    title: row.TypeName,
-                    Id: row.ItemId,
-                    showLayout: showLayout
+                      AttrKey: row.ItemAttributesEntities[0].ItemAttributesId,
+                      AttrValue: row.ItemAttributesEntities[0].ItemSubAttributeId  
+                    }]
                 }
             }
             this.$store.dispatch('Serverstorage', baseSearchNav);
@@ -233,8 +230,8 @@
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({
-                name: 'DataDetails-id',
-                query: {id: row.ItemId }
+                name: 'DataDetails',
+                query: {id: row.ItemId, layout: showLayout }
             })
             analogJump(routeData.href);
         }

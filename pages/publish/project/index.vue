@@ -607,10 +607,7 @@
             let baseSearchNav = {
                 key: 'baseSearchNav',
                 value: {
-                    ClassTypeArrList: [{AttrKey: res.TypeId, AttrValue: this.typyString }],
-                    title: this.typeName,
-                    Id: res.ItemId,
-                    showLayout: this.showLayout
+                    ClassTypeArrList: [{AttrKey: res.TypeId, AttrValue: this.typyString }]
                 }
             }
             this.$store.dispatch('Serverstorage', baseSearchNav);
@@ -630,7 +627,8 @@
             }
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
-            this.$router.push({name: "DataDetails-id", query: {id: res.ItemId}})
+            let routeData = this.$router.resolve({ name: 'DataDetails', query: { id: res.ItemId , layout: this.showLayout } });
+            analogJump(routeData.href);
           }
         })
       }
