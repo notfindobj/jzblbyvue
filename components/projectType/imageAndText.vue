@@ -71,7 +71,7 @@
                     </span>
                 </div>
                 <div class="foot-child">
-                    <span @click="textShare">
+                    <span @click="textShare(itemInfo)">
                         <i class="icon iconfont">&#xe6be;</i>
                         <span>{{ itemInfo.itemOperateData.ShareCount}}</span>
                     </span>
@@ -349,8 +349,9 @@
         this.$emit('clickCollection', this.index, flag)
       },
       // 转发
-      textShare () {
-        this.configModal.isModal = true
+      textShare (row) {
+        this.configModal.href = row.ItemId;
+        this.configModal.isModal = true;
       },
       // 赞
       clickLike(flag) {

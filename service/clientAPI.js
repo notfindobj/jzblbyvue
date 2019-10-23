@@ -273,3 +273,7 @@ export const delareerTyepInfo = async params => {
 export const getFundAccount = async params => {
   return await request.post(`Account/FundAccount`, params)
 }
+//发布导航
+export const getDataByTypeId = async params => {
+  return await request.post(`Menu/GetDataByTypeId`, params)
+}

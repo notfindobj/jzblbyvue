@@ -17,20 +17,20 @@ export default {
         }
     },
     data () {
-        return {
-            modal3: true
-        }
+        return {}
+    },
+    updated () {
+        this.qrcode()
     },
     mounted () {
         this.qrcode()
     },
     methods: {
         qrcode () {
-            
             let qrcode = new QRCode('qrcode', {  
                 width: 200,  
                 height: 200, // 高度  [图片上传失败...(image-9ad77b-1525851843730)]
-                text: window.location.href+ "&share=true", // 二维码内容  
+                text: this.config.href+ "&share=true", // 二维码内容  
                 render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）  
                 // background: '#f0f'  
                 // foreground: '#ff0'  

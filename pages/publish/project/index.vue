@@ -21,12 +21,12 @@
                     <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input"></Input>
                 </FormItem>
                 <FormItem label="类型选择" class="type-select" prop="typeId">
-                    <i v-for="item in menu.RetMenuData" :key="'typeId'+item.ItemAttributesId" >
-                        <Button v-if="formValidate.typeId === item.ItemAttributesId" type="primary" >{{ item.ItemAttributesFullName }} </Button>
-                        <Button v-else @click="clickType(item.ItemAttributesId, item.ItemAttributesFullName, item.ItemSubAttributeCode)" >{{ item.ItemAttributesFullName }} </Button>
+                    <i v-for="(item) in menu" :key="'typeId'+item.value">
+                        <Button v-if="formValidate.typeId === item.value" type="primary" >{{ item.text }} </Button>
+                        <Button v-else @click="clickType(item.value, item.text, 'DesignLib')" >{{ item.text }} </Button>
                     </i>
                     <div class="attr-box" v-show="queryAttrList.length > 0">
-                      <template  v-for="(item, index) in queryAttrList" >
+                      <template v-for="(item, index) in queryAttrList" >
                           <div class="attr-select-item" v-if="item.ValueSource ==='SingleSel'" :key="item.ItemAttributesId+index" >
                               <span >
                                   {{ item.ItemAttributesFullName }}
@@ -81,6 +81,20 @@
                         </div>
                       </template>
                     </div>
+                    <template v-for="(item, index) in queryAttrList" >
+                      <div v-show="item.ValueSource ==='MapLinkage'" :key="index">
+                        <Select size="small" v-model="mitCode" style="width:95px" @on-change="onOneChange">
+                            <Option v-for="(items, index) in mitPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                        </Select>
+                        <Select size="small" v-model="cityCode" @on-change="onTwoChange" style="width:95px">
+                            <Option v-for="(items, index) in cityPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                        </Select>
+                        <Select size="small" v-model="item.ItemSubAttributeId"  style="width:95px" @on-change="onThrChange">
+                            <Option v-for="(items, index) in areaPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                        </Select>
+                      </div>
+                    </template>
+                    <div id="container" v-show="isMap" ref="container"></div>
                 </FormItem>
                 <FormItem label="定制服务" class="make-service" v-show="this.serviceList.length > 0">
                     <Tag type="border"  closable color="error" v-for="(item, index) in serviceSelectList" :key="index+item.serviceId" style="margin-right: 10px;" @on-close="handleClose(item,index)" @click.native="updateService(index)">{{ item.name }}</Tag>
@@ -151,7 +165,7 @@
     </div>
 </template>
 <script>
-  import { getCustomizeService, getMenu, getProjectType, publishProject, uploadFile } from '../../../service/clientAPI'
+  import { getCustomizeService, getDataByTypeId, getProjectType, publishProject, uploadFile, getProvinceList} from '../../../service/clientAPI'
   import { mapGetters } from 'vuex'
   import {setDemo} from '../../../LocalAPI'
   import { _debounce, analogJump } from '../../../plugins/untils/public'
@@ -242,7 +256,15 @@
         serviceName: '',
         isUpdateService: false, // 是否是更新定制服务,
         showLayout: true,
-        typyString: ''
+        typyString: '',
+        mitPro: [], // 省
+        mitCode: "",
+        cityPro: [], // 市
+        cityCode: "",
+        areaPro: [], // 区
+        areaCode: "",
+        aMap: {},
+        isMap: false
       }
     },
     computed: {
@@ -257,9 +279,67 @@
       }
     },
     mounted() {
-      this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
+      this.initMap();
+      this.getCityList()
+      this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token;
     },
     methods: {
+      initMap () {
+        let _this = this;
+        _this.aMap = new AMap.Map('container', {
+          center: [116.397428, 39.90923],//中心点坐标
+          zoom: 11
+        });
+        this.showCityInfo()
+      },
+      showCityInfo() {
+          let _this = this;
+        //实例化城市查询类
+          let citysearch = new AMap.CitySearch();
+          //自动获取用户IP，返回当前城市
+          citysearch.getLocalCity(function(status, result) {
+            if (status === 'complete' && result.info === 'OK') {
+                if (result && result.city && result.bounds) {
+                    _this.mitCode = result.adcode
+                    //地图显示当前城市
+                    // _this.aMap.setBounds(result.bounds);
+                    _this.onOneChange(result.adcode)
+                }
+            }
+        });
+      },
+      onThrChange (code) {
+        this.aMap.setCity(code)
+      },
+      async onTwoChange (code) {
+          let queryData = {
+              ProvinceCode: code
+          }
+          this.aMap.setCity(code)
+          let msg = await getProvinceList(queryData);
+          if (msg) {
+              this.areaPro = msg.respProvince;
+          }
+      },
+      onOneChange (code) {
+        this.cityCode = "";
+        this.areaCode= "";
+        this.aMap.setCity(code)
+        this.getCityList(code)
+      },
+      async getCityList (id = '') {
+          let queryData = {
+              ProvinceCode: id
+          }
+          let msg = await getProvinceList(queryData);
+          if (msg) {
+              if (id) {
+                  this.cityPro = msg.respProvince;
+              } else {
+                  this.mitPro = msg.respProvince;
+              }
+          }
+      },
       ViewProtocol (row) {
         this.$store.dispatch('SETUP', false)
         let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
@@ -301,25 +381,21 @@
           desc: file.name + '格式错误，请选择zip或者rar文件'
         });
       },
-
       // 输入内容
       onEditorChange(e) {
         this.formValidate.content = e.html;
       },
-
       // 添加定制服务
       addService() {
         this.serviceValidate.serviceId = this.serviceList[0].ItemDetailId;
         this.serviceName = this.serviceList[0].ItemValue;
         this.serviceModal = true;
       },
-
       // 选择定制服务
       selectSerice(id, name) {
         this.$set(this.serviceValidate, 'serviceId', id);
         this.serviceName = name;
       },
-
       // 取消定制服务
       cancelService() {
         this.serviceModal = false;
@@ -373,13 +449,20 @@
           })
         }
       },
-
       // 选择类型
       clickType(id, name, type) {
+        let that = this;
         this.typeFile = null; // 清空已上传内容
         this.typyString = type;
         this.serviceSelectList = [];
         getProjectType(id).then(res => {
+          let isP = true
+          res.forEach(ele => {
+            if (ele.ValueSource === "MapLinkage") {
+              isP = false
+            }
+          })
+          isP ? that.isMap = false: that.isMap = true
           this.queryAttrList = res;
           this.formValidate.typeId = id;
           this.typeName = name;
@@ -633,9 +716,8 @@
         })
       }
     },
-
     async asyncData() {
-      const data = await getMenu();
+      const data = await getDataByTypeId();
       return {
         menu: data
       }
@@ -644,6 +726,7 @@
 </script>
 
 <style lang="less" scoped>
+    #container {width:400px; height: 200px; }  
     @import "~assets/css/publish/index.less";
     .content {
         padding-left: 10px;
