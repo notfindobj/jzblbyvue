@@ -78,23 +78,24 @@
                             </span>
                             <Input v-model="price" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 230px;" />
                             <span style="width: 20px;">元</span>
-                        </div>
+                          </div>
+                          <div class="attr-select-item attr-upload-item" v-if="item.ValueSource === 'MapLinkage'" :key="index+'vertical'" >
+                             <span style="vertical-align: top;">项目地址</span>
+                            <Select size="small" v-model="mitCode" style="width:95px" @on-change="onOneChange">
+                                <Option v-for="(items, index) in mitPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                            </Select>
+                            <Select size="small" v-model="item.cityCode" @on-change="onTwoChange" style="width:95px">
+                                <Option v-for="(items, index) in cityPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                            </Select>
+                            <Select size="small" v-model="item.ItemSubAttributeId"  style="width:95px" @on-change="onThrChange">
+                                <Option v-for="(items, index) in areaPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                            </Select>
+                          </div>
                       </template>
                     </div>
-                    <template v-for="(item, index) in queryAttrList" >
-                      <div v-show="item.ValueSource ==='MapLinkage'" :key="index">
-                        <Select size="small" v-model="mitCode" style="width:95px" @on-change="onOneChange">
-                            <Option v-for="(items, index) in mitPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
-                        </Select>
-                        <Select size="small" v-model="cityCode" @on-change="onTwoChange" style="width:95px">
-                            <Option v-for="(items, index) in cityPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
-                        </Select>
-                        <Select size="small" v-model="item.ItemSubAttributeId"  style="width:95px" @on-change="onThrChange">
-                            <Option v-for="(items, index) in areaPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
-                        </Select>
-                      </div>
-                    </template>
-                    <div id="container" v-show="isMap" ref="container"></div>
+                    <div class="attr-map-box">
+                        <div id="container" v-show="isMap" ref="container"></div>
+                    </div>
                 </FormItem>
                 <FormItem label="定制服务" class="make-service" v-show="this.serviceList.length > 0">
                     <Tag type="border"  closable color="error" v-for="(item, index) in serviceSelectList" :key="index+item.serviceId" style="margin-right: 10px;" @on-close="handleClose(item,index)" @click.native="updateService(index)">{{ item.name }}</Tag>
@@ -302,7 +303,7 @@
                 if (result && result.city && result.bounds) {
                     _this.mitCode = result.adcode
                     //地图显示当前城市
-                    // _this.aMap.setBounds(result.bounds);
+                    _this.aMap.setBounds(result.bounds);
                     _this.onOneChange(result.adcode)
                 }
             }
@@ -312,6 +313,7 @@
         this.aMap.setCity(code)
       },
       async onTwoChange (code) {
+          if (!code) return false
           let queryData = {
               ProvinceCode: code
           }
@@ -577,12 +579,18 @@
               continue;
             }
             if (this.queryAttrList[i].ItemSubAttributeId) {
+              let addre = ""
+              if (this.queryAttrList[i].ItemSubAttributeId) {
+                addre = this.queryAttrList[i].ItemSubAttributeId
+              } else if (this.queryAttrList[i].cityCode) {
+                addre = this.queryAttrList[i].cityCode
+              }
               const attrItem = {
                 AttributesId: '',
                 ItemId: '',
                 TypeId: this.formValidate.typeId,
                 ItemAttributesId: this.queryAttrList[i].ItemAttributesId,
-                ItemSubAttributeId: this.queryAttrList[i].ItemSubAttributeId,
+                ItemSubAttributeId: addre,
                 sort: i
               };
               attributesList.push(attrItem);
@@ -726,7 +734,7 @@
 </script>
 
 <style lang="less" scoped>
-    #container {width:400px; height: 200px; }  
+    #container {width:400px; height: 200px; margin: 0 auto;}  
     @import "~assets/css/publish/index.less";
     .content {
         padding-left: 10px;
@@ -880,6 +888,13 @@
     }
     .service-btn {
       margin-right: 10px;
+    }
+    .attr-map-box {
+      width: 770px;
+        display: flex;
+        flex-wrap: wrap;
+        text-align: center;
+        background-color: #FEF9F7;
     }
 </style>
 
