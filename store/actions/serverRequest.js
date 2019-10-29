@@ -119,4 +119,8 @@ export const serverRequest = {
   async getSysExp({commit}, params) {
     return await request.get(`Common/GetSysExpDetail?itemDetailId=${params}`)
   },
+  //发布导航
+  async geOwnItemList({commit}, params) {
+    return await request.post(`ItemList/GetOwnItemList`, params)
+  },
 }

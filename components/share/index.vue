@@ -23,7 +23,7 @@ export default {
         this.qrcode()
     },
     mounted () {
-        this.qrcode()
+        // this.qrcode()
     },
     methods: {
         qrcode () {

@@ -81,6 +81,10 @@
                 ...baseSearchItem
             }
             let getBaseData = await store.dispatch('getItemList', itemData);
+            let userId ={
+                UserId: store.state.overas.UserId
+            }
+            // let userItem = await store.dispatch('geOwnItemList', userId);
             return {
                 searchNav,
                 RspSelectMenuDatas: searchNav.RetMenuData.ChildNode, //菜单数据
@@ -229,7 +233,7 @@
             // 删除选项
             async delItems(items) {
                 let baseSearch = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
-                let searchData =  baseSearch.ClassTypeArrList.filter(o => o.AttrValue !== items.AttrValue)
+                let searchData =  baseSearch.ClassTypeArrList.filter(o => o.AttrValue !== items.AttrValue);
                 // 搜索页导航数据
                 let baseSearchNav = {
                     key: 'baseSearchNav',

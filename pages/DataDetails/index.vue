@@ -34,6 +34,7 @@
                         :attribute="ItemAttributesEntities"
                         @dataDetailsMaskShow="dataDetailsMaskShow"
                         @setFollow="setFollow"
+                        @openMap="openMap"
                     />
                     <commentsCon
                         :width="'340px'"
@@ -64,10 +65,12 @@
             :paymentConfig="paymentConfig"
             @cancel="cancel"
         />
+        <mapModel @closeMap="closeMap" :keywords="keywords" v-if="isMap"/>
         <share :config="configShare"/>
     </div>
 </template>
 <script>
+    import mapModel from "../../components/mapModel"
     import dataDetailsLeft from '../../components/dataDetails/dataDetailsLeft.vue'
     import dataDetailsPDFLeft from '../../components/dataDetails/dataDetailsPDFLeft'
     import dataDetailsRight from '../../components/dataDetails/dataDetailsRight.vue'
@@ -110,7 +113,9 @@
                 downloadTime: null,
                 configShare: {
                     isModal: false
-                }
+                },
+                isMap: false,
+                keywords: ''
             }
         },
         components: {
@@ -121,7 +126,8 @@
             commentsCon,
             dateDetailsDown,
             dataDetailsCustom,
-            dataDetailsPDFLeft
+            dataDetailsPDFLeft,
+            mapModel
         },
         computed: {
             ...mapGetters(['getSessionStorage']),
@@ -181,6 +187,13 @@
             })
         },
         methods: {
+            openMap (value) {
+                this.keywords = value.ItemSubAttributeFullName
+                this.isMap = true
+            },
+            closeMap () {
+                this.isMap = false
+            },
             cancel () {
                 clearInterval(this.downloadTime)
             },

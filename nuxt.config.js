@@ -18,7 +18,7 @@ module.exports = {
       { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
       { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
       { src: 'https://static.runoob.com/assets/qrcode/qrcode.min.js' },
-      { src: 'https://webapi.amap.com/maps?v=1.4.15&key=32fa7552c02016a5f6eefe2a3e062f87&plugin=AMap.Geocoder,AMap.CitySearch' },
+      { src: 'https://webapi.amap.com/maps?v=1.4.15&key=32fa7552c02016a5f6eefe2a3e062f87&plugin=AMap.Geocoder,AMap.CitySearch,AMap.Marker,AMap.Autocomplete,AMap.Pixel' },
     ],
   },
   // 插件依赖
@@ -40,6 +40,7 @@ module.exports = {
     { src: '~plugins/my-theme/index', ssr: true },
     { src: '~plugins/vMap', ssr: true },
     { src: "~plugins/vue-swiper.js", ssr: false },
+    { src: "~plugins/iconfont.js", ssr: false },
     { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],

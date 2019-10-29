@@ -27,7 +27,7 @@
                     </i>
                     <div class="attr-box" v-show="queryAttrList.length > 0">
                       <template v-for="(item, index) in queryAttrList" >
-                          <div class="attr-select-item" v-if="item.ValueSource ==='SingleSel'" :key="item.ItemAttributesId+index" >
+                          <div class="attr-select-item" v-if="item.ValueSource ==='SingleSel' || item.ValueSource ==='CompanyData'" :key="item.ItemAttributesId+index" >
                               <span >
                                   {{ item.ItemAttributesFullName }}
                               </span>
@@ -79,17 +79,23 @@
                             <Input v-model="price" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 230px;" />
                             <span style="width: 20px;">元</span>
                           </div>
-                          <div class="attr-select-item attr-upload-item" v-if="item.ValueSource === 'MapLinkage'" :key="index+'vertical'" >
-                             <span style="vertical-align: top;">项目地址</span>
-                            <Select size="small" v-model="mitCode" style="width:95px" @on-change="onOneChange">
-                                <Option v-for="(items, index) in mitPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
-                            </Select>
-                            <Select size="small" v-model="item.cityCode" @on-change="onTwoChange" style="width:95px">
-                                <Option v-for="(items, index) in cityPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
-                            </Select>
-                            <Select size="small" v-model="item.ItemSubAttributeId"  style="width:95px" @on-change="onThrChange">
-                                <Option v-for="(items, index) in areaPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
-                            </Select>
+                          <div class="attr-select-item attr-upload-item map-box" v-if="item.ValueSource === 'MapLinkage'" :key="index+'vertical'" >
+                            <div>
+                              <span style="vertical-align: top;">{{item.ItemAttributesFullName}}</span>
+                              <Select size="small" v-model="item.mitCode" style="width:95px" @on-change="onOneChange">
+                                  <Option v-for="(items, index) in mitPro" :key="index" :value="items.ProvinceCode +'|' +items.ProvinceName" >{{items.ProvinceName}}</Option>
+                              </Select>
+                              <Select size="small" v-model="item.cityCode" @on-change="onTwoChange" style="width:95px">
+                                  <Option v-for="(items, index) in cityPro" :key="index" :value="items.ProvinceCode +'|' +items.ProvinceName" >{{items.ProvinceName}}</Option>
+                              </Select>
+                              <Select size="small" v-model="item.ItemSubAttributeId"  style="width:95px" @on-change="onThrChange">
+                                  <Option v-for="(items, index) in areaPro" :key="index" :value="items.ProvinceCode" >{{items.ProvinceName}}</Option>
+                              </Select>
+                            </div>
+                            <div>
+                                <span>详细地址</span>
+                                <Input v-model="item.MapAddress" placeholder="请填写项目详细地址（选填）" style="width:190px"></Input>
+                            </div>
                           </div>
                       </template>
                     </div>
@@ -301,7 +307,7 @@
           citysearch.getLocalCity(function(status, result) {
             if (status === 'complete' && result.info === 'OK') {
                 if (result && result.city && result.bounds) {
-                    _this.mitCode = result.adcode
+                    _this.mitCode = result.adcode + result.province;
                     //地图显示当前城市
                     _this.aMap.setBounds(result.bounds);
                     _this.onOneChange(result.adcode)
@@ -314,10 +320,11 @@
       },
       async onTwoChange (code) {
           if (!code) return false
+          let city = code.split('|')
           let queryData = {
-              ProvinceCode: code
+              ProvinceCode: city[0]
           }
-          this.aMap.setCity(code)
+          this.aMap.setCity(city[0])
           let msg = await getProvinceList(queryData);
           if (msg) {
               this.areaPro = msg.respProvince;
@@ -326,8 +333,9 @@
       onOneChange (code) {
         this.cityCode = "";
         this.areaCode= "";
-        this.aMap.setCity(code)
-        this.getCityList(code)
+        let city = code.split('|')
+        this.aMap.setCity(city[0])
+        this.getCityList(city[0])
       },
       async getCityList (id = '') {
           let queryData = {
@@ -585,12 +593,21 @@
               } else if (this.queryAttrList[i].cityCode) {
                 addre = this.queryAttrList[i].cityCode
               }
+              // 拼接详细地址
+              let qadd = ""
+              let queryAttr = this.queryAttrList[i];
+              try {
+                qadd =  queryAttr.mitCode.split('|')[1] +queryAttr.cityCode.split('|')[1] + queryAttr.MapAddress
+              } catch (error) {
+                qadd = queryAttr.MapAddress
+              }
               const attrItem = {
                 AttributesId: '',
                 ItemId: '',
                 TypeId: this.formValidate.typeId,
                 ItemAttributesId: this.queryAttrList[i].ItemAttributesId,
                 ItemSubAttributeId: addre,
+                MapAddress: qadd,
                 sort: i
               };
               attributesList.push(attrItem);
@@ -718,8 +735,7 @@
             }
             this.$store.dispatch('Serverstorage', baseSearchItem);
             let msgss = await setDemo('baseSearchItem', baseSearchItem);
-            let routeData = this.$router.resolve({ name: 'DataDetails', query: { id: res.ItemId , layout: this.showLayout } });
-            analogJump(routeData.href);
+            this.$router.push({ name: 'DataDetails', query: { id: res.ItemId, layout: this.showLayout} });
           }
         })
       }
@@ -734,7 +750,10 @@
 </script>
 
 <style lang="less" scoped>
-    #container {width:400px; height: 200px; margin: 0 auto;}  
+    .map-box {
+      display: flex;
+    }
+    #container {width:1200px; height: 200px; margin: 0 auto;}  
     @import "~assets/css/publish/index.less";
     .content {
         padding-left: 10px;

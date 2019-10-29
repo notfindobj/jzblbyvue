@@ -27,18 +27,40 @@
             </div>
             <!-- 属性展示 -->
             <ul class="screening-nav-list">
-                <li v-for="(item,index) in itemAttribute" :key="index"
-                    :class="item.AttrId ? 'li-active' : ''">
+                <li v-for="(item,index) in itemAttribute" :key="index" :class="item.AttrId ? 'li-active' : ''">
                     <p>{{item.AttrName}}</p>
-                    <ol>
+                    <ol v-if="item.LogoDataCode === 'CompanyData'">
+                        <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)" class="companyli">
+                            <div class="company">
+                                <div class="company-pos">{{items.AttrName}}</div>
+                                <div class="company-side">
+                                    <img v-if="items.LogoPath" :src="items.LogoPath" alt="">
+                                    <span v-else>{{items.AttrName}}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                    <ol v-else>
                         <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)">
                             {{items.AttrName}}
                         </li>
                     </ol>
-                    <i :class="item.AttrId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
-                       v-if="item.ChildNode.length > 13" @click="upAndDown(item)"></i>
+                    <!-- 下拉图标 -->
+                    <!-- <i :class="item.AttrId ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
+                       v-if="item.ChildNode.length > 13" @click="upAndDown(item)"></i> -->
                 </li>
             </ul>
+        </div>
+         <div v-swiper:mySwiper="swiperOption" class="swiper-box">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" > asd1</div>
+                <div class="swiper-slide" > asd2</div>
+                <div class="swiper-slide" > asd3</div>
+                <div class="swiper-slide" > asd4</div>
+                <div class="swiper-slide" > asd5</div>
+            </div>
+            <div class="swiper-button-prev"></div><!--左箭头。如果放置在swiper-container外面，需要自定义样式。-->
+            <div class="swiper-button-next"></div><!--右箭头。如果放置在swiper-container外面，需要自定义样式。-->
         </div>
     </div>
 </template>
@@ -71,7 +93,21 @@ export default {
             currentInex: '',
             currentName: '',
             oneMeun: [],
-            clicked: -1
+            clicked: -1,
+            swiperOption: {
+                loop: true,
+                autoplay: true,
+                slidesPerView : 4,
+                centeredSlides: true,
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                on: {
+                    slideChange() {},
+                    tap() {}
+                },
+            }
         }
     },
     computed: {
@@ -104,6 +140,39 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .swiper-box {
+        height: 200px;
+    }
+    .company {
+        display: inline-block;
+        width: 100px;
+        text-align: center;
+        height: 40px;
+        position: relative;
+        &:hover &-pos {
+             opacity: 1;
+        }
+        &:hover &-side {
+            opacity: 0;
+        }
+        &-pos {
+            position: absolute;
+            width: 100%;
+            opacity: 0;
+        }
+        &-side {
+            position: absolute;
+            transition: opacity .5s;
+            width: 100%;
+            height: 40px;
+            opacity: 1;
+            img {
+                width: 100%;
+                height: 40px;
+                background: #FFFFFF;
+            }
+        }
+    }
     .proNum {
         color: #999;
         font-size: 14px;
@@ -120,18 +189,15 @@ export default {
             margin-bottom: 4px;
             display: flex;
             flex-direction: row;
-
             > p {
                 width: 128px;
                 margin-right: 14px;
             }
-
             > ul {
                 flex: 1;
                 display: flex;
                 flex-direction: row;
                 font-weight: bold;
-
                 > li {
                     height: 22px;
                     padding-right: 13px;
@@ -202,7 +268,9 @@ export default {
 
             .screening-nav-list {
                 width: 100%;
-
+                li.companyli {
+                    display: flex;
+                }
                 > li {
                     height: 40px;
                     overflow: hidden;

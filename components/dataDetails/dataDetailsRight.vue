@@ -10,12 +10,13 @@
                 <p class="data-name">项目信息</p>
                 <ul :class="!isShowIcon ? 'data-introduce' : 'data-introduce data-introduce-active '">
                     <li>
-                        <span>项目名称</span>
+                        <span>项目名称:</span>
                         <span>{{ detaDetails.ItemName }}</span>
                     </li>
                     <li v-for="(item,index) in attribute" :key="index">
-                        <span>{{item.ItemAttributesFullName}}</span>
-                        <span>{{item.ItemSubAttributeFullName}}</span>
+                        <span>{{item.ItemAttributesFullName}}:</span>
+                        <span v-if="item.ItemSubAttributeId.length < 10">{{item.ItemSubAttributeFullName}} <syIcon syHref="ditudaohang" @openMap="openMap(item)"/></span>
+                        <span v-else>{{item.ItemSubAttributeFullName}}</span>
                     </li>
                 </ul>
                 <i v-if="attribute.length > 4"
@@ -37,8 +38,12 @@
 </template>
 <script>
   import { mapState } from 'vuex'
+  import syIcon from "../syIcon"
   export default {
     name: 'detaDetailsRight',
+    components: {
+      syIcon
+    },
     props: {
       detaDetails: {
         type: Object,
@@ -69,6 +74,9 @@
       this.isShowIcon = this.attribute.length <= 4
     },
     methods: {
+      openMap (row) {
+        this.$emit("openMap", row)
+      },
       // 点击头像，去个人中心
       goPersonalCenter() {
         this.$router.push({
