@@ -228,7 +228,7 @@
         .content-screening-list {
             display: flex;
             flex-direction: row;
-            margin-bottom: 23px;
+            margin-bottom: 10px;
 
             > li {
                 line-height: 20px;

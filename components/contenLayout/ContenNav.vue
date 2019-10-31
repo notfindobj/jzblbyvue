@@ -53,11 +53,22 @@
         </div>
          <div v-swiper:mySwiper="swiperOption" class="swiper-box">
             <div class="swiper-wrapper">
-                <div class="swiper-slide" > asd1</div>
-                <div class="swiper-slide" > asd2</div>
-                <div class="swiper-slide" > asd3</div>
-                <div class="swiper-slide" > asd4</div>
-                <div class="swiper-slide" > asd5</div>
+                <template v-for="(items, index) in userItem">
+                    <div class="swiper-slide" :key="index">
+                        <div class="swiper-slide-item">
+                            <img :src="items.ItemTitleImg" alt="">
+                            <div class="slide-item-text">
+                                <div class="item-text-title">
+                                    <span :style="`background-image: url(${items.HeadIcon})`"></span>
+                                    <p>{{items.NickName}}</p>
+                                </div>
+                                <div class="item-text-content">
+                                    {{items.ItemName}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
             </div>
             <div class="swiper-button-prev"></div><!--左箭头。如果放置在swiper-container外面，需要自定义样式。-->
             <div class="swiper-button-next"></div><!--右箭头。如果放置在swiper-container外面，需要自定义样式。-->
@@ -78,6 +89,12 @@ export default {
             required: true,
             default: function () {
             return []
+            }
+        },
+        userItem: {
+            type: Array,
+            default: function () {
+                return []
             }
         },
         queryConditions: {
@@ -142,6 +159,46 @@ export default {
 <style lang="less" scoped>
     .swiper-box {
         height: 200px;
+        margin-bottom: 10px;
+       
+        .swiper-slide-item {
+            cursor: pointer;
+            width: 290px;
+            height: 200px;
+            position: relative;
+            .slide-item-text {
+                display: none;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, .5);
+                color: #FFFFFF;
+                .item-text-title {
+                    text-align: center;
+                    margin-top: 40px;
+                    span {
+                        display: inline-block;
+                        width: 60px;
+                        height: 60px;
+                        background-size: 100% 100%;
+                        border-radius: 50%;
+                    }
+                }
+            }
+            &:hover .slide-item-text {
+                display: block;
+            }
+            .item-text-content {
+                text-align: center;
+                font-size: 16px;
+                font-weight: 500;
+            }
+            img {
+                position: absolute;
+                width: 100%;
+                height: 100%;
+            }
+        }
     }
     .company {
         display: inline-block;

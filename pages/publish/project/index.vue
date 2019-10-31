@@ -79,7 +79,7 @@
                             <Input v-model="price" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 230px;" />
                             <span style="width: 20px;">元</span>
                           </div>
-                          <div class="attr-select-item attr-upload-item map-box" v-if="item.ValueSource === 'MapLinkage'" :key="index+'vertical'" >
+                          <div class="attr-select-item attr-upload-item map-box" v-if="item&&item.ValueSource === 'MapLinkage'" :key="index+'vertical'" >
                             <div>
                               <span style="vertical-align: top;">{{item.ItemAttributesFullName}}</span>
                               <Select size="small" v-model="item.mitCode" style="width:95px" @on-change="onOneChange">
@@ -94,12 +94,13 @@
                             </div>
                             <div>
                                 <span>详细地址</span>
-                                <Input v-model="item.MapAddress" placeholder="请填写项目详细地址（选填）" style="width:190px"></Input>
+                                <input v-model="item.MapAddress" type="text" id="tipinput" placeholder="请填写项目详细地址（选填）" style="width:190px">
                             </div>
                           </div>
                       </template>
                     </div>
                     <div class="attr-map-box">
+                        <!-- <input type="text" id="tipinput" placeholder="请填写项目详细地址（选填）" style="width:190px"> -->
                         <div id="container" v-show="isMap" ref="container"></div>
                     </div>
                 </FormItem>
@@ -315,6 +316,11 @@
             }
         });
       },
+      setAotucomplete () {
+        let auto = new AMap.Autocomplete({
+            input: "tipinput"
+        });
+      },
       onThrChange (code) {
         this.aMap.setCity(code)
       },
@@ -480,13 +486,14 @@
         getCustomizeService(id).then(res => {
           this.serviceList = res;
         })
+        setTimeout(() => {
+          this.setAotucomplete()
+        }, 800)
       },
-
       // 上传文件组件成功回调
       uploadSuccess(res) {
         this.typeFile = res.Data
       },
-
       // 上传之前清空上传列表
       clearUpload() {
         if (this.$refs.uploadFile[0].fileList.length > 0) {

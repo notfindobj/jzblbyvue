@@ -6,8 +6,26 @@
                 <p class="works-name">{{detaDetails.NickName}}</p>
                 <div v-if="userInfoID != detaDetails.UserId" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
-            <div class="data-info">
-                <p class="data-name">项目信息</p>
+            <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
+                <div v-if="detaDetails.IsDownload" @click="immediatelyDown(detaDetails)">
+                  <p>立即下载</p>
+                  <p><span class="btn-group-Price">￥{{detaDetails.Price}}</span></p>
+                </div>
+                <div v-if="detaDetails.IsCustomized" @click="customthis()"> 
+                  <p>同款定制</p> 
+                  <p><span class="btn-group-Price">￥{{detaDetails.FirCusPri}}</span></p>
+                </div>
+            </div>
+            <div class="data-info comments-status-box">
+                <div class="comments-box-status">
+                    <div class="comments-box-status-left">
+                        <span>项目信息</span>
+                        <span>发布日期：{{detaDetails.CreateDate | datefmt('YYYY-MM-DD')}}</span>
+                    </div>
+                    <div class="comments-box-status-right">
+                        <i class="icon iconfont icon-chakan"></i>{{detaDetails.Views}}
+                    </div>
+                </div>
                 <ul :class="!isShowIcon ? 'data-introduce' : 'data-introduce data-introduce-active '">
                     <li>
                         <span>项目名称:</span>
@@ -23,16 +41,7 @@
                    :class="isShowIcon ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
                    @click="unAnddown()"></i>
             </div>
-            <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
-                <div v-if="detaDetails.IsDownload" @click="immediatelyDown(detaDetails)">
-                  <p>立即下载</p>
-                  <p><span class="btn-group-Price">￥{{detaDetails.Price}}</span></p>
-                </div>
-                <div v-if="detaDetails.IsCustomized" @click="customthis()"> 
-                  <p>同款定制</p> 
-                  <p><span class="btn-group-Price">￥{{detaDetails.FirCusPri}}</span></p>
-                </div>
-            </div>
+           
         </div>
     </div>
 </template>
@@ -111,6 +120,44 @@
     .btn-group-Price {
       font-size: 16px;
       color: #666666;
+    }
+    .comments-status-box {
+        .comments-box-status {
+            height: 50px;
+            border-bottom: 1px solid #F2F2F2;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            .comments-box-status-left {
+                > span {
+                    &:nth-child(1) {
+                        font-size: 14px;
+                        color: #333333;
+                        margin-right: 10px;
+                    }
+
+                    &:nth-child(2) {
+                        font-size: 12px;
+                        color: #999999;
+                    }
+                }
+            }
+            .comments-box-status-right {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                color: #666666;
+
+                > i {
+                    font-size: 16px;
+                    margin-right: 5px;
+                }
+            }
+        }
     }
     .data-details-right {
         width: 340px;

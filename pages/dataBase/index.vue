@@ -3,6 +3,7 @@
         <conten-nav
             :itemAttribute="RspSelectMenuDatas"
             :queryConditions="RspQueryClassify"
+            :userItem="userItem"
             @choseSome="getItemsBaseData"
             @choseSomeOne="choseSomeOne"
             @delItems="delItems"
@@ -62,7 +63,8 @@
                 isFinished: true,   // 判断请求是否完成
                 pageNum: 1,
                 isLast: false,
-                titleName: "示范区"
+                titleName: "示范区",
+                userItem: []
             }
         },
         computed: {
@@ -82,11 +84,12 @@
             }
             let getBaseData = await store.dispatch('getItemList', itemData);
             let userId ={
-                UserId: store.state.overas.UserId
+                ItemTypeId: baseSearchNav.ClassTypeArrList[0].AttrKey
             }
-            // let userItem = await store.dispatch('geOwnItemList', userId);
+            let userItem = await store.dispatch('geOwnItemList', userId);
             return {
                 searchNav,
+                userItem,
                 RspSelectMenuDatas: searchNav.RetMenuData.ChildNode, //菜单数据
                 RspQueryClassify: searchNav.RetSelectTypeData.selectBtns, //查询参数
                 showLayout: showLayout,
@@ -136,6 +139,15 @@
                 let msgss = await setDemo('baseSearchItem', SearchItem);
                 this.getItemsList(1)
             }, 1500),
+            async getUserItems (id) {
+                let userId ={
+                    ItemTypeId: id
+                }
+                let msg = await this.$store.dispatch('geOwnItemList', userId);
+                if (msg) {
+                    this.userItem = msg
+                }
+            },
             // 点击分页
             async changePage(page) {
                 let baseSearchItem = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchItem));
@@ -159,9 +171,9 @@
                 let baseSearchNav = {
                     key: 'baseSearchNav',
                     value: {
-                            ClassTypeArrList: [{AttrKey: row.ItemAttributesId, AttrValue: row.ItemSubAttributeCode}],
-                            title: row.ItemAttributesFullName,
-                        }
+                        ClassTypeArrList: [{AttrKey: row.ItemAttributesId, AttrValue: row.ItemSubAttributeCode}],
+                        title: row.ItemAttributesFullName,
+                    }
                 }
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
@@ -181,8 +193,9 @@
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
                 this.$router.push({ name: "dataBase"});
-                this.getNavList()
-                this.getItemsList()
+                this.getUserItems(row.ItemAttributesId)
+                this.getNavList();
+                this.getItemsList();
                 // 去除搜索框内容
                 if (sessionStorage.getItem('searchIndex') && sessionStorage.getItem('searchKeyWords')) {
                     sessionStorage.removeItem('searchIndex');
@@ -220,7 +233,7 @@
                 }
                 this.$store.dispatch('Serverstorage', baseSearchItem);
                 let msgss = await setDemo('baseSearchItem', baseSearchItem);
-                this.$router.push({ name: "dataBase"});
+                // this.$router.push({ name: "dataBase"});
                 this.getNavList()
                 this.getItemsList()
                     // 去除搜索框内容
@@ -332,6 +345,18 @@
                 if (searchNav) {
                     this.RspSelectMenuDatas = searchNav.RetMenuData.ChildNode; //菜单数据
                     this.RspQueryClassify = searchNav.RetSelectTypeData.selectBtns; //查询参数
+                    let baseSearch = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                    let arrList = baseSearch.ClassTypeArrList.slice(0,1);
+                    // 搜索页导航数据
+                    let baseSearchNav = {
+                        key: 'baseSearchNav',
+                        value: {
+                            ClassTypeArrList: [...arrList, ...this.RspQueryClassify],
+                            title: baseSearch.title
+                        }
+                    }
+                    this.$store.dispatch('Serverstorage', baseSearchNav);
+                    let msgs = await setDemo('baseSearchNav', baseSearchNav);
                 }
             },
             // 数据
