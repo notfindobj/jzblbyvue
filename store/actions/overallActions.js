@@ -12,6 +12,14 @@ export const overallActions ={
     SEARCHDATA({ commit, state }, params) {
         commit("setsearchData", params)
     },
+    // 设置评论消息
+    ACCusData ({ commit, state }, params) {
+        commit("setCusData", params)
+    },
+    // 设置定制消息
+    ACComment({ commit, state }, params) {
+        commit("setComment", params)
+    },
     // 设置cookie
     LOGININ ({ commit, state }, params) {
         commit("setAuth", params)

@@ -4,7 +4,10 @@
             <div v-swiper:mySwiper="swiperOption" class="swiper-box">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" v-for="(banner, index) in SlideList" :key="index">
-                        <img :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
+                        <a v-if="banner.ItemUrl" :href="banner.ItemUrl" target="_blank">
+                            <img :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
+                        </a>
+                         <img v-else :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
                     </div>
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
@@ -324,16 +327,23 @@
         return {
             swiperOption: {
                 loop: true,
-                autoplay: true,
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false
+                },
                 slidesPerView: 'auto',
                 centeredSlides: true,
+                paginationClickable: true,
                 pagination: {
                     el: '.swiper-pagination',
-                    dynamicBullets: true
+                    clickable: true,
+                    renderBullet(index, className) {
+                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
+                    }
                 },
                 on: {
-                    slideChange() {},
-                    tap() {}
+                    autoplayStart() {},
+                    autoplayStop() {}
                 },
             }
         }
@@ -399,6 +409,10 @@
         }
     },
     methods: {
+        stopLoop () {
+        },
+        startLoop () {
+        },
         async viewProperties (data, row, name) {
             // 待完善
             if (!this.isLogin) {
@@ -478,6 +492,11 @@
 }
 </script>
 <style lang="less">
+    .swiper-pagination-bullet {
+        width: 18px;
+        height: 18px;
+        color: #fff;
+    }
     .left-items {
         display: flex;
         justify-content: space-around;
@@ -502,7 +521,9 @@
     }
 
     .swiper-box {
-        height: 374px;
+        width: 1200 - 143px;
+        margin: 0 143px auto;
+        height: 360px;
     }
 
     .nav-atvite {
@@ -510,7 +531,7 @@
     }
 
     .main-conment {
-        margin-top: 50px;
+        margin-top: 20px;
         border-top: 1px solid #999999;
 
         &-top {

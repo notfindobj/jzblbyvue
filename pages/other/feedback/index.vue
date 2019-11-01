@@ -44,8 +44,7 @@
 <script>
   export default {
     name: 'feedback',
-    components: {
-    },
+    layout: 'main',
     data () {
       return {
         cityList: [
@@ -84,6 +83,8 @@
 <style lang="less" scoped>
   .content-box{
     flex: 1;
+    width: 1200px;
+    margin: 0 auto;
     height: auto;
     padding: 20px;
     margin-bottom: 30px;

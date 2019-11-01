@@ -33,7 +33,7 @@
                         <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)" class="companyli">
                             <div class="company">
                                 <div class="company-pos">{{items.AttrName}}</div>
-                                <div class="company-side">
+                                <div class="company-side" v-if="items.LogoPath">
                                     <img v-if="items.LogoPath" :src="items.LogoPath" alt="">
                                     <span v-else>{{items.AttrName}}</span>
                                 </div>
@@ -51,7 +51,7 @@
                 </li>
             </ul>
         </div>
-         <div v-swiper:mySwiper="swiperOption" class="swiper-box">
+        <div v-swiper:mySwiper="swiperOption" class="swiper-boxs">
             <div class="swiper-wrapper">
                 <template v-for="(items, index) in userItem">
                     <div class="swiper-slide" :key="index">
@@ -157,7 +157,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-    .swiper-box {
+    .swiper-boxs {
         height: 200px;
         margin-bottom: 10px;
        
@@ -204,10 +204,11 @@ export default {
         display: inline-block;
         width: 100px;
         text-align: center;
-        height: 40px;
+        height: 45px;
         position: relative;
         &:hover &-pos {
-             opacity: 1;
+            opacity: 1;
+            border: 2px solid #ff3c00;
         }
         &:hover &-side {
             opacity: 0;
@@ -215,12 +216,16 @@ export default {
         &-pos {
             position: absolute;
             width: 100%;
-            opacity: 0;
+            opacity: 1;
+            margin-top: 1px;
+            border: 1px solid #716865;
         }
         &-side {
             position: absolute;
+            border: 1px solid #716865;
             transition: opacity .5s;
             width: 100%;
+            margin-top: 1px;
             height: 40px;
             opacity: 1;
             img {
@@ -355,7 +360,7 @@ export default {
 
                         > li {
                             float: left;
-                            margin-right: 24px;
+                            margin-right: 15px;
                             cursor: pointer;
 
                             &:hover {

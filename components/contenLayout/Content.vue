@@ -229,6 +229,7 @@
             display: flex;
             flex-direction: row;
             margin-bottom: 10px;
+            margin-top: 15px;
 
             > li {
                 line-height: 20px;

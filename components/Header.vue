@@ -44,13 +44,13 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <Badge :count="allMessage" class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
+                        <Badge :count="getComment.MsgCount + getCusData.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem >
-                                <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
+                                <nuxt-link to="/Message/customized">评论消息<Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                             <DropdownItem >
-                                <nuxt-link to="/Message/comment">定制消息<Badge v-if="Message.dingzhi && Message.dingzhi.MsgCount > 0" :count="Message.dingzhi.MsgCount"></Badge></nuxt-link>
+                                <nuxt-link to="/Message/comment">定制消息<Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -76,7 +76,7 @@ import {analogJump } from '../plugins/untils/public'
         ...mapState({
             auth: state => state.overas.auth
         }),
-        ...mapGetters(['isLogin'])
+        ...mapGetters(['isLogin', 'getCusData', 'getComment'])
     },
     mounted () {
         if (this.auth) {
@@ -87,7 +87,10 @@ import {analogJump } from '../plugins/untils/public'
         async getMessage () {
             let msg = await this.$store.dispatch('getNews');
             if (msg) {
-                this.Message = msg
+                this.Message = msg;
+                this.$store.dispatch('ACCusData', msg.dingzhi);
+                this.$store.dispatch('ACComment', msg.pinglun);
+                console.log('>>>>>>>', msg)
                 Object.keys(msg).forEach(item =>{
                     this.allMessage += msg[item].MsgCount;
                 })

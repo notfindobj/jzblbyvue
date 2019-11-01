@@ -112,6 +112,7 @@ export default {
                                 }
                                 let m = await this.$store.dispatch('getNews', msgType);
                                 if (m) {
+                                    this.$store.dispatch('ACCusData', m.dingzhi)
                                     this.customized = m.dingzhi
                                 }
                             }

@@ -9,7 +9,9 @@ export const overas = {
         searchNav: 0,
         queryBaseData: {},  // 资料库导航
         wxRegister: {}, // 微信注册时的信息,
-        sessionStorage: {} // 存储的数据
+        sessionStorage: {}, // 存储的数据
+        dingzhi: {},// 存储信息
+        pinglun: {}
     },
     actions: overallActions,
     getters: overallGetters,

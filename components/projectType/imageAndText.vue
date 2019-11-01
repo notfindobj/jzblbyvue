@@ -89,6 +89,7 @@
             </div>
         </div>
         <v-comment
+            :key="ViewerIndex"
             :isShow="isShowComment"
             :itemId="itemInfo.ItemId"
             :commentList="commentList"

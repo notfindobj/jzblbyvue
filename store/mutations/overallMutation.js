@@ -18,6 +18,12 @@ export const overallMutation = {
   setsearchData(state, param) {
     state.searchNav = param
   },
+  setCusData(state, param = {}) {
+    state.dingzhi = param
+  },
+  setComment(state, param = {}) {
+    state.pinglun = param
+  },
   // 存储数据
   setSessionStorage (state, row) {
     state.sessionStorage[row.key] = row.value;

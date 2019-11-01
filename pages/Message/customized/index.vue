@@ -10,7 +10,6 @@
                    <span class="MsgCount-all-del"  @click="signMessage(customized.Msg, 1)">全部删除</span>
                </div>
             </div>
-           
             <ul class="customized-content">
                 <li v-for="(item, index) in customized.Msg" :key="index" @click="signMessage(item, 2)">
                    <div class="customized-content-title">
@@ -25,7 +24,7 @@
                            <span v-else>已读</span>
                        </div>
                    </div>
-                   <div class="customized-content-detailed" v-html="item.MsgContext"></div>
+                   <emotHtml class="customized-content-detailed" v-model="item.MsgContext" @click.native="viewDetails(item.DataIds)"></emotHtml>
                 </li>
             </ul>
         </div>
@@ -33,7 +32,12 @@
 </template>
 <script>
 import {setMessage} from "../../../service/clientAPI"
+import emotHtml from "../../../components/emotHtml"
+import {analogJump} from '../../../plugins/untils/public'
 export default {
+    components: {
+        emotHtml
+    },
     data () {
         return {
             customized: {}
@@ -50,6 +54,24 @@ export default {
         }
     },
     methods: {
+        viewDetails (row) {
+            let routeData = this.$router.resolve({
+                name: 'DataDetails',
+                query: {id: row.itemId, layout: true }
+            })
+            analogJump(routeData.href);
+        },
+        async getMegs () {
+            let msgType = {
+                page: 1,
+                msgType: 0
+            }
+            let m = await this.$store.dispatch('getNews', msgType);
+            if (m) {
+                this.$store.dispatch('ACComment', m.pinglun);
+                this.customized = m.pinglun;
+            }
+        },
         async signMessage (id, type, index) {
             let OpId = ""
             if (id.constructor  === Object) {
@@ -73,7 +95,7 @@ export default {
             if (id.constructor  === Object && type == 2) {
                 let msg = await setMessage(queryData);
                 if (msg) {
-                   this.$set(id, "ReadStatu", 0)
+                   this.getMegs()
                 } 
             } else {
                 this.$Modal.confirm({
@@ -84,21 +106,15 @@ export default {
                         if (msg) {
                             if (id.constructor  === Object) {
                                 if (type == 2) {
-                                    this.$set(id, "ReadStatu", 0)
+                                    this.$set(id, "ReadStatu", 0);
+                                    this.getMegs()
                                 }
                                 if (type == 1) {
-                                    this.customized.Msg.splice(index, 1)
+                                    this.customized.Msg.splice(index, 1);
                                 }
                             }
                             if (id.constructor === Array) {
-                                let msgType = {
-                                    page: 1,
-                                    msgType: 0
-                                }
-                                let m = await this.$store.dispatch('getNews', msgType);
-                                if (m) {
-                                    this.customized = m.pinglun
-                                }
+                                this.getMegs()
                             }
                         } 
                     },
@@ -107,7 +123,6 @@ export default {
                     }
                 });
             }
-            
         }
     },
     
@@ -183,6 +198,10 @@ export default {
             &-detailed {
                 line-height: 30px;
                 padding: 0 20px;
+                cursor: pointer;
+                &:hover {
+                    color: #ff3c00;
+                }
             }
         }
     }

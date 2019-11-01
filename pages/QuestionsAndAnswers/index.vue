@@ -322,38 +322,6 @@ export default {
             padding: 20px;
             display: flex;
             justify-content: space-between;
-            .swiper-box {
-                width: 520px;
-                height: 249px;
-                background-color: #ccc;
-                .swiper-wrapper {
-                    width: 520px;
-                    height: 249px;
-                    .swiper-slide {
-                        position: relative;
-                        text-align: center;
-                        font-size: 18px;
-                        background: #ccc;
-                        cursor: pointer;
-                        display: -webkit-box;
-                        display: -ms-flexbox;
-                        display: -webkit-flex;
-                        display: flex;
-                        -webkit-box-pack: center;
-                        -ms-flex-pack: center;
-                        -webkit-justify-content: center;
-                        justify-content: center;
-                        -webkit-box-align: center;
-                        -ms-flex-align: center;
-                        -webkit-align-items: center;
-                        align-items: center;
-                        img {
-                            width: 100%;
-                            height: 100%;
-                        }
-                    }
-                }
-            }
             .top-list {
                 width: 264px;
 
@@ -361,15 +329,12 @@ export default {
                     img {
                         vertical-align: middle;
                     }
-
                     font-size: 14px;
                     color: #333;
                     font-weight: 500;
                 }
-
                 ul {
                     list-style: none;
-
                     li {
                         font-size: 12px;
                         color: #666;
@@ -378,20 +343,17 @@ export default {
                         text-overflow: ellipsis;
                         overflow: hidden;
                         white-space: nowrap;
-
                         a:hover {
                             color: #FF3C00;
                         }
                     }
                 }
-
                 .bottom-link {
                     display: block;
                     margin-top: 10px;
                     color: #ff3c00;
                 }
             }
-
         }
 
         .content {
@@ -399,30 +361,24 @@ export default {
                 padding: 0;
                 margin: 0 20px;
             }
-
             .ivu-menu-item:hover {
                 color: #333;
             }
-
             .ivu-menu-item-active {
                 color: #333;
                 font-weight: 500;
             }
-
             .ivu-menu-horizontal.ivu-menu-light:after {
                 background: #f5f6f5;
             }
-
             .tabs {
                 margin-bottom: 25px;
                 position: sticky;
                 top: 60px;
             }
-
             .content-list {
                 position: relative;
             }
-
             .content-item {
                 width: 100%;
                 border-bottom: 1px solid #d8d8d8;

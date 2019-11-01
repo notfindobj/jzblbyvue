@@ -14,5 +14,11 @@ export const overallGetters = {
     },
     getSessionStorage (state) {
         return state.sessionStorage
+    },
+    getCusData (state) {
+        return state.dingzhi
+    },
+    getComment (state) {
+        return state.pinglun
     }
 }
