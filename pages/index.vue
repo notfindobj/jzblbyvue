@@ -523,7 +523,7 @@
     .swiper-box {
         width: 1200 - 143px;
         margin: 0 143px auto;
-        height: 360px;
+        height: 400px;
     }
 
     .nav-atvite {

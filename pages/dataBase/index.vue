@@ -64,7 +64,7 @@
                 pageNum: 1,
                 isLast: false,
                 titleName: "示范区",
-                userItem: []
+                userItem: [],
             }
         },
         computed: {
@@ -145,7 +145,8 @@
                 }
                 let msg = await this.$store.dispatch('geOwnItemList', userId);
                 if (msg) {
-                    this.userItem = msg
+                    this.userItem = [];
+                    this.userItem = msg;
                 }
             },
             // 点击分页

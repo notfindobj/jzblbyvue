@@ -54,7 +54,7 @@ export default {
         }
         let msg = await store.dispatch('getNews', msgType);
         return {
-            customized:msg.dingzhi
+            customized:msg.pinglun
         }
     },
     methods: {
@@ -64,6 +64,17 @@ export default {
         },
         dataDetailsMaskClose () {
             this.isCustom = false;
+        },
+        async getMegs () {
+            let msgType = {
+                page: 1,
+                msgType: 1
+            }
+            let m = await this.$store.dispatch('getNews', msgType);
+            if (m) {
+                this.$store.dispatch('ACCusData', m.dingzhi);
+                this.customized = m.dingzhi;
+            }
         },
         async signMessage (id, type, index) {
             let OpId = ""
@@ -99,22 +110,14 @@ export default {
                         if (msg) {
                             if (id.constructor  === Object) {
                                 if (type == 2) {
-                                    this.$set(id, "ReadStatu", 0)
+                                    this.getMegs()
                                 }
                                 if (type == 1) {
                                     this.customized.Msg.splice(index, 1)
                                 }
                             }
                             if (id.constructor === Array) {
-                                let msgType = {
-                                    page: 1,
-                                    msgType: 1
-                                }
-                                let m = await this.$store.dispatch('getNews', msgType);
-                                if (m) {
-                                    this.$store.dispatch('ACCusData', m.dingzhi)
-                                    this.customized = m.dingzhi
-                                }
+                                this.getMegs()
                             }
                         }
                     },

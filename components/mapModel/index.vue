@@ -1,5 +1,5 @@
 <template>
-    <div class="mapOPen">
+    <div class="mapOPen" ref="mapOPen">
         <div class="mapOPen-box">
             <i class="icon iconfont icon-chahao3" @click="closeMap"></i>
             <div id="openMap" ref="openMap"></div>
@@ -20,6 +20,13 @@ export default {
         }
     },
     mounted () {
+        let _this = this;
+        document.addEventListener('keyup', function () {
+            let e = event || window.event || arguments.callee.caller.arguments[0];
+            if(e && e.keyCode === 27){ 
+                _this.closeMap()
+            }
+        })
         this.initMap(this.keywords);
     },
     methods: {

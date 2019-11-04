@@ -51,24 +51,25 @@
                 </li>
             </ul>
         </div>
-        <div v-swiper:mySwiper="swiperOption" class="swiper-boxs">
+        <div v-swiper:mySwiper="swiperOption" class="swiper-boxs" v-if="userItem.length > 0" >
             <div class="swiper-wrapper">
-                <template v-for="(items, index) in userItem">
-                    <div class="swiper-slide" :key="index">
-                        <div class="swiper-slide-item">
-                            <img :src="items.ItemTitleImg" alt="">
-                            <div class="slide-item-text">
-                                <div class="item-text-title">
+                <div v-for="(items, index) in userItem" class="swiper-slide" :key="index">
+                    <div class="swiper-slide-item" >
+                        <img :src="items.ItemTitleImg" alt="">
+                        <span class="slide-ite-new" v-if="userInfoID === items.UserId">NEW</span>
+                        <div class="slide-item-text" @click="viewDetails(items)">
+                            <div class="item-text-title" @click.stop>
+                                <span @click="goPersonalCenter(items)">
                                     <span :style="`background-image: url(${items.HeadIcon})`"></span>
                                     <p>{{items.NickName}}</p>
-                                </div>
-                                <div class="item-text-content">
-                                    {{items.ItemName}}
-                                </div>
+                                </span>
+                            </div>
+                            <div class="item-text-content">
+                                {{items.ItemName}}
                             </div>
                         </div>
                     </div>
-                </template>
+                </div>
             </div>
             <div class="swiper-button-prev"></div><!--左箭头。如果放置在swiper-container外面，需要自定义样式。-->
             <div class="swiper-button-next"></div><!--右箭头。如果放置在swiper-container外面，需要自定义样式。-->
@@ -76,7 +77,8 @@
     </div>
 </template>
 <script>
-import {mapGetters } from 'vuex'
+import {mapGetters, mapState} from 'vuex'
+import {analogJump} from '../../plugins/untils/public'
 export default {
     name: 'contenNav',
     props: {
@@ -112,10 +114,15 @@ export default {
             oneMeun: [],
             clicked: -1,
             swiperOption: {
+                autoplay: {
+                    delay: 2500,
+                    disableOnInteraction: false
+                },
+                slidesPerView: 4,
+                spaceBetween: 20,
+                slidesPerGroup: 1,
                 loop: true,
-                autoplay: true,
-                slidesPerView : 4,
-                centeredSlides: true,
+                loopFillGroupWithBlank: true,
                 navigation: {
                     nextEl: '.swiper-button-next',
                     prevEl: '.swiper-button-prev',
@@ -129,6 +136,9 @@ export default {
     },
     computed: {
         ...mapGetters(['getSessionStorage']),
+        ...mapState({
+            userInfoID: state => state.overas.auth? state.overas.auth.UserId: ""
+        })
     },
     created() {
         this.currentName = this.getSessionStorage.baseSearchNav.title;
@@ -138,6 +148,22 @@ export default {
         })
     },
     methods: {
+        viewDetails (row) {
+            let ItemType = Number(sessionStorage.getItem('searchIndex') || 0);
+            let routeData = this.$router.resolve({
+                name: 'DataDetails',
+                query: {id: row.ItemId, layout: (ItemType !== 6 && ItemType !== 7) ? true : false}
+            })
+            analogJump(routeData.href);
+        },
+        // 点击头像，去个人中心
+        goPersonalCenter(items) {
+            let routeData = this.$router.resolve({
+                name: 'HeAndITribal-id',
+                query: { id: items.UserId}
+            })
+            analogJump(routeData.href);
+        },
         // 一级
         choseSome(index, item) {
             this.currentInex = item.ItemAttributesId;
@@ -157,25 +183,34 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .slide-ite-new {
+        position: absolute;
+        color: #ff3c00;
+        font-weight: bold;
+        right: 10px;
+        line-height: 30px;
+    }
     .swiper-boxs {
         height: 200px;
         margin-bottom: 10px;
-       
         .swiper-slide-item {
             cursor: pointer;
             width: 290px;
             height: 200px;
             position: relative;
+          
             .slide-item-text {
                 display: none;
                 position: absolute;
                 width: 100%;
                 height: 100%;
+                text-align: center;
                 background: rgba(0, 0, 0, .5);
                 color: #FFFFFF;
                 .item-text-title {
                     text-align: center;
-                    margin-top: 40px;
+                    display: inline-block;
+                    margin: 40px auto 0;
                     span {
                         display: inline-block;
                         width: 60px;
@@ -332,6 +367,7 @@ export default {
                 width: 100%;
                 li.companyli {
                     display: flex;
+                    margin-right: 0px;
                 }
                 > li {
                     height: 40px;

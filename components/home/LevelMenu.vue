@@ -183,7 +183,7 @@
         left: 143px;
         top: 4px;
         min-width: 850px;
-        min-height: 367px;
+        min-height: 400px;
         padding: 7px 0;
         background: #ffffff;
 
