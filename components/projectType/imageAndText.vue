@@ -57,9 +57,16 @@
                 <p v-if ="itemInfo.TalkContent && itemInfo.TalkType === 1" @click="goPictureDetails(itemInfo)" class="detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <p v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
-                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
+                  <template v-if="itemInfo.imglistNew !== ''" >
+                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.imglistNew.split(',')" :key="imgIndex">
+                        <img :src="baseUrlRegExp(item)" alt="">
+                    </div>
+                  </template>
+                  <template v-else>
+                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
                         <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                     </div>
+                  </template>
                 </div>
             </div>
             <!-- 搜藏工具 -->
@@ -117,7 +124,7 @@
     props: {
       textLength: {
         type: Number,
-        default: 8
+        default: 9
       },
       itemInfo: {
         type: Object,

@@ -1,31 +1,53 @@
 <template>
     <div>
         <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
-            <div class="container">
-                <template v-for="(item, index) in attentionList">
-                    <ImageAndText
-                        :key="index"
-                        v-if="item.TalkType !== 2"
-                        :itemInfo="item"
-                        :index="index"
-                        @clickCollection="clickCollection"
-                        @clickLike="clickLike"
-                        @clickMenu="clickMenu"
-                    ></ImageAndText>
-                    <VideoItem
-                        :key="index"
-                        v-if="item.TalkType === 2"
-                        :videoInfo="item"
-                        :index="index"
-                        @clickCollection="clickCollection"
-                        @clickLike="clickLike"
-                        @clickMenu="clickMenu"
-                    ></VideoItem>
-                </template>
-                <div v-if="attentionList.length <= 0" class="attentionListSty">
-                    暂无关注数据
+           <div class="container-box">
+                <div class="container">
+                    <template v-for="(item, index) in attentionList">
+                        <ImageAndText
+                            :key="index"
+                            v-if="item.TalkType !== 2"
+                            :itemInfo="item"
+                            :index="index"
+                            @clickCollection="clickCollection"
+                            @clickLike="clickLike"
+                            @clickMenu="clickMenu"
+                        ></ImageAndText>
+                        <VideoItem
+                            :key="index"
+                            v-if="item.TalkType === 2"
+                            :videoInfo="item"
+                            :index="index"
+                            @clickCollection="clickCollection"
+                            @clickLike="clickLike"
+                            @clickMenu="clickMenu"
+                        ></VideoItem>
+                    </template>
+                    <div v-if="attentionList.length <= 0" class="attentionListSty">
+                        暂无关注数据
+                    </div>
                 </div>
-            </div>
+                <div class="container-right">
+                    <div class="user-title">
+                        <div class="user-title-l">
+                            <img :src="userInfo.HeadIcon" alt="">
+                        </div>
+                        <div class="user-title-r">
+                            <p>{{userInfo.NickName}}</p>
+                        </div>
+                    </div>
+                    <ul class="user-cont">
+                        <li>
+                            <span>项目：</span>
+                            <span>{{UserProAndFans.proCount || 0}}</span>
+                        </li>
+                        <li>
+                            <span>粉丝：</span>
+                            <span>{{UserProAndFans.Fans || 0}}</span>
+                        </li>
+                    </ul>
+                </div>
+           </div>
             <ToTop ></ToTop>
             <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         </crollBox>
@@ -38,13 +60,15 @@
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
     import { _throttle } from '../../plugins/untils/public'
-    import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat } from '../../service/clientAPI'
+    import {mapGetters, mapState} from 'vuex'
+    import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getUserProAndFans } from '../../service/clientAPI'
     export default {
         layout: 'main',
         name: 'attention',
         middleware: 'authenticated',
         data() {
             return {
+                UserProAndFans: {},
                 pageNum: 1,
                 attentionList: [],
                 isLast: false,
@@ -58,7 +82,21 @@
             crollBox,
             ToTop
         },
+        computed: {
+            ...mapState({
+                userInfo: state => state.overas.auth? state.overas.auth: {}
+            })
+        },
+        created () {
+            this.getUserPro(this.userInfo.UserId)
+        },
         methods: {
+            async getUserPro (id) {
+                let msg = await getUserProAndFans(id)
+                if (msg) {
+                this.UserProAndFans = msg;
+                }
+            },
             async clickMenu (row, item, index) {
                 let qieryData = {
                     "ItemId": row.ItemId,
@@ -199,6 +237,68 @@
 </script>
 
 <style lang="less" scoped>
+    .container-box {
+      width: 1200px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+    }
+    .container-right {
+      width: 330px;
+      background: #fff;
+      margin-top: 10px;
+      max-height:150px;
+      position: sticky;
+      top: 70px;
+      text-align: center;
+    }
+    .user-title {
+      display: flex;
+      padding: 15px 25px 0;
+      display: inline-block;
+      &-l {
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      &-r {
+        margin-left: 15px;
+        p {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
+    }
+    .user-cont {
+      padding: 15px 25px;
+      display: flex;
+      font-size: 16px;
+      justify-content: space-around;
+      li {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        &:first-child {
+          &::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            position: absolute;
+            right: 0;
+            height: 100%;
+            background: #d4d6d4;
+          }
+        }
+      }
+    }
     .attentionListSty {
         text-align: center;
         font-size: 20px;

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="containers">
     <h1 v-if="error.statusCode === 500">
       <img src="../assets/images/err500.jpg" width="100%" alt="">
     </h1>
@@ -60,7 +60,7 @@ export default {
         }
       }
   }
-  .container {
+  .containers {
     width: 1200px;
     position: relative;
     margin: 0 auto;

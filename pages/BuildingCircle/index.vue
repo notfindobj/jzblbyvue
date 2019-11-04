@@ -1,26 +1,48 @@
 <template>
-     <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
-        <div class="container">
+     <crollBox :isLast="isLast" @willReachBottom ="willReachBottom">
+        <div class="container-box">
+          <div class="container">
             <template v-for="(item, index) in dataList">
-                <ImageAndText
-                    :key="index"
-                    v-if="item.TalkType !== 2"
-                    :itemInfo="item"
-                    :index="index"
-                    @clickCollection="clickCollection"
-                    @clickMenu="clickMenu"
-                    @clickLike="clickLike"
-                ></ImageAndText>
-                <VideoItem
-                    :key="index"
-                    v-if="item.TalkType === 2"
-                    :videoInfo="item"
-                    :index="index"
-                    @clickMenu="clickMenu"
-                    @clickCollection="clickCollection"
-                    @clickLike="clickLike"
-                ></VideoItem>
-            </template>
+                  <ImageAndText
+                      :key="index"
+                      v-if="item.TalkType !== 2"
+                      :itemInfo="item"
+                      :index="index"
+                      @clickCollection="clickCollection"
+                      @clickMenu="clickMenu"
+                      @clickLike="clickLike"
+                  ></ImageAndText>
+                  <VideoItem
+                      :key="index"
+                      v-if="item.TalkType === 2"
+                      :videoInfo="item"
+                      :index="index"
+                      @clickMenu="clickMenu"
+                      @clickCollection="clickCollection"
+                      @clickLike="clickLike"
+                  ></VideoItem>
+              </template>
+          </div>
+          <div class="container-right">
+            <div class="user-title">
+              <div class="user-title-l">
+                <img :src="userInfo.HeadIcon" alt="">
+              </div>
+              <div class="user-title-r">
+                <p>{{userInfo.NickName}}</p>
+              </div>
+            </div>
+            <ul class="user-cont">
+              <li>
+                <span>项目：</span>
+                <span>{{UserProAndFans.proCount || 0}}</span>
+              </li>
+              <li>
+                <span>粉丝：</span>
+                <span>{{UserProAndFans.Fans || 0}}</span>
+              </li>
+            </ul>
+          </div>
         </div>
         <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -33,18 +55,25 @@ import VideoItem from '../../components/projectType/video'
 import crollBox from '../../components/crollBox'
 import ToTop from '../../components/toTop'
 import { _throttle } from '../../plugins/untils/public'
-import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat} from '../../service/clientAPI'
+import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getUserProAndFans} from '../../service/clientAPI'
+import {mapGetters, mapState} from 'vuex'
 export default {
     layout: 'main',
     middleware: 'authenticated',
     data() {
       return {
+        UserProAndFans: {},
         pageNum: 1,
         dataList: [],
         isLast: false,
         records: 0,
         total: 1,   // 总页数
       }
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.overas.auth? state.overas.auth: {}
+        })
     },
     components: {
       ImageAndText,
@@ -59,12 +88,22 @@ export default {
           Rows: 8
         };
         let getTalks = await store.dispatch('getTalk', queryData);
+        
         return {
           dataList: getTalks.retModels || [],
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
         }
     },
+    created () {
+      this.getUserPro(this.userInfo.UserId)
+    },
     methods: {
+      async getUserPro (id) {
+        let msg = await getUserProAndFans(id)
+        if (msg) {
+          this.UserProAndFans = msg;
+        }
+      },
       async clickMenu (row, item, index) {
         let qieryData = {
           "ItemId": row.ItemId,
@@ -202,6 +241,68 @@ export default {
 
 <style lang="less" scoped>
     @import "~assets/css/ModulesStyle/index.less";
+    .container-box {
+      width: 1200px;
+      margin: 0 auto;
+      text-align: left;
+      display: flex;
+      justify-content: space-between;
+    }
+    .container-right {
+      width: 330px;
+      background: #fff;
+      margin-top: 10px;
+      max-height:150px;
+      position: sticky;
+      top: 70px;
+      text-align: center;
+    }
+    .user-title {
+      display: flex;
+      padding: 15px 25px 0;
+      display: inline-block;
+      &-l {
+        border-radius: 50%;
+        overflow: hidden;
+        display: inline-block;
+        width: 50px;
+        height: 50px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      &-r {
+        margin-left: 15px;
+        p {
+          font-size: 16px;
+          font-weight: bold;
+        }
+      }
+    }
+    .user-cont {
+      padding: 15px 25px;
+      display: flex;
+      font-size: 16px;
+      justify-content: space-around;
+      li {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        position: relative;
+        &:first-child {
+          &::after {
+            content: '';
+            display: inline-block;
+            width: 1px;
+            position: absolute;
+            right: 0;
+            height: 100%;
+            background: #d4d6d4;
+          }
+        }
+      }
+    }
     .ivu-page {
       text-align: center;
     }

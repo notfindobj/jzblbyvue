@@ -15,7 +15,7 @@
                    <div class="customized-content-title">
                        <div>
                            <span :class="item.ReadStatu === 1 ? 'customized-yuan customized-yuan-color': 'customized-yuan'"></span>
-                           <span>【{{item.MsgTitle}}】</span>
+                           <span class="MsgTitle">【{{item.MsgTitle}}】</span>
                            <span>{{item.CreateDate}}</span>
                        </div>
                        <div class="customized-content-title-right">
@@ -24,7 +24,7 @@
                            <span v-else>已读</span>
                        </div>
                    </div>
-                   <emotHtml class="customized-content-detailed" v-model="item.MsgContext" @click.native="viewDetails(item.DataIds)"></emotHtml>
+                   <emotHtml class="customized-content-detailed" v-model="item.MsgContext" @click.native="viewDetails(item)"></emotHtml>
                 </li>
             </ul>
         </div>
@@ -55,9 +55,10 @@ export default {
     },
     methods: {
         viewDetails (row) {
+            this.signMessage(row, 2)
             let routeData = this.$router.resolve({
                 name: 'DataDetails',
-                query: {id: row.itemId, layout: true }
+                query: {id: row.DataIds.itemId, layout: true }
             })
             analogJump(routeData.href);
         },
@@ -129,6 +130,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .MsgTitle {
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 15px;
+    }
     .MsgCount-all {
       margin-left: 20px;
     }

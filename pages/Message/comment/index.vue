@@ -10,6 +10,7 @@
                    <span class="MsgCount-all-del" @click="signMessage(customized.Msg, 1)">全部删除</span>
                </div>
             </div>
+            
             <ul class="customized-content">
                 <li v-for="(item, index) in customized.Msg" :key="index">
                    <div class="customized-content-title">
@@ -54,12 +55,14 @@ export default {
         }
         let msg = await store.dispatch('getNews', msgType);
         return {
-            customized:msg.pinglun
+            customized:msg.dingzhi
         }
     },
     methods: {
         viewCustom(row) {
             this.isCustom = true;
+            this.signMessage(row, 2);
+            this.getMegs()
             this.customId = row.DataIds
         },
         dataDetailsMaskClose () {
@@ -132,6 +135,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .MsgTitle {
+        font-size: 14px;
+        font-weight: bold;
+        margin-right: 15px;
+    }
     .flex-content {
         justify-content: center;
         align-items: center;
