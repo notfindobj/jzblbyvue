@@ -36,6 +36,7 @@
     "vue-pdf": "^4.0.7",
     "vue-quill-editor": "^3.0.6",
     "vuedraggable": "^2.23.0",
+    "wangeditor": "^3.1.1",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {

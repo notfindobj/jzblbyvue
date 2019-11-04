@@ -9,9 +9,8 @@ exports.configUrl = {
             return 'https://www.api.jzbl.com/api/'
         } else {
         // 本地环境
-            // return 'http://192.168.10.13:8066/api/'
-            // return 'http://106.14.139.124:8099/api/'
-            return 'https://www.api.jzbl.com/api/'
+            return 'http://192.168.10.15:8066/api/'
+            // return 'https://www.api.jzbl.com/api/'
         }
     })(),
     // 本地接口

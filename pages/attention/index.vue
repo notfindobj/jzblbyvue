@@ -28,7 +28,7 @@
                     </div>
                 </div>
                 <div class="container-right">
-                    <div class="user-title">
+                    <div class="user-title" @click="goPersonalCenter(userInfo)">
                         <div class="user-title-l">
                             <img :src="userInfo.HeadIcon" alt="">
                         </div>
@@ -91,6 +91,15 @@
             this.getUserPro(this.userInfo.UserId)
         },
         methods: {
+            // 点击头像，去个人中心
+            goPersonalCenter(item) {
+                this.$router.push({
+                name: 'HeAndITribal-id',
+                    query: {
+                        id: item.UserId
+                    }
+                })
+            },
             async getUserPro (id) {
                 let msg = await getUserProAndFans(id)
                 if (msg) {
@@ -254,9 +263,10 @@
       text-align: center;
     }
     .user-title {
-      display: flex;
-      padding: 15px 25px 0;
-      display: inline-block;
+        cursor: pointer;
+        display: flex;
+        padding: 15px 25px 0;
+        display: inline-block;
       &-l {
         border-radius: 50%;
         overflow: hidden;

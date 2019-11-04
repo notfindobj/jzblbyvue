@@ -11,7 +11,7 @@
                 ></video-item>
             </div>
             <div class="container-right">
-                <div class="user-title">
+                <div class="user-title" @click="goPersonalCenter(userInfo)">
                     <div class="user-title-l">
                         <img :src="userInfo.HeadIcon" alt="">
                     </div>
@@ -94,6 +94,15 @@
             }
         },
         methods: {
+            // 点击头像，去个人中心
+            goPersonalCenter(item) {
+                this.$router.push({
+                name: 'HeAndITribal-id',
+                    query: {
+                        id: item.UserId
+                    }
+                })
+            },
             async getUserPro (id) {
                 let msg = await getUserProAndFans(id)
                 if (msg) {
@@ -224,27 +233,28 @@
       text-align: center;
     }
     .user-title {
-      display: flex;
-      padding: 15px 25px 0;
-      display: inline-block;
-      &-l {
-        border-radius: 50%;
-        overflow: hidden;
+        cursor: pointer;
+        display: flex;
+        padding: 15px 25px 0;
         display: inline-block;
-        width: 50px;
-        height: 50px;
-        img {
-          width: 100%;
-          height: 100%;
+        &-l {
+            border-radius: 50%;
+            overflow: hidden;
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            img {
+            width: 100%;
+            height: 100%;
+            }
         }
-      }
-      &-r {
-        margin-left: 15px;
-        p {
-          font-size: 16px;
-          font-weight: bold;
+        &-r {
+            margin-left: 15px;
+            p {
+            font-size: 16px;
+            font-weight: bold;
+            }
         }
-      }
     }
     .user-cont {
       padding: 15px 25px;
