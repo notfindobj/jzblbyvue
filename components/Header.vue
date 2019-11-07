@@ -8,8 +8,9 @@
                  <li>
                     <nuxt-link to="/dataBase" @click.native="goList">资料库</nuxt-link>
                 </li>
+                
                 <li>
-                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
+                    <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                 </li>
                 <li>
                     <nuxt-link to="/attention">关注</nuxt-link>
@@ -21,10 +22,10 @@
                     <nuxt-link to="/videos">视频</nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
+                    <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
+                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
                 </li>
                 <li>
                     <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
@@ -90,7 +91,6 @@ import {analogJump } from '../plugins/untils/public'
                 this.Message = msg;
                 this.$store.dispatch('ACCusData', msg.dingzhi);
                 this.$store.dispatch('ACComment', msg.pinglun);
-                console.log('>>>>>>>', msg)
                 Object.keys(msg).forEach(item =>{
                     this.allMessage += msg[item].MsgCount;
                 })

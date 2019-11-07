@@ -74,11 +74,11 @@
                     <span>资源库 <i class="iconfont icon-jiantou"></i></span>
                     <LevelMenu class="banner-nav" v-show="isIndex || isShowCate"></LevelMenu>
                 </li>
+                <li @click="goBuilding">建筑圈</li>
                 <li @click="goAttention">关注</li>
                 <!-- <li @click="goRecommend">推荐</li> -->
                 <li @click="goVideo">视频</li>
                 <li @click="goQuestion">问答</li>
-                <li @click="goBuilding">建筑圈</li>
                 <!-- <li @click="goHeAndI">建筑游学</li> -->
                 <!-- <li @click="goAboutUs">建筑书店</li> -->
                 <li @click="goMytribe">我的部落</li>

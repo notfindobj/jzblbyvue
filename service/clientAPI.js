@@ -277,3 +277,7 @@ export const getFundAccount = async params => {
 export const getDataByTypeId = async params => {
   return await request.post(`Menu/GetDataByTypeId`, params)
 }
+// 获取推荐 用于建筑圈，视频
+export const getRecommend = async params => {
+  return await request.post(`Other/GetRecommend?TypeIds=`+params, )
+}

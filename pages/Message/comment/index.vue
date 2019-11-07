@@ -16,7 +16,7 @@
                    <div class="customized-content-title">
                        <div class="flex-content">
                             <span :class="item.ReadStatu === 1 ? 'customized-yuan customized-yuan-color': 'customized-yuan'"></span>
-                            <span class="MsgTitle">{{item.MsgTitle}}</span>
+                            <span class="MsgTitle" @click="viewDetails(item)">{{item.MsgTitle}}</span>
                             <span class="CreateDate">{{item.CreateDate}}</span>
                        </div>
                        <div class="customized-content-title-right">
@@ -36,6 +36,7 @@
 </template>
 <script>
 import {setMessage} from "../../../service/clientAPI"
+import {analogJump} from '../../../plugins/untils/public'
 import Custom from "./custom"
 export default {
     data () {
@@ -59,6 +60,14 @@ export default {
         }
     },
     methods: {
+        viewDetails (row) {
+            this.signMessage(row, 2)
+            let routeData = this.$router.resolve({
+                name: 'DataDetails',
+                query: {id: row.DataIds.itemId, layout: true }
+            })
+            analogJump(routeData.href);
+        },
         viewCustom(row) {
             this.isCustom = true;
             this.signMessage(row, 2);
@@ -116,7 +125,7 @@ export default {
                                     this.getMegs()
                                 }
                                 if (type == 1) {
-                                    this.customized.Msg.splice(index, 1)
+                                    this.getMegs()
                                 }
                             }
                             if (id.constructor === Array) {
@@ -139,6 +148,10 @@ export default {
         font-size: 14px;
         font-weight: bold;
         margin-right: 15px;
+        cursor: pointer;
+        &:hover {
+            color: #ff3c00;
+        }
     }
     .flex-content {
         justify-content: center;

@@ -58,7 +58,7 @@
                 <p v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                   <template v-if="itemInfo.imglistNew !== ''" >
-                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.imglistNew.split(',')" :key="imgIndex">
+                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.imglistNew.split(',')" :key="imgIndex" v-if="item">
                         <img :src="baseUrlRegExp(item)" alt="">
                     </div>
                   </template>

@@ -2,6 +2,15 @@
      <crollBox :isLast="isLast" @willReachBottom ="willReachBottom">
         <div class="container-box">
           <div class="container">
+            <div>
+              <JEditor ref="editor" :editorTab="['tw', 'tz', 'sp', 'wd']"
+                @editorPush="editorPush"
+              />
+               <Spin fix v-if="spinShow">
+                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
+                    <div>上传中</div>
+                </Spin>
+            </div>
             <template v-for="(item, index) in dataList">
                   <ImageAndText
                       :key="index"
@@ -23,26 +32,7 @@
                   ></VideoItem>
               </template>
           </div>
-          <div class="container-right">
-            <div class="user-title" @click="goPersonalCenter(userInfo)">
-              <div class="user-title-l">
-                <img :src="userInfo.HeadIcon" alt="">
-              </div>
-              <div class="user-title-r">
-                <p>{{userInfo.NickName}}</p>
-              </div>
-            </div>
-            <ul class="user-cont">
-              <li>
-                <span>项目：</span>
-                <span>{{UserProAndFans.proCount || 0}}</span>
-              </li>
-              <li>
-                <span>粉丝：</span>
-                <span>{{UserProAndFans.Fans || 0}}</span>
-              </li>
-            </ul>
-          </div>
+          <nominate/>
         </div>
         <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -53,16 +43,18 @@
 import ImageAndText from '../../components/projectType/imageAndText'
 import VideoItem from '../../components/projectType/video'
 import crollBox from '../../components/crollBox'
+import nominate from '../../components/nominate'
 import ToTop from '../../components/toTop'
 import { _throttle } from '../../plugins/untils/public'
-import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getUserProAndFans} from '../../service/clientAPI'
+import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, releaseStatement} from '../../service/clientAPI'
+import JEditor from "../../components/jzEditor"
 import {mapGetters, mapState} from 'vuex'
 export default {
     layout: 'main',
     middleware: 'authenticated',
     data() {
       return {
-        UserProAndFans: {},
+        spinShow: false,
         pageNum: 1,
         dataList: [],
         isLast: false,
@@ -79,7 +71,9 @@ export default {
       ImageAndText,
       VideoItem,
       ToTop,
-      crollBox
+      crollBox,
+      JEditor,
+      nominate
     },
     async asyncData({ app, store, route }) {
         let queryData = {
@@ -88,31 +82,24 @@ export default {
           Rows: 8
         };
         let getTalks = await store.dispatch('getTalk', queryData);
-        
+        if (getTalks.retModels && getTalks.retModels instanceof Array) {
+            getTalks.retModels.forEach(element => {
+                if (element.imglistNew) { 
+                    element.videoList = []
+                    element.imglistNew.replace(',', '')
+                    element.videoList = [ {
+                        smallImgUrl: element.smallImgUrl,
+                        videoUrl: element.imglistNew
+                    }]
+                }
+            });
+        }
         return {
           dataList: getTalks.retModels || [],
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
         }
     },
-    created () {
-      this.getUserPro(this.userInfo.UserId)
-    },
     methods: {
-      // 点击头像，去个人中心
-        goPersonalCenter(item) {
-            this.$router.push({
-            name: 'HeAndITribal-id',
-                query: {
-                    id: item.UserId
-                }
-            })
-        },
-      async getUserPro (id) {
-        let msg = await getUserProAndFans(id)
-        if (msg) {
-          this.UserProAndFans = msg;
-        }
-      },
       async clickMenu (row, item, index) {
         let qieryData = {
           "ItemId": row.ItemId,
@@ -198,6 +185,18 @@ export default {
             Page: this.pageNum,
             Rows: 8
           });
+          if (data.retModels && data.retModels instanceof Array) {
+            data.retModels.forEach(element => {
+              if (element.imglistNew) { 
+                    element.videoList = []
+                    element.imglistNew.replace(',', '')
+                    element.videoList = [ {
+                      smallImgUrl: element.smallImgUrl,
+                      videoUrl: element.imglistNew
+                    }]
+                }
+            });
+          }
           if (data) {
             if (type === 1) {
               this.dataList = [];
@@ -237,12 +236,45 @@ export default {
           itemInfo.itemOperateData.IsLike = flag;
           flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
           this.$set(this.dataList, index, itemInfo);
-
-          // // 如果是点击的弹框中的，就更新videoInfo
-          // if (this.isShowModal) {
-          //   this.$set(this.videoInfo, 'itemOperateData', itemInfo.itemOperateData)
-          // }
         })
+      },
+      // 发布
+      async editorPush (content) {
+        if (!content.editortext) {
+          this.$Message.warning('发布内容不能为空');
+          return false;
+        }
+        let data = {}
+        if (content.editorName === 'tw') {
+          data = {
+              talkType: 1,
+              talkTitle: '',
+              displayPrivacyId: content.publishMode.split('|')[1],
+              talkContent: content.editorContent,
+              listImg: content.imgList
+          }
+        } else if (content.editorName === 'sp') {
+            if (content.imgList.length < 1) {
+              this.$Message.warning('视频还没有上传哦~');
+              return false;
+            }
+          data = {
+              talkType: 2,
+              talkTitle: content.editorContent,
+              talkContent: '',
+              displayPrivacyId: content.publishMode.split('|')[1],
+              listImg: content.imgList
+          }
+        }
+        this.spinShow = true;
+        let msg = await releaseStatement(data);
+        if (msg) {
+            // 初始化编辑器
+            this.$refs.editor.clearEditor();
+            // 加载数据
+            this.getList(null, 1)
+            this.spinShow = false;
+        }
       }
     }
 }
@@ -257,62 +289,6 @@ export default {
       display: flex;
       justify-content: space-between;
     }
-    .container-right {
-      width: 330px;
-      background: #fff;
-      margin-top: 10px;
-      max-height:150px;
-      position: sticky;
-      top: 70px;
-      text-align: center;
-    }
-    .user-title {
-        cursor: pointer;
-        display: flex;
-        padding: 15px 25px 0;
-        display: inline-block;
-        &-l {
-          border-radius: 50%;
-          overflow: hidden;
-          display: inline-block;
-          width: 50px;
-          height: 50px;
-          img {
-            width: 100%;
-            height: 100%;
-          }
-        }
-      &-r {
-        margin-left: 15px;
-        p {
-          font-size: 16px;
-          font-weight: bold;
-        }
-      }
-    }
-    .user-cont {
-      padding: 15px 25px;
-      display: flex;
-      font-size: 16px;
-      justify-content: space-around;
-      li {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        position: relative;
-        &:first-child {
-          &::after {
-            content: '';
-            display: inline-block;
-            width: 1px;
-            position: absolute;
-            right: 0;
-            height: 100%;
-            background: #d4d6d4;
-          }
-        }
-      }
-    }
     .ivu-page {
       text-align: center;
     }
@@ -320,7 +296,6 @@ export default {
         width: 700px;
         display: flex;
         flex-wrap: wrap;
-
         .img {
             width: 220px;
             height: 220px;

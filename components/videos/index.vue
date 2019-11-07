@@ -1,7 +1,7 @@
 <template>
     <div class="test_two_box">
        <div class="video-box">
-            <video :id="videoRef" :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
+            <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
                 <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
             </video>
             <div class="video-img" @mouseover="videoMouseover" @mouseout="videoMouseout" @click="play" @dblclick="dbPlay"></div>
@@ -47,7 +47,7 @@ export default {
         };
     },
     created () {
-        this.videoRef = getRanNum(10);
+        this.videoRef = getRanNum(18);
         this.videoCon = getRanNum(11);
         this.controlPlay = getRanNum(16);
         this.isPlay = getRanNum(8);

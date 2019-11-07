@@ -10,26 +10,7 @@
                     @clickMenu="clickMenu"
                 ></video-item>
             </div>
-            <div class="container-right">
-                <div class="user-title" @click="goPersonalCenter(userInfo)">
-                    <div class="user-title-l">
-                        <img :src="userInfo.HeadIcon" alt="">
-                    </div>
-                    <div class="user-title-r">
-                        <p>{{userInfo.NickName}}</p>
-                    </div>
-                </div>
-                <ul class="user-cont">
-                    <li>
-                        <span>项目：</span>
-                        <span>{{UserProAndFans.proCount || 0}}</span>
-                    </li>
-                    <li>
-                        <span>粉丝：</span>
-                        <span>{{UserProAndFans.Fans || 0}}</span>
-                    </li>
-                </ul>
-          </div>
+            <nominate/>
         </div>
         <ToTop :isShowToTop="false"></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -41,6 +22,7 @@
     import VideoItem from '../../components/projectType/video'
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
+    import nominate from '../../components/nominate'
     import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getUserProAndFans} from '../../service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     import {mapGetters, mapState} from 'vuex'
@@ -51,11 +33,11 @@
             'video-modal': VideoModal,
             'video-item': VideoItem,
             ToTop,
-            crollBox
+            crollBox,
+            nominate
         },
         data() {
             return {
-                UserProAndFans: {},
                 fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
                 pageNum: 1,
                 videoList: [],
@@ -68,19 +50,23 @@
                 watchIndex: '', // 当前视频的index
             }
         },
-        computed: {
-            ...mapState({
-                userInfo: state => state.overas.auth? state.overas.auth: {}
-            })
-        },
-        created () {
-            this.getUserPro(this.userInfo.UserId)
-        },
         async asyncData({ store }) {
             const data = await store.dispatch('getTalk', {
                 TalkType: 2,
                 Page: 0
             })
+            if (data.retModels && data.retModels instanceof Array) {
+                data.retModels.forEach(element => {
+                    if (element.imglistNew) { 
+                        element.videoList = []
+                        element.imglistNew.replace(',', '')
+                        element.videoList = [ {
+                            smallImgUrl: element.smallImgUrl,
+                            videoUrl: element.imglistNew
+                        }]
+                    }
+                });
+            }
             if (data) {
                 return {
                     videoList: data.retModels || [],
@@ -102,12 +88,6 @@
                         id: item.UserId
                     }
                 })
-            },
-            async getUserPro (id) {
-                let msg = await getUserProAndFans(id)
-                if (msg) {
-                this.UserProAndFans = msg;
-                }
             },
             async clickMenu (row, item, index) {
                 let qieryData = {
@@ -195,6 +175,20 @@
                     TalkType: 2,
                     Page: this.pageNum
                 });
+                if (data.retModels && data.retModels instanceof Array) {
+                    data.retModels.forEach(element => {
+                        if (element.imglistNew) {
+                            element.videoList = []
+                            element.imglistNew.replace(',', '')
+                            element.videoList = [ {
+                                smallImgUrl: element.smallImgUrl,
+                                videoUrl: element.imglistNew
+                            }]
+                        }                        
+                    });
+                } else {
+                    return false
+                }
                 if (data) {
                     if (type === 1) {
                         this.videoList = [];
@@ -216,68 +210,12 @@
 </script>
 
 <style lang="less" scoped>
-        .container-box {
+    .container-box {
       width: 1200px;
       margin: 0 auto;
       text-align: left;
       display: flex;
       justify-content: space-between;
-    }
-    .container-right {
-      width: 330px;
-      background: #fff;
-      margin-top: 10px;
-      max-height:150px;
-      position: sticky;
-      top: 70px;
-      text-align: center;
-    }
-    .user-title {
-        cursor: pointer;
-        display: flex;
-        padding: 15px 25px 0;
-        display: inline-block;
-        &-l {
-            border-radius: 50%;
-            overflow: hidden;
-            display: inline-block;
-            width: 50px;
-            height: 50px;
-            img {
-            width: 100%;
-            height: 100%;
-            }
-        }
-        &-r {
-            margin-left: 15px;
-            p {
-            font-size: 16px;
-            font-weight: bold;
-            }
-        }
-    }
-    .user-cont {
-      padding: 15px 25px;
-      display: flex;
-      font-size: 16px;
-      justify-content: space-around;
-      li {
-        flex: 1;
-        display: flex;
-        justify-content: center;
-        position: relative;
-        &:first-child {
-          &::after {
-            content: '';
-            display: inline-block;
-            width: 1px;
-            position: absolute;
-            right: 0;
-            height: 100%;
-            background: #d4d6d4;
-          }
-        }
-      }
     }
     .ivu-page {
       text-align: center;

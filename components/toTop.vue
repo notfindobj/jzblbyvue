@@ -40,7 +40,7 @@ export default {
             })();
         },
         goPublish() {
-            this.$router.push('/publish/project')
+            this.$router.push('/publish/imageText')
         }
     }
 }
