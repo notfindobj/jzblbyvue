@@ -1,8 +1,11 @@
 <template>
     <div>
         <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
-           <div class="container-box">
+            <div class="container-box">
                 <div class="container">
+                    <div class="editor-jzbl">
+                        <proRele  @relSuccessfully="relSuccessfully"/>
+                    </div>
                     <template v-for="(item, index) in attentionList">
                         <ImageAndText
                             :key="index"
@@ -28,7 +31,7 @@
                     </div>
                 </div>
                 <nominate/>
-           </div>
+            </div>
             <ToTop ></ToTop>
             <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         </crollBox>
@@ -36,6 +39,7 @@
 </template>
 
 <script>
+    import proRele from "../../components/proRele"
     import ImageAndText from '../../components/projectType/imageAndText'
     import VideoItem from '../../components/projectType/video'
     import ToTop from '../../components/toTop'
@@ -61,7 +65,8 @@
             VideoItem,
             crollBox,
             ToTop,
-            nominate
+            nominate,
+            proRele
         },
         methods: {
             // 点击头像，去个人中心
@@ -198,7 +203,13 @@
                 this.pageNum = data.paginationData.page;
                 this.records = data.paginationData.records;
             },
+            relSuccessfully (val) {
+                if (val) {
+                    this.getList(null, 1)
+                }
+            }
         },
+        
         async asyncData({ store }) {
             const data = await store.dispatch('getAttentionList', {
                 Page: 1,
@@ -213,6 +224,11 @@
 </script>
 
 <style lang="less" scoped>
+    .editor-jzbl {
+        border: 1px solid #dedede;
+        background: #fff;
+        margin-top: 10px;
+    }
     .container-box {
       width: 1200px;
       margin: 0 auto;

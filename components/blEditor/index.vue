@@ -1,17 +1,11 @@
 <template>
     <div>
         <div class="editor-box">
-            <ul class="editor-tab">
-                <li :class="editorName === item.value ? 'editor-tab-active': ''" v-for="(item, index) in editorTool" :key="index" v-if="item.isShow" @click="clickEditor(item)">{{item.name}}</li>
-            </ul>
-            <div v-if="placeholder">
-                <input v-model="editorTitle" :placeholder="placeholder" class="editor-title" />
-            </div>
             <div ref="toolbar" class="editor-toolbar"></div>
             <div class="text" ref="editor"></div>
             <div class="editor-footer">
                 <ul class="editor-footer-tool">
-                    <li :class="editorName !== 'sp'? 'editor-footer-tool-img' : 'editor-footer-tool-img prohibit'" >
+                    <li :class="!['sp'].includes(editorType)? 'editor-footer-tool-img' : 'editor-footer-tool-img prohibit'" >
                         <span class="add-img" @click="uploadPic()">
                             <i class=" icon iconfont">&#xe631;</i>
                             <input
@@ -24,7 +18,7 @@
                                 accept="image/gif,image/jpeg,image/jpg,image/png" >
                             图片
                         </span>
-                        <div class="editor-footer-tool-update" v-if="(editorName === 'tw' || editorName === 'wd')  && isPanel">
+                        <div class="editor-footer-tool-update" v-if="['tw', 'wd'].includes(editorType)  && isPanel">
                             <span class="update-horn"></span>
                             <div class="tool-updat-content">
                                 <div class="updat-content-title">本地上传</div>
@@ -45,12 +39,12 @@
                             </div>
                         </div>
                     </li>
-                    <li :class="editorName === 'sp' ? 'editor-footer-tool-video' : 'prohibit editor-footer-tool-video '" >
+                    <li :class="['sp'].includes(editorType)? 'editor-footer-tool-video' : 'prohibit editor-footer-tool-video '" >
                         <span class="add-video" @click="uploadVideo()">
                             <i class=" icon iconfont">&#xe624;</i>
                             视频
                         </span>
-                        <div class="editor-footer-tool-update" v-if="editorName === 'sp' && isPanel">
+                        <div class="editor-footer-tool-update" v-if="['sp'].includes(editorType) && isPanel">
                             <span class="update-horn"></span>
                             <div class="tool-updat-content">
                                 <div class="updat-content-title">上传视频</div>
@@ -70,7 +64,7 @@
                     </li>
                 </ul>
                 <ul class="editor-footer-tools">
-                    <li>
+                    <li v-if="!['xm'].includes(editorType)">
                         <Dropdown placement="bottom" trigger="click" @on-click="selectIsPublic" >
                             <a href="javascript:void(0)">
                                 {{publishMode | interceptText}}
@@ -80,6 +74,12 @@
                                 <DropdownItem v-for="(item, index) in privacyList" :name="item.Name + '|'+ item.Id" :key="index">{{item.Name}}</DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
+                    </li>
+                    <li v-if="['xm'].includes(editorType)">
+                        <p>
+                            <Checkbox class="checkbox" v-model="isAgree">我已仔细阅读并同意</Checkbox>
+                            <span @click="ViewProtocol">《建筑部落用户发布协议》</span>
+                        </p>
                     </li>
                     <li>
                         <span @click="editorPush" class="editor-push">发布</span>
@@ -92,56 +92,39 @@
 <script>
 import {uploadFile, GetOperatPrivacy} from '../../service/clientAPI'
 import Upload from '../../components/publish/upload'
+import { _debounce, analogJump } from '../../plugins/untils/public'
 import uploadVideo from '../../components/publish/uploadVideo'
 import draggable from 'vuedraggable'
 export default {
     name: 'editor',
+    props: {
+        editorType: {
+            type: String,
+            default: 'xm'
+        }
+    },
     components: {
         draggable,
         Upload,
         uploadVideo
-    },
-    props: {
-        editorTab: {
-            type: Array,
-            default: function () {
-                return ['tw', 'tz', 'sp', 'wd']
-            }
-        }
     },
     data () {
         return {
             isPanel: false,
             imgList: [],
             spinShow: false,
-            editorName: 'tw',
             editorContent: '',
-            editorTool: [
-                {name:'发布图文', value: 'tw', title: '', content: '有什么新鲜事想告诉大家？', isShow: true},
-                {name:'发布文章', value: 'tz', title: '请输入文章标题', content: '请输入正文...', isShow: true},
-                {name:'发布视频', value: 'sp', title: '', content: '有什么新鲜事想告诉大家？', isShow: true},
-                {name:'发布项目', value: 'xm', title: '项目名称', content: '有什么新鲜事想告诉大家？', isShow: true},
-                {name:'发布问答', value: 'wd', title: '请输入问题标题（4-40字）', content: '添加问题背景描述（选填，0-40字）', isShow: true},
-            ],
             imgsrc: [],
-            editor: {},
             editorTitle: '',
             placeholder: '',
+            editor: {},
+            isAgree: false,
             publishMode: '公开',
             privacyList: [],
         }
     },
     created () {
         this.getPrivacyList();
-        this.editorTool.forEach((eles) => {
-            let isT = false
-            this.editorTab.forEach(ele => {
-                if ( eles.value === ele) {
-                    isT = true;
-                }
-                eles.isShow = isT
-            })
-        })
     },
     mounted() {
         let _this = this;
@@ -174,6 +157,11 @@ export default {
         _this.editor.create();
     },
     methods: {
+        ViewProtocol (row) {
+            this.$store.dispatch('SETUP', false);
+            let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
+            analogJump(routeData.href);
+        },
         // 权限
         async getPrivacyList () {
             let msg = await GetOperatPrivacy(3);
@@ -196,7 +184,7 @@ export default {
                 }
                 uploadFile(data, 1).then(res => {
                     for (let q = 0; q < res.length; q++) {
-                        _this.editor.txt.append(`<img src="${res[q].smallImgUrl}" style="max-width:100%;"></img>`)
+                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img><p><br></p></p>`)
                     }
                     _this.imgsrc = _this.getSrc(_this.editor.txt.html())
                 }).catch(err => {
@@ -206,33 +194,23 @@ export default {
         },
         // 图片
         uploadPic () {
-            if (this.editorName === 'sp') {
+            if (['sp'].includes(this.editorType)) {
                 return false
             }
-            if (this.editorName === 'tw' || this.editorName === 'wd') {
+            if (['tw', 'wd'].includes(this.editorType)) {
                 this.isPanel = !this.isPanel;
                 return false
             }
             this.$refs.uploadPic.click();
         },
         uploadVideo () {
-            if (this.editorName !== 'sp') {
+            if (!['sp'].includes(this.editorType)) {
                 return false
             }
-            if (this.editorName === 'sp') {
+            if (['sp'].includes(this.editorType)) {
                 this.isPanel = !this.isPanel;
                 return false
             }
-        },
-        // tab 切换
-        clickEditor (row) {
-            this.editorName = row.value;
-            this.placeholder = row.title;
-            this.isPanel = false;
-            this.imgsrc = [];
-            this.editorTitle = '';
-            this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
-            this.editor.txt.html(`<p>${row.content||''}</p>`)
         },
         delImg () {
             // this.$delete(this.imgList, index);
@@ -243,9 +221,7 @@ export default {
             }
         },
         // 视频
-        clearVideo () {
-
-        },
+        clearVideo () {},
         uploadSuccessVideo (videoInfo) {
             this.imgList = [];
             this.imgList = [videoInfo];
@@ -283,12 +259,9 @@ export default {
             return imgs
         },
         clearEditor () {
-            this.editorName = this.editorName;
-            this.placeholder= this.placeholder;
             this.isPanel = false;
             this.imgsrc = [];
             this.imgList = [];
-            this.editorTitle = '';
             this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
             this.editor.txt.html(`<p></p>`)
         },
@@ -298,9 +271,8 @@ export default {
                 imgList: this.imgList,
                 editorContent: this.editor.txt.html(),
                 editortext: this.editor.txt.text(),
-                editorTitle: this.editorTitle,
                 publishMode: this.publishMode,
-                editorName: this.editorName
+                isAgree: this.isAgree
             }
             this.$emit('editorPush',content )
         }
@@ -308,6 +280,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    /deep/.w-e-toolbar .w-e-menu {
+        z-index: 99 !important;
+    }
     .ivu-spin-fix {
         z-index: 99999;
     }
@@ -334,6 +309,10 @@ export default {
         right: -2px;
         top: -4px;
         color: #ffffff;
+        img {
+            width: 100%;
+            height: 100%;
+        }
         &:hover{
             color: #ff3c00;
             -webkit-transform:rotate(180deg) ;
@@ -421,6 +400,10 @@ export default {
         display: flex;
         justify-content: space-between;
         line-height: 40px;
+        position: sticky;
+        bottom: 0;
+        background: #fff;
+        z-index: 99;
         &-tools {
             display: flex;
             >li {
@@ -469,7 +452,7 @@ export default {
         cursor: pointer;
     }
     .editor-box {
-        border: 1px solid #d4d6d4;
+        // border: 1px solid #d4d6d4;
         background: #fff;
         margin-top: 10px;
     }

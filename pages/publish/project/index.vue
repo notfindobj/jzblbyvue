@@ -4,17 +4,17 @@
             <Form ref="formValidate" :model="formValidate" :rules="ruleValidate" class="form-box publish-project-form" :label-width="110" >
                 <FormItem label="项目图片" prop="img">
                     <div class="upload-img-box" :style="`background-image:url(${formValidate.img});`" @mouseenter="enteUpload(formValidate.img)" @mouseleave="leaveUpload(formValidate.img)">
-                    <div :class="!isMove ? 'upload-img-wrap upload-img-ente' : 'upload-img-wrap upload-img-leave'" 
-                      :style="`display: ${!formValidate.img || isMove? 'inline-block;' : 'none;'} `" @click="uploadJeck">
-                        <div class="upload-component">
-                            <a href="javascript:" style="display:none;">
-                                <input ref="imgFile" type="file" @change="fileSelected($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
-                            </a>
-                            <Icon type="ios-add-circle" size="35" color="#ff3c00"/>
-                        </div>
-                        <p>图片将会自动压缩</p>
-                        <p>图片建议不要超过20M</p>
-                    </div>
+                      <div :class="!isMove ? 'upload-img-wrap upload-img-ente' : 'upload-img-wrap upload-img-leave'" 
+                        :style="`display: ${!formValidate.img || isMove? 'inline-block;' : 'none;'} `" @click="uploadJeck">
+                          <div class="upload-component">
+                              <a href="javascript:" style="display:none;">
+                                  <input ref="imgFile" type="file" @change="fileSelected($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
+                              </a>
+                              <Icon type="ios-add-circle" size="35" color="#ff3c00"/>
+                          </div>
+                          <p>图片将会自动压缩</p>
+                          <p>图片建议不要超过20M</p>
+                      </div>
                     </div>
                 </FormItem>
                 <FormItem label="项目名称" prop="name">

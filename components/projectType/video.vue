@@ -41,16 +41,9 @@
                 <p  @click="goPictureDetails(videoInfo)" class="detail-picture"><emotHtml v-model="videoInfo.TalkTitle"/></p>
                 <div class="video-wrap" >
                     <div class="photo-wrap">
-                        <template v-if="videoInfo.videoList">
-                          <div class="video" @click.stop="" v-for="(item, index) in videoInfo.videoList" :key="index">
-                            <videos :itemVideo="item" :detaDetails="videoInfo" />
-                          </div>
-                        </template>
-                        <template v-else>
-                          <div class="video" @click.stop="">
-                            <videos :itemVideo="videoInfo.Imgs[0]" :detaDetails="videoInfo" />
-                          </div>
-                        </template>
+                        <div class="video" @click.stop="" v-if="videoInfo.ResourceObj.length > 0">
+                          <videos :itemVideo="videoInfo.ResourceObj[0] || {}" :detaDetails="videoInfo" />
+                        </div>
                     </div>
                 </div>
             </div>

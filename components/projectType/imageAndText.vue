@@ -22,6 +22,7 @@
                         <div class="info-lable">
                           <span v-if="itemInfo.TalkType === 1">图文</span>
                           <span v-if="itemInfo.TalkType === 3">问答</span>
+                          <span v-if="itemInfo.TalkType === 5">文章</span>
                           <span v-if="itemInfo.TalkType === 4">{{itemInfo.TypeName}}</span>
                         </div>
                     </div>
@@ -57,16 +58,9 @@
                 <p v-if ="itemInfo.TalkContent && itemInfo.TalkType === 1" @click="goPictureDetails(itemInfo)" class="detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <p v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
-                  <template v-if="itemInfo.imglistNew !== ''" >
-                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.imglistNew.split(',')" :key="imgIndex" v-if="item">
-                        <img :src="baseUrlRegExp(item)" alt="">
+                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
+                      <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                     </div>
-                  </template>
-                  <template v-else>
-                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.Imgs" :key="imgIndex">
-                        <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
-                    </div>
-                  </template>
                 </div>
             </div>
             <!-- 搜藏工具 -->

@@ -2,14 +2,8 @@
      <crollBox :isLast="isLast" @willReachBottom ="willReachBottom">
         <div class="container-box">
           <div class="container">
-            <div>
-              <JEditor ref="editor" :editorTab="['tw', 'tz', 'sp', 'wd']"
-                @editorPush="editorPush"
-              />
-               <Spin fix v-if="spinShow">
-                    <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
-                    <div>上传中</div>
-                </Spin>
+            <div class="editor-jzbl">
+                <proRele  @relSuccessfully="relSuccessfully"/>
             </div>
             <template v-for="(item, index) in dataList">
                   <ImageAndText
@@ -47,14 +41,13 @@ import nominate from '../../components/nominate'
 import ToTop from '../../components/toTop'
 import { _throttle } from '../../plugins/untils/public'
 import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, releaseStatement} from '../../service/clientAPI'
-import JEditor from "../../components/jzEditor"
+import proRele from "../../components/proRele"
 import {mapGetters, mapState} from 'vuex'
 export default {
     layout: 'main',
     middleware: 'authenticated',
     data() {
       return {
-        spinShow: false,
         pageNum: 1,
         dataList: [],
         isLast: false,
@@ -72,7 +65,7 @@ export default {
       VideoItem,
       ToTop,
       crollBox,
-      JEditor,
+      proRele,
       nominate
     },
     async asyncData({ app, store, route }) {
@@ -82,18 +75,6 @@ export default {
           Rows: 8
         };
         let getTalks = await store.dispatch('getTalk', queryData);
-        if (getTalks.retModels && getTalks.retModels instanceof Array) {
-            getTalks.retModels.forEach(element => {
-                if (element.imglistNew) { 
-                    element.videoList = []
-                    element.imglistNew.replace(',', '')
-                    element.videoList = [ {
-                        smallImgUrl: element.smallImgUrl,
-                        videoUrl: element.imglistNew
-                    }]
-                }
-            });
-        }
         return {
           dataList: getTalks.retModels || [],
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
@@ -185,18 +166,6 @@ export default {
             Page: this.pageNum,
             Rows: 8
           });
-          if (data.retModels && data.retModels instanceof Array) {
-            data.retModels.forEach(element => {
-              if (element.imglistNew) { 
-                    element.videoList = []
-                    element.imglistNew.replace(',', '')
-                    element.videoList = [ {
-                      smallImgUrl: element.smallImgUrl,
-                      videoUrl: element.imglistNew
-                    }]
-                }
-            });
-          }
           if (data) {
             if (type === 1) {
               this.dataList = [];
@@ -207,6 +176,11 @@ export default {
             this.pageNum = data.paginationData.page;
             this.total = data.paginationData.total;
             this.records = data.paginationData.records;
+          }
+      },
+      relSuccessfully (val) {
+          if (val) {
+              this.getList(null, 1)
           }
       },
       // 点击收藏
@@ -239,48 +213,16 @@ export default {
         })
       },
       // 发布
-      async editorPush (content) {
-        if (!content.editortext) {
-          this.$Message.warning('发布内容不能为空');
-          return false;
-        }
-        let data = {}
-        if (content.editorName === 'tw') {
-          data = {
-              talkType: 1,
-              talkTitle: '',
-              displayPrivacyId: content.publishMode.split('|')[1],
-              talkContent: content.editorContent,
-              listImg: content.imgList
-          }
-        } else if (content.editorName === 'sp') {
-            if (content.imgList.length < 1) {
-              this.$Message.warning('视频还没有上传哦~');
-              return false;
-            }
-          data = {
-              talkType: 2,
-              talkTitle: content.editorContent,
-              talkContent: '',
-              displayPrivacyId: content.publishMode.split('|')[1],
-              listImg: content.imgList
-          }
-        }
-        this.spinShow = true;
-        let msg = await releaseStatement(data);
-        if (msg) {
-            // 初始化编辑器
-            this.$refs.editor.clearEditor();
-            // 加载数据
-            this.getList(null, 1)
-            this.spinShow = false;
-        }
-      }
     }
 }
 </script>
 
 <style lang="less" scoped>
+    .editor-jzbl {
+        border: 1px solid #dedede;
+        background: #fff;
+        margin-top: 10px;
+    }
     @import "~assets/css/ModulesStyle/index.less";
     .container-box {
       width: 1200px;
