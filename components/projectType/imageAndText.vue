@@ -59,7 +59,7 @@
                 <p class="detail-content" v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
-                      <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
+                      <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="">
                     </div>
                 </div>
             </div>

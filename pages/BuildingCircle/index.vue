@@ -25,11 +25,11 @@
                       @clickLike="clickLike"
                   ></VideoItem>
               </template>
+            <Page class="page-the" v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
           </div>
           <nominate :answers="answers" :recommend="recommend"/>
         </div>
         <ToTop></ToTop>
-        <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
     </crollBox>
 </template>
 
@@ -266,5 +266,8 @@ export default {
             margin: 10px 10px 0 0;
             background-color: #ccc;
         }
+    }
+    .page-the {
+      margin-top: 10px;
     }
 </style>

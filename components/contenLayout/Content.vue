@@ -12,7 +12,7 @@
                 <ul class="works-list">
                     <li @mouseleave="hideWorks()" v-for="(items, index) in RspItemDatas" :key="index">
                         <div class="img-box" @click="viewItem(items)">
-                            <img :src="items.ItemTitleImg" alt="">
+                            <img v-lazy="items.ItemTitleImg" alt="">
                             <div class="works-like">
                                 <p><i class="icon iconfont icon-chakan"></i>{{items.Views}}</p>
                                 <p @click.stop="clickCollections(!items.IsCollections, index)">
@@ -157,37 +157,37 @@
         ...mapGetters(['getSessionStorage']),
     },
     methods: {
-      // 将要滚动到底部
-      willReachBottom() {
-        this.$emit('loadData')
-      },
-      entrySorting(val) {
-        this.$emit('entrySorting', val)
-      },
-      showWorks(item) {
-        this.$emit('showWorks', item)
-      },
-      // 查看项目
-      viewItem(val) {
-        this.$emit('viewItem', val);
-      },
-      hideWorks(item) {
-        // this.currentWorks = null;
-        this.$emit('hideWorks', item);
-      },
-      focus() {
-        this.$emit('worksFocus', this.UserProAndFans);
-      },
-      clickCollections(flag, index) {
-        this.$emit('handleCollections', flag, index)
-      },
-      // 跳转
-      jumpRoute(item) {
-        this.$emit('jumpRoute', item);
-      },
-      direct() {
-        //this.currentWorks = null;
-      }
+        // 将要滚动到底部
+        willReachBottom() {
+            this.$emit('loadData')
+        },
+        entrySorting(val) {
+            this.$emit('entrySorting', val)
+        },
+        showWorks(item) {
+            this.$emit('showWorks', item)
+        },
+        // 查看项目
+        viewItem(val) {
+            this.$emit('viewItem', val);
+        },
+        hideWorks(item) {
+            // this.currentWorks = null;
+            this.$emit('hideWorks', item);
+        },
+        focus() {
+            this.$emit('worksFocus', this.UserProAndFans);
+        },
+        clickCollections(flag, index) {
+            this.$emit('handleCollections', flag, index)
+        },
+        // 跳转
+        jumpRoute(item) {
+            this.$emit('jumpRoute', item);
+        },
+        direct() {
+            //this.currentWorks = null;
+        }
     },
   }
 </script>
@@ -388,7 +388,6 @@
                         width: 64px;
                         height: 64px;
                         border-radius: 50%;
-                        background: red;
                         margin: 0 auto 10px;
                     }
 

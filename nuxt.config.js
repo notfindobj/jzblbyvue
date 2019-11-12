@@ -42,6 +42,7 @@ module.exports = {
     { src: "~plugins/vue-swiper.js", ssr: false },
     { src: "~plugins/iconfont.js", ssr: false },
     { src: '~/plugins/vue-quill-editor', ssr: false },
+    { src: '~/plugins/vue-lazyload.js', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
   server: {
