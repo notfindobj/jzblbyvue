@@ -120,7 +120,6 @@ export default {
                     { required: true, message: ' ', trigger: 'blur' }
                 ]
             },
-            titleIsError: false,
             isMove: false,
             menuList: [],
             typeAttrList: [],
@@ -143,8 +142,8 @@ export default {
         }),
     },
     created () {
-        this.getDataList()
-        this.getCascaderData()
+        this.getDataList();
+        this.getCascaderData();
     },
     watch: {
       cascaderAddress(val) {
@@ -185,6 +184,23 @@ export default {
                     this.$set(this.formValidate, 'img', res.smallImgUrl);
                 })
             }
+        },
+        clearEditor () {
+            this.serviceList = [];
+            this.serviceSelectList = [];
+            this.serviceSelectList = [];
+            this.formValidate = {
+                description: '',
+                typeString: '',
+                name: '',
+                img: ''
+            }
+            this.typeFile = null;
+            this.price = '';
+            this.address = '';
+            this.cascaderAddress = [];
+            this.typeAttrList = [];
+            this.initMap()
         },
         // 选择类型
         async clickType(id, name, type) {
@@ -397,7 +413,7 @@ export default {
                 if (valid) {
                     _this.$emit('protPush', obg)
                 } else {
-                     _this.$emit('protPush', false)
+                    _this.$emit('protPush', false)
                 }
             })
             

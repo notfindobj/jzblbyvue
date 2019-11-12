@@ -14,6 +14,9 @@
             </div>
         </div>
         <div class="main-box">
+            <div class="editor-jzbl">
+                <proRele  @relSuccessfully="relSuccessfully"/>
+            </div>
             <!-- 示范区景观 -->
             <div>
                 <div class="main-conment">
@@ -301,6 +304,7 @@
 </template>
 <script>
   import LevelMenu from '../components/home/LevelMenu'
+  import proRele from "../components/proRele"
   import {setDemo} from '../LocalAPI'
   import { analogJump } from '../plugins/untils/public'
   import { mapGetters} from 'vuex'
@@ -352,7 +356,8 @@
         ...mapGetters(['isLogin']),
     },
     components: {
-        LevelMenu
+        LevelMenu,
+        proRele
     },
     async asyncData({ app, store }) {
         let [menuData, homeData] = await Promise.all([store.dispatch('getMenu'), store.dispatch('getHomeData')]);
@@ -409,10 +414,13 @@
         }
     },
     methods: {
-        stopLoop () {
+        relSuccessfully (val) {
+            // if (val) {
+            //     this.getList(null, 1);
+            // }
         },
-        startLoop () {
-        },
+        stopLoop () {},
+        startLoop () {},
         async viewProperties (data, row, name) {
             // 待完善
             if (!this.isLogin) {
@@ -492,6 +500,12 @@
 }
 </script>
 <style lang="less">
+    .editor-jzbl {
+        background: #fff;
+    }
+    .relSuccessfully {
+        
+    }
     .swiper-pagination-bullet {
         width: 18px;
         height: 18px;

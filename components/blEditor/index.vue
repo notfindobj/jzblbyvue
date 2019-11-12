@@ -212,7 +212,8 @@ export default {
                 return false
             }
         },
-        delImg () {
+        delImg (index) {
+            this.imgList.splice(index, 1)
             // this.$delete(this.imgList, index);
         },
         uploadSuccess (fileList) {
@@ -221,7 +222,9 @@ export default {
             }
         },
         // 视频
-        clearVideo () {},
+        clearVideo () {
+            this.imgList = []
+        },
         uploadSuccessVideo (videoInfo) {
             this.imgList = [];
             this.imgList = [videoInfo];

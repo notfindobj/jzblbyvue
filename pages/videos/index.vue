@@ -2,6 +2,9 @@
     <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
         <div class="container-box">
             <div class="container">
+                <div class="editor-jzbl">
+                    <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
+                </div>
                 <video-item
                     v-for="(item, index) in videoList"
                     :key="item.TalkId"
@@ -10,9 +13,9 @@
                     @clickMenu="clickMenu"
                 ></video-item>
             </div>
-            <nominate/>
+            <nominate :answers="answers" :recommend="recommend"/>
         </div>
-        <ToTop :isShowToTop="false"></ToTop>
+        <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
     </crollBox>
 </template>
@@ -23,7 +26,8 @@
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
     import nominate from '../../components/nominate'
-    import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getUserProAndFans} from '../../service/clientAPI'
+    import proRele from "../../components/proRele"
+    import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getUserProAndFans, getRecommend} from '../../service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     import {mapGetters, mapState} from 'vuex'
     export default {
@@ -34,11 +38,15 @@
             'video-item': VideoItem,
             ToTop,
             crollBox,
-            nominate
+            nominate,
+            proRele
         },
         data() {
             return {
+                editorName: 'sp',
                 fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
+                answers: [],
+                recommend: [],
                 pageNum: 1,
                 videoList: [],
                 isLast: false,
@@ -79,7 +87,29 @@
                 }
             }
         },
+        created () {
+            this.getRecommendList();
+        },
         methods: {
+            clickEditor (val) {
+                this.editorName = val
+            },
+            // 获取推荐
+            async getRecommendList () {
+                let msg = await getRecommend("2,4")
+                if (msg) {
+                    msg.forEach(ele =>{
+                    if (ele.TypeId === 3) {
+                        this.answers.push(ele)
+                    } else {
+                        this.recommend.push(ele)
+                    }
+                    })
+                }
+            },
+            relSuccessfully () {
+
+            },
             // 点击头像，去个人中心
             goPersonalCenter(item) {
                 this.$router.push({
@@ -210,6 +240,9 @@
 </script>
 
 <style lang="less" scoped>
+    .editor-jzbl {
+        background: #fff;
+    }
     .container-box {
       width: 1200px;
       margin: 0 auto;

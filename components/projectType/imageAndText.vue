@@ -55,8 +55,8 @@
             <!-- 内容 -->
             <div class="content" >
                 <div v-if="itemInfo.TalkTitle" @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
-                <p v-if ="itemInfo.TalkContent && itemInfo.TalkType === 1" @click="goPictureDetails(itemInfo)" class="detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
-                <p v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <p v-if ="itemInfo.TalkContent && (itemInfo.TalkType === 1 || itemInfo.TalkType === 5)" @click="goPictureDetails(itemInfo)" class="detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <p class="detail-content" v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
                       <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
@@ -205,37 +205,14 @@
             } else {
               showLayout = true
             }
-            let baseSearchNav = {
-                key: 'baseSearchNav',
-                value: {
-                    ClassTypeArrList: [{
-                      AttrKey: row.ItemAttributesEntities[0].ItemAttributesId,
-                      AttrValue: row.ItemAttributesEntities[0].ItemSubAttributeId  
-                    }]
-                }
-            }
-            this.$store.dispatch('Serverstorage', baseSearchNav);
-            let msgs = await setDemo('baseSearchNav', baseSearchNav);
-            // 搜索页项目数据
-            let baseSearchItem = {
-                key: 'baseSearchItem',
-                value: {
-                    Pagination: {
-                        SortType: 1,
-                        KeyWords: "",
-                        Order: true,
-                        Page: 1,
-                        Rows: 32
-                    }
-                }
-            }
-            this.$store.dispatch('Serverstorage', baseSearchItem);
-            let msgss = await setDemo('baseSearchItem', baseSearchItem);
             let routeData = this.$router.resolve({
                 name: 'DataDetails',
                 query: {id: row.ItemId, layout: showLayout }
             })
             analogJump(routeData.href);
+        }
+        if (row.TalkType === 5) {
+          this.goPictureDetails(row)
         }
       },
       moveLeftClick(val) {
@@ -441,6 +418,11 @@
   }
 </script>
 <style lang="less">
+    .detail-content {
+      img {
+        max-width: 100%;
+      }
+    }
     .detail-picture {
       cursor: pointer;
     }

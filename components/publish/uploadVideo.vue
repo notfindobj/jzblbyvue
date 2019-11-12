@@ -38,12 +38,10 @@
         }
           this.$emit('clearVideo');
       },
-
       // 删除文件
       removeFile() {
         this.$emit('clearVideo');
       },
-
       // 上传成功
       uploadSuccess(res) {
         this.$emit('uploadSuccess', res.Data)

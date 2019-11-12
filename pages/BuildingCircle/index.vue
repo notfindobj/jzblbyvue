@@ -3,7 +3,7 @@
         <div class="container-box">
           <div class="container">
             <div class="editor-jzbl">
-                <proRele  @relSuccessfully="relSuccessfully"/>
+                <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
             </div>
             <template v-for="(item, index) in dataList">
                   <ImageAndText
@@ -26,7 +26,7 @@
                   ></VideoItem>
               </template>
           </div>
-          <nominate/>
+          <nominate :answers="answers" :recommend="recommend"/>
         </div>
         <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -40,7 +40,7 @@ import crollBox from '../../components/crollBox'
 import nominate from '../../components/nominate'
 import ToTop from '../../components/toTop'
 import { _throttle } from '../../plugins/untils/public'
-import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, releaseStatement} from '../../service/clientAPI'
+import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, releaseStatement, getRecommend} from '../../service/clientAPI'
 import proRele from "../../components/proRele"
 import {mapGetters, mapState} from 'vuex'
 export default {
@@ -48,6 +48,9 @@ export default {
     middleware: 'authenticated',
     data() {
       return {
+        editorName: 'tw',
+        answers: [],
+        recommend: [],
         pageNum: 1,
         dataList: [],
         isLast: false,
@@ -80,7 +83,26 @@ export default {
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
         }
     },
+    created () {
+      this.getRecommendList();
+    },
     methods: {
+      clickEditor (val) {
+        this.editorName = val
+      },
+      // 获取推荐
+      async getRecommendList () {
+          let msg = await getRecommend("1,2,3,4")
+          if (msg) {
+            msg.forEach(ele =>{
+              if (ele.TypeId === 3) {
+                this.answers.push(ele)
+              } else {
+                this.recommend.push(ele)
+              }
+            })
+          }
+      },
       async clickMenu (row, item, index) {
         let qieryData = {
           "ItemId": row.ItemId,

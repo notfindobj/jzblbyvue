@@ -120,6 +120,7 @@ export default {
                 },
                 slidesPerView: 4,
                 spaceBetween: 20,
+                centeredSlides: true,
                 slidesPerGroup: 1,
                 loop: true,
                 loopFillGroupWithBlank: true,

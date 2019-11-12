@@ -5,6 +5,9 @@
                 <!-- 主内容区 -->
                 <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="content">
+                        <div class="editor-jzbl">
+                            <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
+                        </div>
                         <Menu mode="horizontal" theme="light" :active-name="menuIndex" class="tabs" @on-select="selectMenu">
                             <MenuItem name="5"> 最近问答</MenuItem>
                             <MenuItem name="1"> 本周最热</MenuItem>
@@ -80,12 +83,14 @@ import { getQADataBy, setCollection, setthumbsUp} from '../../service/clientAPI'
 import ToTop from '../../components/toTop'
 import proTools from '../../components/proTools'
 import crollBox from '../../components/crollBox'
+import proRele from "../../components/proRele"
 import { _throttle } from '../../plugins/untils/public'
 export default {
     layout: 'main',
     middleware: 'authenticated',
     data() {
         return {
+            editorName: 'wd',
             fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
             htzhIcon: require('~/assets/images/htzq.png'),
             swiperOption: {
@@ -118,9 +123,16 @@ export default {
     components: {
         ToTop,
         crollBox,
+        proRele,
         proTools
     },
     methods: {
+        relSuccessfully () {
+            this.getQAData(1);
+        },
+        clickEditor (val) {
+            this.editorName = val
+        },
         // 跳转部落
         goToPersonal (row) {
             this.$router.push({

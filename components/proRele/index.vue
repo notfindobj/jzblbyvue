@@ -23,9 +23,14 @@ export default {
         blEditor,
         dataBank
     },
+    props: {
+        editorName: {
+            type: String,
+            default: 'tw'
+        }
+    },
     data () {
         return {
-            editorName: 'tw',
             spinShow: false,
             editorTitle: '',
             protPushData: {}
@@ -50,17 +55,19 @@ export default {
     },
     methods: {
         clickEditor (tab) {
-            this.editorName = tab.value;
             this.editorTitle = '';
             this.$refs.editor.clearEditor();
+            this.$emit('clickEditor', tab.value)
         },
         protPush (row) {
             this.protPushData = row || {};
         },
         async editorPush (row) {
-           
             if (this.editorName === 'xm') {
                 this.$refs.protPush.protPush();
+                this.$refs.editor.clearEditor();
+                this.$refs.protPush.clearEditor();
+                return false
                 if (row.editortext === '') {
                     this.$Message.warning('项目内容不能为空');
                     return false
@@ -70,13 +77,19 @@ export default {
                     return false
                 }
                 if (JSON.stringify(this.protPushData) !== '{}') {
-                    this.protPushData.content = row.editorContent
+                    this.protPushData.ItemContent = row.editorContent
                     this.spinShow = true
                     let msg = await publishProject(this.protPushData);
                     if (msg) {
-                        this.$Message.success('发布成功！');
-                        this.spinShow = false
-                        this.$emit('relSuccessfully', true)
+                        if (this.$route.name === 'BuildingCircle') {
+                            this.$Message.success('发布成功！');
+                            this.spinShow = false;
+                            this.$refs.editor.clearEditor();
+                            this.$refs.protPush.clearEditor();
+                            this.$emit('relSuccessfully', true)
+                        } else{
+                            this.$router.push({ name: "BuildingCircle"})
+                        }
                     } 
                 }
             }
@@ -95,10 +108,14 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    this.$Message.success('发布成功！');
-                    this.$refs.editor.clearEditor();
-                    this.spinShow = false
-                    this.$emit('relSuccessfully', true)
+                    if (this.$route.name === 'BuildingCircle') {
+                        this.$Message.success('发布成功！');
+                        this.$refs.editor.clearEditor();
+                        this.spinShow = false
+                        this.$emit('relSuccessfully', true)
+                    } else{
+                        this.$router.push({ name: "BuildingCircle"})
+                    }
                 } 
             }
             if (this.editorName === 'sp' && row.editortext !== '') {
@@ -116,10 +133,15 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    this.$Message.success('发布成功！');
-                    this.$refs.editor.clearEditor();
-                    this.spinShow = false
-                    this.$emit('relSuccessfully', true)
+                    if (this.$route.name === 'videos') {
+                        this.$Message.success('发布成功！');
+                        this.$refs.editor.clearEditor();
+                        this.spinShow = false
+                        this.$emit('relSuccessfully', true)
+                    } else {
+                        this.$router.push({ name: "videos"})
+                    }
+                    
                 } 
             }
             if (this.editorName === 'wd') {
@@ -138,10 +160,14 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    this.$Message.success('发布成功！');
-                    this.$refs.editor.clearEditor();
-                    this.spinShow = false
-                    this.$emit('relSuccessfully', true)
+                    if (this.$route.name === 'QuestionsAndAnswers') {
+                       this.$Message.success('发布成功！');
+                        this.$refs.editor.clearEditor();
+                        this.spinShow = false
+                        this.$emit('relSuccessfully', true) 
+                    } else {
+                        this.$router.push({ name: "QuestionsAndAnswers"})
+                    }
                 } 
             }
             if (this.editorName === 'tz') {
@@ -159,12 +185,18 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    this.$Message.success('发布成功！');
-                    this.$refs.editor.clearEditor();
-                    this.spinShow = false
-                    this.$emit('relSuccessfully', true)
+                    if (this.$route.name === 'BuildingCircle') {
+                        this.$Message.success('发布成功！');
+                        this.$refs.editor.clearEditor();
+                        this.spinShow = false
+                        this.$emit('relSuccessfully', true)
+                    } else{
+                        this.$router.push({ name: "BuildingCircle"})
+                    }
+                    
                 } 
             }
+            this.editorTitle = '';
         }
     },
 }

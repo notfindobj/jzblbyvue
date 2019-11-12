@@ -11,16 +11,13 @@
                     <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
                 </div>
                 <div style="width：800px" id="pictureBox">
-                    <div>
-                        {{detailInfo.TalkContent}}
-                    </div>
+                    <div v-html="detailInfo.TalkContent"></div>
                     <div v-for="(items, index) in detailInfo.Imgs" :key="index">
                         <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" >
                     </div>
                 </div>
             </div> 
         </div>
-        
         <div class="picture-right">
             <div class="picture-right-title">
                 <img @click="goToPersonal(detailInfo)" :src="detailInfo.HeadIcon" alt="">

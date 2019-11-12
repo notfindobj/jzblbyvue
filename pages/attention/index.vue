@@ -4,7 +4,7 @@
             <div class="container-box">
                 <div class="container">
                     <div class="editor-jzbl">
-                        <proRele  @relSuccessfully="relSuccessfully"/>
+                        <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
                     </div>
                     <template v-for="(item, index) in attentionList">
                         <ImageAndText
@@ -30,7 +30,7 @@
                         暂无关注数据
                     </div>
                 </div>
-                <nominate/>
+                <nominate :answers="answers" :recommend="recommend"/>
             </div>
             <ToTop ></ToTop>
             <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -46,13 +46,16 @@
     import crollBox from '../../components/crollBox'
     import { _throttle } from '../../plugins/untils/public'
     import nominate from '../../components/nominate'
-    import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat } from '../../service/clientAPI'
+    import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getRecommend} from '../../service/clientAPI'
     export default {
         layout: 'main',
         name: 'attention',
         middleware: 'authenticated',
         data() {
             return {
+                editorName: 'tw',
+                answers: [],
+                recommend: [],
                 pageNum: 1,
                 attentionList: [],
                 isLast: false,
@@ -68,7 +71,26 @@
             nominate,
             proRele
         },
+        created () {
+            this.getRecommendList()
+        },
         methods: {
+            clickEditor (val) {
+                this.editorName = val
+            },
+            // 获取推荐
+            async getRecommendList () {
+                let msg = await getRecommend("1,2,3,4")
+                if (msg) {
+                    msg.forEach(ele =>{
+                    if (ele.TypeId === 3) {
+                        this.answers.push(ele)
+                    } else {
+                        this.recommend.push(ele)
+                    }
+                    })
+                }
+            },
             // 点击头像，去个人中心
             goPersonalCenter(item) {
                 this.$router.push({
@@ -209,7 +231,6 @@
                 }
             }
         },
-        
         async asyncData({ store }) {
             const data = await store.dispatch('getAttentionList', {
                 Page: 1,

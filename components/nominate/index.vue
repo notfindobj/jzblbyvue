@@ -21,30 +21,43 @@
                 </li>
             </ul>
         </div>
-        <div>
-            <div v-swiper:mySwiper="swiperOption" class="swiper-boxs" v-if="userItem.length > 0" >
+        <div class="recommend-box" v-if="answers.length > 0 || recommend.length > 0" >
+            <div class="recommend" v-if="recommend.length > 0">
+                <span class="recommend-title">猜你喜欢</span>
+                <span>换一换</span>
+            </div>
+            <div v-swiper:mySwiper="swiperOption" class="swiper-boxs" >
                 <div class="swiper-wrapper">
-                    <div v-for="(items, index) in userItem" class="swiper-slide" :key="index">
+                    <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
                         <div class="swiper-slide-item" >
-                            <img :src="items.ItemTitleImg" alt="">
-                            <span class="slide-ite-new" v-if="userInfoID === items.UserId">NEW</span>
-                            <div class="slide-item-text" @click="viewDetails(items)">
-                                <div class="item-text-title" @click.stop>
-                                    <span @click="goPersonalCenter(items)">
-                                        <span :style="`background-image: url(${items.HeadIcon})`"></span>
-                                        <p>{{items.NickName}}</p>
-                                    </span>
+                            <div class="recommend-swiper">
+                                <div class="recommend-swiper-name">
+                                    {{items.Title}}
                                 </div>
-                                <div class="item-text-content">
-                                    {{items.ItemName}}
-                                </div>
+                                <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
+                                    <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                                </nuxt-link>
+                                <nuxt-link v-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
+                                    <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                                </nuxt-link>
+                                <nuxt-link v-else target="_blank" :to="{name: 'pictureDetails-id', params: {id:items.ItemId, }}">
+                                    <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                                </nuxt-link>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="swiper-button-prev"></div><!--左箭头。如果放置在swiper-container外面，需要自定义样式。-->
-                <div class="swiper-button-next"></div><!--右箭头。如果放置在swiper-container外面，需要自定义样式。-->
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
+            <div class="recommend" v-if="answers.length > 0">
+                <span class="recommend-title">猜你喜欢</span>
+                <span>换一换</span>
+            </div>
+            <ul class="recommend-problem">
+                <li v-for="(items, index) in answers" :key="index">
+                    <nuxt-link target="_blank" :to="{name: 'QuestionsAndAnswers-id', params: {id:items.ItemId}}">{{items.Title}}</nuxt-link>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -52,27 +65,41 @@
 import {mapGetters, mapState} from 'vuex'
 import {getUserProAndFans, getRecommend} from '../../service/clientAPI'
 export default {
+    props: {
+        answers: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        },
+        recommend: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        }
+    },
     data () {
         return {
             UserProAndFans: {},
             userItem: [],
             swiperOption: {
                 autoplay: {
-                    delay: 2500,
+                    delay: 3000,
                     disableOnInteraction: false
                 },
-                slidesPerGroup: 1,
+                // slidesPerGroup: 1,
                 loop: true,
                 loopFillGroupWithBlank: true,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                on: {
-                    slideChange() {},
-                    tap() {}
-                },
-            }
+                pagination: {
+                    el: '.swiper-pagination',
+                    clickable: true,
+                    renderBullet(index, className) {
+                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
+                    }
+                }
+            },
+            warnList: []
         }
     },
     computed: {
@@ -82,9 +109,17 @@ export default {
     },
     created () {
       this.getUserPro(this.userInfo.UserId)
-    //   this.getRecommendList()
+      this.getRecommendList()
     },
     methods: {
+        baseUrlRegExp (str) {
+            let reg = RegExp(/\http:\/\/www./);
+            if(str.match(reg)){
+                return str
+            } else {
+                return process.env.fileBaseUrl+ str
+            }
+        },
         async getRecommendList () {
             let msg = await getRecommend("1,2,3,4")
             if (msg) {
@@ -110,6 +145,66 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .recommend-problem {
+        padding: 10px;
+        font-size: 16px;
+        width: 330px;
+        background: #fff;
+        border-top: 1px solid #f0f0f0;
+        li a {
+            display: inline-block;
+            line-height: 25px;
+            &:hover {
+                color: #FF3C00;
+                text-decoration: underline;
+            }
+        }
+    }
+    .recommend-boxs {
+        width: 330px;
+        height: auto;
+    }
+    .recommend-swiper {
+        position: relative;
+        &-name {
+            position: absolute;
+            color: #fff;
+            font-size: 14px;
+            line-height: 25px;
+        }
+    }
+    .recommend-box {}
+    .recommend {
+        background: #fff;
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        font-size: 16px;
+        padding: 10px;
+        &-title {
+            font-weight: bold;
+            cursor: pointer;
+        }
+    }
+    /deep/.swiper-pagination-bullet{
+        width: 18px;
+        height: 18px;
+        color: #fff;
+    }
+    /deep/.swiper-pagination-bullet-active {
+        background: #FF3C00;
+    }
+    .swiper-boxs {
+        width: 330px;
+        height: 200px;
+        img {
+            width: 100%;
+            height: 200px;
+        }
+    }
+    .swiper-slide-item {
+        cursor: pointer;
+    }
     .nominate {
         position: sticky;
         display: inline-block;

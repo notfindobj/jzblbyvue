@@ -244,7 +244,7 @@ export default {
         },
         // 视频
         clearVideo () {
-
+            this.imgList = [];
         },
         uploadSuccessVideo (videoInfo) {
             this.imgList = [];
