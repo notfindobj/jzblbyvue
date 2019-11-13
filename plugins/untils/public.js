@@ -87,7 +87,7 @@ export function preventSliding (className) {
 }
 // 
 export function baseUrlRegExp (str='') {
-    let reg = RegExp(/\http:\/\/www./);
+    let reg = RegExp(/\http:\/\//);
     if(str.match(reg)){
         return str
     } else {

@@ -12,7 +12,7 @@
                 </div>
                 <div style="width：800px" id="pictureBox">
                     <div v-html="detailInfo.TalkContent"></div>
-                    <div v-for="(items, index) in detailInfo.Imgs" :key="index">
+                    <div v-for="(items, index) in detailInfo.ResourceObj" :key="index">
                         <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" >
                     </div>
                 </div>
@@ -86,7 +86,7 @@ export default {
     },
     methods: {
         baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\/www./);
+            let reg = RegExp(/\http:\/\//);
             if(str.match(reg)){
                 return str
             } else {
@@ -106,13 +106,7 @@ export default {
                     zoomRatio: 0.4,
                     maxZoomRatio: 3,
                     show: function (e) {
-                    _this.isShowViewBox = true;
-                    },
-                    ready: function () {
-                        console.log('ready')
-                    },
-                    build: function () {
-                        console.log('build')
+                        _this.isShowViewBox = true;
                     },
                     view: function (e) {
                         _this.itemLength = document.querySelectorAll('.viewer-list > li').length;
@@ -126,8 +120,8 @@ export default {
                         });
                     },
                     hidden() {
-                    _this.isBtnSile = false;
-                    _this.viewShowBox()
+                        _this.isBtnSile = false;
+                        _this.viewShowBox()
                     }
                 })
             })

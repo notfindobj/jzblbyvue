@@ -3,8 +3,8 @@
         <div class="videod-title">
             {{videoDetails.TalkTitle}}
         </div>
-        <video ref="videoRef" :poster="baseUrlRegExp(resourcesVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">
-            <source :src="baseUrlRegExp(resourcesVideo.videoUrl)" type="video/mp4" >
+        <video ref="videoRef" :poster="baseUrlRegExp(videoDetails.ResourceObj[0].smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">
+            <source :src="baseUrlRegExp(videoDetails.ResourceObj[0].videoUrl)" type="video/mp4" >
         </video>
         <commentsCon
             :publish="videoDetails"
@@ -105,7 +105,7 @@ export default {
             );
         },
         baseUrlRegExp (str="") {
-            let reg = RegExp(/\http:\/\/www./);
+            let reg = RegExp(/\http:\/\//);
             if(str.match(reg)){
                 return str
             } else {

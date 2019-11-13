@@ -202,7 +202,7 @@ export default {
             let msg =  this.$store.dispatch('getGetComments', queryData)
         },
         baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\/www./);
+            let reg = RegExp(/\http:\/\//);
             if(str.match(reg)){
                 return str
             } else {

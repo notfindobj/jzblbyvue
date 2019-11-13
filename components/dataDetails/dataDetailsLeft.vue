@@ -81,16 +81,6 @@
             show: function (e) {
               _this.isShowViewBox = true;
             },
-            ready: function () {
-              // document.querySelector('.viewer-close').onmouseover();
-              console.log('ready')
-            },
-            build: function () {
-              console.log('build')
-            },
-            built: function () {
-              console.log('built')
-            },
             view: function (e) {
               _this.itemLength = document.querySelectorAll('.viewer-list > li').length;
               _this.itemIndex = e.detail.index;

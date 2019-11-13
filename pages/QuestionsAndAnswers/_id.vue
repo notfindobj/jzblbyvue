@@ -270,28 +270,16 @@
                         title: false,
                         zoomRatio: 0.4,
                         maxZoomRatio: 3,
-                        show: function (e) {
-                        console.log(e)
-                        },
-                        ready: function () {
-                        console.log('ready')
-                        },
-                        build: function () {
-                        console.log('build')
-                        },
                         view: function(e) {
-                        _this.itemLength = e.target.childElementCount;
-                        _this.itemIndex = e.detail.index;
-                        },
-                        built: function () {
-                        console.log('built')
+                            _this.itemLength = e.target.childElementCount;
+                            _this.itemIndex = e.detail.index;
                         },
                         shown: function (e) {
-                        _this.isBtnSile = true;
-                        var that = e.target.viewer;
-                        $(e.target.viewer.viewer).find(".viewer-canvas").on("dblclick", "img", function () {
-                            that.hide();
-                        });
+                            _this.isBtnSile = true;
+                            var that = e.target.viewer;
+                            $(e.target.viewer.viewer).find(".viewer-canvas").on("dblclick", "img", function () {
+                                that.hide();
+                            });
                         },
                         hidden() {
                         _this.isBtnSile = false;

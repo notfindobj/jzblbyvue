@@ -33,7 +33,51 @@ export default {
         return {
             spinShow: false,
             editorTitle: '',
-            protPushData: {}
+            protPushData: {},
+            Building: ['da970ced-f63b-4c93-96d2-8ccffc860f02', 'e5082f90-f590-4107-8d42-2d37897ef261' ,'412c275f-3a6b-45b0-b3b2-a69a36666e8a'],
+            pdfBul: ['f7399e5e-82a6-47e0-942e-fcae1a68af40', 'efa20b33-6dd9-4eb4-85c8-55ea854fee89'],
+            navigationID: [
+                {
+                    value: 'e5082f90-f590-4107-8d42-2d37897ef261',
+                    label: '示范区'
+                },
+                {
+                    value: '412c275f-3a6b-45b0-b3b2-a69a36666e8a',
+                    label: '楼盘'
+                },
+                {
+                    value: 'da970ced-f63b-4c93-96d2-8ccffc860f02',
+                    label: '效果图'
+                },
+                {
+                    value: '0607ac33-06c6-4430-86f0-3bb7ef83eca3',
+                    label: 'SU模型'
+                },
+                {
+                    value: '03b6f0e1-f0ef-4654-86d3-d7c8d35b7fd3',
+                    label: '总图'
+                },
+                {
+                    value: '642cdb69-a95a-4b84-9242-8ad4cc6ddabf',
+                    label: '平面'
+                },
+                {
+                    value: '9626945d-6f04-4b61-9190-a273a4d94e05',
+                    label: '文本'
+                },
+                {
+                    value: 'f7399e5e-82a6-47e0-942e-fcae1a68af40',
+                    label: '建筑规范'
+                },
+                {
+                    value: 'efa20b33-6dd9-4eb4-85c8-55ea854fee89',
+                    label: '室内案例'
+                },
+                {
+                    value: '7bb57c36-0180-44ac-85c4-a38a66d3a780',
+                    label: '新楼盘'
+                }
+            ]
         }
     },
     computed: {
@@ -65,10 +109,7 @@ export default {
         async editorPush (row) {
             if (this.editorName === 'xm') {
                 this.$refs.protPush.protPush();
-                this.$refs.editor.clearEditor();
-                this.$refs.protPush.clearEditor();
-                return false
-                if (row.editortext === '') {
+                if (row.editortext === '' || row.imgList.length < 1) {
                     this.$Message.warning('项目内容不能为空');
                     return false
                 }
@@ -81,14 +122,18 @@ export default {
                     this.spinShow = true
                     let msg = await publishProject(this.protPushData);
                     if (msg) {
-                        if (this.$route.name === 'BuildingCircle') {
+                        if (this.$route.name === 'BuildingCircle' && this.Building.includes(this.protPushData.TypeModel.ItemTypeId)) {
                             this.$Message.success('发布成功！');
                             this.spinShow = false;
                             this.$refs.editor.clearEditor();
                             this.$refs.protPush.clearEditor();
                             this.$emit('relSuccessfully', true)
                         } else{
-                            this.$router.push({ name: "BuildingCircle"})
+                            let layout = true
+                            if (this.pdfBul.includes(this.protPushData.TypeModel.ItemTypeId)) {
+                                layout = false
+                            }
+                            this.$router.push({name: 'DataDetails',query: {id: msg.ItemId, layout: layout}})
                         }
                     } 
                 }

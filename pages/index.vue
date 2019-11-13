@@ -15,7 +15,7 @@
         </div>
         <div class="main-box">
             <div class="editor-jzbl">
-                <proRele  @relSuccessfully="relSuccessfully"/>
+                <proRele :editorName="editorName" @clickEditor="clickEditor"/>
             </div>
             <!-- 示范区景观 -->
             <div>
@@ -329,6 +329,7 @@
     },
     data() {
         return {
+            editorName: 'tw',
             swiperOption: {
                 loop: true,
                 autoplay: {
@@ -414,10 +415,8 @@
         }
     },
     methods: {
-        relSuccessfully (val) {
-            // if (val) {
-            //     this.getList(null, 1);
-            // }
+        clickEditor (val) {
+            this.editorName = val
         },
         stopLoop () {},
         startLoop () {},

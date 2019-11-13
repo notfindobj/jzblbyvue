@@ -59,7 +59,7 @@
                 <p class="detail-content" v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
                 <div class="photo-wrap" :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
-                      <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="">
+                      <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
                     </div>
                 </div>
             </div>
@@ -173,6 +173,10 @@
       this.initView()
     },
     methods: {
+      replaceImgs (val) {
+          let regex = "/i/s/";
+          return val.replace(regex, "/i/");
+      },
       async delComments (row) {
         let msg = await delComment(row.CommentsId)
         if (msg) {
@@ -268,21 +272,9 @@
             title: false,
             zoomRatio: 0.4,
             maxZoomRatio: 3,
-            show: function (e) {
-              console.log(e)
-            },
-            ready: function () {
-              console.log('ready')
-            },
-            build: function () {
-              console.log('build')
-            },
             view: function(e) {
               _this.itemLength = e.target.childElementCount;
               _this.itemIndex = e.detail.index;
-            },
-            built: function () {
-              console.log('built')
             },
             shown: function (e) {
               _this.isBtnSile = true;
@@ -300,7 +292,7 @@
         })
       },
       baseUrlRegExp (str) {
-          let reg = RegExp(/\http:\/\/www./);
+          let reg = RegExp(/\http:\/\//);
           if(str.match(reg)){
             return str
           } else {
@@ -346,12 +338,10 @@
           this.isShowComment = false;
           return false;
         }
-
         this.isShowComment = true;
         this.isLoadingComment = true;
         this.getComment();
       },
-
       // 获取评论
       getComment() {
         this.$store.dispatch('getGetComments', {
