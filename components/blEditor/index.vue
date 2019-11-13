@@ -27,14 +27,10 @@
                                     <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
                                         <div class="img-item" v-for="(item, index) in imgList" :key="index" >
                                             <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
-                                            <img :src="item.smallImgUrl" alt="">
+                                            <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                                         </div>
                                     </draggable>
-                                    <Upload
-                                        class="upload"
-                                        :uploadType="2"
-                                        @uploadSuccess="uploadSuccess"
-                                    />
+                                    <Upload class="upload" :uploadType="2" @uploadSuccess="uploadSuccess" />
                                 </div>
                             </div>
                         </div>
@@ -157,6 +153,14 @@ export default {
         _this.editor.create();
     },
     methods: {
+        baseUrlRegExp (str) {
+            let reg = RegExp(/\http:\/\//);
+            if(str.match(reg)){
+                return str
+            } else {
+                return this.fileBaseUrl+ str
+            }
+        },
         ViewProtocol (row) {
             this.$store.dispatch('SETUP', false);
             let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
@@ -184,7 +188,8 @@ export default {
                 }
                 uploadFile(data, 1).then(res => {
                     for (let q = 0; q < res.length; q++) {
-                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img><p><br></p></p>`)
+                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img><p><br></p></p>`);
+                        _this.imgList.push(res[q]);
                     }
                     _this.imgsrc = _this.getSrc(_this.editor.txt.html())
                 }).catch(err => {
@@ -345,6 +350,10 @@ export default {
         overflow: hidden;
         cursor: pointer;
         position: relative;
+        img {
+            width: 100%;
+            height: 100%;
+        }
     }
     .updat-content-title {
         font-size: 14px;
