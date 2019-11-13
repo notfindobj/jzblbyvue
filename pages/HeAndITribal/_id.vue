@@ -405,8 +405,8 @@
         height: 100%;
         background: url("../../assets/images/heandibg.png") no-repeat left top;
         background-size: cover;
-
         .he-and-i-tribal-content {
+            overflow: hidden;
             width: 1200px;
             height: auto;
             margin: 0 auto;
