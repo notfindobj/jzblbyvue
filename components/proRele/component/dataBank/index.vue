@@ -148,7 +148,7 @@ export default {
     watch: {
       cascaderAddress(val) {
         this.aMap.setCity(val[val.length-1]);
-        this.setAotucomplete()
+        this.setAotucomplete(val);
       }
     },
     methods: {
@@ -338,10 +338,11 @@ export default {
                 zoom: 11
             });
         },
-        setAotucomplete () {
+        setAotucomplete (city) {
             let _this = this;
             let auto = new AMap.Autocomplete({
-                input: 'tipinput'
+                input: 'tipinput',
+                city: city[0],
             });
         },
         protPush () {

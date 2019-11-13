@@ -91,6 +91,7 @@ import Upload from '../../components/publish/upload'
 import { _debounce, analogJump } from '../../plugins/untils/public'
 import uploadVideo from '../../components/publish/uploadVideo'
 import draggable from 'vuedraggable'
+import { sinaIcon, jzIcon} from '../../assets/Emoticon'
 export default {
     name: 'editor',
     props: {
@@ -141,6 +142,26 @@ export default {
           'undo', // 撤销
           'redo', // 重复
         ],
+        // 表情面板可以有多个 tab ，因此要配置成一个数组。数组每个元素代表一个 tab 的配置
+        _this.editor.customConfig.emotions = [
+            {
+                // tab 的标题
+                title: '默认',
+                // type -> 'emoji' / 'image'
+                type: 'image',
+                // content -> 数组
+                content: jzIcon
+            },
+             {
+                // tab 的标题
+                title: '热门',
+                // type -> 'emoji' / 'image'
+                type: 'image',
+                // content -> 数组
+                content: sinaIcon
+            },
+            
+        ]
         _this.editor.customConfig.showLinkImg = false
         _this.$refs.editor.addEventListener('click', function (e) {
             if (e.target.tagName === 'IMG') {
@@ -474,10 +495,16 @@ export default {
     /deep/ .w-e-text {
         padding: 0 10px;
         min-height: 100px;
-    }
-    /deep/ .w-e-text {
         overflow: hidden;
         background: #eeed;
+        img {
+            width: 25px;
+        }
+    }
+    /deep/ .w-e-emoticon-container .w-e-item{
+        img {
+            width: 25px;
+        }
     }
     .text {
         min-height: 100px;

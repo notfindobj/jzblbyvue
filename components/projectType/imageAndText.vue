@@ -55,9 +55,9 @@
             <!-- 内容 -->
             <div class="content" >
                 <div v-if="itemInfo.TalkTitle" @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
-                <p v-if ="itemInfo.TalkContent && (itemInfo.TalkType === 1 || itemInfo.TalkType === 5)" @click="goPictureDetails(itemInfo)" class="detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
-                <p class="detail-content" v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
-                <div class="photo-wrap" :ref="mathId">
+                <p v-if ="itemInfo.TalkContent && (itemInfo.TalkType === 1 || itemInfo.TalkType === 5)" @click="goPictureDetails(itemInfo)" class="wrap detail-picture"><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <p class="detail-content wrap " v-else><emotHtml v-model="itemInfo.TalkContent"/></p>
+                <div class="photo-wrap " :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
                       <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
                     </div>
@@ -415,6 +415,9 @@
     }
     .detail-picture {
       cursor: pointer;
+       img[data-w-e="1"] {
+         width: 22px;
+       }
     }
     .itemHide {
       display: none;
