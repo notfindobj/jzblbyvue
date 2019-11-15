@@ -10,7 +10,7 @@
             </div>
             <div class="cards-eye">
                 <div>
-                    <i class="iconfont icon-shangchuan"></i>
+                    <i class="iconfont icon-chakan"></i>
                     {{ bigCardsDate.Views }}
                 </div>
                 <div class="cards-eye-name">

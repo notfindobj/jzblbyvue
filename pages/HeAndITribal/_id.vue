@@ -11,8 +11,8 @@
                     </li>
                 </ul>
                 <div class="he-and-i-con-box-content">
+                    <!-- 二级导航-->
                     <div class="he-and-i-con-box-content-left">
-                        <!-- 二级导航-->
                         <ul class="head-boxs head-boxs-two" v-show="headList && headList.length > 0">
                             <li :class="twoIndex === itemIndex ? 'li-active' : ''" v-for="(item, itemIndex) in headList" :key="itemIndex" 
                                 @click="changeTwo(item.TypeId, itemIndex)">
@@ -406,7 +406,7 @@
         background: url("../../assets/images/heandibg.png") no-repeat left top;
         background-size: cover;
         .he-and-i-tribal-content {
-            overflow: hidden;
+            // overflow: hidden;
             width: 1200px;
             height: auto;
             margin: 0 auto;

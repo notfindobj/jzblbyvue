@@ -43,8 +43,8 @@
                     <span class="tool-box-private">私信</span>
                   </div>
                 </div>
-                <div class="block-head-right">
-                    <Dropdown placement="bottom-end" trigger="click" v-if="itemInfo.itemBindOperat">
+                <div class="block-head-right" v-if="itemInfo.itemBindOperat">
+                    <Dropdown placement="bottom-end" trigger="click" v-if="itemInfo.itemBindOperat.ItemOperatBtns.length > 0">
                         <a href="javascript:void(0)"><Icon type="ios-arrow-down"></Icon></a>
                         <DropdownMenu slot="list">
                             <DropdownItem v-for="(items, indexs) in itemInfo.itemBindOperat.ItemOperatBtns" :key="indexs" @click.native="dropdownMenu(itemInfo, items, index)"> {{items.OperatName}}</DropdownItem>
@@ -55,8 +55,8 @@
             <!-- 内容 -->
             <div class="content" >
                 <div v-if="itemInfo.TalkTitle" @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
-                <p v-if ="itemInfo.TalkContent && (itemInfo.TalkType === 1 || itemInfo.TalkType === 5)" @click="goPictureDetails(itemInfo)" class="wrap detail-picture" v-html="itemInfo.TalkContent"></p>
-                <p class="detail-content wrap " v-else v-html="itemInfo.TalkContent"></p>
+                <p v-if ="itemInfo.TalkContent && (itemInfo.TalkType === 1 || itemInfo.TalkType === 5)" @click="goPictureDetails(itemInfo)" class="detail-picture" v-html="itemInfo.TalkContent"></p>
+                <p class="detail-content" v-else v-html="itemInfo.TalkContent"></p>
                 <div class="photo-wrap " :ref="mathId">
                     <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
                       <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
