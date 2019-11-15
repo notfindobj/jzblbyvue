@@ -51,7 +51,7 @@
                 </li>
             </ul>
         </div>
-        <div ref="swiperBox" v-swiper:mySwiper="swiperOption" class="swiper-boxs" v-if="userItem.length > 0" >
+        <div class="swiper-boxs" v-if="userItem.length > 0">
             <div class="swiper-wrapper">
                 <div v-for="(items, index) in userItem" class="swiper-slide" :key="index">
                     <div class="swiper-slide-item" >
@@ -71,14 +71,16 @@
                     </div>
                 </div>
             </div>
-            <div class="swiper-button-prev"></div><!--左箭头。如果放置在swiper-container外面，需要自定义样式。-->
-            <div class="swiper-button-next"></div><!--右箭头。如果放置在swiper-container外面，需要自定义样式。-->
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
         </div>
     </div>
 </template>
 <script>
 import {mapGetters, mapState} from 'vuex'
 import {analogJump} from '../../plugins/untils/public'
+import Swiper from "swiper"
+import 'swiper/dist/css/swiper.min.css'
 export default {
     name: 'contenNav',
     props: {
@@ -113,27 +115,7 @@ export default {
             currentName: '',
             oneMeun: [],
             clicked: -1,
-            swiperOption: {
-                autoplay: {
-                    delay: 2500,
-                    disableOnInteraction: false
-                },
-                notNextTick: true,
-                slidesPerView: 4,
-                spaceBetween: 20,
-                centeredSlides: true,
-                slidesPerGroup: 1,
-                loop: true,
-                loopFillGroupWithBlank: true,
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                on: {
-                    slideChange() {},
-                    tap() {}
-                },
-            }
+            swiperBox: null
         }
     },
     computed: {
@@ -141,10 +123,6 @@ export default {
         ...mapState({
             userInfoID: state => state.overas.auth? state.overas.auth.UserId: ""
         }),
-        swiper() {
-        // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
-            return this.$refs.swiperBox.swiper
-        },
     },
     created() {
         this.currentName = this.getSessionStorage.baseSearchNav.title;
@@ -153,13 +131,36 @@ export default {
             this.oneMeun = res.RetMenuData;
         })
     },
-    
     watch: {
       userItem: function (val, oval) {
-        console.log(this.swiper)
+        this.swiperBox.updateSlides();
       }
     },
+    mounted () {
+        this.initSwiper()
+    },
     methods: {
+        initSwiper () {
+            this.swiperBox = new Swiper (".swiper-boxs",{
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                slidesPerView: 4,
+                spaceBetween: 20,
+                centeredSlides: true,
+                slidesPerGroup: 1,
+                notNextTick: true,
+                loop:true,  //循环
+                loopFillGroupWithBlank: true,  
+                observer:true,//修改swiper自己或子元素时，自动初始化swiper
+        　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
+                autoplay: {
+                    delay: 2500,
+                　　disableOnInteraction: false,  //触碰后自动切换停止
+            　　}
+            })
+        },
         viewDetails (row) {
             let ItemType = Number(sessionStorage.getItem('searchIndex') || 0);
             let routeData = this.$router.resolve({
@@ -205,6 +206,8 @@ export default {
     .swiper-boxs {
         height: 200px;
         margin-bottom: 10px;
+        overflow: hidden;
+        position: relative;
         .swiper-slide-item {
             cursor: pointer;
             width: 290px;

@@ -26,7 +26,7 @@
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
             </div>
-            <div v-swiper:mySwiper="swiperOption" class="swiper-boxs" >
+            <div class="swiper-boxss swiper-content">
                 <div class="swiper-wrapper">
                     <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
                         <div class="swiper-slide-item" >
@@ -64,6 +64,8 @@
 <script>
 import {mapGetters, mapState} from 'vuex'
 import {getUserProAndFans, getRecommend} from '../../service/clientAPI'
+import Swiper from "swiper"
+import 'swiper/dist/css/swiper.min.css'
 export default {
     props: {
         answers: {
@@ -82,24 +84,6 @@ export default {
     data () {
         return {
             UserProAndFans: {},
-            userItem: [],
-            swiperOption: {
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false
-                },
-                // slidesPerGroup: 1,
-                loop: true,
-                loopFillGroupWithBlank: true,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                    renderBullet(index, className) {
-                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
-                    }
-                }
-            },
-            warnList: []
         }
     },
     computed: {
@@ -107,23 +91,44 @@ export default {
             userInfo: state => state.overas.auth? state.overas.auth: {}
         })
     },
+    watch: {
+      recommend: function (val, oval) {
+            if (val.length > 0) {
+                this.initSwiper()
+            } else {
+                console.log('aaaaa')
+            }
+      }
+    },
     created () {
-      this.getUserPro(this.userInfo.UserId)
-      this.getRecommendList()
+        this.getUserPro(this.userInfo.UserId)
     },
     methods: {
+        initSwiper () {
+            this.swiperBox = new Swiper (".swiper-content",{
+                loop:true,  //循环
+                observer:true,//修改swiper自己或子元素时，自动初始化swiper
+                //使用分页器
+                paginationClickable :true,
+                pagination: {
+                　　el: '.swiper-pagination',
+                    clickable: true,
+                    renderBullet(index, className) {
+                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
+                    }
+                },    
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false
+                },
+            })
+        },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
             if(str.match(reg)){
                 return str
             } else {
                 return process.env.fileBaseUrl+ str
-            }
-        },
-        async getRecommendList () {
-            let msg = await getRecommend("1,2,3,4")
-            if (msg) {
-                this.userItem = msg;
             }
         },
         async getUserPro (id) {
@@ -160,7 +165,7 @@ export default {
             }
         }
     }
-    .recommend-boxs {
+    .recommend-boxss {
         width: 330px;
         height: auto;
     }
@@ -173,7 +178,6 @@ export default {
             line-height: 25px;
         }
     }
-    .recommend-box {}
     .recommend {
         background: #fff;
         margin-top: 10px;
@@ -194,9 +198,11 @@ export default {
     /deep/.swiper-pagination-bullet-active {
         background: #FF3C00;
     }
-    .swiper-boxs {
+    .swiper-boxss {
         width: 330px;
         height: 200px;
+        overflow: hidden;
+        position: relative;
         img {
             width: 100%;
             height: 200px;

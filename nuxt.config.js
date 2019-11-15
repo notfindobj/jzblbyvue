@@ -29,7 +29,6 @@ module.exports = {
   // 公共CSS
   css: [
     '~assets/font-face/iconfont.css',
-    'swiper/dist/css/swiper.css',
     'quill/dist/quill.snow.css',
     'quill/dist/quill.bubble.css',
     'quill/dist/quill.core.css',
@@ -39,7 +38,6 @@ module.exports = {
   plugins: [
     { src: '~plugins/my-theme/index', ssr: true },
     { src: '~plugins/vMap', ssr: true },
-    { src: "~plugins/vue-swiper.js", ssr: false },
     { src: "~plugins/iconfont.js", ssr: false },
     { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/vue-lazyload.js', ssr: false },

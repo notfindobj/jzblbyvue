@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="banner-box">
-            <div v-swiper:mySwiper="swiperOption" class="swiper-box">
+            <div class="swiper-box">
                 <div class="swiper-wrapper">
                     <div class="swiper-slide" v-for="(banner, index) in SlideList" :key="index">
                         <a v-if="banner.ItemUrl" :href="banner.ItemUrl" target="_blank">
@@ -12,6 +12,17 @@
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
+            <!-- <div v-swiper:mySwiper="swiperOption" >
+                <div >
+                    <div class="swiper-slide" v-for="(banner, index) in SlideList" :key="index">
+                        <a v-if="banner.ItemUrl" :href="banner.ItemUrl" target="_blank">
+                            <img :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
+                        </a>
+                         <img v-else :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
+                    </div>
+                </div>
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
+            </div> -->
         </div>
         <div class="main-box">
             <div class="editor-jzbl">
@@ -308,6 +319,8 @@
   import {setDemo} from '../LocalAPI'
   import { analogJump } from '../plugins/untils/public'
   import { mapGetters} from 'vuex'
+  import Swiper from "swiper"
+  import 'swiper/dist/css/swiper.min.css'
   export default {
     head: {
         title: '建筑部落',
@@ -330,27 +343,6 @@
     data() {
         return {
             editorName: 'tw',
-            swiperOption: {
-                loop: true,
-                autoplay: {
-                    delay: 2500,
-                    disableOnInteraction: false
-                },
-                slidesPerView: 'auto',
-                centeredSlides: true,
-                paginationClickable: true,
-                pagination: {
-                    el: '.swiper-pagination',
-                    clickable: true,
-                    renderBullet(index, className) {
-                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
-                    }
-                },
-                on: {
-                    autoplayStart() {},
-                    autoplayStop() {}
-                },
-            }
         }
     },
     computed: {
@@ -414,7 +406,31 @@
             snList: homeData.ItemList.Snal.RecommendedItemModels || [], // 室内案例
         }
     },
+    mounted () {
+        this.initSwiper()
+    },
     methods: {
+        initSwiper () {
+            let swiper = new Swiper (".swiper-box",{
+                direction: 'horizontal',
+                loop:true,  //循环
+                loopFillGroupWithBlank: true,  
+                observer:true,//修改swiper自己或子元素时，自动初始化swiper
+            　　 observeParents:true,//修改swiper的父元素时，自动初始化swiper
+                //使用分页器
+                paginationClickable :true,
+                pagination: {
+                　　el: '.swiper-pagination',
+                    clickable: true,
+                    renderBullet(index, className) {
+                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
+                    }
+                },    
+                autoplay: {
+                　　disableOnInteraction: false,  //触碰后自动切换停止
+            　　}
+            })
+        },
         clickEditor (val) {
             this.editorName = val
         },
@@ -502,9 +518,6 @@
     .editor-jzbl {
         background: #fff;
     }
-    .relSuccessfully {
-        
-    }
     .swiper-pagination-bullet {
         width: 18px;
         height: 18px;
@@ -537,6 +550,7 @@
         width: 1200 - 143px;
         margin: 0 143px auto;
         height: 400px;
+        overflow: hidden;
     }
 
     .nav-atvite {
