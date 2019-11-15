@@ -1,5 +1,5 @@
 <template>
-    <div class="comment-shape-t" v-show="isShow" @click="isShowEmotion = false">
+    <div class="comment-shape-t" v-if="isShow" @click="isShowEmotion = false">
         <div v-show="isShape" class="comment-shape "  :style="{right: right}"></div>
         <div class="comment">
             <div class="comment-head" v-if="isShowInput">
@@ -50,7 +50,6 @@
         type: Boolean,
         default: false
       },
-
       itemId: {
         type: String,
         default: ''

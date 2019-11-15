@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="public-block" :class="{'comment-active': isShowComment}">
+        <div class="public-block" :class="{'comment-active': videoInfo.isShowComment}">
             <div class="block-head">
                 <div class="block-head-left" @mouseleave="hideWorks()">
                     <div class="avatar" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)">
@@ -73,7 +73,7 @@
             </div>
         </div>
         <Comment
-            :isShow="isShowComment"
+            :isShow="videoInfo.isShowComment"
             :itemId="videoInfo.ItemId"
             :commentList="commentList"
             :isShowLoading="isLoadingComment"
@@ -113,12 +113,16 @@
         fileBaseUrl: process.env.fileBaseUrl,
         isTool: '',
         UserProAndFans: {},
-        isShowComment: false,    // 是否显示评论
         commentList: [], // 评论列表
         isLoadingComment: false,    // 是否显示评论加载中的动画
         configModal: {
           isModal: false
         }
+      }
+    },
+    watch: {
+      videoInfo: function (val) {
+        this.$set(val, 'isShowComment', false)
       }
     },
     methods: {
@@ -214,12 +218,12 @@
       },
       // 点击评论
       clickComment() {
-        if (this.isShowComment) {
-          this.isShowComment = false;
+        if (this.videoInfo.isShowComment) {
+          this.videoInfo.isShowComment = false;
           return false;
         }
 
-        this.isShowComment = true;
+        this.videoInfo.isShowComment = true;
         this.isLoadingComment = true;
         this.getComment();
       },

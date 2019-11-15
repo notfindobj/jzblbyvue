@@ -8,7 +8,7 @@
             @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
             <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
         </div>
-        <div class="public-block" :class="{'comment-active': isShowComment}">
+        <div class="public-block" :class="{'comment-active': itemInfo.isShowComment}">
             <div class="block-head" @mouseleave="hideWorks()">
                 <div class="block-head-left">
                     <div class="avatar" @click="goToPersonal(itemInfo)" @mouseenter="showWorks(itemInfo.UserId, itemInfo.ItemId)">
@@ -91,7 +91,7 @@
         </div>
         <v-comment
             :key="ViewerIndex"
-            :isShow="isShowComment"
+            :isShow="itemInfo.isShowComment"
             :itemId="itemInfo.ItemId"
             :commentList="commentList"
             :isShowLoading="isLoadingComment"
@@ -143,7 +143,6 @@
         mathId: '',
         isTool: '',
         UserProAndFans: {},
-        isShowComment: false,    // 是否显示评论
         commentList: [], // 评论列表
         isLoadingComment: false,    // 是否显示评论加载中的动画
         // 左右切换
@@ -163,7 +162,8 @@
       this.mathId = getRanNum(7);
     },
     watch: {
-      itemInfo: function () {
+      itemInfo: function (val) {
+        this.$set(val, 'isShowComment', false)
         this[this.ViewerIndex].destroy();
         this.mathId = getRanNum(7);
         setTimeout(this.initView, 500);
@@ -334,11 +334,11 @@
       },
       // 点击评论
       clickComment() {
-        if (this.isShowComment) {
-          this.isShowComment = false;
+        if (this.itemInfo.isShowComment) {
+          this.itemInfo.isShowComment = false;
           return false;
         }
-        this.isShowComment = true;
+        this.itemInfo.isShowComment = true;
         this.isLoadingComment = true;
         this.getComment();
       },
