@@ -9,7 +9,7 @@
                     <span class="user-name">{{ commentInfo.NickName }}</span>
                     <span class="publish-time">{{ commentInfo.CreateDate }}</span>
                 </div>
-                <div class="comment-content"><emotHtml v-model="commentInfo.Message"/></div>
+                <div class="comment-content" v-html="commentInfo.Message"></div>
                 <p class="opera-row">
                     <span v-if="commentInfo.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(commentInfo)">
                         删除

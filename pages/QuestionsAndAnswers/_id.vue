@@ -11,9 +11,7 @@
         <div class="main-left">
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
             <div class="ql-container ql-snow">
-                <div class="ql-editor detail-text">
-                    <emotHtml v-model="detailInfo.TalkContent"/>
-                </div>
+                <div class="ql-editor detail-text" v-html="detailInfo.TalkContent"></div>
             </div>
             <div class="img-row" :ref="mathId">
                 <div class="img" v-for="item in detailInfo.Imgs" :key="item.smallImgUrl" >
@@ -301,10 +299,10 @@
         created() {
             this.mathId = this.getRanNum();
             this.getComment();
-            this.initIview()
         },
         mounted () {
             this.initView()
+            this.initIview()
         },
         async asyncData({ store, params }) {
             const data = await store.dispatch('getQADetail', params.id);
@@ -342,10 +340,8 @@
                 font-size: 14px;
                 color: #666;
             }
-
             .img-row {
                 margin-top: 20px;
-
                 .img {
                     display: inline-block;
                     margin-right: 10px;

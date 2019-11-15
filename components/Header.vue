@@ -64,7 +64,7 @@
 import { mapState, mapGetters } from 'vuex'
 import { logout, setDemo} from '../LocalAPI'
 import {analogJump } from '../plugins/untils/public'
-  export default {
+export default {
     data() {
       return {
         loginImg: require('../assets/images/top_logo.png'),

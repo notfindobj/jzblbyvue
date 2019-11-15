@@ -1,5 +1,5 @@
 <template>
-    <div class="emotHtml text" v-html="value"></div>
+    <span v-html="value.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></span>
 </template>
 <script>
 import {getEmotionList} from '../../plugins/untils/public'

@@ -6,7 +6,7 @@
                         <img v-if="isItMe" :src="userInfo.HeadIcon " alt="" width="100px;">
                         <img v-else :src="GetUserData.HeadIconSrc " alt="" width="100px;">
                     </div>
-                    <div class="personal-left-header-name">{{GetUserData.Nickname}}</div>
+                    <div class="personal-left-header-name">{{isItMe ? userInfo.NickName : GetUserData.Nickname}}</div>
                 </div>
                 <ul class="personal-left-nav">
                     <li>
@@ -58,18 +58,30 @@ import { getUserData } from '../service/clientAPI'
 export default {
     name: 'PersonalCenter',
     middleware: 'message',
+    data () {
+        return {
+            GetUserData: {
+                HeadIconSrc: '',
+                NickName: ''
+            }
+        }
+    },
     computed: {
         ...mapState({
             userInfo: state => state.overas.auth
         }),
-    },
-    data () {
-        return {
-            userId: '',
-            isItMe: true,
-            GetUserData: {
-                HeadIconSrc: '',
-                NickName: ''
+        isItMe () {
+            if (!this.$route.params.userId || this.userInfo.UserId === this.$route.params.userId) {
+                return true;
+            } else {
+                return false;
+            }
+        },
+        userId () {
+            if (this.$route.params.userId) {
+                return this.$route.params.userId
+            } else {
+                return this.userInfo.UserId
             }
         }
     },
@@ -77,14 +89,7 @@ export default {
         let query = {
             userId: this.userInfo.UserId
         }
-        this.userId = this.userInfo.UserId
         if (this.$route.params.userId) {
-            if (this.userInfo.UserId === this.$route.params.userId) {
-                this.isItMe = true;
-            } else {
-                this.isItMe = false;
-            }
-            this.userId = this.$route.params.userId
             query.userId = this.$route.params.userId
         }
         this.getUserInfo(query);

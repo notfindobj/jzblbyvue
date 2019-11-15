@@ -51,7 +51,7 @@
                 </li>
             </ul>
         </div>
-        <div v-swiper:mySwiper="swiperOption" class="swiper-boxs" v-if="userItem.length > 0" >
+        <div ref="swiperBox" v-swiper:mySwiper="swiperOption" class="swiper-boxs" v-if="userItem.length > 0" >
             <div class="swiper-wrapper">
                 <div v-for="(items, index) in userItem" class="swiper-slide" :key="index">
                     <div class="swiper-slide-item" >
@@ -118,6 +118,7 @@ export default {
                     delay: 2500,
                     disableOnInteraction: false
                 },
+                notNextTick: true,
                 slidesPerView: 4,
                 spaceBetween: 20,
                 centeredSlides: true,
@@ -139,7 +140,11 @@ export default {
         ...mapGetters(['getSessionStorage']),
         ...mapState({
             userInfoID: state => state.overas.auth? state.overas.auth.UserId: ""
-        })
+        }),
+        swiper() {
+        // 如果你需要得到当前的swiper对象来做一些事情，你可以像下面这样定义一个方法属性来获取当前的swiper对象，同时notNextTick必须为true
+            return this.$refs.swiperBox.swiper
+        },
     },
     created() {
         this.currentName = this.getSessionStorage.baseSearchNav.title;
@@ -147,6 +152,12 @@ export default {
         this.$store.dispatch('getMenu').then(async (res) => {
             this.oneMeun = res.RetMenuData;
         })
+    },
+    
+    watch: {
+      userItem: function (val, oval) {
+        console.log(this.swiper)
+      }
     },
     methods: {
         viewDetails (row) {
@@ -238,7 +249,7 @@ export default {
     }
     .company {
         display: inline-block;
-        width: 100px;
+        width: 109px;
         text-align: center;
         height: 45px;
         position: relative;
