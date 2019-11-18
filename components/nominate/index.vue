@@ -31,9 +31,7 @@
                     <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
                         <div class="swiper-slide-item" >
                             <div class="recommend-swiper">
-                                <div class="recommend-swiper-name">
-                                    {{items.Title}}
-                                </div>
+                                <div class="recommend-swiper-name" v-html="items.Title"></div>
                                 <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
                                     <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
                                 </nuxt-link>
@@ -91,17 +89,11 @@ export default {
             userInfo: state => state.overas.auth? state.overas.auth: {}
         })
     },
-    watch: {
-      recommend: function (val, oval) {
-            if (val.length > 0) {
-                this.initSwiper()
-            } else {
-                console.log('aaaaa')
-            }
-      }
-    },
     created () {
         this.getUserPro(this.userInfo.UserId)
+    },
+    mounted () {
+        this.initSwiper()
     },
     methods: {
         initSwiper () {

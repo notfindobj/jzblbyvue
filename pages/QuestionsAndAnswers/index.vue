@@ -297,7 +297,7 @@ export default {
     }
     .main-left {
         width: 340px;
-        max-height: 750px;
+        max-height: 500px;
         padding: 20px;
         background: #FFFFFF;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);

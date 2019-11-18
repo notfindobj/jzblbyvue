@@ -181,7 +181,7 @@ export default {
         border-bottom: 1px solid #F2F4F2;
         position: sticky;
         top: 0;
-        z-index: 1000;
+        z-index: 1001;
         .container {
             width: 1200px;
             height: 100%;

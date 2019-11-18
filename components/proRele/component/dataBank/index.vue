@@ -423,6 +423,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .form-box {
+        margin-top: 10px;
+    }
     .address-input {
         border-radius: 5px;
         outline: none;

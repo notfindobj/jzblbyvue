@@ -436,7 +436,7 @@ export default {
         position: sticky;
         bottom: 0;
         background: #fff;
-        z-index: 99;
+        z-index: 999;
         &-tools {
             display: flex;
             >li {
@@ -508,6 +508,6 @@ export default {
     }
     .text {
         min-height: 100px;
-        z-index: 10 !important;
+        z-index: 1000 !important;
     }
 </style>
