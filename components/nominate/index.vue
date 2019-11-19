@@ -26,7 +26,16 @@
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
             </div>
-            <div class="swiper-boxss swiper-content">
+            <div class="swiper-boxss" id="swiper-content">
+                <div class="swiper-wrapper">
+                    <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
+                        <div class="recommend-swiper-name" v-html="items.Title"></div>
+                        <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                    </div> 
+                </div>
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
+            </div>
+            <!-- <div class="swiper-boxss">
                 <div class="swiper-wrapper">
                     <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
                         <div class="swiper-slide-item" >
@@ -46,7 +55,7 @@
                     </div>
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
-            </div>
+            </div> -->
             <div class="recommend" v-if="answers.length > 0">
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
@@ -66,22 +75,17 @@ import Swiper from "swiper"
 import 'swiper/dist/css/swiper.min.css'
 export default {
     props: {
-        answers: {
-            type: Array,
-            default: function () {
-                return []
-            }
-        },
-        recommend: {
-            type: Array,
-            default: function () {
-                return []
-            }
+        valType: {
+            type: String,
+            default: '1,2,3,4'
         }
     },
     data () {
         return {
             UserProAndFans: {},
+            swiperBox: {},
+            answers: [],
+            recommend: []
         }
     },
     computed: {
@@ -90,15 +94,19 @@ export default {
         })
     },
     created () {
-        this.getUserPro(this.userInfo.UserId)
+        this.getUserPro(this.userInfo.UserId);
+        this.getRecommendList()
     },
     mounted () {
         this.initSwiper()
     },
     methods: {
         initSwiper () {
-            this.swiperBox = new Swiper (".swiper-content",{
+            this.swiperBox = new Swiper (".swiper-boxss",{
                 loop:true,  //循环
+                lazy: {
+                    loadPrevNext: true,
+                },
                 observer:true,//修改swiper自己或子元素时，自动初始化swiper
                 //使用分页器
                 paginationClickable :true,
@@ -121,6 +129,20 @@ export default {
                 return str
             } else {
                 return process.env.fileBaseUrl+ str
+            }
+        },
+        // 获取推荐
+        async getRecommendList (val) {
+            let msg = await getRecommend(this.valType)
+            if (msg) {
+                msg.forEach(ele =>{
+                    if (ele.TypeId === 3) {
+                        this.answers.push(ele)
+                    } else {
+                        this.recommend.push(ele)
+                    }
+                })
+                
             }
         },
         async getUserPro (id) {

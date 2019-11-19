@@ -13,7 +13,7 @@
                     @clickMenu="clickMenu"
                 ></video-item>
             </div>
-            <nominate :answers="answers" :recommend="recommend"/>
+            <nominate />
         </div>
         <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -45,8 +45,6 @@
             return {
                 editorName: 'sp',
                 fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
-                answers: [],
-                recommend: [],
                 pageNum: 1,
                 videoList: [],
                 isLast: false,

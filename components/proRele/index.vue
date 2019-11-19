@@ -16,6 +16,7 @@
 import Tabls from './component/tabls'
 import dataBank from './component/dataBank'
 import blEditor from '../blEditor'
+import { mapGetters} from 'vuex'
 import {publishProject, uploadFile, releaseStatement} from '../../service/clientAPI'
 export default {
     components: {
@@ -95,7 +96,8 @@ export default {
                     break;
                 }
             }
-        }
+        },
+        ...mapGetters(['isLogin'])
     },
     methods: {
         clickEditor (tab) {
@@ -107,6 +109,11 @@ export default {
             this.protPushData = row || {};
         },
         async editorPush (row) {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             if (this.editorName === 'xm') {
                 this.$refs.protPush.protPush();
                 if (row.editortext === '' || row.imgList.length < 1) {

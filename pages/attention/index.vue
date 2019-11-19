@@ -30,7 +30,7 @@
                         暂无关注数据
                     </div>
                 </div>
-                <nominate :answers="answers" :recommend="recommend"/>
+                <nominate />
             </div>
             <ToTop ></ToTop>
             <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -46,6 +46,7 @@
     import crollBox from '../../components/crollBox'
     import { _throttle } from '../../plugins/untils/public'
     import nominate from '../../components/nominate'
+    import {mapGetters, mapState} from 'vuex'
     import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, getRecommend} from '../../service/clientAPI'
     export default {
         layout: 'main',
@@ -54,8 +55,6 @@
         data() {
             return {
                 editorName: 'tw',
-                answers: [],
-                recommend: [],
                 pageNum: 1,
                 attentionList: [],
                 isLast: false,

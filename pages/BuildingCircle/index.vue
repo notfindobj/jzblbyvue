@@ -27,7 +27,7 @@
               </template>
             <Page class="page-the" v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
           </div>
-          <nominate :answers="answers" :recommend="recommend"/>
+          <nominate />
         </div>
         <ToTop></ToTop>
     </crollBox>
@@ -49,8 +49,6 @@ export default {
     data() {
       return {
         editorName: 'tw',
-        answers: [],
-        recommend: [],
         pageNum: 1,
         dataList: [],
         isLast: false,
@@ -83,25 +81,9 @@ export default {
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
         }
     },
-    created () {
-      this.getRecommendList();
-    },
     methods: {
       clickEditor (val) {
         this.editorName = val
-      },
-      // 获取推荐
-      async getRecommendList () {
-          let msg = await getRecommend("1,2,3,4")
-          if (msg) {
-            msg.forEach(ele =>{
-              if (ele.TypeId === 3) {
-                this.answers.push(ele)
-              } else {
-                this.recommend.push(ele)
-              }
-            })
-          }
       },
       async clickMenu (row, item, index) {
         let qieryData = {
