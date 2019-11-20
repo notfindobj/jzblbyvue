@@ -176,7 +176,7 @@ export default {
     methods: {
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
-            if(str.match(reg)){
+            if(str && str.match(reg)){
                 return str
             } else {
                 return this.fileBaseUrl+ str

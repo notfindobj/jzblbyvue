@@ -266,7 +266,6 @@
         .works-list {
             width: 100%;
             .clearfix();
-
             > li {
                 float: left;
                 width: 292px;
@@ -279,21 +278,24 @@
                 &:hover {
                     box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
                 }
-
                 &:nth-child(4n) {
                     margin-right: 0;
                 }
-
                 .img-box {
                     height: 200px;
                     position: relative;
                     cursor: pointer;
                     overflow: hidden;
-
                     > img {
                         display: inline-block;
                         width: 100%;
                         height: auto;
+                        transition: transform 1s;
+                        transform: scale(1);
+                    }
+                    &:hover > img {
+                        transition: transform 1s;
+                        transform: scale(1.5);
                     }
                     .works-like {
                         width: 100%;

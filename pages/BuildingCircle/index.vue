@@ -3,7 +3,7 @@
         <div class="container-box">
           <div class="container">
             <div class="editor-jzbl">
-                <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
+              <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
             </div>
             <template v-for="(item, index) in dataList">
                   <ImageAndText
@@ -22,7 +22,7 @@
                       :index="index"
                       @clickMenu="clickMenu"
                       @clickCollection="clickCollection"
-                      @clickLike="clickLike"
+                      @clickLike="clickLike" 
                   ></VideoItem>
               </template>
             <Page class="page-the" v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>

@@ -13,7 +13,7 @@
                     @clickMenu="clickMenu"
                 ></video-item>
             </div>
-            <nominate />
+            <nominate valType="2"/>
         </div>
         <ToTop></ToTop>
         <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
@@ -85,25 +85,9 @@
                 }
             }
         },
-        created () {
-            this.getRecommendList();
-        },
         methods: {
             clickEditor (val) {
                 this.editorName = val
-            },
-            // 获取推荐
-            async getRecommendList () {
-                let msg = await getRecommend("2,4")
-                if (msg) {
-                    msg.forEach(ele =>{
-                    if (ele.TypeId === 3) {
-                        this.answers.push(ele)
-                    } else {
-                        this.recommend.push(ele)
-                    }
-                    })
-                }
             },
             relSuccessfully () {
 

@@ -70,25 +70,9 @@
             nominate,
             proRele
         },
-        created () {
-            this.getRecommendList()
-        },
         methods: {
             clickEditor (val) {
                 this.editorName = val
-            },
-            // 获取推荐
-            async getRecommendList () {
-                let msg = await getRecommend("1,2,3,4")
-                if (msg) {
-                    msg.forEach(ele =>{
-                    if (ele.TypeId === 3) {
-                        this.answers.push(ele)
-                    } else {
-                        this.recommend.push(ele)
-                    }
-                    })
-                }
             },
             // 点击头像，去个人中心
             goPersonalCenter(item) {
