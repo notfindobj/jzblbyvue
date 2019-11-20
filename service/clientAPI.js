@@ -278,6 +278,6 @@ export const getDataByTypeId = async params => {
   return await request.post(`Menu/GetDataByTypeId`, params)
 }
 // 获取推荐 用于建筑圈，视频
-export const getRecommend = async params => {
-  return await request.post(`Other/GetRecommend?TypeIds=`+params, )
+export const getRecommend = async (params, pages) => {
+  return await request.post(`Other/GetRecommend?typeIds=`+params+'&take='+pages, )
 }

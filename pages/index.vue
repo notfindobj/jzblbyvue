@@ -7,26 +7,46 @@
                         <a v-if="banner.ItemUrl" :href="banner.ItemUrl" target="_blank">
                             <img :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
                         </a>
-                         <img v-else :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
+                        <img v-else :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
                     </div>
                 </div>
                 <div class="swiper-pagination swiper-pagination-bullets"></div>
             </div>
-            <!-- <div v-swiper:mySwiper="swiperOption" >
-                <div >
-                    <div class="swiper-slide" v-for="(banner, index) in SlideList" :key="index">
-                        <a v-if="banner.ItemUrl" :href="banner.ItemUrl" target="_blank">
-                            <img :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
-                        </a>
-                         <img v-else :src="banner.CoverImgUrl" alt="" style="width: 100%;height: 100%;">
-                    </div>
-                </div>
-                <div class="swiper-pagination swiper-pagination-bullets"></div>
-            </div> -->
         </div>
         <div class="main-box">
             <div class="editor-jzbl">
                 <proRele :editorName="editorName" @clickEditor="clickEditor"/>
+            </div>
+            <div class="hot-item">
+                 <div class="main-conment">
+                    <div class="main-conment-top">
+                        <ul class="main-conment-sub">
+                            <li>建筑圈</li>
+                            <li>图文</li>
+                            <li>问答</li>
+                            <li>文章</li>
+                            <li>项目</li>
+                        </ul>
+                        <div class="main-conment-more" >查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                    </div>
+                </div>
+                <div class="hot-item-content">
+                    <div class="hot-item-left">
+                        <template v-for="(items, index) in hotPro" v-if="index < 4" >
+                            <hotCard :hotCard="items" :key="index"/>
+                        </template>
+                    </div>
+                    <div>
+                        <hotVideo/>
+                        <ul class="Questions" v-if="hotQue.length > 0">
+                            <li v-for="(item, index) in hotQue" :key="index">
+                                <nuxt-link  target="_blank" :to="{name: 'QuestionsAndAnswers', params: {id:item.ItemId}}">
+                                   <span v-html="item.Title"></span>
+                                </nuxt-link>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </div>
             <!-- 示范区景观 -->
             <div>
@@ -316,9 +336,12 @@
 <script>
   import LevelMenu from '../components/home/LevelMenu'
   import proRele from "../components/proRele"
+  import hotCard from "../components/hotCard"
+  import hotVideo from "../components/hotVideo"
   import {setDemo} from '../LocalAPI'
   import { analogJump } from '../plugins/untils/public'
   import { mapGetters} from 'vuex'
+  import {getRecommend} from '../service/clientAPI'
   import Swiper from "swiper"
   import 'swiper/dist/css/swiper.min.css'
   export default {
@@ -343,6 +366,10 @@
     data() {
         return {
             editorName: 'tw',
+            hotList: [],
+            hotPro: [],
+            hotVideo: [],
+            hotQue: []
         }
     },
     computed: {
@@ -350,7 +377,9 @@
     },
     components: {
         LevelMenu,
-        proRele
+        proRele,
+        hotCard,
+        hotVideo
     },
     async asyncData({ app, store }) {
         let [menuData, homeData] = await Promise.all([store.dispatch('getMenu'), store.dispatch('getHomeData')]);
@@ -407,6 +436,7 @@
         }
     },
     mounted () {
+        this.hotPros();
         this.initSwiper()
     },
     methods: {
@@ -432,10 +462,8 @@
             })
         },
         clickEditor (val) {
-            this.editorName = val
+            this.editorName = val;
         },
-        stopLoop () {},
-        startLoop () {},
         async viewProperties (data, row, name) {
             // 待完善
             if (!this.isLogin) {
@@ -473,7 +501,7 @@
             let routeData = this.$router.resolve({ name: 'dataBase'});
             analogJump(routeData.href);
         },
-        async viewItem(row, item, val) {
+        async viewItem(row, item, val) {  
             if (!this.isLogin) {
                 this.$store.dispatch('SETUP', true);
                 this.$store.dispatch('LOGGEDIN', 'signIn');
@@ -510,15 +538,70 @@
         // 路由跳转
         jumpRoute(items) {
             this.$router.push({ name: "HeAndITribal-id", query: { id: items.UserId } });
+        },
+        // 热门推荐
+        async hotPros (id = '1,2,3', pages = 4) {
+            let msg = await getRecommend(id, pages);
+            if (msg && msg instanceof Array) {
+                // this.hotList = msg;
+                msg.forEach(ele => {
+                    if (ele.TypeId === 1) {
+                        this.hotPro.push(ele)
+                    }
+                    if (ele.TypeId === 2) {
+                        this.hotVideo.push(ele)
+                    }
+                    if (ele.TypeId === 3) {
+                        this.hotQue.push(ele)
+                    }
+                })
+            }
         }
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
+    .Questions {
+        font-size: 16px;
+        line-height: 25px;
+        margin-top: 10px;
+        background: #fff;
+        padding: 5px 10px;
+        li a {
+            display: inline-block;
+            line-height: 25px;
+            &:hover {
+                color: #FF3C00;
+                text-decoration: underline;
+            }
+        }
+    }
+    .hot-item {
+        &-title {
+            text-align: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: #FF3C00;
+        }
+        &-content {
+            display: flex;
+            justify-content: space-between;
+        }
+        &-left {
+            display: flex;
+            width: 49%;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+    }
     .editor-jzbl {
         background: #fff;
     }
-    .swiper-pagination-bullet {
+    /deep/.swiper-pagination {
+        width: 1057px;
+        bottom: 12px;
+    }
+    /deep/.swiper-pagination-bullet {
         width: 18px;
         height: 18px;
         color: #fff;
@@ -528,7 +611,7 @@
         justify-content: space-around;
     }
 
-    .swiper-pagination-bullet-active {
+    /deep/.swiper-pagination-bullet-active {
         background: #FF3C00;
     }
 
@@ -560,7 +643,6 @@
     .main-conment {
         margin-top: 20px;
         border-top: 1px solid #999999;
-
         &-top {
             display: flex;
             justify-content: space-between;
@@ -576,7 +658,7 @@
                 cursor: pointer;
                 &:first-child {
                     padding-right: 10px;
-                    font-size: 30px;
+                    font-size: 24px;
                 }
                 &:not(:first-child, :last-child)::after {
                     position: relative;

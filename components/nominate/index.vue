@@ -26,36 +26,7 @@
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
             </div>
-            <div class="swiper-boxss" id="swiper-content">
-                <div class="swiper-wrapper">
-                    <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
-                        <div class="recommend-swiper-name" v-html="items.Title"></div>
-                        <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
-                    </div> 
-                </div>
-                <div class="swiper-pagination swiper-pagination-bullets"></div>
-            </div>
-            <!-- <div class="swiper-boxss">
-                <div class="swiper-wrapper">
-                    <div v-for="(items, index) in recommend" class="swiper-slide" :key="index">
-                        <div class="swiper-slide-item" >
-                            <div class="recommend-swiper">
-                                <div class="recommend-swiper-name" v-html="items.Title"></div>
-                                <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
-                                    <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
-                                </nuxt-link>
-                                <nuxt-link v-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
-                                    <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
-                                </nuxt-link>
-                                <nuxt-link v-else target="_blank" :to="{name: 'pictureDetails-id', params: {id:items.ItemId, }}">
-                                    <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
-                                </nuxt-link>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="swiper-pagination swiper-pagination-bullets"></div>
-            </div> -->
+           
             <div class="recommend" v-if="answers.length > 0">
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
@@ -98,31 +69,8 @@ export default {
         this.getRecommendList()
     },
     mounted () {
-        this.initSwiper()
     },
     methods: {
-        initSwiper () {
-            this.swiperBox = new Swiper (".swiper-boxss",{
-                loop:true,  //循环
-                lazy: {
-                    loadPrevNext: true,
-                },
-                observer:true,//修改swiper自己或子元素时，自动初始化swiper
-                //使用分页器
-                paginationClickable :true,
-                pagination: {
-                　　el: '.swiper-pagination',
-                    clickable: true,
-                    renderBullet(index, className) {
-                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
-                    }
-                },    
-                autoplay: {
-                    delay: 3000,
-                    disableOnInteraction: false
-                },
-            })
-        },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
             if(str.match(reg)){
@@ -142,7 +90,6 @@ export default {
                         this.recommend.push(ele)
                     }
                 })
-                
             }
         },
         async getUserPro (id) {

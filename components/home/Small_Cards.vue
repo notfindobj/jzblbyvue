@@ -14,8 +14,8 @@
                     {{ smallCardsDate.Views }}
                 </div>
                 <div class="cards-eye-name" @click.stop="vivewCol(smallCardsDate)">
-                    <i class="iconfont icon-shangchuan"></i>
-                    <span>{{smallCardsDate.CreateUserName}}</span>
+                    <i class="iconfont icon-favorite"></i>
+                    <span>{{smallCardsDate.Collections}}</span>
                 </div>
             </div>
         </div>
@@ -72,6 +72,8 @@ export default {
         display: inline-block;
         border-radius: 3px;
         border: 1px solid #ccc;
+        box-shadow: none;
+        transition: box-shadow .5s;
         &-top {
             position: relative;
             height: 194px;
@@ -81,12 +83,16 @@ export default {
                 width: 283px;
                 height: 194px;
                 position: relative;
-                // background-repeat: no-repeat;
-                // background-size: cover;
-                // object-fit: fill;
+                overflow: hidden;
                 img {
                     width: 100%;
                     height: 100%;
+                    transform: scale(1);
+                    transition: transform 1s;
+                }
+                &:hover img {
+                    transform: scale(1.2);
+                    transition: transform 1s;
                 }
             }
         }
@@ -112,6 +118,7 @@ export default {
             }
         }
         &:hover {
+            transition: box-shadow .5s;
             box-shadow: 0 2px 15px #999999;
         }
     }
