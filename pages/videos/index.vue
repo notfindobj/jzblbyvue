@@ -57,10 +57,11 @@
             }
         },
         async asyncData({ store }) {
-            const data = await store.dispatch('getTalk', {
+            let queryData = {
                 TalkType: 2,
-                Page: 0
-            })
+                Page: 1
+            };
+            const data = await store.dispatch('getTalk', {queryData});
             if (data.retModels && data.retModels instanceof Array) {
                 data.retModels.forEach(element => {
                     if (element.imglistNew) { 
@@ -183,10 +184,11 @@
             }, 1500),
             // 获取数据
             async getList(row, type) {
-                const data = await this.$store.dispatch('getTalk', {
-                    TalkType: 2,
-                    Page: this.pageNum
-                });
+                let queryData = {
+                    TalkType: this.pageNum,
+                    Page: 0
+                };
+                const data = await this.$store.dispatch('getTalk', {queryData});
                 if (data.retModels && data.retModels instanceof Array) {
                     data.retModels.forEach(element => {
                         if (element.imglistNew) {

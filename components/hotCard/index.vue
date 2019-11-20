@@ -1,5 +1,5 @@
 <template>
-    <div class="hotCard">
+    <div class="hotCard" @click="enterBuild(hotCard)">
         <div class="hotCard-content">
             <img :src="baseUrlRegExp(hotCard.ImgSrc)" alt="">
         </div>
@@ -24,6 +24,9 @@ export default {
         }
     },
     methods: {
+        enterBuild (hotCard) {
+            this.$emit('enterBuild', hotCard);
+        },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
             if(str && str.match(reg)){
@@ -47,7 +50,7 @@ export default {
         overflow: hidden;
         cursor: pointer;
         box-shadow: none;
-        transition: box-shadow 1s;
+        transition: box-shadow .5s;
         &-top {
             position: absolute;
             top: 0;
@@ -61,7 +64,7 @@ export default {
             width: 100%;
             height: 100%;
             transform: scale(1);
-            transition: transform 1s;
+            transition: transform .5s;
         }
         &-foote {
             position: absolute;
@@ -69,18 +72,18 @@ export default {
             background: #fff;
             width: 100%;
             bottom: -45px;
-            transition: bottom 1s ;
+            transition: bottom .5s ;
         }
         &:hover &-foote{
-            transition: bottom 1s ;
+            transition: bottom .5s ;
             bottom: 0;
         }
         &:hover &-content > img{
-            transition: transform 1s;
+            transition: transform .5s;
             transform: scale(1.5);
         }
         &:hover {
-            transition: box-shadow 1s;
+            transition: box-shadow .5s;
             box-shadow: 0 2px 15px #999999;
         }
     }

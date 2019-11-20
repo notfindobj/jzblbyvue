@@ -129,7 +129,7 @@ export default {
                     this.spinShow = true
                     let msg = await publishProject(this.protPushData);
                     if (msg) {
-                        if (this.$route.name === 'BuildingCircle' && this.Building.includes(this.protPushData.TypeModel.ItemTypeId)) {
+                        if (this.$route.name === 'BuildingCircle-id' && this.Building.includes(this.protPushData.TypeModel.ItemTypeId)) {
                             this.$Message.success('发布成功！');
                             this.spinShow = false;
                             this.$refs.editor.clearEditor();
@@ -160,7 +160,7 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    if (this.$route.name === 'BuildingCircle') {
+                    if (this.$route.name === 'BuildingCircle-id') {
                         this.$Message.success('发布成功！');
                         this.$refs.editor.clearEditor();
                         this.spinShow = false
@@ -237,13 +237,13 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    if (this.$route.name === 'BuildingCircle') {
+                    if (this.$route.name === 'BuildingCircle-id') {
                         this.$Message.success('发布成功！');
                         this.$refs.editor.clearEditor();
                         this.spinShow = false
                         this.$emit('relSuccessfully', true)
                     } else{
-                        this.$router.push({ name: "BuildingCircle"})
+                        this.$router.push({ name: "BuildingCircle-id"})
                     }
                     
                 } 

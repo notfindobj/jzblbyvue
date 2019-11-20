@@ -33,11 +33,11 @@
                 <div class="hot-item-content">
                     <div class="hot-item-left">
                         <template v-for="(items, index) in hotPro" v-if="index < 4" >
-                            <hotCard :hotCard="items" :key="index"/>
+                            <hotCard :hotCard="items" :key="index" @enterBuild="enterBuild"/>
                         </template>
                     </div>
                     <div>
-                        <hotVideo/>
+                        <hotVideo v-if="hotVideo.length > 0" :hotVideo="hotVideo[0]" @enterVideo="enterVideo"/>
                         <ul class="Questions" v-if="hotQue.length > 0">
                             <li v-for="(item, index) in hotQue" :key="index">
                                 <nuxt-link  target="_blank" :to="{name: 'QuestionsAndAnswers', params: {id:item.ItemId}}">
@@ -437,9 +437,16 @@
     },
     mounted () {
         this.hotPros();
+        this.hotvideo();
         this.initSwiper()
     },
     methods: {
+        enterBuild (row) {
+            this.$router.push({ name: "BuildingCircle-id", params: {id:row.ItemId}});
+        },
+        enterVideo (row) {
+            console.log(row)
+        },
         initSwiper () {
             let swiper = new Swiper (".swiper-box",{
                 direction: 'horizontal',
@@ -553,6 +560,17 @@
                     }
                     if (ele.TypeId === 3) {
                         this.hotQue.push(ele)
+                    }
+                })
+            }
+        },
+        // 热门推荐
+        async hotvideo (id = '2', pages = 1) {
+            let msg = await getRecommend(id, pages);
+            if (msg && msg instanceof Array) {
+                msg.forEach(ele => {
+                    if (ele.TypeId === 2) {
+                        this.hotVideo.push(ele)
                     }
                 })
             }

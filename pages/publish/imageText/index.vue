@@ -120,7 +120,7 @@
         }).then(res => {
           this.$Message.success('发布成功！');
           setTimeout(() => {
-            this.$router.push({ name: "BuildingCircle"})
+            this.$router.push({ name: "BuildingCircle-id"})
           }, 1800)
         }).catch(err => {
           console.log(err, '发布图文')

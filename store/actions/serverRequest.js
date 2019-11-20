@@ -19,7 +19,8 @@ export const serverRequest = {
   },
   // 获取建筑圈说说
   async getTalk({ commit, state }, params) {
-    return await request.post('Talk/GetTalk', params)
+    let takeUrl = `Talk/GetTalk?talkId=${params.id}`
+    return await request.post(takeUrl, params.queryData)
   },
   // 获取建筑圈详情评论
   async getGetComments({ commit, state }, params) {

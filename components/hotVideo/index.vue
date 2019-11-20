@@ -1,12 +1,12 @@
 <template>
     <div class="hotVide">
-        <div class="hotVide-content">
-            <video :ref="videoRef" autoplay="autoplay" :poster="baseUrlRegExp(hotList.ImgSrc)" class="vjs-matrix video-js vjs-big-play-centered" >
-                <source :src="baseUrlRegExp(hotList.ImgSrc)" type="video/mp4" >
+        <div class="hotVide-content" @click="enterVideo(hotVideo)">
+            <video v-if="hotVideo.ResourceObj.length > 0" :ref="videoRef" autoplay="autoplay" :poster="baseUrlRegExp(hotVideo.ResourceObj[0].smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
+                <source :src="baseUrlRegExp(hotVideo.ResourceObj[0].videoUrl)" type="video/mp4" >
             </video>
         </div>
         <div class="hotVide-top">
-            {{hotList.Title}}
+            {{hotVideo.Title}}
         </div>
     </div>
 </template>
@@ -15,19 +15,20 @@ import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 import {getRanNum} from '../../plugins/untils/public'
 export default {
+    props: {
+       hotVideo: {
+           type: Object,
+           default: function () {
+               return []
+           }
+       } 
+    },
     data () {
         return {
             videoRef: '',
             videoCon: '',
             isPlay: '',
             controlPlay: {},
-            hotList: {
-                ImgSrc: "http://www.pic.jzbl.com//buildingcircle/4a7a24b7-7a14-43a9-9afe-f0714ca307d3/2019-10-09/v/daea94eb1570603565.mp4",
-                ItemId: "ebc5b5da-0892-4342-a235-d180a1f4d039",
-                Title: "浙江一座千年古镇，保存着江南最完整的古建筑群，是孙权故里",
-                TypeId: 3
-            }
-           
         }
     },
     created () {
@@ -41,6 +42,9 @@ export default {
         this.initVideo();
     },
     methods: {
+        enterVideo (hotVideo) {
+            this.$emit('enterVideo', hotVideo)
+        },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
             if(str && str.match(reg)){

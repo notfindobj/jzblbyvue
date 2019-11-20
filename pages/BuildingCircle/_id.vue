@@ -75,7 +75,7 @@ export default {
           Page: 1,
           Rows: 8
         };
-        let getTalks = await store.dispatch('getTalk', queryData);
+        let getTalks = await store.dispatch('getTalk', {queryData, id:route.params.id});
         return {
           dataList: getTalks.retModels || [],
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
@@ -165,11 +165,12 @@ export default {
           this.getList();
       }, 1500),
       async getList(row, type) {
-          const data = await this.$store.dispatch('getTalk', {
+          let queryData = {
             TalkType: "",
             Page: this.pageNum,
             Rows: 8
-          });
+          };
+          const data = await this.$store.dispatch('getTalk', {queryData});
           if (data) {
             if (type === 1) {
               this.dataList = [];
