@@ -1,7 +1,7 @@
 <template>
     <div class="hotVide">
         <div class="hotVide-content">
-            <video :ref="videoRef" :poster="baseUrlRegExp(hotList.ImgSrc)" class="vjs-matrix video-js vjs-big-play-centered" >
+            <video :ref="videoRef" autoplay="autoplay" :poster="baseUrlRegExp(hotList.ImgSrc)" class="vjs-matrix video-js vjs-big-play-centered" >
                 <source :src="baseUrlRegExp(hotList.ImgSrc)" type="video/mp4" >
             </video>
         </div>
@@ -100,7 +100,7 @@ export default {
     .vjs-tech {
         pointer-events: none;
     }
-    .vjs-has-started .vjs-control-bar {
+    /deep/.vjs-has-started .vjs-control-bar {
         opacity: 0;
     }
     .hotVide {

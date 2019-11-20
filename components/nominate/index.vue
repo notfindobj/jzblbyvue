@@ -26,7 +26,14 @@
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
             </div>
-           
+            <div class="Swiper-nominate">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide" v-for="(items, index) in recommend" :key="index">
+                        <img :src="baseUrlRegExp(items.ImgSrc)" :v-else="index">
+                    </div>
+                </div>
+                <div class="swiper-pagination swiper-pagination-bullets"></div>
+            </div>
             <div class="recommend" v-if="answers.length > 0">
                 <span class="recommend-title">猜你喜欢</span>
                 <span>换一换</span>
@@ -56,7 +63,7 @@ export default {
             UserProAndFans: {},
             swiperBox: {},
             answers: [],
-            recommend: []
+            recommend: [{}]
         }
     },
     computed: {
@@ -69,8 +76,30 @@ export default {
         this.getRecommendList()
     },
     mounted () {
+        this.initSwiper();
     },
     methods: {
+        initSwiper () {
+            let swiper = new Swiper (".Swiper-nominate",{
+                direction: 'horizontal',
+                loop:true,  //循环
+                loopFillGroupWithBlank: true,  
+                observer:true,//修改swiper自己或子元素时，自动初始化swiper
+            　　 observeParents:true,//修改swiper的父元素时，自动初始化swiper
+                //使用分页器
+                paginationClickable :true,
+                pagination: {
+                　　el: '.swiper-pagination',
+                    clickable: true,
+                    renderBullet(index, className) {
+                        return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
+                    }
+                },    
+                autoplay: {
+                　　disableOnInteraction: false,  //触碰后自动切换停止
+            　　}
+            })
+        },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
             if(str.match(reg)){
@@ -83,13 +112,15 @@ export default {
         async getRecommendList (val) {
             let msg = await getRecommend(this.valType)
             if (msg) {
+                let rec = []
                 msg.forEach(ele =>{
                     if (ele.TypeId === 3) {
                         this.answers.push(ele)
                     } else {
-                        this.recommend.push(ele)
+                        rec.push(ele)
                     }
                 })
+                this.recommend = rec;
             }
         },
         async getUserPro (id) {
@@ -111,6 +142,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .Swiper-nominate {
+        width: 330px;
+        height: 200px;
+        overflow: hidden;
+        position: relative;
+        img {
+            width: 100%;
+            height: 200px;
+        }
+    }
     .recommend-problem {
         padding: 10px;
         font-size: 16px;
@@ -124,19 +165,6 @@ export default {
                 color: #FF3C00;
                 text-decoration: underline;
             }
-        }
-    }
-    .recommend-boxss {
-        width: 330px;
-        height: auto;
-    }
-    .recommend-swiper {
-        position: relative;
-        &-name {
-            position: absolute;
-            color: #fff;
-            font-size: 14px;
-            line-height: 25px;
         }
     }
     .recommend {
@@ -158,19 +186,6 @@ export default {
     }
     /deep/.swiper-pagination-bullet-active {
         background: #FF3C00;
-    }
-    .swiper-boxss {
-        width: 330px;
-        height: 200px;
-        overflow: hidden;
-        position: relative;
-        img {
-            width: 100%;
-            height: 200px;
-        }
-    }
-    .swiper-slide-item {
-        cursor: pointer;
     }
     .nominate {
         position: sticky;

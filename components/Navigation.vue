@@ -206,7 +206,7 @@
                     key: 'baseSearchItem',
                     value: {
                         Pagination: {
-                            SortType: 1,
+                            SortType: '1',
                             KeyWords: this.searchData,
                             Order: true,
                             Page: 1,

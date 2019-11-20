@@ -14,8 +14,8 @@
                     {{ bigCardsDate.Views }}
                 </div>
                 <div class="cards-eye-name">
-                    <i class="iconfont icon-shangchuan"></i>
-                    <span>{{bigCardsDate.CreateUserName}}</span>
+                    <i class="iconfont icon-favorite"></i>
+                    <span>{{bigCardsDate.Collections}}</span>
                 </div>
             </div>
         </div>
@@ -65,6 +65,8 @@ export default {
         border-radius: 3px;
         height: 475px;
         border: 1px solid #ccc;
+        box-shadow: none;
+        transition: box-shadow .5s;
         &-top {
             position: relative;
             height: 356px;
@@ -72,10 +74,17 @@ export default {
             cursor: pointer;
             &-bgimg {
                 width: 594px;
+                overflow: hidden;
                 height: 356px;
                 img {
                     width: 100%;
-                    height: 100%;
+                    height: 100%; 
+                    transform: scale(1);
+                    transition: transform 1s;
+                }
+                &:hover img {
+                    transform: scale(1.2);
+                    transition: transform 1s;
                 }
             }
         }
@@ -110,6 +119,7 @@ export default {
             }
         }
         &:hover {
+            transition: box-shadow .5s;
             box-shadow: 0 2px 15px #999999;
         }
     }

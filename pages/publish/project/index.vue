@@ -732,7 +732,7 @@
                 key: 'baseSearchItem',
                 value: {
                     Pagination: {
-                        SortType: 1,
+                        SortType: '1',
                         KeyWords: "",
                         Order: true,
                         Page: 1,
