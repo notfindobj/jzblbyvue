@@ -43,8 +43,6 @@ export default {
         height: 230px;
         position: relative;
         border-radius: 3px;
-        box-shadow: none;
-        transition: box-shadow 1s;
         border: 1px solid #ccc;
         overflow: hidden;
         cursor: pointer;

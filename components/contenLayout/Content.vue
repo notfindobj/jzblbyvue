@@ -275,8 +275,11 @@
                 margin-right: 10px;
                 margin-bottom: 20px;
                 position: relative;
+                box-shadow: none;
+                transition: box-shadow .5s;
                 &:hover {
-                    box-shadow: 0 2px 20px 0 rgba(0, 0, 0, 0.15);
+                    transition: box-shadow .5s;
+                    box-shadow: 0 10px 10px 0 #989898;
                 }
                 &:nth-child(4n) {
                     margin-right: 0;
