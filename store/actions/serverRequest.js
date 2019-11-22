@@ -104,7 +104,7 @@ export const serverRequest = {
   async getQueryData({commit}, params) {
     return await request.post(`Query/QueryData`, params)
   },
-  // 获取要展示的搜索的按钮
+  // 个人部落访问记录
   async TribeVisiting({commit}, params) {
     return await request.post(`MyTribe/TribeVisiting`, params)
   },

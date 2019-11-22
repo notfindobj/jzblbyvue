@@ -62,7 +62,7 @@ export default {
     },
     computed: {
       ...mapState({
-          Identity: state => state.overas.auth
+          Identity: state => state.overas.auth|| {}
       })
     },
     data() {
@@ -76,9 +76,9 @@ export default {
     created () {
       if (this.$route.query.id) {
           if (this.Identity.UserId === this.$route.query.id) {
-              this.isItMe = true;
+            this.isItMe = true;
           } else {
-              this.isItMe = false;
+            this.isItMe = false;
           }
       }
       this.getALLThemeList();

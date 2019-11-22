@@ -7,7 +7,7 @@
                 <div v-if="userInfoID != detaDetails.UserId" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
             <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
-                <div v-if="detaDetails.IsDownload" @click="immediatelyDown(detaDetails)">
+                <div v-if="detaDetails.IsDownload" ref="immediatelyDown" @click="immediatelyDown(detaDetails)">
                   <p>立即下载</p>
                   <p><span class="btn-group-Price">￥{{detaDetails.Price}}</span></p>
                 </div>
@@ -80,7 +80,12 @@
         })
     },
     created() {
-      this.isShowIcon = this.attribute.length <= 4
+      this.isShowIcon = this.attribute.length <= 4;
+    },
+    mounted () {
+      if (this.$route.query.isDow === 'true') {
+        this.$refs.immediatelyDown.click();
+      }
     },
     methods: {
       openMap (row) {
@@ -308,8 +313,8 @@
                             background: #FF3C00;
                             border-radius: 1px;
                             position: absolute;
-                            // right: 70px;
-                            left: 42%;
+                            left: 50%;
+                            transform: translateX(-50%);
                             top: 30px;
                         }
                     }

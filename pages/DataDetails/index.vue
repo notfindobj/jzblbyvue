@@ -431,7 +431,7 @@
                             }
                         }
                     }, 3000)
-                } else {s
+                } else {
                     window.location.href = config.data
                 }
                 this.isShowDateDetailsDown = false;

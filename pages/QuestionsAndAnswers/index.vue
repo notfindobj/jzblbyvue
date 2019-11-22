@@ -46,12 +46,12 @@
                                             </div>
                                         </div>
                                     </div>
-                                <proTools 
-                                :itemTools="item" 
-                                @goDetail="goDetail"
-                                @liked="liked"
-                                 @collection="collection"/>
-                            </div>
+                                    <proTools 
+                                        :itemTools="item" 
+                                        @goDetail="goDetail"
+                                        @liked="liked"
+                                        @collection="collection"/>
+                                </div>
                             </template>
                         </div>
                         <div class="page-box" v-if="total > 5">
@@ -87,7 +87,6 @@ import proRele from "../../components/proRele"
 import { _throttle } from '../../plugins/untils/public'
 export default {
     layout: 'main',
-    middleware: 'authenticated',
     data() {
         return {
             editorName: 'wd',

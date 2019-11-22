@@ -5,7 +5,7 @@
         <div v-if="['tz', 'wd'].includes(editorName)">
             <input v-model="editorTitle" :placeholder="ArticleTitle.title" class="editor-title" />
         </div>
-        <blEditor ref="editor" :editorType="editorName" @editorPush="editorPush" />
+        <blEditor ref="editor" :editorType="editorName" @editorPush="editorPush" @notLogged="notLogged"/>
         <Spin fix v-if="spinShow">
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
             <div>上传中</div>
@@ -100,6 +100,11 @@ export default {
         ...mapGetters(['isLogin'])
     },
     methods: {
+        // 是否登录
+        notLogged () {
+            this.$store.dispatch('SETUP', true);
+            this.$store.dispatch('LOGGEDIN', 'signIn');
+        },
         clickEditor (tab) {
             this.editorTitle = '';
             this.$refs.editor.clearEditor();

@@ -55,7 +55,7 @@
                     </div>
                 </div>
             </div>
-            <div class="search-coment-right">
+            <div class="search-coment-right" v-if="historyList.length > 0">
                 <div class="card-head">
                     <h4 class="title">搜索历史</h4>
                     <span class="s-btn-c" @click="delSearch()">清除</span>
@@ -73,9 +73,9 @@
 <script> 
 import {setFollow, delQueryData} from '../../service/clientAPI'
 import { analogJump } from '../../plugins/untils/public'
+import {mapGetters} from 'vuex'
 export default {
     layout: 'main',
-    middleware: 'authenticated',
     data() {
         return {
             searchTop: '',
@@ -84,6 +84,9 @@ export default {
             searchData: '',
             searchItems: []
         }
+    },
+    computed: {
+        ...mapGetters(['isLogin'])
     },
     async asyncData({route, store}) {
         let btnData = await store.dispatch('getQueryBtnData');
@@ -111,7 +114,7 @@ export default {
             searchData,
             btnData,
             searchTop,
-            historyList,
+            historyList: historyList || [],
             twoSwitch,
             searchTitle,
             searchItems
@@ -133,7 +136,7 @@ export default {
             this.searchTitle = row.Id;
         },
         async delSearch (item, index) {
-             let msg = ''
+            let msg = ''
             if (item) {
                 msg = await delQueryData(item.Id);
                 if (msg) {
@@ -163,6 +166,11 @@ export default {
         },
          // 关注
         async worksFocus(item) {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             let queryData = {
                 UserId: item.UserId,
                 IsDelete: item.IsFollow

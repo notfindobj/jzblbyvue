@@ -91,6 +91,7 @@
   import Comment from '../video/comment'
   import { analogJump } from '../../plugins/untils/public'
   import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow, delComment} from '../../service/clientAPI'
+  import { mapGetters} from 'vuex'
   export default {
     props: {
       videoInfo: {
@@ -107,6 +108,9 @@
     components: {
       share,
       Comment
+    },
+    computed: {
+      ...mapGetters(['isLogin'])
     },
     data() {
       return {
@@ -170,6 +174,11 @@
       },
       // 关注
       async worksFocus(item) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         let queryData = {
             UserId: item.UserId,
             IsDelete: item.IsFollow
@@ -182,6 +191,11 @@
       },
       // 收藏
       async clickCollection(row) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         let queryData = {
             ItemId: row.ItemId,
             TalkType: 2,
@@ -199,18 +213,25 @@
       },
       // 项目点赞
       async clickLike(row) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         let queryData = {
             ItemId: row.ItemId,
             LikeType: 1,
             IsDelete: row.itemOperateData.IsLike
         }
         let thumbsUpMsg = await setthumbsUp(queryData);
-        if (row.itemOperateData.IsLike) {
+        if (thumbsUpMsg) {
+          if (row.itemOperateData.IsLike) {
             this.$set(row.itemOperateData, 'LikeCount', row.itemOperateData.LikeCount - 1)
-        } else {
+          } else {
             this.$set(row.itemOperateData, 'LikeCount', row.itemOperateData.LikeCount + 1)
+          }
+          this.$set(row.itemOperateData, 'IsLike', !row.itemOperateData.IsLike)
         }
-        this.$set(row.itemOperateData, 'IsLike', !row.itemOperateData.IsLike)
       },
       // 转发
       textShare () {
@@ -222,7 +243,6 @@
           this.videoInfo.isShowComment = false;
           return false;
         }
-
         this.videoInfo.isShowComment = true;
         this.isLoadingComment = true;
         this.getComment();
@@ -239,6 +259,11 @@
       },
       // 评论
       submitComment(content) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         this.isLoadingComment = true;
         setComments({
           ItemId: this.videoInfo.ItemId,

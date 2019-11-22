@@ -45,7 +45,6 @@ import proRele from "../../components/proRele"
 import {mapGetters, mapState} from 'vuex'
 export default {
     layout: 'main',
-    middleware: 'authenticated',
     data() {
       return {
         editorName: 'tw',
@@ -55,11 +54,6 @@ export default {
         records: 0,
         total: 1,   // 总页数
       }
-    },
-    computed: {
-        ...mapState({
-            userInfo: state => state.overas.auth? state.overas.auth: {}
-        })
     },
     components: {
       ImageAndText,
@@ -189,33 +183,37 @@ export default {
           }
       },
       // 点击收藏
-      clickCollection(index, flag) {
-        setCollection({
+      async clickCollection(index, flag) {
+        let queryData = {
           ItemId: this.dataList[index].ItemId,
           ItemName: this.dataList[index].TalkTitle,
           ItemTitleImg: '',
           IsDelete: !flag,
           TalkType: this.dataList[index].TalkType
-        }).then(() => {
+        }
+        let msg = await setCollection(queryData);
+        if (msg) {
           let dataInfo = JSON.parse(JSON.stringify(this.dataList[index]));
           dataInfo.itemOperateData.IsCollection = flag;
           flag ? dataInfo.itemOperateData.CollectionCount += 1 : dataInfo.itemOperateData.CollectionCount -= 1;
           this.$set(this.dataList, index, dataInfo);
-        })
+        }
       },
       // 点击点赞
-      clickLike(index, flag) {
-        setthumbsUp({
-          ItemId: this.dataList[index].ItemId,
+      async clickLike(index, flag) {
+        let queryData = {
+           ItemId: this.dataList[index].ItemId,
           LikeType: this.dataList[index].TalkType,
           CommentsId: '',
           IsDelete: !flag
-        }).then(() => {
+        }
+        let msg = await setthumbsUp(queryData);
+        if (msg) {
           let itemInfo = JSON.parse(JSON.stringify(this.dataList[index]));
           itemInfo.itemOperateData.IsLike = flag;
           flag ? itemInfo.itemOperateData.LikeCount += 1 : itemInfo.itemOperateData.LikeCount -= 1;
           this.$set(this.dataList, index, itemInfo);
-        })
+        }
       },
       // 发布
     }

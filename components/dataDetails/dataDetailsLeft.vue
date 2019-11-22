@@ -284,10 +284,6 @@
 
     #detaDetails {
         padding-right: 10px;
-
-        img {
-            width: 100%;
-        }
     }
 
     .view-left-move-del {

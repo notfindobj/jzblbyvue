@@ -80,7 +80,7 @@
         showCount: 3,   // 显示几条评论
         isLast: false,
         width: '96%',
-        right: '439px'
+        right: '310px'
       }
     },
     mounted() {
@@ -106,7 +106,6 @@
       handleEmotion(item) {
         this.commentCon += `[${ item.content }]`
       },
-
       // 评论
       handleComment() {
         if (!this.commentCon) {
@@ -116,7 +115,6 @@
         this.$emit('submitComment', this.commentCon);
         this.commentCon = '';
       },
-
       // 显示更多
       showMore() {
         this.showCount += 3;

@@ -1,7 +1,7 @@
 <template>
 <!-- 建筑圈右侧内容 -->
     <div class="nominate">
-        <div class="container-right">
+        <div class="container-right" v-if="UserProAndFans">
             <div class="user-title" @click="goPersonalCenter(userInfo)">
                 <div class="user-title-l">
                 <img :src="userInfo.HeadIcon" alt="">
@@ -60,7 +60,7 @@ export default {
     },
     data () {
         return {
-            UserProAndFans: {},
+            UserProAndFans: null,
             swiperBox: {},
             answers: [],
             recommend: [{}]
@@ -72,7 +72,9 @@ export default {
         })
     },
     created () {
-        this.getUserPro(this.userInfo.UserId);
+        if (this.userInfo.UserId) {
+            this.getUserPro(this.userInfo.UserId);
+        }
         this.getRecommendList()
     },
     mounted () {

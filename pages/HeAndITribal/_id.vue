@@ -46,7 +46,7 @@
     import HeAndIIntroduction from './HeAndIIntroduction'
     import HeAndIDownload from './HeAndIDownload'
     import mySomethingStatistical from './mySomethingStatistical'
-    import { mapState } from 'vuex'
+    import { mapState , mapGetters} from 'vuex'
     import Heads from './head'
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
@@ -54,7 +54,6 @@
     import { _throttle } from '../../plugins/untils/public'
     export default {
         layout: 'main',
-        middleware: 'authenticated',
         name: 'PersonalCenter',
         components: {
             HeAndIIntroduction,
@@ -88,22 +87,26 @@
         },
         computed: {
             ...mapState({
-                userInfoID: state => state.overas.auth.UserId
+                userInfoID: state => state.overas.auth || {}
             })
         },
         async asyncData({ store, query }) {
-            let id = query.id ? query.id : store.getters.getToken.UserId;
-            let itIsMe = null
-            if (query.id === '' || query.id === store.getters.getToken.UserId) {
-                itIsMe = false;
-            } else {
-                itIsMe = true;
+            let id = query.id;
+            let itIsMe = true;
+            let getToken = store.getters
+            if (getToken.isLogin) {
+                id = query.id ? query.id : store.getters.getToken.UserId;
+                if (query.id === '' || query.id === store.getters.getToken.UserId) {
+                    itIsMe = false;
+                } else {
+                    itIsMe = true;
+                }
             }
             let Trid = {
                 "UserId": id
             }
-            await store.dispatch('TribeVisiting', Trid);
-            const data = await store.dispatch('getTribeInfo', id);
+            let tr = await store.dispatch('TribeVisiting', Trid);
+            let data = await store.dispatch('getTribeInfo', id);
             return {
                 userId: id,
                 itIsMe,
@@ -112,7 +115,7 @@
         },
         created () {
             this.getTypeMeunList(); 
-            if (this.$route.query.id === undefined || this.$route.query.id === this.userInfoID) {
+            if (this.$route.query.id === undefined || this.$route.query.id === this.userInfoID.UserId) {
                 this.itIsMe = false;
             }  else {
                 this.itIsMe = true;
@@ -280,7 +283,7 @@
                 this.pageNum = 1;
                 let queryData = {
                     typeId: inx || 0,
-                    UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID
+                    UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID.UserId
                 }
                 let menuButs = await getTypeMeun(queryData);
                 if (menuButs) {
@@ -309,7 +312,7 @@
                 let query = {
                     "IsFollow": this.IsFollow,
                     "page": this.pageNum,
-                    "UserId": this.$route.query.id ? this.$route.query.id : this.userInfoID
+                    "UserId": this.$route.query.id ? this.$route.query.id : this.userInfoID.UserId
                 }
                 let msg  = await getFollowOrFans(query);
                 if (msg) {
@@ -346,7 +349,7 @@
                     Rows: 8,
                     ItemTypeId: index,
                     typeId: this.currentIndex,
-                    UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID
+                    UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID.UserId
                 }).then(res => {
                     if (res.retModels instanceof Array) {
                         if (isScroll) {

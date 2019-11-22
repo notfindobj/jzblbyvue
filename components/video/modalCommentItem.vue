@@ -11,20 +11,8 @@
             </p>
             <div class="comment-operation">
                 <p>
-                    <i
-                        class="icon iconfont icon1"
-                        v-if="!commentInfo.islikes"
-                        @click="likeComment(true)"
-                    >
-                        &#xe643;
-                    </i>
-                    <i
-                        class="icon iconfont icon1-active"
-                        v-if="commentInfo.islikes"
-                        @click="likeComment(false)"
-                    >
-                        &#xe621;
-                    </i>
+                    <i class="icon iconfont icon1" v-if="!commentInfo.islikes" @click="likeComment(true)" > &#xe643; </i>
+                    <i class="icon iconfont icon1-active" v-if="commentInfo.islikes" @click="likeComment(false)" > &#xe621; </i>
                     <span>点赞</span>
                 </p>
                 <Divider type="vertical" style="margin: 0 10px;"/>
@@ -74,8 +62,6 @@
         components: {
             Emotion
         },
-
-
         data() {
             return {
                 isShowInput: false,
@@ -83,7 +69,6 @@
                 isShowEmotion: false
             }
         },
-
         methods: {
             // 点赞评论
             likeComment(flag) {

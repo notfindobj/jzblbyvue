@@ -333,7 +333,6 @@
     import { setHearImg } from '../../../LocalAPI'
     import { analogJump } from '../../../plugins/untils/public'
     import { mapState, mapGetters} from 'vuex'
-
     export default {
         data() {
             return {
@@ -389,20 +388,29 @@
         },
         computed: {
             ...mapState({
-                Identity: state => state.overas.auth
+                Identity: state => state.overas.auth || {}
             }),
+            ...mapGetters(['isLogin'])
+        },
+        asyncData({params}) {
+            return {
+                queryId: params.userId
+            }
         },
         created () {
-            this.getCareerDataList()
-            this.getCareerTyepList()
+            if (!this.isLogin) {
+                this.isItMe = false;
+            }
+            this.getCareerDataList();
+            this.getCareerTyepList();
         },
         mounted() {
             let query = {
-                userId: this.Identity.UserId
+                userId: this.queryId
             }
             this.userId = this.Identity.UserId
             if (this.$route.params.userId) {
-                if (this.Identity.UserId === this.$route.params.userId) {
+                if (this.Identity.UserId === this.queryId) {
                     this.isItMe = true;
                 } else {
                     this.isItMe = false;
@@ -416,7 +424,7 @@
         },
         methods: {
             async getCareerTyepList () {
-                let msg = await getCareerTyepInfo(this.Identity.UserId);
+                let msg = await getCareerTyepInfo(this.queryId);
                 if (msg) {
                     if (this.EntCode === 2) {
                         this.careerTyep = msg.DelCareers || [];

@@ -74,14 +74,26 @@
                     <span>资源库 <i class="iconfont icon-jiantou"></i></span>
                     <LevelMenu class="banner-nav" v-show="isIndex || isShowCate"></LevelMenu>
                 </li>
-                <li @click="goBuilding">建筑圈</li>
-                <li @click="goAttention">关注</li>
+                <li>
+                    <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
+                </li>
+                <li>
+                    <nuxt-link to="/attention">关注</nuxt-link>
+                </li>
                 <!-- <li @click="goRecommend">推荐</li> -->
-                <li @click="goVideo">视频</li>
-                <li @click="goQuestion">问答</li>
+                <li>
+                    <nuxt-link to="/videos">视频</nuxt-link>
+                </li>
+                
+                <li>
+                    <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
+                </li>
                 <!-- <li @click="goHeAndI">建筑游学</li> -->
                 <!-- <li @click="goAboutUs">建筑书店</li> -->
-                <li @click="goMytribe">我的部落</li>
+                <li>
+                    <a href="javasrcipt:(0)"  @click="goMytribe">我的部落</a>
+                    <!-- <nuxt-link to="/HeAndITribal"></nuxt-link> -->
+                </li>
             </ul>
             <!-- <div class="main-nav-publish" @click="publish">发布</div> -->
         </div>
@@ -180,7 +192,6 @@
             },
             async signOut() {
                 let msg = await logout();
-                this.$router.push({name: "index"});
                 if (msg) {
                     this.$store.dispatch('LOGININ', null);
                     localStorage.removeItem('LOGININ');
@@ -242,23 +253,19 @@
                 let routeData = this.$router.resolve({ name: "publish-imageText" });
                 analogJump(routeData.href);
             },
-            goAttention() {
-                this.$router.push({ path: "/attention" })
-            },
             goRecommend() {
                 this.$router.push({ path: "/recommend" })
             },
-            goVideo() {
-                this.$router.push({ path: "/videos" })
-            },
-            goQuestion() {
-                this.$router.push({ path: "/QuestionsAndAnswers" })
-            },
-            goBuilding() {
-                this.$router.push({ path: "/BuildingCircle" })
-            },
             goHeAndI() {
                 this.$Message.error('开发中....')
+            },
+            goMytribe () {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
+                this.$router.push({ name: "HeAndITribal-id" })
             },
             goSearchPage () {
                 if (!this.isLogin) {
@@ -274,13 +281,15 @@
                 this.$Message.error('开发中....')
                 // this.$router.push({ path: "/aboutUS" })
             },
-            goMytribe() {
-                this.$router.push({ path: "/HeAndITribal" })
-            }
         }
     }
 </script>
 <style lang="less" scoped>
+    .main-nav-tab {
+        a {
+            color: #FF3C00;
+        }
+    }
     .badge-sty {
         top: 5px;
         line-height: 10px;

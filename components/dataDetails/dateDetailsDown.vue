@@ -44,11 +44,11 @@
             typeCode: '',
             typeIcon: require('../../assets/images/WeChat.png')
           },
-          // {
-          //   typeName:'支付宝支付',
-          //   typeCode:'',
-          //   typeIcon: require('../../assets/images/payZFB.png')
-          // },
+          {
+            typeName:'支付宝支付',
+            typeCode:'',
+            typeIcon: require('../../assets/images/payZFB.png')
+          },
         ],
         currentIndex: 0
       }

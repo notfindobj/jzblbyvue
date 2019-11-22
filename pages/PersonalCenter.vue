@@ -3,7 +3,7 @@
             <div class="personal-left">
                 <div class="personal-left-header">
                     <div class="personal-left-header-img">
-                        <img v-if="isItMe" :src="userInfo.HeadIcon " alt="" width="100px;">
+                        <img v-if="isItMe" :src="userInfo.HeadIcon" alt="" width="100px;">
                         <img v-else :src="GetUserData.HeadIconSrc " alt="" width="100px;">
                     </div>
                     <div class="personal-left-header-name">{{isItMe ? userInfo.NickName : GetUserData.Nickname}}</div>
@@ -68,7 +68,7 @@ export default {
     },
     computed: {
         ...mapState({
-            userInfo: state => state.overas.auth
+            userInfo: state => state.overas.auth || {}
         }),
         isItMe () {
             if (!this.$route.params.userId || this.userInfo.UserId === this.$route.params.userId) {

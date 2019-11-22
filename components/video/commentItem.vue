@@ -16,9 +16,8 @@
                     </span>
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
-                    <span>
-                        <i class="icon iconfont" v-show="!isLike" @click="clickLike(true)" >&#xe67e;</i>
-                        <i class="icon iconfont" style="color: #ff3c00;" v-show="isLike" @click="clickLike(false)" >&#xe621;</i> 赞
+                    <span  @click="clickLike(!isLike)">
+                        <i class="icon iconfont" >{{!isLike ? '&#xe67e;' : '&#xe621;'}}</i>点赞
                     </span>
                 </p>
             </div>
@@ -42,6 +41,7 @@
   import Reply from '../../components/video/reply'
   import ReplyItem from '../../components/video/replyItem'
   import { setComments, setthumbsUp} from '../../service/clientAPI'
+  import { mapGetters} from 'vuex'
   export default {
     props: {
       commentInfo: {
@@ -50,6 +50,9 @@
           return {}
         }
       }
+    },
+    computed: {
+      ...mapGetters(['isLogin'])
     },
     components: {
       Reply,
@@ -67,9 +70,9 @@
     },
     methods: {
        // 删除评论
-        delComment (val) {
-            this.$emit('delComment', val)
-        },
+      delComment (val) {
+          this.$emit('delComment', val)
+      },
        // 跳转部落
       goToPersonal (row) {
         this.$router.push({
@@ -80,6 +83,11 @@
         })
       },
       clickReply() {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         if (this.$route.name === 'QuestionsAndAnswers-id') {
           this.replyInputWith = 560;
         }
@@ -95,19 +103,24 @@
         // }
       },
       // 点赞
-      clickLike(flag) {
-        if (this.commentInfo.CommentsId) {
-          setthumbsUp({
+      async clickLike(flag) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
+        let queryData = {
             ItemId: this.commentInfo.ItemId,
             LikeType: 0,
             CommentsId: this.commentInfo.CommentsId,
             IsDelete: !flag
-          }).then(res => {
+        }
+        if (this.commentInfo.CommentsId) {
+          let msg = await setthumbsUp(queryData);
+          if (msg) {
             this.isLike = flag;
-          })
-        } else {
-          this.$Message.warning('不能给自己点赞哦！');
-          return false;
+            return false
+          }
         }
       },
 

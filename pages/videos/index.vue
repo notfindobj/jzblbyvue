@@ -32,7 +32,6 @@
     import {mapGetters, mapState} from 'vuex'
     export default {
         layout: 'main',
-        middleware: 'authenticated',
         components: {
             'video-modal': VideoModal,
             'video-item': VideoItem,

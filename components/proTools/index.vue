@@ -33,6 +33,7 @@
     </ul>
 </template>
 <script>
+import {mapGetters} from 'vuex'
 export default {
     props: {
         itemTools: {
@@ -40,14 +41,32 @@ export default {
             default: () => {}
         }
     },
+    computed: {
+        ...mapGetters(['isLogin'])
+    },
     methods: {
         goDetail (row) {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             this.$emit('goDetail', row.QAId);
         },
         Collection (row) {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             this.$emit('collection', row);
         },
         liked (row) {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             this.$emit('liked', row);
         }
     },

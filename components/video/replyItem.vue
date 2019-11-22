@@ -11,9 +11,7 @@
                     <span class="reply-time">{{ replyInfo.CreateDate }}</span>
                 </div>
                 <p class="opera-row">
-                    <span v-if="replyInfo.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(replyInfo)">
-                        删除
-                    </span>
+                    <span v-if="replyInfo.IsDeleteBtn" class="discuss-footer-shcnhu" @click="delComment(replyInfo)">删除</span>
                     <span @click="clickReply">回复</span>
                     <span class="line-col">|</span>
                     <span>

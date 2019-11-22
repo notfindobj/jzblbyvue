@@ -112,7 +112,6 @@
     import { mapState } from 'vuex'
     export default {
         layout: 'main',
-        middleware: 'authenticated',
         data() {
             return {
                 fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
@@ -187,13 +186,15 @@
                 this.isRight = false
             },
             // 关注/取消关注
-            handleGz(flag) {
-                setFollow({
+            async handleGz(flag) {
+                let queryData = {
                     UserId: this.detailInfo.UserId,
                     IsDelete: !flag
-                }).then(res => {
+                }
+                let msg= await setFollow(queryData)
+                if (msg) {
                     this.$set(this.detailInfo, 'IsFollow', flag)
-                })
+                }
             },
             // 选择表情
             handleEmotion(item) {
@@ -314,7 +315,6 @@
 </script>
 <style lang="less" scoped>
     @import "~assets/css/publish/index.less";
-
     .container {
         width: 1200px;
         margin: 0 auto;

@@ -12,12 +12,16 @@
 </template>
 <script>
 import {addEvent} from '../plugins/untils/public'
+import { mapGetters} from 'vuex'
 export default {
     props: {
         isShowToTop: {
             type: Boolean,
             default: true
         }
+    },
+    computed: {
+        ...mapGetters(['isLogin'])
     },
     data() {
         return {
@@ -40,6 +44,11 @@ export default {
             })();
         },
         goPublish() {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             this.$router.push('/publish/imageText')
         }
     }

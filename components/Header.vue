@@ -12,8 +12,8 @@
                 <li>
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                 </li>
-                <li>
-                    <nuxt-link to="/attention">关注</nuxt-link>
+                <li >
+                    <nuxt-link to="/attention" >关注</nuxt-link>
                 </li>
                 <!-- <li>
                     <nuxt-link to="/recommend">推荐</nuxt-link>
@@ -25,7 +25,7 @@
                     <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
                 </li>
                 <li>
-                    <nuxt-link to="/HeAndITribal" @click.native="goMytribe">我的部落</nuxt-link>
+                    <a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a>
                 </li>
                 <li>
                     <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
@@ -58,13 +58,18 @@
                 </li>
             </ul>
         </div>
+        <signPage />
     </div>
 </template>
 <script>
 import { mapState, mapGetters } from 'vuex'
+import signPage from '../components/home/signPage'
 import { logout, setDemo} from '../LocalAPI'
 import {analogJump } from '../plugins/untils/public'
 export default {
+    components: {
+        signPage
+    },
     data() {
       return {
         loginImg: require('../assets/images/top_logo.png'),
@@ -143,11 +148,18 @@ export default {
         },
         SignIn() {
             this.$store.dispatch('SETUP', true);
+            this.$store.dispatch('LOGGEDIN', 'signIn');
         },
         goMytribe() {
-            if (this.$route.name === "HeAndITribal-id") {
-                window.location.reload();
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
             }
+            this.$router.push({ name: "HeAndITribal-id" })
+            // if (this.$route.name === "HeAndITribal-id") {
+            //     window.location.reload();
+            // }
         },
         searchPach () {
             this.$router.push({ name: "searchPage" });
@@ -158,7 +170,6 @@ export default {
         },
         async signOut() {
             let msg = await logout();
-            this.$router.push({name: "index"});
             if (msg) {
                 this.$store.dispatch('LOGININ', null);
                 localStorage.removeItem('LOGININ');

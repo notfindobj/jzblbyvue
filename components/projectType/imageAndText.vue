@@ -112,6 +112,7 @@
   import {getRanNum, analogJump} from '../../plugins/untils/public'
   import {setDemo} from '../../LocalAPI'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment} from '../../service/clientAPI'
+  import { mapGetters} from 'vuex'
   var name = getRanNum(5)
   export default {
     name: name,
@@ -134,6 +135,9 @@
     components: {
       'v-comment': Comment,
       share
+    },
+    computed: {
+      ...mapGetters(['isLogin'])
     },
     data() {
       let ViewerIndex = getRanNum(6)
@@ -228,14 +232,14 @@
               this[this.ViewerIndex].next()
             } 
           }
-          if (val === 1) {
-            if (this.itemIndex === 0) {
-              this[this.ViewerIndex].close();
-              this[this.ViewerIndex].hide();
-            } else {
-              this[this.ViewerIndex].prev()
-            }
+        if (val === 1) {
+          if (this.itemIndex === 0) {
+            this[this.ViewerIndex].close();
+            this[this.ViewerIndex].hide();
+          } else {
+            this[this.ViewerIndex].prev()
           }
+        }
       },
       mousemoveLeft() {
         this.isLeft = true
@@ -317,6 +321,11 @@
       },
       // 收藏
       clickCollection(flag) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         this.$emit('clickCollection', this.index, flag)
       },
       // 转发
@@ -326,6 +335,11 @@
       },
       // 赞
       clickLike(flag) {
+        if (!this.isLogin) {
+          this.$store.dispatch('SETUP', true);
+          this.$store.dispatch('LOGGEDIN', 'signIn');
+          return false
+        }
         this.$emit('clickLike', this.index, flag)
       },
       // 点击弹出详情
@@ -335,10 +349,10 @@
       // 点击评论
       clickComment() {
         if (this.itemInfo.isShowComment) {
-          this.itemInfo.isShowComment = false;
+          this.$set(this.itemInfo, 'isShowComment', false);
           return false;
         }
-        this.itemInfo.isShowComment = true;
+        this.$set(this.itemInfo, 'isShowComment', true);
         this.isLoadingComment = true;
         this.getComment();
       },
@@ -353,9 +367,8 @@
         })
       },
       // 评论
-      submitComment(content) {
-        this.isLoadingComment = true;
-        setComments({
+      async submitComment(content) {
+        let queryData = {
           ItemId: this.itemInfo.ItemId,
           ReplyId: '',
           ReplyUserId: '',
@@ -363,15 +376,17 @@
           Message: content,
           ItemImgSrc: '',
           ScopeType: this.setTalkType(this.itemInfo.TalkType)
-        }).then(res => {
+        }
+        let msg = await setComments(queryData);
+        if (msg) {
+          this.isLoadingComment = true;
           this.$Message.success('评论成功');
           this.getComment();
-        })
+        }
       },
       // 回复
-      submitReplay(params) {
-        this.isLoadingComment = true;
-        setComments({
+      async submitReplay(params) {
+        let queryData = {
           ItemId: this.itemInfo.ItemId,
           ReplyId: params.commentsId,
           ReplyUserId: params.userId,
@@ -379,20 +394,25 @@
           Message: params.content,
           ItemImgSrc: '',
           ScopeType: this.setTalkType(this.itemInfo.TalkType)
-        }).then(res => {
-          // this.$Message.success('评论成功');
+        }
+        let msg = await setComments(queryData);
+        if (msg) {
+          this.isLoadingComment = true;
           this.getComment();
-        })
+        }
       },
 
       // 点赞回复
-      submitLike(obj) {
-        setthumbsUp({
+      async submitLike(obj) {
+       
+
+        let queryData = {
           ItemId: this.itemInfo.ItemId,
           LikeType: 0,
           CommentsId: obj.commentsId,
           IsDelete: !obj.flag
-        })
+        }
+        let msg = await setthumbsUp(queryData);
       },
       setTalkType (val) {
         let type = val;

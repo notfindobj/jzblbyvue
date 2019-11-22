@@ -92,6 +92,7 @@ import { _debounce, analogJump } from '../../plugins/untils/public'
 import uploadVideo from '../../components/publish/uploadVideo'
 import draggable from 'vuedraggable'
 import { sinaIcon, jzIcon} from '../../assets/Emoticon'
+import { mapGetters } from 'vuex'
 export default {
     name: 'editor',
     props: {
@@ -104,6 +105,9 @@ export default {
         draggable,
         Upload,
         uploadVideo
+    },
+    computed: {
+        ...mapGetters(['isLogin'])
     },
     data () {
         return {
@@ -220,6 +224,10 @@ export default {
         },
         // 图片
         uploadPic () {
+            if (!this.isLogin) {
+                this.$emit('notLogged');
+                return false
+            }
             if (['sp'].includes(this.editorType)) {
                 return false
             }
@@ -230,6 +238,10 @@ export default {
             this.$refs.uploadPic.click();
         },
         uploadVideo () {
+            if (!this.isLogin) {
+                this.$emit('notLogged');
+                return false
+            }
             if (!['sp'].includes(this.editorType)) {
                 return false
             }
@@ -491,15 +503,14 @@ export default {
     }
     .editor-toolbar {
         border-bottom: 1px solid #ececec;
+        position: relative;
+        z-index: 500;
     }
     /deep/ .w-e-text {
         padding: 0 10px;
         min-height: 100px;
         overflow: hidden;
         background: #eeed;
-        img {
-            width: 25px;
-        }
     }
     /deep/ .w-e-emoticon-container .w-e-item{
         img {
@@ -508,6 +519,6 @@ export default {
     }
     .text {
         min-height: 100px;
-        z-index: 1000 !important;
+        z-index: 400 !important;
     }
 </style>

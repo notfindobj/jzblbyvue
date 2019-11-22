@@ -19,9 +19,8 @@
         </div>
     </Upload>
 </template>
-
 <script>
-
+  import { mapState, mapGetters } from 'vuex'
   export default {
     data() {
       return {
@@ -29,7 +28,11 @@
         token: ''
       }
     },
-
+    computed: {
+        ...mapState({
+            userInfo: state => state.overas.auth || {},
+        }),
+    },
     methods: {
       // 上传前
       beforeUpload() {
@@ -47,9 +50,8 @@
         this.$emit('uploadSuccess', res.Data)
       }
     },
-
-    mounted() {
-      this.token = "Bearer " + JSON.parse(localStorage.getItem('LOGININ')).token
+    created() {
+      this.token = "Bearer " + this.userInfo.token || '';
     },
   }
 </script>
