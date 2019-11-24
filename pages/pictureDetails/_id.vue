@@ -12,9 +12,9 @@
                 </div>
                 <div style="width：800px" id="pictureBox">
                     <div v-html="detailInfo.TalkContent"></div>
-                    <div v-for="(items, index) in detailInfo.ResourceObj" :key="index">
+                    <!-- <div v-for="(items, index) in detailInfo.ResourceObj" :key="index">
                         <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" >
-                    </div>
+                    </div> -->
                 </div>
             </div> 
         </div>
@@ -50,7 +50,6 @@ import ToTop from '../../components/toTop'
 export default {
     name: "pictureBox",
     layout: 'main',
-    middleware: 'authenticated',
     components: {
         commentsCon,
         ToTop

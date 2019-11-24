@@ -66,7 +66,11 @@
                     </div>
                 </div>
                 <div>
-                    <Input style="width:344px;" v-model="baiduData" size="large" search enter-button="百度" placeholder="" @on-search="onSearch"/>
+                    <Input style="width:344px;" v-model="baiduData" size="large">
+                        <Button type="primary" slot="append" class="btn-bg" size="large"  @click="onSearch">
+                            百度
+                        </Button>
+                    </Input>
                 </div>
             </div>
             <ul class="main-nav-tab">
@@ -339,10 +343,13 @@
         }
     }
     .btn-bg {
-        background-color: #FF3C00 !important;
-        color: #ffffff !important;
+        background-color: #808080 !important;
+        color: #fff !important;
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
+        &:focus {
+            box-shadow:none;
+        }
     }
     .home-bar {
         height: 40px;

@@ -68,8 +68,9 @@ export default {
         }
         &-foote {
             position: absolute;
-            height: 45px;
+            height: 40px;
             background: #fff;
+            line-height: 20px;
             width: 100%;
             bottom: -45px;
             transition: bottom .5s ;

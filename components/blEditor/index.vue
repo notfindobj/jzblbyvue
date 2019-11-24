@@ -1,8 +1,10 @@
 <template>
     <div>
         <div class="editor-box">
-            <div ref="toolbar" class="editor-toolbar"></div>
-            <div class="text" ref="editor"></div>
+            <div>
+                <div ref="toolbar" class="editor-toolbar"></div>
+                <div class="text" ref="editor"></div>
+            </div>
             <div class="editor-footer">
                 <ul class="editor-footer-tool">
                     <li :class="!['sp'].includes(editorType)? 'editor-footer-tool-img' : 'editor-footer-tool-img prohibit'" >
@@ -202,6 +204,10 @@ export default {
         selectIsPublic (name) {
             this.publishMode = name;
         },
+        replaceImgs (val) {
+            let regex = "/i/s/";
+            return val.replace(regex, "/i/");
+        },
         //  富文本上传图片
         fileSelected (e) {
             let _this= this;
@@ -213,7 +219,7 @@ export default {
                 }
                 uploadFile(data, 1).then(res => {
                     for (let q = 0; q < res.length; q++) {
-                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img><p><br></p></p>`);
+                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" data-original="${this.replaceImgs(res[q].smallImgUrl)}" style="max-width:100%;"></img><p><br></p></p>`);
                         _this.imgList.push(res[q]);
                     }
                     _this.imgsrc = _this.getSrc(_this.editor.txt.html())
@@ -504,11 +510,11 @@ export default {
     .editor-toolbar {
         border-bottom: 1px solid #ececec;
         position: relative;
-        z-index: 500;
+        z-index: 1000;
     }
     /deep/ .w-e-text {
         padding: 0 10px;
-        min-height: 100px;
+        min-height: 150px;
         overflow: hidden;
         background: #eeed;
     }
@@ -517,8 +523,11 @@ export default {
             width: 25px;
         }
     }
+    /deep/ .w-e-text-container .w-e-panel-container .w-e-panel-tab-content {
+        height: 118px !important;
+    }
     .text {
-        min-height: 100px;
+        min-height: 150px;
         z-index: 400 !important;
     }
 </style>

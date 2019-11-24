@@ -82,7 +82,7 @@
                 width: 30px;
                 height: 30px;
                 background-color: #ccc;
-
+                margin-right: 3px;
                 img {
                     width: 100%;
                     height: 100%;

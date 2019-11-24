@@ -444,7 +444,7 @@ export default {
         }
     }
     .attr-map-box {
-        width: 770px;
+        width: 100%;
         display: flex;
         height: 250px;
         flex-wrap: wrap;
@@ -531,7 +531,7 @@ export default {
             }
           }
           .upload-img-ente {
-            background-color: #f5f5f5;
+            background-color: #fff;
             color: #999;
           }
           .upload-img-leave {

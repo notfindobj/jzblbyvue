@@ -54,6 +54,7 @@ export default {
         font-size: 16px;
         font-weight: 600;
         border-bottom: 1px solid #d4d6d4;
+        background: #fff;
         li {
             padding: 8px 10px;
             cursor: pointer;

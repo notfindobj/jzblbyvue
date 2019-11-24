@@ -167,7 +167,6 @@
     },
     watch: {
       itemInfo: function (val) {
-        this.$set(val, 'isShowComment', false)
         this[this.ViewerIndex].destroy();
         this.mathId = getRanNum(7);
         setTimeout(this.initView, 500);

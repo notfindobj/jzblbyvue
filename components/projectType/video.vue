@@ -124,11 +124,6 @@
         }
       }
     },
-    watch: {
-      videoInfo: function (val) {
-        this.$set(val, 'isShowComment', false)
-      }
-    },
     methods: {
       goPictureDetails (row) {
         let routeData = this.$router.resolve({
@@ -240,10 +235,10 @@
       // 点击评论
       clickComment() {
         if (this.videoInfo.isShowComment) {
-          this.videoInfo.isShowComment = false;
+          this.$set(this.videoInfo, 'isShowComment', false)
           return false;
         }
-        this.videoInfo.isShowComment = true;
+        this.$set(this.videoInfo, 'isShowComment', true);
         this.isLoadingComment = true;
         this.getComment();
       },

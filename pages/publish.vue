@@ -1,29 +1,46 @@
 <template>
     <div class="page">
         <div class="container">
-            <div class="publish-tabs">
+            <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
+            <!-- <div class="publish-tabs">
                 <nuxt-link class="publish-tab" :to="{name: 'publish-imageText'}">发布图文</nuxt-link>
                 <nuxt-link class="publish-tab" :to="{name: 'publish-project'}">发布项目</nuxt-link>
                 <nuxt-link class="publish-tab" :to="{name: 'publish-video'}">发布视频</nuxt-link>
                 <nuxt-link class="publish-tab" :to="{name: 'publish-questionsAndAnswers'}">发布问答</nuxt-link>
-            </div>
-            <nuxt-child/>
+            </div> -->
+            <!-- <nuxt-child/> -->
         </div>
     </div>
 </template>
 
 <script>
-  export default {
+import proRele from "../components/proRele"
+export default {
     layout: 'main',
-    middleware: 'authenticated'
-  }
+    middleware: 'authenticated',
+    data() {
+      return {
+          editorName: 'tw',
+      }  
+    },components: {
+        proRele
+    },
+    methods: {
+        clickEditor (val) {
+            this.editorName = val
+        },
+        relSuccessfully () {
+
+        }
+    }
+}
 </script>
 
 <style lang="less" scoped>
     .page {
         background-color: #F5F6F5;
         .container {
-            width: 1200px;
+            width: 1000px;
             margin: 0 auto;
             padding-top: 30px;
         }

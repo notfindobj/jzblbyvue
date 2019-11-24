@@ -171,7 +171,7 @@ export default {
                         this.spinShow = false
                         this.$emit('relSuccessfully', true)
                     } else{
-                        this.$router.push({ name: "BuildingCircle"})
+                        this.$router.push({ name: "BuildingCircle-id"})
                     }
                 } 
             }
@@ -204,6 +204,10 @@ export default {
             if (this.editorName === 'wd') {
                 if (row.editortext === '') {
                     this.$Message.warning('内容不能为空');
+                    return false
+                }
+                if (this.editorTitle === '') {
+                    this.$Message.warning('标题不能为空');
                     return false
                 }
                 this.spinShow = true
@@ -253,6 +257,9 @@ export default {
                     
                 } 
             }
+            setTimeout(() => {
+                this.spinShow = false
+            }, 2000)
             this.editorTitle = '';
         }
     },

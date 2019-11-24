@@ -49,7 +49,7 @@ export default {
                 this.$store.dispatch('LOGGEDIN', 'signIn');
                 return false
             }
-            this.$router.push('/publish/imageText')
+            this.$router.push('/publish')
         }
     }
 }

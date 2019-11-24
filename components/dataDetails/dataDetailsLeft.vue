@@ -71,13 +71,8 @@
             toolbar: true,
             navbar: true,
             title: false,
-            // inline: false,
             zoomRatio: 0.4,
             maxZoomRatio: 3,
-            // backdrop: false,
-            // loading: false,
-            // parent: document.getElementById('view'),
-            // container: document.getElementById('view'),
             show: function (e) {
               _this.isShowViewBox = true;
             },
@@ -284,6 +279,10 @@
 
     #detaDetails {
         padding-right: 10px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
     }
 
     .view-left-move-del {

@@ -14,7 +14,7 @@
                 <div class="ql-editor detail-text" v-html="detailInfo.TalkContent"></div>
             </div>
             <div class="img-row" :ref="mathId">
-                <div class="img" v-for="item in detailInfo.Imgs" :key="item.smallImgUrl" >
+                <div class="img" v-for="item in detailInfo.ResourceObj" :key="item.smallImgUrl" >
                     <img :src="fileBaseUrl + item.smallImgUrl" alt="">
                 </div>
             </div>

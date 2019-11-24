@@ -5,8 +5,8 @@
             <div class="replay-content">
                 <div class="replay-info">
                     <p>
-                        <span class="replay-user">{{ replyInfo.NickName }}：</span>
-                        {{ replyInfo.Message }}
+                      <span class="replay-user">{{ replyInfo.NickName }}：</span>
+                      <emotHtml v-model="replyInfo.Message"/>
                     </p>
                     <span class="reply-time">{{ replyInfo.CreateDate }}</span>
                 </div>
