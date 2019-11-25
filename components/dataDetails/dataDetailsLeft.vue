@@ -67,6 +67,12 @@
         _this.$nextTick(() => {
           _this.Viewer = new Viewer(ViewerDom, {
             url: 'data-original',
+            // 过滤表情
+            filter: function (e) {
+              if (e.getAttribute('data-w-e') !== '1') {
+                return e
+              }
+            },
             button: false,
             toolbar: true,
             navbar: true,

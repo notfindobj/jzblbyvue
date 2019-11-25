@@ -105,6 +105,11 @@ export default {
             _this.$nextTick(() => {
                 _this.Viewer = new Viewer(ViewerDom, {
                     url: 'data-original',
+                    filter: function (e) {
+                        if (e.getAttribute('data-w-e') !== '1') {
+                            return e
+                        }
+                    },
                     button: false,
                     toolbar: true,
                     navbar: true,
