@@ -46,13 +46,12 @@ service.interceptors.response.use(
         return res.data
       }else if (res.data.Code === 101) {
         Message.warning(res.data.Msg);
-          // $store.dispatch('LOGININ', null);
-          // sessionStorage.removeItem("LOGININ");
-          // delCookie("adminToken");
-          // Message.warning(res.data.Msg);
-          // if (window.location.href !== "https://www.jzbl.com/") {
-          //   window.location.href="https://www.jzbl.com"
-          // }
+          $store.dispatch('LOGININ', null);
+          sessionStorage.removeItem("LOGININ");
+          delCookie("adminToken");
+          if (window.location.href !== "https://www.jzbl.com/") {
+            window.location.href="https://www.jzbl.com"
+          }
       } else {
         Message.warning(res.data.Msg);
         // return res.data.Data

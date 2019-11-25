@@ -13,10 +13,8 @@
         </div>
         <div class="screening-nav">
             <!-- 面包屑 -->
-            <Breadcrumb separator=">">
-                <BreadcrumbItem style="color: #999999">资源库</BreadcrumbItem>
-                <BreadcrumbItem style="color: #999999;font-weight: normal" v-if="currentName">{{currentName}}
-                </BreadcrumbItem>
+            <Breadcrumb separator=">" v-if="queryConditions.length > 0">
+                <BreadcrumbItem style="color: #999999">档案库</BreadcrumbItem>
             </Breadcrumb>
             <!-- 选中的属性 -->
             <div class="itemAttribute">
@@ -112,7 +110,6 @@ export default {
     data() {
         return {
             currentInex: '',
-            currentName: '',
             oneMeun: [],
             clicked: -1,
             swiperBox: null
@@ -125,7 +122,6 @@ export default {
         }),
     },
     created() {
-        this.currentName = this.getSessionStorage.baseSearchNav.title;
         this.currentInex = this.getSessionStorage.baseSearchNav.ClassTypeArrList[0].AttrKey;
         this.$store.dispatch('getMenu').then(async (res) => {
             this.oneMeun = res.RetMenuData;
@@ -180,7 +176,6 @@ export default {
         // 一级
         choseSome(index, item) {
             this.currentInex = item.ItemAttributesId;
-            this.currentName = item.ItemAttributesFullName;
             this.$emit('choseSome', item)
         },
         choseSomeOne(item, inx) {

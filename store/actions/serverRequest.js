@@ -9,11 +9,11 @@ export const serverRequest = {
   async getHomeData({ commit, state }, params) {
     return await request.get('Home/GetIndexAllData')
   },
-  // 获取资源库
+  // 获取档案库
   async getBaseData({ commit, state }, params) {
     return await request.post('ItemList/GetItemList', params)
   },
-  // 获取资源库详情
+  // 获取档案库详情
   async getBaseDataDetails({ commit, state }, params) {
     return await request.post('ItemDetails/Details', params)
   },

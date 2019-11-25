@@ -40,7 +40,7 @@
                         <hotVideo v-if="hotVideo.length > 0" :hotVideo="hotVideo[0]" @enterVideo="enterVideo"/>
                         <ul class="Questions" v-if="hotQue.length > 0">
                             <li v-for="(item, index) in hotQue" :key="index">
-                                <nuxt-link  target="_blank" :to="{name: 'QuestionsAndAnswers', params: {id:item.ItemId}}">
+                                <nuxt-link target="_blank" :to="{name: 'QuestionsAndAnswers', params: {id:item.ItemId}}">
                                    <span v-html="item.Title"></span>
                                 </nuxt-link>
                             </li>
@@ -218,7 +218,7 @@
             </div>
             <!-- 文本 -->
             <div>
-                <div class="main-conment">
+                <div class="main-conment" v-if="wbList.length > 0">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
                             <li @click="viewProperties(webs, {}, 'wbList')">{{webs.ItemAttributesFullName}}</li>
@@ -445,7 +445,7 @@
             this.$router.push({ name: "BuildingCircle-id", params: {id:row.ItemId}});
         },
         enterVideo (row) {
-            console.log(row)
+            this.$router.push({ name: "BuildingCircle-id", params: {id:row.ItemId}});
         },
         initSwiper () {
             let swiper = new Swiper (".swiper-box",{

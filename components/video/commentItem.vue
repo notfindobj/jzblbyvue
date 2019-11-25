@@ -204,6 +204,7 @@
         .item-info-row1 {
             display: flex;
             justify-content: space-between;
+            padding-left: 5px;
             align-items: center;
             margin-bottom: 5px;
 
@@ -223,6 +224,7 @@
             font-size: 14px;
             color: #333;
             line-height: 24px;
+            padding-left:5px;
         }
 
         .opera-row {

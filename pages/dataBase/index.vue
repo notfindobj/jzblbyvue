@@ -40,7 +40,7 @@
         middleware: 'authenticated',
         head() {
             return {
-                title: `资源库`,
+                title: `档案库`,
                 meta: [
                     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
                     { hid: 'about', name: 'about', content: "关于我们" }
@@ -63,7 +63,6 @@
                 isFinished: true,   // 判断请求是否完成
                 pageNum: 1,
                 isLast: false,
-                titleName: "示范区",
                 userItem: [],
             }
         },

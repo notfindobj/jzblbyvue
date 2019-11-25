@@ -175,7 +175,7 @@ export default {
                     }
                 } 
             }
-            if (this.editorName === 'sp' && row.editortext !== '') {
+            if (this.editorName === 'sp'  && row.editortext !== '' ) {
                 if (row.editortext === '') {
                     this.$Message.warning('内容不能为空');
                     return false
@@ -190,7 +190,7 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    if (this.$route.name === 'videos') {
+                    if (this.$route.name === 'videos' || this.$route.name === 'BuildingCircle-id') {
                         this.$Message.success('发布成功！');
                         this.$refs.editor.clearEditor();
                         this.spinShow = false
@@ -221,7 +221,7 @@ export default {
                 }
                 let msg = await releaseStatement(obg);
                 if (msg) {
-                    if (this.$route.name === 'QuestionsAndAnswers') {
+                    if (this.$route.name === 'QuestionsAndAnswers' || this.$route.name === 'BuildingCircle-id') {
                        this.$Message.success('发布成功！');
                         this.$refs.editor.clearEditor();
                         this.spinShow = false
@@ -232,6 +232,10 @@ export default {
                 } 
             }
             if (this.editorName === 'tz') {
+                if (this.editorTitle === '') {
+                    this.$Message.warning('标题不能为空');
+                    return false
+                }
                 if (row.editortext === '') {
                     this.$Message.warning('内容不能为空');
                     return false

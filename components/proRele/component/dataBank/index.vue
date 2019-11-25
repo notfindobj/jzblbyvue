@@ -264,7 +264,6 @@ export default {
                 this.serviceSelectList.push(row)
             }
             this.$refs.cusService.cancelService()
-            console.log(this.serviceSelectList)
         },
         // 上传之前清空上传列表
         clearUpload() {

@@ -12,9 +12,9 @@
                 </div>
                 <div style="width：800px" id="pictureBox">
                     <div v-html="detailInfo.TalkContent"></div>
-                    <!-- <div v-for="(items, index) in detailInfo.ResourceObj" :key="index">
+                    <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TypeId !== 5" :key="index">
                         <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" >
-                    </div> -->
+                    </div>
                 </div>
             </div> 
         </div>
@@ -22,8 +22,8 @@
             <div class="picture-right-title">
                 <img @click="goToPersonal(detailInfo)" :src="detailInfo.HeadIcon" alt="">
                 <p>{{detailInfo.NickName}}</p>
-                <div class="btn-guan">
-                    关注
+                <div :class="!detailInfo.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detailInfo)">
+                    {{!detailInfo.IsFollow? '+ 关注' : '已关注'}}
                 </div>
             </div>
             <commentsCon
@@ -47,6 +47,7 @@ import 'viewerjs/dist/viewer.css';
 import commentsCon from '../../components/comments/commentsCon.vue'
 import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile, delComment} from '../../service/clientAPI'
 import ToTop from '../../components/toTop'
+import { mapState, mapGetters } from 'vuex'
 export default {
     name: "pictureBox",
     layout: 'main',
@@ -65,6 +66,12 @@ export default {
             detailInfo: data,
             commentsData: cmsg
         }
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.overas.auth
+        }),
+        ...mapGetters(['isLogin'])
     },
     data () {
         return {
@@ -278,12 +285,19 @@ export default {
         },
         // 关注
         async setFollow(item) {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
             let queryData = {
                 UserId: item.UserId,
                 IsDelete: item.IsFollow
             }
-            let collectionMsg = await setFollow(queryData)
-            this.$set(item, 'IsFollow', !item.IsFollow)
+            let collectionMsg = await setFollow(queryData);
+            if (collectionMsg) {
+                this.$set(item, 'IsFollow', !item.IsFollow)
+            }
         },
         // 转发
         Forward () {
@@ -410,6 +424,30 @@ export default {
             width: 80px;
             position: relative;
 
+        }
+    }
+    .focus-btn {
+        cursor: pointer;
+        width: 84px;
+        height: 26px;
+        margin: 0 auto;
+        background: #FF3C00;
+        border-radius: 4px;
+        line-height: 26px;
+        text-align: center;
+        font-size: 14px;
+        color: #FFFFFF;
+        &-gray {
+            background: #b0b0b0;
+            cursor: pointer;
+            width: 84px;
+            height: 26px;
+            margin: 0 auto;
+            border-radius: 4px;
+            line-height: 26px;
+            text-align: center;
+            font-size: 14px;
+            color: #FFFFFF;
         }
     }
     .moveRight {

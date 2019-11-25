@@ -184,8 +184,8 @@
             // 获取数据
             async getList(row, type) {
                 let queryData = {
-                    TalkType: this.pageNum,
-                    Page: 0
+                    TalkType: '2',
+                    Page: this.pageNum
                 };
                 const data = await this.$store.dispatch('getTalk', {queryData});
                 if (data.retModels && data.retModels instanceof Array) {

@@ -25,7 +25,7 @@ export const registerUser = async (params) => {
 export const ResetPwd = async (params) => {
   return await request.post('Account/ResetPwd', params)
 }
-// 获取资源库
+// 获取档案库
 export const getBaseData = async (params) => {
   return await request.post('ItemList/GetItemList', params)
 }
@@ -34,7 +34,7 @@ export const getUserProAndFans = async (params) => {
   return await request.post(`Account/GetUserProAndFans?byUserId=${params}`)
 }
 /**
- * 资源库详情
+ * 档案库详情
  */
   // 点赞
 export const setthumbsUp = async (params) => {

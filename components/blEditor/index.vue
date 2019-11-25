@@ -219,7 +219,7 @@ export default {
                 }
                 uploadFile(data, 1).then(res => {
                     for (let q = 0; q < res.length; q++) {
-                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" data-original="${this.replaceImgs(res[q].smallImgUrl)}" style="max-width:100%;"></img><p><br></p></p>`);
+                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img><p><br></p></p>`);
                         _this.imgList.push(res[q]);
                     }
                     _this.imgsrc = _this.getSrc(_this.editor.txt.html())
@@ -494,7 +494,7 @@ export default {
     }
     .editor-push {
         display: inline-block;
-        width: 120px;
+        width: 90px;
         line-height: 42px;
         text-align: center;
         font-size: 14px;

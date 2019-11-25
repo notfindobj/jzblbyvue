@@ -3,7 +3,7 @@
         <div class="data-details-con-box">
             <div class="data-details-location">
                 <Breadcrumb separator=">" style="margin-bottom: 20px">
-                    <BreadcrumbItem class="BreadcrumbItem">资源库</BreadcrumbItem>
+                    <BreadcrumbItem class="BreadcrumbItem">档案库</BreadcrumbItem>
                     <BreadcrumbItem v-for="(items, index) in ItemAttributesEntities" :key="index">
                         <span class="cate-span" @click="clickCate(index)">{{items.ItemSubAttributeFullName}}</span>
                     </BreadcrumbItem>
@@ -229,17 +229,20 @@
             async clickCate(index) {
                 let attrList = [];
                 let query = {};
-                let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav));
+                let dataBase = JSON.parse(JSON.stringify(this.getSessionStorage.baseSearchNav || {}));
                 this.ItemAttributesEntities.forEach((item, attrIndex) => {
                     if (index >= attrIndex) {
                         query = item
+                        let clickCates = 'DesignLib'
+                        if (attrIndex > 0) {
+                            clickCates = item.ItemSubAttributeId
+                        }
                         attrList.push({
-                            AttrKey: item.ItemAttributesId, AttrValue: item.ItemSubAttributeId
+                            AttrKey: item.ItemAttributesId, AttrValue: clickCates
                         })
                     }
                 });
-                dataBase.ClassTypeArrList.splice(1);
-                dataBase.ClassTypeArrList.push(...attrList)
+                dataBase.ClassTypeArrList = attrList
                 // 搜索页导航数据
                 let baseSearchNav = {
                     key: 'baseSearchNav',
@@ -250,7 +253,6 @@
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 let routeData = this.$router.resolve({ name: 'dataBase'});
                 analogJump(routeData.href);
-                
             },
             initLazy() {
                 $("img[data-original]").lazyload()

@@ -75,7 +75,7 @@
             </div>
             <ul class="main-nav-tab">
                 <li class="resource" @mouseenter="isShowCate=true" @mouseleave="isShowCate=false">
-                    <span>资源库 <i class="iconfont icon-jiantou"></i></span>
+                    <span>档案库 <i class="iconfont icon-jiantou"></i></span>
                     <LevelMenu class="banner-nav" v-show="isIndex || isShowCate"></LevelMenu>
                 </li>
                 <li>
@@ -204,7 +204,7 @@
             },
             async searchBaseData() {
                 if (!this.searchNav && this.searchNav !== 0) {
-                    this.$Message.warning('请先选择资源库类型~');
+                    this.$Message.warning('请先选择档案库类型~');
                     return false;
                 }
                 let baseSearchNav = {
