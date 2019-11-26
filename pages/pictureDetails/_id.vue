@@ -13,7 +13,7 @@
                 <div style="width：800px" id="pictureBox">
                     <div v-html="detailInfo.TalkContent"></div>
                     <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TypeId !== 5" :key="index">
-                        <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" >
+                        <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" :data-original="baseUrlRegExp(replaceImgs(items.smallImgUrl))" >
                     </div>
                 </div>
             </div> 
@@ -62,6 +62,12 @@ export default {
             ScopeType: 2
         }
         const cmsg = await store.dispatch('getGetComments', queryData);
+        //记录用户访问
+        let rec = await recordFrequency({
+            ItemId: params.id,
+            DomainType: data.TalkType
+        })
+        console.log(rec)
         return {
             detailInfo: data,
             commentsData: cmsg
@@ -98,6 +104,10 @@ export default {
             } else {
                 return process.env.fileBaseUrl+ str
             }
+        },
+        replaceImgs (val) {
+            let regex = "/i/s/";
+            return val.replace(regex, "/i/");
         },
         initView() {
             const ViewerDom = document.getElementById('pictureBox');

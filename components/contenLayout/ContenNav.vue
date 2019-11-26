@@ -27,7 +27,7 @@
             <ul class="screening-nav-list">
                 <li v-for="(item,index) in itemAttribute" :key="index" :class="item.AttrId ? 'li-active' : ''">
                     <p>{{item.AttrName}}</p>
-                    <ol v-if="item.LogoDataCode === 'CompanyData'">
+                    <ol v-if="item.LogoDataCode === 'CompanyData'" class="comLogo">
                         <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)" class="companyli">
                             <div class="company">
                                 <div class="company-pos">{{items.AttrName}}</div>
@@ -49,7 +49,7 @@
                 </li>
             </ul>
         </div>
-        <div class="swiper-boxs" v-if="userItem.length > 0">
+        <div class="swiper-boxs" v-show="queryConditions && queryConditions.length <= 0">
             <div class="swiper-wrapper">
                 <div v-for="(items, index) in userItem" class="swiper-slide" :key="index">
                     <div class="swiper-slide-item" >
@@ -191,6 +191,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .comLogo {
+        margin-top: 2px;
+        margin-bottom: 2px;
+    }
     .slide-ite-new {
         position: absolute;
         color: #ff3c00;
@@ -208,7 +212,8 @@ export default {
             width: 290px;
             height: 200px;
             position: relative;
-          
+            border-radius: 8px;
+            overflow: hidden;
             .slide-item-text {
                 display: none;
                 position: absolute;
@@ -254,6 +259,8 @@ export default {
         &:hover &-pos {
             opacity: 1;
             border: 2px solid #ff3c00;
+            width: 111px;
+            left: -1px;
         }
         &:hover &-side {
             opacity: 0;
@@ -262,21 +269,22 @@ export default {
             position: absolute;
             width: 100%;
             opacity: 1;
-            margin-top: 1px;
-            border: 1px solid #716865;
+            margin-top: -1px;
+            height: 47px;
         }
         &-side {
             position: absolute;
-            border: 1px solid #716865;
             transition: opacity .5s;
             width: 100%;
             margin-top: 1px;
-            height: 40px;
+            height: 45px;
             opacity: 1;
             img {
                 width: 100%;
-                height: 40px;
+                height: 45px;
                 background: #FFFFFF;
+                position: relative;
+                top: -1px;
             }
         }
     }
@@ -378,6 +386,8 @@ export default {
                 li.companyli {
                     display: flex;
                     margin-right: 0px;
+                    border: 1px solid #333;
+                    margin: -1px -1px 0 0;
                 }
                 > li {
                     height: 40px;

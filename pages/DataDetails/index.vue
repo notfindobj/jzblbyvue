@@ -85,13 +85,12 @@
     import { analogJump } from '../../plugins/untils/public'
     export default {
         name: 'datadetail',
-        middleware: 'authenticated',
         head() {
             return {
-                title: `资料库详情`,
+                title: `档案库详情`,
                 meta: [
                     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-                    { hid: 'about', name: 'about', content: "资料库详情" }
+                    { hid: 'about', name: 'about', content: "档案库详情" }
                 ],
             }
         },
@@ -130,7 +129,7 @@
             mapModel
         },
         computed: {
-            ...mapGetters(['getSessionStorage']),
+            ...mapGetters(['getSessionStorage', 'isLogin']),
             ...mapState({
                 auth: state => state.overas.auth
             }),
@@ -180,7 +179,7 @@
             $(document).ready(function () {
                 _this.initLazy()
             });
-            // // 记录用户访问
+            //记录用户访问
             recordFrequency({
                 ItemId: this.detaDetails.ItemId,
                 DomainType: 0
@@ -259,6 +258,11 @@
             },
             // 项目点赞
             async thumbsUp(item) {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 let queryData = {
                     ItemId: item.ItemId,
                     LikeType: 1,
@@ -291,6 +295,11 @@
             },
             // 收藏
             async Collection(item) {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 let queryData = {
                     ItemId: item.ItemId,
                     TalkType: 4,
@@ -306,6 +315,11 @@
             },
             //评论
             async commentValue(row, val) {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 let queryData = {
                     ItemId: row.ItemId,
                     IsReply: false,
@@ -327,6 +341,7 @@
                 }
             },
             async delComments (row) {
+
                 let msg = await delComment(row.CommentsId)
                 if (msg) {
                     // 根据项目详情请求评论信息
@@ -342,6 +357,11 @@
             },
             // 评论回复
             async discussValue(row, val) {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 let queryData = {
                     ItemId: row.ItemId, // 项目ID
                     IsReply: true, // 回复
@@ -366,6 +386,11 @@
             },
             // 关注
             async setFollow(item) {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 let queryData = {
                     UserId: item.UserId,
                     IsDelete: item.IsFollow
@@ -378,6 +403,11 @@
                 this.configShare.isModal = true;
             },
             async dataDetailsMaskShow(obj) {
+                if (!this.isLogin) {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                    return false
+                }
                 this.paymentConfig.url = '';
                 if (obj.isPay) {
                     let msg = await downloadFile(obj.ItemId);

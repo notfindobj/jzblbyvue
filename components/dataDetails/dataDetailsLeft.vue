@@ -139,6 +139,9 @@
   }
 </script>
 <style lang="less">
+    /deep/.viewer-backdrop {
+      background-color: rgba(0,0,0,.7) !important;
+    }
     .isHide {
         display: none;
     }

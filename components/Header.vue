@@ -6,7 +6,7 @@
                     <img class="logo-img" @click="goHome" :src="loginImg" alt="建筑部落">
                 </li>
                  <li>
-                    <nuxt-link to="/dataBase" @click.native="goList">资料库</nuxt-link>
+                    <nuxt-link to="/dataBase" @click.native="goList">档案库</nuxt-link>
                 </li>
                 
                 <li>

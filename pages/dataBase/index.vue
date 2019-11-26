@@ -37,7 +37,6 @@
     import { setDemo } from '../../LocalAPI'
     import { _throttle ,scrollToTop, analogJump} from '../../plugins/untils/public'
     export default {
-        middleware: 'authenticated',
         head() {
             return {
                 title: `档案库`,

@@ -57,7 +57,7 @@
                     </FormItem>
                 </Col>
                 <Col span="12">
-                    <FormItem label="身份证号码:" prop="IDCordId">
+                    <FormItem label="经办人身份证号码:" prop="IDCordId">
                         <Input v-model="companyAttr.IDCordId"></Input>
                     </FormItem>
                 </Col>

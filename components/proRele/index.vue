@@ -2,8 +2,8 @@
     <div>
         <Tabls :editorTab="['tw', 'tz', 'sp', 'wd', 'xm']" :editorName="editorName" @clickEditor="clickEditor"/>
         <dataBank ref="protPush"  v-if="editorName === 'xm'" @protPush="protPush"/>
-        <div v-if="['tz', 'wd'].includes(editorName)">
-            <input v-model="editorTitle" :placeholder="ArticleTitle.title" class="editor-title" />
+        <div v-show="['tz', 'wd'].includes(editorName)">
+            <input ref="editorTitle" v-model="editorTitle" :placeholder="ArticleTitle.title" class="editor-title" />
         </div>
         <blEditor ref="editor" :editorType="editorName" @editorPush="editorPush" @notLogged="notLogged"/>
         <Spin fix v-if="spinShow">
@@ -109,6 +109,11 @@ export default {
             this.editorTitle = '';
             this.$refs.editor.clearEditor();
             this.$emit('clickEditor', tab.value)
+            if (['tz', 'wd'].includes(tab.value)) {
+                setTimeout(() => {
+                    this.$refs.editorTitle.focus()
+                }, 50)
+            }
         },
         protPush (row) {
             this.protPushData = row || {};

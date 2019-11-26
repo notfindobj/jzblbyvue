@@ -4,7 +4,7 @@
             <div class="works-info">
                 <img @click="goPersonalCenter" :src="detaDetails.HeadIcon" alt="">
                 <p class="works-name">{{detaDetails.NickName}}</p>
-                <div v-if="userInfoID != detaDetails.UserId" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
+                <div v-if="!(userInfoID && userInfoID.UserId === detaDetails.UserId)" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
             <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
                 <div v-if="detaDetails.IsDownload" ref="immediatelyDown" @click="immediatelyDown(detaDetails)">
@@ -46,7 +46,7 @@
     </div>
 </template>
 <script>
-  import { mapState } from 'vuex'
+  import { mapState , mapGetters} from 'vuex'
   import syIcon from "../syIcon"
   export default {
     name: 'detaDetailsRight',
@@ -76,8 +76,9 @@
     },
     computed: {
         ...mapState({
-            userInfoID: state => state.overas.auth.UserId
-        })
+            userInfoID: state => state.overas.auth
+        }),
+        ...mapGetters(['isLogin'])
     },
     created() {
       this.isShowIcon = this.attribute.length <= 4;
@@ -115,6 +116,11 @@
         this.$emit('dataDetailsMaskShow', { type: 'Custom' })
       },
       setFollow(item) {
+        if (!this.isLogin) {
+            this.$store.dispatch('SETUP', true);
+            this.$store.dispatch('LOGGEDIN', 'signIn');
+            return false
+        }
         this.$emit('setFollow', item)
       }
     }

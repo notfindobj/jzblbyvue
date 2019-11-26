@@ -35,7 +35,7 @@
 </template>
 <script>
     import { _debounce, analogJump } from '../../plugins/untils/public'
-    import { mapGetters, mapState } from 'vuex'
+    import { mapState } from 'vuex'
     import { setDemo } from '../../LocalAPI'
     export default { 
         data() {
@@ -49,7 +49,6 @@
                 sessionStorages: state => state.overas.sessionStorage,
                 showSign: state => state.overas.showSign
             }),
-            ...mapGetters(['getSessionStorage', 'isLogin']),
         },
         mounted() {
             this.$store.dispatch('getMenu').then(async (res) => {
@@ -65,11 +64,6 @@
             }, 100),
             // 点击二级分类
             async clickFullName(pre, type, ch) {
-                if (!this.isLogin) {
-                    this.$store.dispatch('SETUP', true);
-                    this.$store.dispatch('LOGGEDIN', 'signIn');
-                    return false
-                }
                 // 搜索页导航数据
                 let baseSearchNav = {
                     key: 'baseSearchNav',
@@ -104,11 +98,6 @@
             },
             // 点击一级分类
             async goList(cate) {
-                if (!this.isLogin) {
-                    this.$store.dispatch('SETUP', true);
-                    this.$store.dispatch('LOGGEDIN', 'signIn');
-                    return false
-                }
                 // 搜索页导航数据
                 let baseSearchNav = {
                     key: 'baseSearchNav',

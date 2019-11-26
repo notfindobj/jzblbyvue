@@ -15,7 +15,7 @@
             </div>
             <div class="img-row" :ref="mathId">
                 <div class="img" v-for="item in detailInfo.ResourceObj" :key="item.smallImgUrl" >
-                    <img :src="fileBaseUrl + item.smallImgUrl" alt="">
+                    <img :src="fileBaseUrl + item.smallImgUrl" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))" alt="" >
                 </div>
             </div>
             <div class="editor-wrap">
@@ -139,6 +139,18 @@
             'v-comment': Comment
         },
         methods: {
+            baseUrlRegExp (str) {
+                let reg = RegExp(/\http:\/\//);
+                if(str && str.match(reg)){
+                    return str
+                } else {
+                    return process.env.fileBaseUrl+ str
+                }
+            },
+            replaceImgs (val) {
+                let regex = "/i/s/";
+                return val.replace(regex, "/i/");
+            },
             // 跳转部落
             goToPersonal (row) {
                 this.$router.push({
@@ -263,6 +275,12 @@
                 _this.$nextTick(() => {
                     _this[_this.ViewerIndex] = new Viewer(_this.$refs[this.mathId], {
                         url: 'data-original',
+                        // 过滤表情
+                        filter: function (e) {
+                            if (e.getAttribute('data-w-e') !== '1') {
+                                return e
+                            }
+                        },
                         button: false,
                         toolbar: true,
                         navbar: true,

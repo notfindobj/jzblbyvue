@@ -7,7 +7,7 @@ export const overas = {
         isItLoggedIn: '', // 打开模态框状态
         auth: null, // 登录状态，
         searchNav: 0,
-        queryBaseData: {},  // 资料库导航
+        queryBaseData: {},  // 档案库导航
         wxRegister: {}, // 微信注册时的信息,
         sessionStorage: {}, // 存储的数据
         dingzhi: {},// 存储信息

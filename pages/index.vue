@@ -21,13 +21,13 @@
                  <div class="main-conment">
                     <div class="main-conment-top">
                         <ul class="main-conment-sub">
-                            <li>建筑圈</li>
-                            <li>图文</li>
-                            <li>问答</li>
-                            <li>文章</li>
-                            <li>项目</li>
+                            <li @click="enterBuildMore">建筑圈</li>
+                            <li @click="enterBuildMore">图文</li>
+                            <li @click="enterBuildMore">问答</li>
+                            <li @click="enterBuildMore">文章</li>
+                            <li @click="enterBuildMore">项目</li>
                         </ul>
-                        <div class="main-conment-more" >查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
+                        <div class="main-conment-more" @click="enterBuildMore" >查看更多 <i class="iconfont icon-jiantou jiantou-clolr"></i></div>
                     </div>
                 </div>
                 <div class="hot-item-content">
@@ -444,6 +444,9 @@
         enterBuild (row) {
             this.$router.push({ name: "BuildingCircle-id", params: {id:row.ItemId}});
         },
+        enterBuildMore () {
+            this.$router.push({ name: "BuildingCircle-id"});
+        },
         enterVideo (row) {
             this.$router.push({ name: "BuildingCircle-id", params: {id:row.ItemId}});
         },
@@ -550,7 +553,6 @@
         async hotPros (id = '1,2,3', pages = 4) {
             let msg = await getRecommend(id, pages);
             if (msg && msg instanceof Array) {
-                // this.hotList = msg;
                 msg.forEach(ele => {
                     if (ele.TypeId === 1) {
                         this.hotPro.push(ele)

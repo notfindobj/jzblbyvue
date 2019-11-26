@@ -32,7 +32,7 @@
                         <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
                             <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
                         </nuxt-link>
-                        <nuxt-link v-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
+                        <nuxt-link v-else-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
                             <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
                         </nuxt-link>
                         <nuxt-link v-else target="_blank" :to="{name: 'pictureDetails-id', params: {id:items.ItemId, }}">

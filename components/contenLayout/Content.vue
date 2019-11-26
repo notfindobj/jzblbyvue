@@ -230,31 +230,21 @@
             flex-direction: row;
             margin-bottom: 10px;
             margin-top: 15px;
-
             > li {
                 line-height: 20px;
                 font-size: 14px;
                 color: #666666;
-                margin-right: 36px;
+                padding: 0 5px;
                 cursor: pointer;
+                margin-right: 10px;
+                border: 1px solid #9c9c9c;
             }
-
             .li-active {
-                color: #ED1B24;
+                color: #fff;
                 font-weight: 500;
                 position: relative;
-
-                &:before {
-                    width: 30px;
-                    height: 1px;
-                    content: '';
-                    background: #ED1B24;
-                    border-radius: 2px;
-                    position: absolute;
-                    left: 50%;
-                    bottom: -2px;
-                    transform: translateX(-50%);
-                }
+                background: #ff3c00;
+                border-radius: 2px;
             }
         }
 

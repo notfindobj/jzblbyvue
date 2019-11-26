@@ -4,8 +4,8 @@
             <img :src="baseUrlRegExp(hotCard.ImgSrc)" alt="">
         </div>
         <div class="hotCard-top">
-            <span><i class="iconfont icon-chakan"></i>{{hotCard.itemOperateData.Views}}</span>
-            <span><i class="iconfont icon-favorite"></i>{{hotCard.itemOperateData.Collections}}</span>
+            <span><i class="iconfont icon-chakan"></i>{{hotCard.itemOperateData.ReadCount}}</span>
+            <span><i class="iconfont icon-favorite"></i>{{hotCard.itemOperateData.CollectionCount}}</span>
         </div>
         <div class="hotCard-foote" >
             <span v-html="hotCard.Title"></span>
@@ -81,7 +81,7 @@ export default {
         }
         &:hover &-content > img{
             transition: transform .5s;
-            transform: scale(1.5);
+            transform: scale(1.2);
         }
         &:hover {
             transition: box-shadow .5s;

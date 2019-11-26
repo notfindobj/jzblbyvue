@@ -20,11 +20,11 @@
                                 accept="image/gif,image/jpeg,image/jpg,image/png" >
                             图片
                         </span>
-                        <div class="editor-footer-tool-update" v-if="['tw', 'wd'].includes(editorType)  && isPanel">
+                        <div class="editor-footer-tool-pic" :style="`width: ${boxWidth};height: ${boxHeight}`" v-if="['tw', 'wd'].includes(editorType)  && isPanel">
                             <span class="update-horn"></span>
                             <div class="tool-updat-content">
                                 <div class="updat-content-title">本地上传</div>
-                                <p>共{{imgList.length}}张，还能上传{{30 -imgList.length}}张</p>
+                                <p>共{{imgList.length}}张，还能上传{{30 - imgList.length}}张</p>
                                 <div>
                                     <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
                                         <div class="img-item" v-for="(item, index) in imgList" :key="index" >
@@ -32,7 +32,7 @@
                                             <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                                         </div>
                                     </draggable>
-                                    <Upload class="upload" :uploadType="2" @uploadSuccess="uploadSuccess" />
+                                    <Upload class="upload" :uploadType="2" :nowLength="imgList.length" @uploadSuccess="uploadSuccess" />
                                 </div>
                             </div>
                         </div>
@@ -42,7 +42,7 @@
                             <i class=" icon iconfont">&#xe624;</i>
                             视频
                         </span>
-                        <div class="editor-footer-tool-update" v-if="['sp'].includes(editorType) && isPanel">
+                        <div class="editor-footer-tool-videos" v-if="['sp'].includes(editorType) && isPanel">
                             <span class="update-horn"></span>
                             <div class="tool-updat-content">
                                 <div class="updat-content-title">上传视频</div>
@@ -109,7 +109,24 @@ export default {
         uploadVideo
     },
     computed: {
-        ...mapGetters(['isLogin'])
+        ...mapGetters(['isLogin']),
+        boxWidth () {
+            if (this.imgList.length < 4) {
+                return '350px'
+            } else if (this.imgList.length >= 4 && this.imgList.length< 10){
+                return 350 + (this.imgList.length - 3) * 80 + 'px'
+            } else {
+                return '850px'
+            }
+        },
+        boxHeight () {
+            let imgLength = this.imgList.length+1 
+            if (imgLength/ 10  > 2 ) {
+                return (240 + (imgLength / 10 - 1) * 80) + 'px'
+            } else {
+                return '240px'
+            }
+        }
     },
     data () {
         return {
@@ -260,6 +277,9 @@ export default {
             this.imgList.splice(index, 1)
             // this.$delete(this.imgList, index);
         },
+        // 上传前的钩子函数
+        beforeUpload (fileList) {
+        },
         uploadSuccess (fileList) {
             for(let i of fileList) {
                 this.imgList.push(i);
@@ -281,7 +301,6 @@ export default {
                 let merge = this.imgsrc.concat(nowimgs).filter(function (v, i, arr) {
                     return arr.indexOf(v) === arr.lastIndexOf(v)
                 })
-                console.log(merge)
                 for (let x in merge) {
                     let colds = merge[x].split('/')
                     console.log(colds)
@@ -479,7 +498,18 @@ export default {
             &-video {
                 position: relative;
             }
-            &-update {
+            &-pic {
+                position:absolute;
+                z-index: 666;
+                left: 0;
+                background: #fff;
+                width: 400px;
+                height: 240px;
+                border-radius: 3px;
+                box-shadow:0px 2px 5px #000000;
+                cursor: auto;
+            }
+            &-videos {
                 position:absolute;
                 z-index: 666;
                 left: 0;

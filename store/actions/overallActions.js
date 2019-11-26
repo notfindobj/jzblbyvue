@@ -24,7 +24,7 @@ export const overallActions ={
     LOGININ ({ commit, state }, params) {
         commit("setAuth", params)
     },
-    // 设置资料库导航数据
+    // 设置档案库导航数据
     BASEDATA ({ commit, state }, params) {
         commit("setqueryBase", params)
     },

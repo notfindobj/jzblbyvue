@@ -5,9 +5,7 @@
                 <source :src="baseUrlRegExp(hotVideo.ResourceObj[0].videoUrl)" type="video/mp4" >
             </video>
         </div>
-        <div class="hotVide-top">
-            {{hotVideo.Title}}
-        </div>
+        <div class="hotVide-top" v-html="hotVideo.Title"></div>
     </div>
 </template>
 <script>

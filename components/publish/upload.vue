@@ -16,14 +16,30 @@
 
 <script>
   import { uploadFile } from '../../service/clientAPI'
-
   export default {
     props: {
-      uploadType: Number
+      uploadType: Number,
+      nowLength: {
+        type: Number,
+        default: 0
+      },
+      maxLength: {
+          type: Number,
+          default: 30
+      }
     },
     methods: {
       fileSelected(e) {
         let file = e.target.files;
+        let now =  this.nowLength + file.length
+        if (now > this.maxLength) {
+          this.$Message.info({
+                render: h => {
+                    return h('span', `图片上传最多不能超过${this.maxLength}张`)
+                }
+            });
+          return false
+        }
         if (file.length > 0) {
           let data = new FormData();
           for (let item of file) {
