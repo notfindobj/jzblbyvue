@@ -56,7 +56,7 @@
                     </div>
                     <div class="main-content-left-search">
                         <Input v-model="searchData" style="width:450px;" size="large" @keydown.enter.native="searchBaseData">
-                            <Select slot="prepend" v-model="searchNav" style="width:100px">
+                            <Select slot="prepend" v-model="searchNavs" style="width:100px">
                                 <Option v-for="(items, indexs) in menuData" :value="indexs" :key="indexs">{{items.ItemAttributesFullName}} </Option>
                             </Select>
                             <Button type="primary" slot="append" class="btn-bg" size="large" @click="searchBaseData">
@@ -130,7 +130,8 @@
                 region: '',
                 searchpage: '',
                 allMessage: 0,
-                Message: {}
+                Message: {},
+                searchNavs: 0
             }
         },
         computed: {
@@ -145,6 +146,9 @@
             LevelMenu
         },
         mounted() {
+            if (sessionStorage.getItem('searchIndex')) {
+                this.searchNavs = sessionStorage.getItem('searchIndex')
+            }
             if (this.auth) {
                 this.getMessage()
             }
@@ -154,10 +158,19 @@
                 this.searchData = sessionStorage.getItem('searchKeyWords');
             }   
             this.isIndex = this.$route.name === 'index';
+            if (!this.isLogin) {
+                setInterval(() => {
+                    this.$store.dispatch('SETUP', true);
+                    this.$store.dispatch('LOGGEDIN', 'signIn');
+                }, 1000*10)
+            }
         },
         watch: {
             $route(to, from) {
                 this.isIndex = this.$route.name === 'index';
+            },
+            searchNav (val) {
+                this.searchNavs = val
             }
         },
         async created() {
@@ -203,15 +216,15 @@
                 }
             },
             async searchBaseData() {
-                if (!this.searchNav && this.searchNav !== 0) {
+                if (!this.searchNavs && this.searchNavs !== 0) {
                     this.$Message.warning('请先选择档案库类型~');
                     return false;
                 }
                 let baseSearchNav = {
                     key: 'baseSearchNav',
                     value: {
-                        ClassTypeArrList: [{AttrKey: this.menuData[this.searchNav].ItemAttributesId, AttrValue: this.menuData[this.searchNav].ItemSubAttributeCode}],
-                        title: this.menuData[this.searchNav].ItemAttributesFullName,
+                        ClassTypeArrList: [{AttrKey: this.menuData[this.searchNavs].ItemAttributesId, AttrValue: this.menuData[this.searchNavs].ItemSubAttributeCode}],
+                        title: this.menuData[this.searchNavs].ItemAttributesFullName,
                     }
                 }
                 this.$store.dispatch('Serverstorage', baseSearchNav);
@@ -234,7 +247,7 @@
                 if (this.$route.name === "dataBase") {
                     // let routeData = this.$router.resolve({ name: 'dataBase'});
                     this.$router.push({ name: "dataBase"});
-                    sessionStorage.setItem('searchIndex', this.searchNav);
+                    sessionStorage.setItem('searchIndex', this.searchNavs);
                     sessionStorage.setItem('searchKeyWords', this.searchData);
                     window.location.reload();
                 } else {

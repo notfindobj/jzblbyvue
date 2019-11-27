@@ -26,7 +26,7 @@
             <!-- 属性展示 -->
             <ul class="screening-nav-list">
                 <li v-for="(item,index) in itemAttribute" :key="index" :class="item.AttrId ? 'li-active' : ''">
-                    <p>{{item.AttrName}}</p>
+                    <p>{{item.AttrName}}:</p>
                     <ol v-if="item.LogoDataCode === 'CompanyData'" class="comLogo">
                         <li v-for="(items,index) in item.ChildNode" :key="index" @click="choseSomeOne(item,items)" class="companyli">
                             <div class="company">
@@ -199,8 +199,9 @@ export default {
         position: absolute;
         color: #ff3c00;
         font-weight: bold;
-        right: 10px;
+        left: 50%;
         line-height: 30px;
+        transform: translateX(-50%);
     }
     .swiper-boxs {
         height: 200px;
@@ -212,7 +213,7 @@ export default {
             width: 290px;
             height: 200px;
             position: relative;
-            border-radius: 8px;
+            border-radius: 40px;
             overflow: hidden;
             .slide-item-text {
                 display: none;
@@ -252,14 +253,14 @@ export default {
     }
     .company {
         display: inline-block;
-        width: 109px;
+        width: 106px;
         text-align: center;
         height: 45px;
         position: relative;
         &:hover &-pos {
             opacity: 1;
             border: 2px solid #ff3c00;
-            width: 111px;
+            width: 108px;
             left: -1px;
         }
         &:hover &-side {
@@ -271,6 +272,7 @@ export default {
             opacity: 1;
             margin-top: -1px;
             height: 47px;
+            line-height: 47px;
         }
         &-side {
             position: absolute;
@@ -380,7 +382,6 @@ export default {
             border-radius: 4px;
             box-sizing: border-box;
             padding: 10px 20px 10px;
-
             .screening-nav-list {
                 width: 100%;
                 li.companyli {
@@ -406,8 +407,8 @@ export default {
                     }
 
                     > p {
-                        /*width: 76px;*/
-                        margin-right: 20px;
+                        width: 65px;
+                        margin-right: 10px;
                         font-weight: bold;
                     }
 

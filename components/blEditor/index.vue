@@ -3,7 +3,9 @@
         <div class="editor-box">
             <div>
                 <div ref="toolbar" class="editor-toolbar"></div>
-                <div class="text" ref="editor"></div>
+                <div class="text" ref="editor">
+                    <p>分享建筑动态！</p>
+                </div>
             </div>
             <div class="editor-footer">
                 <ul class="editor-footer-tool">
@@ -147,56 +149,60 @@ export default {
         this.getPrivacyList();
     },
     mounted() {
-        let _this = this;
-        const Editor = process.browser ? require('wangeditor') : undefined;
-        _this.editor = new Editor(this.$refs.toolbar, this.$refs.editor);
-        _this.editor.customConfig.menus = [
-          'head', // 标题
-          'bold', // 粗体
-          'italic', // 斜体
-          'underline', // 下划线
-          'foreColor', // 文字颜色
-          'backColor', // 背景颜色
-          'list', // 列表
-          'justify', // 对齐方式
-          'quote', // 引用
-          'emoticon', // 表情
-        //   'image', // 插入图片
-          'undo', // 撤销
-          'redo', // 重复
-        ],
-        // 表情面板可以有多个 tab ，因此要配置成一个数组。数组每个元素代表一个 tab 的配置
-        _this.editor.customConfig.emotions = [
-            {
-                // tab 的标题
-                title: '默认',
-                // type -> 'emoji' / 'image'
-                type: 'image',
-                // content -> 数组
-                content: jzIcon
-            },
-             {
-                // tab 的标题
-                title: '热门',
-                // type -> 'emoji' / 'image'
-                type: 'image',
-                // content -> 数组
-                content: sinaIcon
-            },
-            
-        ]
-        _this.editor.customConfig.showLinkImg = false
-        _this.$refs.editor.addEventListener('click', function (e) {
-            if (e.target.tagName === 'IMG') {
-                console.log('aaa', e.target.getAttribute('src'))
-            }
-        })
-        _this.editor.customConfig.onchange = function (html) {
-          _this.onchange(html)
-        }
-        _this.editor.create();
+        this.initEditor()
     },
     methods: {
+        initEditor () {
+            let _this = this;
+            const Editor = process.browser ? require('wangeditor') : undefined;
+            _this.editor = new Editor(this.$refs.toolbar, this.$refs.editor);
+            _this.editor.customConfig.menus = [
+                'head', // 标题
+                'bold', // 粗体
+                'italic', // 斜体
+                'underline', // 下划线
+                'foreColor', // 文字颜色
+                'backColor', // 背景颜色
+                'list', // 列表
+                'justify', // 对齐方式
+                'quote', // 引用
+                'emoticon', // 表情
+                //   'image', // 插入图片
+                'undo', // 撤销
+                'redo', // 重复
+            ],
+            // 表情面板可以有多个 tab ，因此要配置成一个数组。数组每个元素代表一个 tab 的配置
+            _this.editor.customConfig.emotions = [
+                {
+                    // tab 的标题
+                    title: '默认',
+                    // type -> 'emoji' / 'image'
+                    type: 'image',
+                    // content -> 数组
+                    content: jzIcon
+                },
+                {
+                    // tab 的标题
+                    title: '热门',
+                    // type -> 'emoji' / 'image'
+                    type: 'image',
+                    // content -> 数组
+                    content: sinaIcon
+                },
+                
+            ]
+            _this.editor.customConfig.showLinkImg = false
+            _this.$refs.editor.addEventListener('click', function (e) {
+                if (e.target.tagName === 'IMG') {
+                    console.log('aaa', e.target.getAttribute('src'))
+                }
+            })
+            _this.editor.customConfig.onchange = function (html) {
+                _this.onchange(html)
+                
+            }
+            _this.editor.create();
+        },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
             if(str && str.match(reg)){
@@ -304,7 +310,6 @@ export default {
                 for (let x in merge) {
                     let colds = merge[x].split('/')
                     console.log(colds)
-                    // this.deleteImage(colds) //服务器删除文件
                 }
                 this.imgsrc = nowimgs
             }
@@ -324,12 +329,22 @@ export default {
             }
             return imgs
         },
+        auxiliary () {
+            let content = {
+                imgList: this.imgList,
+                editorContent: `<p>${this.editor.txt.html()}</p>`,
+                editortext: this.editor.txt.text(),
+                publishMode: this.publishMode,
+                isAgree: this.isAgree
+            }
+            this.$emit('auxiliary',content )
+        },
         clearEditor () {
             this.isPanel = false;
             this.imgsrc = [];
             this.imgList = [];
             this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
-            this.editor.txt.html(`<p></p>`)
+            this.editor.txt.html(`<p>分享建筑动态！</p>`);
         },
         // 发布
         editorPush () {
@@ -547,6 +562,11 @@ export default {
         min-height: 150px;
         overflow: hidden;
         background: #eeed;
+        p {
+            span {
+                font-size: 16px !important;
+            }
+        }
     }
     /deep/ .w-e-emoticon-container .w-e-item{
         img {

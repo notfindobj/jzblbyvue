@@ -475,12 +475,6 @@
             this.editorName = val;
         },
         async viewProperties (data, row, name) {
-            // 待完善
-            if (!this.isLogin) {
-                this.$store.dispatch('SETUP', true);
-                this.$store.dispatch('LOGGEDIN', 'signIn');
-                return false
-            }
              // 搜索页导航数据
             let baseSearchNav = {
                 key: 'baseSearchNav',
@@ -512,11 +506,6 @@
             analogJump(routeData.href);
         },
         async viewItem(row, item, val) {  
-            if (!this.isLogin) {
-                this.$store.dispatch('SETUP', true);
-                this.$store.dispatch('LOGGEDIN', 'signIn');
-                return false
-            }
             // 搜索页导航数据
             let baseSearchNav = {
                 key: 'baseSearchNav',

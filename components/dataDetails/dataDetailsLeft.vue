@@ -288,6 +288,9 @@
 
     #detaDetails {
         padding-right: 10px;
+        p {
+          font-size: 14px;
+        }
         img {
           width: 100%;
           height: 100%;

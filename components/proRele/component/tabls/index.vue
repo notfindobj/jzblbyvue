@@ -42,7 +42,13 @@ export default {
     methods: {
         // tab 切换
         clickEditor (row) {
-            this.$emit('clickEditor', row)
+            let lastTab = {}
+            this.editorTool.forEach((eles) => {
+                if (eles.value === this.editorName) {
+                    lastTab = eles
+                }
+            })
+            this.$emit('clickEditor', row, lastTab)
         },
     },
 }

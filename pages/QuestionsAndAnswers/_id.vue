@@ -519,7 +519,42 @@
     .ql-container.ql-snow {
         border: none;
     }
-
+    .view-left-move {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        height: 100%;
+        background: transparent;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        padding-left: 30px;
+        > img {
+            top: 50%;
+            width: 80px;
+            position: relative;
+        }
+    }
+    .view-right-move {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        height: 100%;
+        background: transparent;
+        z-index: 9999;
+        top: 0;
+        right: 0;
+        text-align: right;
+        padding-right: 30px;
+        > img {
+            top: 50%;
+            width: 80px;
+            position: relative;
+            transform: rotate(180deg);
+        }
+    }
     .ql-editor {
         padding: 0;
     }

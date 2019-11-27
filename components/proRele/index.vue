@@ -5,7 +5,7 @@
         <div v-show="['tz', 'wd'].includes(editorName)">
             <input ref="editorTitle" v-model="editorTitle" :placeholder="ArticleTitle.title" class="editor-title" />
         </div>
-        <blEditor ref="editor" :editorType="editorName" @editorPush="editorPush" @notLogged="notLogged"/>
+        <blEditor ref="editor" :editorType="editorName" @editorPush="editorPush" @notLogged="notLogged" @auxiliary="auxiliary"/>
         <Spin fix v-if="spinShow">
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
             <div>上传中</div>
@@ -78,7 +78,8 @@ export default {
                     value: '7bb57c36-0180-44ac-85c4-a38a66d3a780',
                     label: '新楼盘'
                 }
-            ]
+            ],
+            auxi: {}
         }
     },
     computed: {
@@ -105,15 +106,29 @@ export default {
             this.$store.dispatch('SETUP', true);
             this.$store.dispatch('LOGGEDIN', 'signIn');
         },
-        clickEditor (tab) {
-            this.editorTitle = '';
-            this.$refs.editor.clearEditor();
-            this.$emit('clickEditor', tab.value)
-            if (['tz', 'wd'].includes(tab.value)) {
-                setTimeout(() => {
-                    this.$refs.editorTitle.focus()
-                }, 50)
+        clickEditor (tab, lastTab) {
+            let isTab = false
+            this.$refs.editor.auxiliary();
+            if (this.auxi.imgList.length > 0) {
+                if (confirm(`是否放弃${lastTab.name}？`)) {
+                    isTab = true
+                }
+            } else {
+                isTab = true
             }
+            if (isTab) {
+                this.editorTitle = '';
+                this.$refs.editor.clearEditor();
+                this.$emit('clickEditor', tab.value)
+                if (['tz', 'wd'].includes(tab.value)) {
+                    setTimeout(() => {
+                        this.$refs.editorTitle.focus()
+                    }, 50)
+                }
+            }
+        },
+        auxiliary (row) {
+            this.auxi = row
         },
         protPush (row) {
             this.protPushData = row || {};

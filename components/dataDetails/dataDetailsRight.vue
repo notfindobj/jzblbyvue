@@ -31,7 +31,7 @@
                         <span>项目名称:</span>
                         <span>{{ detaDetails.ItemName }}</span>
                     </li>
-                    <li v-for="(item,index) in attribute" :key="index">
+                    <li v-for="(item,index) in attribute" :key="index" v-if="item.ItemAttributesFullName">
                         <span>{{item.ItemAttributesFullName}}:</span>
                         <span v-if="item.ItemSubAttributeId.length < 10">{{item.ItemSubAttributeFullName}} <syIcon syHref="ditudaohang" @openMap="openMap(item)"/></span>
                         <span v-else>{{item.ItemSubAttributeFullName}}</span>
