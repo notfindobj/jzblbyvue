@@ -55,12 +55,22 @@
             <!-- 内容 -->
             <div class="content" >
                 <div v-if="itemInfo.TalkTitle" @click="goDetail(itemInfo)" class="ql-editor detail-text qaa" v-html="itemInfo.TalkTitle"></div>
-                <p v-if ="itemInfo.TalkContent && (itemInfo.TalkType === 1 || itemInfo.TalkType === 5)" @click="goPictureDetails(itemInfo)" class="detail-picture" v-html="itemInfo.TalkContent"></p>
+                <p v-if ="itemInfo.TalkContent && itemInfo.TalkType === 1" @click="goPictureDetails(itemInfo)" class="detail-picture" v-html="itemInfo.TalkContent"></p>
+                <div v-else-if ="itemInfo.TalkContent && itemInfo.TalkType === 5" >
+                  <unfold :html="itemInfo.TalkContent" :isUnfold="isUnfold" @Unfold="Unfold"/>
+                </div>
                 <p class="detail-content" v-else v-html="itemInfo.TalkContent"></p>
                 <div class="photo-wrap " :ref="mathId">
-                    <div :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
+                  <!-- 其他 -->
+                    <div v-if="itemInfo.TalkType !== 5" :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
                       <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
                     </div>
+                    <!--文章 -->
+                    <template v-if="!isUnfold">
+                      <div v-if="itemInfo.TalkType === 5 && imgIndex <4"  :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj"  :key="imgIndex">
+                        <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
+                      </div>
+                    </template>
                 </div>
             </div>
             <!-- 搜藏工具 -->
@@ -100,7 +110,7 @@
             @submitLike="submitLike"
             @delComments="delComments"
         ></v-comment>
-        <share :config="configModal"/>
+        <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
 </template>
 
@@ -109,6 +119,7 @@
   import 'viewerjs/dist/viewer.css';
   import Comment from '../video/comment'
   import share from '../share'
+  import unfold from '../unfold'
   import {getRanNum, analogJump} from '../../plugins/untils/public'
   import {setDemo} from '../../LocalAPI'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment} from '../../service/clientAPI'
@@ -134,10 +145,11 @@
     },
     components: {
       'v-comment': Comment,
-      share
+      share,
+      unfold
     },
     computed: {
-      ...mapGetters(['isLogin'])
+      ...mapGetters(['isLogin']),
     },
     data() {
       let ViewerIndex = getRanNum(6)
@@ -157,9 +169,12 @@
         isLeftPngR: require('../../assets/images/leftButton.png'),
         isLeft: false,
         isRight: false,
+        qrcodeContent: {},
         configModal: {
           isModal: false
-        }
+        },
+        redArticle: 0,
+        isUnfold: false
       }
     },
     created () {
@@ -174,11 +189,29 @@
     },
     mounted () {
       this.initView()
+      this.newAddBtn()
     },
     methods: {
+      Unfold (val) {
+        this.isUnfold = val;
+      },
+      newAddBtn(){
+        let _this = this;
+        this.$nextTick(function () {
+          if (_this.$refs.redArticle) {
+            _this.redArticle = _this.$refs.redArticle.offsetHeight
+          }
+        })
+      },
+      getSimpleText(html){
+        // 剔除除表情后的所有标签
+        var re1 = new RegExp("<(?!(img).*(data-w-e)).*?>","g");//
+        var msg = html.replace(re1,'');//执行替换成空字符
+        return msg;
+      },
       replaceImgs (val) {
-          let regex = "/i/s/";
-          return val.replace(regex, "/i/");
+        let regex = "/i/s/";
+        return val.replace(regex, "/i/");
       },
       async delComments (row) {
         let msg = await delComment(row.CommentsId)
@@ -329,7 +362,7 @@
       },
       // 转发
       textShare (row) {
-        this.configModal.href = row.ItemId;
+        this.qrcodeContent = row;
         this.configModal.isModal = true;
       },
       // 赞
@@ -400,11 +433,8 @@
           this.getComment();
         }
       },
-
       // 点赞回复
       async submitLike(obj) {
-       
-
         let queryData = {
           ItemId: this.itemInfo.ItemId,
           LikeType: 0,
@@ -426,7 +456,14 @@
     }
   }
 </script>
-<style lang="less">
+<style lang="less" scoped>
+    .unfold-picture {
+
+    }
+    .Unfold {
+      color: #FF3C00;
+      cursor: pointer;
+    }
     .detail-content {
       img {
         max-width: 100%;
@@ -589,7 +626,7 @@
     .qaa {
       font-size: 20px;
       font-weight: bold;
-      padding: 12px 0;
+      padding: 0 0 12px 0;
       color: #000000;
       cursor: pointer;
       display: inline-block;

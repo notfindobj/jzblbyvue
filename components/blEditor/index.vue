@@ -335,7 +335,7 @@ export default {
         editorPush () {
             let content = {
                 imgList: this.imgList,
-                editorContent: this.editor.txt.html(),
+                editorContent: `<p>${this.editor.txt.html()}</p>`,
                 editortext: this.editor.txt.text(),
                 publishMode: this.publishMode,
                 isAgree: this.isAgree

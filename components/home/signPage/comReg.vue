@@ -28,9 +28,21 @@
                 </Col>
             </Row>
             <Row>
+                <Col span="12" style="padding-right:10px">
+                    <FormItem label="营业执照编号:" prop="BusLicRegNum">  
+                        <Input v-model="companyAttr.BusLicRegNum" ></Input>
+                    </FormItem>
+                </Col>
+                <Col span="12" style="padding-right:10px">
+                    <FormItem label="公司地址:" prop="CompanyAddress">  
+                        <Cascader v-model="CompanyArr" :data="cascaderList" :load-data="loadData"  ></Cascader>
+                    </FormItem>
+                </Col>
+            </Row>
+            <Row>
                 <Col span="16" style="padding-right:10px">
-                    <FormItem label="营业执照证照编号:" prop="BusLicRegNum">
-                        <Input v-model="companyAttr.BusLicRegNum"></Input>
+                    <FormItem label="公司详细地址:" prop="CompanyAddress">  
+                        <Input v-model="companyAttr.CompanyAddress"  placeholder="公司详细地址"></Input>
                     </FormItem>
                 </Col>
             </Row>
@@ -115,7 +127,7 @@
 </template>
 <script>
 import {baseUrlRegExp} from '../../../plugins/untils/public'
-import {getEntType, registerEnterprise , uploadFile, getMobileCode} from '../../../service/clientAPI'
+import {getEntType, registerEnterprise , uploadFile, getMobileCode, getProvinceList} from '../../../service/clientAPI'
 import {validatePassCheck, validateIdentity} from '../../../plugins/untils/Verify'
 export default {
     layout: 'main',
@@ -143,8 +155,13 @@ export default {
                 "CompanyTypeId": "", // 公司类型Id
                 "CellphoneNumber": "", // 联系人手机号码
                 "Password": "", // 联系人登陆密码
-                "Authcode": "" // 手机号码验证码
+                "Authcode": "", // 手机号码验证码,
+                "CompanyProvinceId": "", // 省份Id,
+                "CompanyCityId": "", // 市区ID,
+                "CompanyAreaId": "", // 地区Id,
+                "CompanyAddress": "", // 详细地址,
             },
+            CompanyArr: [], // 省市区
             entTypeList: [],
             rules: {
                 IDCardImgNegaId:[
@@ -185,15 +202,24 @@ export default {
                 ],
                 IDCordId: [
                     {required: true, validator: validateIdentity, trigger: 'blur' }
+                ],
+                CompanyAddress: [
+                    {required: true, message: '选项不能为空！', trigger: 'blur'}
+                ],
+                CompanyArr: [
+                    {required: true, message: '选项不能为空！', trigger: 'blur'}
                 ]
             },
             isDisabled: false,
             enterButtonText: '获取验证码',
-            modal10: false
+            modal10: false,
+            cascaderList: [], // 城市信息
+            cascaderAddress: [],
         }
     },
     mounted () {
         this.getEntTypeList();
+        this.getCascaderData();
         if (localStorage.getItem('entInfo')) {
             let entInfo = JSON.parse(localStorage.getItem('entInfo'));
             this.companyAttr= {
@@ -220,9 +246,51 @@ export default {
             }
 
         }
-        console.log(JSON.parse(localStorage.getItem('entInfo')))
     },
     methods: {
+        // 获取联动信息
+        async getCascaderData (id = '') {
+            let queryData = {
+                ProvinceCode: id
+            }
+            let msg = await getProvinceList(queryData);
+            msg.respProvince.forEach(ele => {
+                ele.loading = false;
+                ele.children = [];
+                ele.children = [];
+                ele.level = 1;
+                ele.value = ele.ProvinceCode
+                ele.label = ele.ProvinceName
+            })
+            if (msg) {
+                this.cascaderList = msg.respProvince;
+            }
+        },
+        async loadData (item, callback) {
+            item.loading = true;
+            let queryData = {
+                ProvinceCode: item.value
+            }
+            let msg = await getProvinceList(queryData);
+            if (msg.respProvince instanceof Array) {
+                msg.respProvince.forEach(ele => {
+                    if (item.level < 2) {
+                        ele.level = item.level + 1;
+                        ele.loading = false;
+                        ele.children = [];
+                    }
+                    ele.value = ele.ProvinceCode
+                    ele.label = ele.ProvinceName
+                })
+            } else {
+                return false
+            }
+            if (msg) {
+                item.children = msg.respProvince
+                item.loading = false;
+                callback();
+            }
+        },
         // 获取验证码
         async getMobile() {
             let queruys = {
@@ -265,12 +333,16 @@ export default {
             }   
         },
         registComUser (name) {
+            let _this = this
             localStorage.removeItem('entInfo');
             this.$refs[name].validate(async (valid) => {
                 if (valid) {
                     let comUser = JSON.parse(JSON.stringify(this.companyAttr));
                     comUser.BusLicBegin = comUser.Business[0];
                     comUser.BusLicEnd =  comUser.Business[1];
+                    comUser.CompanyProvinceId = _this.CompanyArr[0]
+                    comUser.CompanyCityId = _this.CompanyArr[1]
+                    comUser.CompanyAreaId = _this.CompanyArr[2]
                     delete comUser.Business;
                     delete comUser.BusLicImg;
                     delete comUser.IDCardImgPosi;

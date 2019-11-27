@@ -4,37 +4,63 @@
             打开微信“扫一扫”，打开网页后点击屏幕右上角分享按钮
         </div>
         <div class="qrcode">
-            <div id="qrcode" style="display:  inline-block;"></div>  
+            <img :src="QRCodeData" alt="分享链接">
         </div>
     </Modal>
 </template>
 <script>
+import QRCode from 'qrcode'
 export default {
     props: {
         config: {
             type: Object,
             default: () => {}
+        },
+        qrcodeContent: {
+            type: Object,
+            default: () => {}
         }
     },
     data () {
-        return {}
+        return {
+            QRCodeData: ''
+        }
     },
-    updated () {
-        this.qrcode()
-    },
-    mounted () {
-        // this.qrcode()
+    watch: {
+        qrcodeContent(newValue, oldValue) {
+            this.qrcode(newValue)
+        }
     },
     methods: {
-        qrcode () {
-            let qrcode = new QRCode('qrcode', {  
-                width: 200,  
-                height: 200, // 高度  [图片上传失败...(image-9ad77b-1525851843730)]
-                text: this.config.href+ "&share=true", // 二维码内容  
-                render: 'canvas' // 设置渲染方式（有两种方式 table和canvas，默认是canvas）  
-                // background: '#f0f'  
-                // foreground: '#ff0'  
-            })  
+        qrcode (row) {
+            let content = ''
+            // 图文
+            switch(row.TalkType) {
+                case 1: 
+                    content =  `${process.env.localUrl}pictureDetails/${row.ItemId}`
+                    break;
+                case 2: 
+                    content =  `${process.env.localUrl}videoDetails/${row.ItemId}`
+                    break;
+                case 3: 
+                    content =  `${process.env.localUrl}QuestionsAndAnswers/${row.ItemId}`
+                    break;
+                case 4: 
+                    content =  `${process.env.localUrl}DataDetails?id=${row.ItemId}&layout=true`
+                    break;
+                case 5: 
+                    content =  `${process.env.localUrl}pictureDetails/${row.ItemId}`
+                    break;
+                default:
+                    content =  `${process.env.localUrl}pictureDetails/${this.$route.fullPath}`
+            }
+            QRCode.toDataURL(content)
+            .then(url => {
+                this.QRCodeData = url
+            })
+            .catch(err => {
+                console.error(err)
+            })
         }  
     }
 }

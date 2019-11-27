@@ -12,7 +12,7 @@
                 </div>
                 <div style="width：800px" id="pictureBox">
                     <div v-html="detailInfo.TalkContent"></div>
-                    <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TypeId !== 5" :key="index">
+                    <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TalkType !== 5" :key="index">
                         <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" :data-original="baseUrlRegExp(replaceImgs(items.smallImgUrl))" >
                     </div>
                 </div>
@@ -39,11 +39,13 @@
             />
         </div>
         <ToTop/>
+        <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
 </template>
 <script>
 import Viewer from 'viewerjs';
 import 'viewerjs/dist/viewer.css';
+import share from '../../components/share'
 import commentsCon from '../../components/comments/commentsCon.vue'
 import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile, delComment} from '../../service/clientAPI'
 import ToTop from '../../components/toTop'
@@ -53,7 +55,8 @@ export default {
     layout: 'main',
     components: {
         commentsCon,
-        ToTop
+        ToTop,
+        share
     },
     async asyncData({ store, params }) {
         const data = await store.dispatch('getQADetail', params.id);
@@ -67,7 +70,6 @@ export default {
             ItemId: params.id,
             DomainType: data.TalkType
         })
-        console.log(rec)
         return {
             detailInfo: data,
             commentsData: cmsg
@@ -90,7 +92,11 @@ export default {
             Viewer: {},
             itemLength: 0,
             itemIndex: 0,
-            isBtnSile: true
+            isBtnSile: true,
+            configModal: {
+                isModal: false
+            },
+            qrcodeContent: {}
         }
     },
     mounted() {
@@ -199,12 +205,13 @@ export default {
                 IsDelete: item.islikes
             }
             let thumbsUpMsg = await setthumbsUp(queryData);
+            debugger
             if (item.islikes) {
-                this.$set(item, 'likes', item.likes - 1)
+                this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
             } else {
-                this.$set(item, 'likes', item.likes + 1)
+                this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
             }
-            this.$set(item, 'islikes', !item.islikes)
+            this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
         },
         async somePraise(item) {
             let queryData = {
@@ -216,11 +223,11 @@ export default {
             let msg = await setthumbsUp(queryData);
             if (msg) {
                 if (item.islikes) {
-                    this.$set(item, 'LikeCount', item.LikeCount - 1)
+                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
                 } else {
-                    this.$set(item, 'LikeCount', item.LikeCount + 1)
+                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
                 }
-                this.$set(item, 'islikes', !item.islikes)
+                this.$set(item.itemOperateData, 'IsLike', !item.IsLike)
             }
         },
         // 收藏
@@ -315,8 +322,9 @@ export default {
             }
         },
         // 转发
-        Forward () {
-            this.configShare.isModal = true;
+        Forward (row) {
+            this.qrcodeContent = row;
+            this.configModal.isModal = true;
         },
     },
 }
@@ -326,6 +334,7 @@ export default {
         width: 1200px;
         margin: 0 auto;
         display: flex;
+        margin-top: 15px;
         justify-content: space-between;
         &-left {
             width: 850px;
@@ -333,6 +342,9 @@ export default {
                 img {
                     width: 100%;
                 }
+                font-size: 14px;
+                background: #fff;
+                padding: 10px 15px;
             }
         }
         &-right {

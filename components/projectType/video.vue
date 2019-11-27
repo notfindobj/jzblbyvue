@@ -55,7 +55,7 @@
                     </span>
                 </div>
                 <div class="foot-child">
-                    <span @click="textShare">
+                    <span @click="textShare(videoInfo)">
                       <i class="icon iconfont">&#xe6be;</i>
                       <span>{{ videoInfo.itemOperateData.ShareCount }}</span>
                     </span>
@@ -82,7 +82,7 @@
             @submitLike="submitLike"
             @delComments="delComments"
         />
-        <share :config="configModal"/>
+        <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
 </template>
 
@@ -119,6 +119,7 @@
         UserProAndFans: {},
         commentList: [], // 评论列表
         isLoadingComment: false,    // 是否显示评论加载中的动画
+        qrcodeContent: {},
         configModal: {
           isModal: false
         }
@@ -229,7 +230,8 @@
         }
       },
       // 转发
-      textShare () {
+      textShare (row) {
+        this.qrcodeContent = row;
         this.configModal.isModal = true
       },
       // 点击评论

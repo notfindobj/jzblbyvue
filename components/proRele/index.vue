@@ -126,7 +126,7 @@ export default {
             }
             if (this.editorName === 'xm') {
                 this.$refs.protPush.protPush();
-                if (row.editortext === '' || row.imgList.length < 1) {
+                if (row.editortext === '' && row.imgList.length < 1) {
                     this.$Message.warning('项目内容不能为空');
                     return false
                 }
@@ -156,7 +156,7 @@ export default {
                 }
             }
             if (this.editorName === 'tw') {
-                if (row.editortext === '') {
+                if (row.editortext === ''&& row.imgList.length < 1) {
                     this.$Message.warning('内容不能为空');
                     return false
                 }
@@ -181,7 +181,7 @@ export default {
                 } 
             }
             if (this.editorName === 'sp'  && row.editortext !== '' ) {
-                if (row.editortext === '') {
+                if (row.editortext === ''&& row.imgList.length < 1) {
                     this.$Message.warning('内容不能为空');
                     return false
                 }
@@ -207,7 +207,7 @@ export default {
                 } 
             }
             if (this.editorName === 'wd') {
-                if (row.editortext === '') {
+                if (row.editortext === '' && row.imgList.length < 1) {
                     this.$Message.warning('内容不能为空');
                     return false
                 }
@@ -241,7 +241,7 @@ export default {
                     this.$Message.warning('标题不能为空');
                     return false
                 }
-                if (row.editortext === '') {
+                if (row.editortext === '' && row.imgList.length < 0) {
                     this.$Message.warning('内容不能为空');
                     return false
                 }

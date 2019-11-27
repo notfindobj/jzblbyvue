@@ -2,15 +2,6 @@
     <div class="comments-box" :style="`width:${width}`">
         <!-- 发表评论 -->
         <div class="comments-status-box">
-            <!-- <div class="comments-box-status">
-                <div class="comments-box-status-left">
-                    <span>发布状态</span>
-                    <span>发布日期：{{publish.CreateDate | datefmt('YYYY-MM-DD')}}</span>
-                </div>
-                <div class="comments-box-status-right">
-                    <i class="icon iconfont icon-chakan"></i>{{publish.Views}}
-                </div>
-            </div> -->
             <ul class="comments-status-info">
                 <li>
                     <span :class="publish.islikes? 'operationColor': ''" @click="thumbsUp(publish)">

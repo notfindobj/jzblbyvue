@@ -66,7 +66,7 @@
             @cancel="cancel"
         />
         <mapModel @closeMap="closeMap" :keywords="keywords" v-if="isMap"/>
-        <share :config="configShare"/>
+        <share :config="configShare" :qrcodeContent="qrcodeContent"/>
     </div>
 </template>
 <script>
@@ -114,7 +114,8 @@
                     isModal: false
                 },
                 isMap: false,
-                keywords: ''
+                keywords: '',
+                qrcodeContent: {}
             }
         },
         components: {
@@ -399,7 +400,8 @@
                 this.$set(item, 'IsFollow', !item.IsFollow)
             },
             // 转发
-            Forward () {
+            Forward (row) {
+                this.qrcodeContent = row;
                 this.configShare.isModal = true;
             },
             async dataDetailsMaskShow(obj) {

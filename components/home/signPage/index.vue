@@ -89,7 +89,7 @@ export default {
                     this.modalwidth = 400
                     break;
                 case"comReg": 
-                    this.modalwidth = 700
+                    this.modalwidth = 800
                     title = "企业用户注册"
                     break;
                 default:

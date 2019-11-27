@@ -30,7 +30,6 @@ import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, do
 export default {
     name: "videoBox",
     layout: 'main',
-    middleware: 'authenticated',
     data () {
         return {
             videoCon: null,

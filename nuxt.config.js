@@ -17,7 +17,6 @@ module.exports = {
     script: [
       { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
       { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
-      { src: 'https://static.runoob.com/assets/qrcode/qrcode.min.js' },
       { src: 'https://webapi.amap.com/maps?v=1.4.15&key=32fa7552c02016a5f6eefe2a3e062f87&plugin=AMap.Geocoder,AMap.CitySearch,AMap.Marker,AMap.Autocomplete,AMap.Pixel' },
     ],
   },
@@ -51,6 +50,7 @@ module.exports = {
     NODE_ENV: process.env.NODE_ENV,
     baseUrl: configUrl.baseUrl,
     fileBaseUrl: configUrl.fileBaseUrl,
+    localUrl: configUrl.localUrl,
   },
   proxyTable: [
       '/api',
