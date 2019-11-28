@@ -54,23 +54,9 @@
                         </div>
                         <div class="means-right">
                             <span class="means-left-label">所在地：</span>
-                            <span
-                                v-if="means">{{userInfo.CityName}}/{{userInfo.CountyName}}/{{userInfo.ProvinceName}}</span>
+                            <span v-if="means">{{userInfo.ProvinceName}}/{{userInfo.CityName}}/{{userInfo.CountyName}}</span>
                             <span v-else>
-                                <Select size="small" v-model="GetUserData.CityArea" style="width:95px"
-                                        @on-change="onChange">
-                                <Option v-for="(items, index) in city" :key="index"
-                                        :value="items.ProvinceCode+'|'+items.ProvinceName">{{items.ProvinceName}}</Option>
-                                </Select>
-                                <Select size="small" v-model="GetUserData.CountyArea" @on-change="onTwoChange"
-                                        style="width:95px">
-                                    <Option v-for="(items, index) in count" :key="index"
-                                            :value="items.ProvinceCode+'|'+items.ProvinceName">{{items.ProvinceName}}</Option>
-                                </Select>
-                                <Select size="small" v-model="GetUserData.ProvinceArea" style="width:95px">
-                                    <Option v-for="(items, index) in province" :key="index"
-                                            :value="items.ProvinceCode+'|'+items.ProvinceName">{{items.ProvinceName}}</Option>
-                                </Select>
+                                <Cascader key="CompanyArr" style="width: 160px;" size="small" v-model="CompanyArr" :data="cascaderList" :load-data="loadData"></Cascader>
                             </span>
                         </div>
                     </div>
@@ -206,7 +192,7 @@
                     <Tag v-if="careerTyep" type="dot" color="success" class="userLabel-label" >{{careerTyep}}</Tag>
                 </span>
                 <div class="message-items-right-edit" v-if="iscareer">
-                    <Cascader :data="careerList" v-model="careerData" style="width:200px"></Cascader>
+                    <Cascader key="careerData" :data="careerList" v-model="careerData" style="width:200px"></Cascader>
                 </div>
                 <div v-if="iscareer" class="message-items-right-save">
                     <div class="modifying-head" @click="setCareerTyepList()">保存</div>
@@ -256,7 +242,7 @@
                                 <span v-if="career">{{JurisdiInfo.PrivacyName}}</span>
                                 <Select v-else v-model="ModelJurisdiInfo.Privacy" size="small" style="width:160px">
                                     <Option v-for="(items, index) in Jurisdi" :key="index"
-                                            :value="items.Id+'|'+items.Name">{{items.Name}}
+                                        :value="items.Id+'|'+items.Name">{{items.Name}}
                                     </Option>
                                 </Select>
                             </div>
@@ -273,30 +259,16 @@
                         <div>
                             <span class="means-left-label">工作时间：</span>
                             <span v-if="career">{{JurisdiInfo.OperatHoursStart}}-{{JurisdiInfo.OperatHoursEnd}}</span>
-                            <DatePicker v-else type="daterange" format="yyyy/MM/dd"
-                                        v-model="ModelJurisdiInfo.OperatHours" placeholder="Select date"
+                            <DatePicker v-else type="daterange" format="yyyy/MM/dd" v-model="ModelJurisdiInfo.OperatHours" placeholder="工作时间"
                                         style="width: 340px"></DatePicker>
                         </div>
                     </div>
                     <div class="means">
                         <div>
                             <span class="means-left-label">所在地：</span>
-                            <span v-if="career">{{JurisdiInfo.CityName}}/{{JurisdiInfo.CountName}}/{{JurisdiInfo.ProvinceName}}</span>
+                            <span v-if="career">{{JurisdiInfo.ProvinceName}}/{{JurisdiInfo.CityName}}/{{JurisdiInfo.CountyName}}</span>
                             <span v-else>
-                                <Select size="small" v-model="ModelJurisdiInfo.CityArea" style="width:110px"
-                                        @on-change="onChange">
-                                    <Option v-for="(items, index) in city" :key="index"
-                                            :value="items.ProvinceCode+'|'+items.ProvinceName">{{items.ProvinceName}}</Option>
-                                </Select>
-                                <Select size="small" v-model="ModelJurisdiInfo.CountyArea" @on-change="onTwoChange"
-                                        style="width:110px">
-                                    <Option v-for="(items, index) in count" :key="index"
-                                            :value="items.ProvinceCode+'|'+items.ProvinceName">{{items.ProvinceName}}</Option>
-                                </Select>
-                                <Select size="small" v-model="ModelJurisdiInfo.ProvinceArea" style="width:110px">
-                                    <Option v-for="(items, index) in province" :key="index"
-                                            :value="items.ProvinceCode+'|'+items.ProvinceName">{{items.ProvinceName}}</Option>
-                                </Select>
+                                <Cascader key="23874987" style="width: 340px;"  size="small" v-model="jobCompanyArr" :data="cascaderList" :load-data="loadData"></Cascader>
                             </span>
                         </div>
                     </div>
@@ -383,7 +355,10 @@
                 userId:'',
                 careerList: [],
                 careerTyep: "",
-                careerData: []
+                careerData: [],
+                cascaderList: [], // 城市信息
+                CompanyArr: [],
+                jobCompanyArr: []
             }
         },
         computed: {
@@ -421,8 +396,52 @@
             this.getUserInfo(query);
             this.getUserExpertiseList(query);
             this.getThisUserJobInfoList(query);
+            this.getCascaderData()
         },
         methods: {
+            // 获取联动信息
+            async getCascaderData (id = '') {
+                let queryData = {
+                    ProvinceCode: id
+                }
+                let msg = await getProvinceList(queryData);
+                msg.respProvince.forEach(ele => {
+                    ele.loading = false;
+                    ele.children = [];
+                    ele.children = [];
+                    ele.level = 1;
+                    ele.value = ele.ProvinceCode+'|'+ele.ProvinceName
+                    ele.label = ele.ProvinceName
+                })
+                if (msg) {
+                    this.cascaderList = msg.respProvince;
+                }
+            },
+            async loadData (item, callback) {
+                item.loading = true;
+                let queryData = {
+                    ProvinceCode: item.value.split('|')[0]
+                }
+                let msg = await getProvinceList(queryData);
+                if (msg.respProvince instanceof Array) {
+                    msg.respProvince.forEach(ele => {
+                        if (item.level < 2) {
+                            ele.level = item.level + 1;
+                            ele.loading = false;
+                            ele.children = [];
+                        }
+                        ele.value = ele.ProvinceCode+'|'+ele.ProvinceName
+                        ele.label = ele.ProvinceName
+                    })
+                } else {
+                    return false
+                }
+                if (msg) {
+                    item.children = msg.respProvince
+                    item.loading = false;
+                    callback();
+                }
+            },
             async getCareerTyepList () {
                 let msg = await getCareerTyepInfo(this.queryId);
                 if (msg) {
@@ -526,6 +545,7 @@
                 if (msg) {
                     this.EntCode = msg.EntCode;
                     this.userInfo = msg;
+                    this.CompanyArr = [msg.ProvinceAreaId + '|' + msg.ProvinceName,msg.CityAreaId + '|' + msg.CityName, msg.CountyAreaId + '|' + msg.CountyName];
                     this.GetUserData = {
                         HeadIconSrc: msg.HeadIconSrc,
                         Nickname: msg.Nickname,
@@ -536,10 +556,8 @@
                         Birthday: msg.Birthday,
                         Description: msg.Description,
                         Emotional: msg.EmotionalStateId + '|' + msg.EmotionalState,
-                        ProvinceArea: msg.ProvinceAreaId + '|' + msg.ProvinceName,
-                        CityArea: msg.CityAreaId + '|' + msg.CityName,
-                        CountyArea: msg.CountyAreaId + '|' + msg.CountyName,
                     }
+                    
                 }
             },
             async getCityList(id = '', index) {
@@ -571,12 +589,12 @@
                         Description: this.GetUserData.Description,
                         EmotionalStateId: this.GetUserData.Emotional.split('|')[0],
                         EmotionalState: this.GetUserData.Emotional.split('|')[1],
-                        ProvinceAreaId: this.GetUserData.ProvinceArea.split('|')[0],
-                        ProvinceName: this.GetUserData.ProvinceArea.split('|')[1],
-                        CityAreaId: this.GetUserData.CityArea.split('|')[0],
-                        CityName: this.GetUserData.CityArea.split('|')[1],
-                        CountyAreaId: this.GetUserData.CountyArea.split('|')[0],
-                        CountyName: this.GetUserData.CountyArea.split('|')[1],
+                        ProvinceAreaId: this.CompanyArr[0].split('|')[0], //省份ID
+                        ProvinceName: this.CompanyArr[0].split('|')[1], // 省份名称
+                        CityAreaId: this.CompanyArr[1].split('|')[0], // 市ID
+                        CityName: this.CompanyArr[1].split('|')[1], // 市名称
+                        CountAreaId: this.CompanyArr[2].split('|')[0], // 区ID
+                        CountyName: this.CompanyArr[2].split('|')[1], // // 区名称
                     }
                 } catch (error) {
 
@@ -584,7 +602,10 @@
                 let msg = await setUserData(queryData);
                 if (msg) {
                     this.$Message.success('添加成功');
-                    this.getUserInfo();
+                    let query = {
+                        userId: this.queryId
+                    }
+                    this.getUserInfo(query);
                 }
             },
             onChange(value) {
@@ -611,28 +632,14 @@
                 }
             },
             meansClick() {
+                let _this = this;
                 this.means = !this.means;
                 this.getOperaList();
-                this.getCityList();
-                if (this.userInfo.CountyAreaId) {
-                    this.getCityList(this.userInfo.CityAreaId)
-                }
-                if (this.userInfo.ProvinceAreaId) {
-                    this.onTwoChange(this.userInfo.CountyAreaId + '|' + this.userInfo.CountyName)
-                }
             },
             clickCareer() {
                 this.career = !this.career;
                 this.getJurisdiList();
-                this.getCityList()
-               try {
-                    if (this.JurisdiInfo.CountyAreaId) {
-                        this.getCityList(this.JurisdiInfo.CityAreaId);
-                    }
-                    if (this.JurisdiInfo.ProvinceAreaId) {
-                        this.onTwoChange(this.JurisdiInfo.CountyAreaId + '|' + this.JurisdiInfo.CountyName);
-                    }
-               } catch (error) {}
+                // this.getCityList()
             },
             // 个人资料  END
             async setNickName() {
@@ -646,7 +653,10 @@
                     this.$store.dispatch('LOGININ', info);
                     localStorage.setItem('LOGININ', JSON.stringify(info))
                     this.nickname = !this.nickname
-                    this.getUserInfo();
+                    let query = {
+                        userId: this.queryId
+                    }
+                    this.getUserInfo(query);
                 }
             },
             // 获取当前用户所有职业信息接口 GetThisUserJobInfo
@@ -655,7 +665,8 @@
                 if (msg) {
                     if (msg.jobInfos) {
                         let val = msg.jobInfos[0]
-                        this.JurisdiInfo = val
+                        this.JurisdiInfo = val;
+                        this.jobCompanyArr = [val.ProvinceAreaId + '|' + val.ProvinceName,val.CityAreaId + '|' + val.CityName,val.CountyAreaId + '|' + val.CountName]
                         this.ModelJurisdiInfo = {
                             CompanyName: val.CompanyName,
                             CompanyId: val.CompanyName,
@@ -681,13 +692,13 @@
                         OperatHoursEnd: this.ModelJurisdiInfo.OperatHours[1],
                         PrivacyId: this.ModelJurisdiInfo.Privacy.split('|')[0],
                         PrivacyName: this.ModelJurisdiInfo.Privacy.split('|')[1],
-                        ProvinceAreaId: this.ModelJurisdiInfo.ProvinceArea.split('|')[0],
-                        ProvinceName: this.ModelJurisdiInfo.ProvinceArea.split('|')[1],
-                        CityAreaId: this.ModelJurisdiInfo.CityArea.split('|')[0],
-                        CityName: this.ModelJurisdiInfo.CityArea.split('|')[1],
-                        CountyAreaId: this.ModelJurisdiInfo.CountyArea.split('|')[0],
-                        CountName: this.ModelJurisdiInfo.CountyArea.split('|')[1],
-                        Id: id
+                        Id: id,
+                        ProvinceAreaId: this.jobCompanyArr[0].split('|')[0], //省份ID
+                        ProvinceName: this.jobCompanyArr[0].split('|')[1], // 省份名称
+                        CityAreaId: this.jobCompanyArr[1].split('|')[0], // 市ID
+                        CityName: this.jobCompanyArr[1].split('|')[1], // 市名称
+                        CountyAreaId: this.jobCompanyArr[2].split('|')[0], // 区ID
+                        CountyName: this.jobCompanyArr[2].split('|')[1], // // 区名称
                     }
                 } catch (error) {
                 }
@@ -695,7 +706,10 @@
                 if (msg) {
                     this.$Message.success('修改成功');
                     this.career = !this.career;
-                    this.getThisUserJobInfoList();
+                    let query = {
+                        userId: this.queryId
+                    }
+                    this.getThisUserJobInfoList(query);
                 }
             },
             // 操作权限

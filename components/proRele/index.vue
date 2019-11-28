@@ -5,7 +5,7 @@
         <div v-show="['tz', 'wd'].includes(editorName)">
             <input ref="editorTitle" v-model="editorTitle" :placeholder="ArticleTitle.title" class="editor-title" />
         </div>
-        <blEditor ref="editor" :editorType="editorName" @editorPush="editorPush" @notLogged="notLogged" @auxiliary="auxiliary"/>
+        <blEditor ref="editor" :editorType="editorName" :placeholders="placeholders" @editorPush="editorPush" @notLogged="notLogged" @auxiliary="auxiliary"/>
         <Spin fix v-if="spinShow">
             <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
             <div>上传中</div>
@@ -79,8 +79,23 @@ export default {
                     label: '新楼盘'
                 }
             ],
+            editorTool: [
+                {name:'发布图文', value: 'tw', isShow: true, placeholders: '分享建筑动态！'},
+                {name:'发布文章', value: 'tz', isShow: true, placeholders: '分享建筑动态！'},
+                {name:'发布视频', value: 'sp', isShow: true, placeholders: '分享建筑动态！'},
+                {name:'发布项目', value: 'xm', isShow: true, placeholders: '项目详情！'},
+                {name:'发布问答', value: 'wd', isShow: true, placeholders: '分享建筑动态！'},
+            ],
+            placeholders: '分享建筑动态！',
             auxi: {}
         }
+    },
+    created () {
+        this.editorTool.forEach(ele => {
+            if (ele.value === this.editorName) {
+                this.placeholders = ele.placeholders
+            }
+        })
     },
     computed: {
         ArticleTitle: function () {
@@ -107,7 +122,7 @@ export default {
             this.$store.dispatch('LOGGEDIN', 'signIn');
         },
         clickEditor (tab, lastTab) {
-            let isTab = false
+            let isTab = false;
             this.$refs.editor.auxiliary();
             if (this.auxi.imgList.length > 0) {
                 if (confirm(`是否放弃${lastTab.name}？`)) {
@@ -118,7 +133,7 @@ export default {
             }
             if (isTab) {
                 this.editorTitle = '';
-                this.$refs.editor.clearEditor();
+                this.$refs.editor.clearEditor(tab.placeholders);
                 this.$emit('clickEditor', tab.value)
                 if (['tz', 'wd'].includes(tab.value)) {
                     setTimeout(() => {

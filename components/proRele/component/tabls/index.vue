@@ -31,11 +31,11 @@ export default {
     data () {
         return {
             editorTool: [
-                {name:'发布图文', value: 'tw', isShow: true},
-                {name:'发布文章', value: 'tz', isShow: true},
-                {name:'发布视频', value: 'sp', isShow: true},
-                {name:'发布项目', value: 'xm', isShow: true},
-                {name:'发布问答', value: 'wd', isShow: true},
+                {name:'发布图文', value: 'tw', isShow: true, placeholders: '分享建筑动态！'},
+                {name:'发布文章', value: 'tz', isShow: true, placeholders: '分享建筑动态！'},
+                {name:'发布视频', value: 'sp', isShow: true, placeholders: '分享建筑动态！'},
+                {name:'发布项目', value: 'xm', isShow: true, placeholders: '项目详情！'},
+                {name:'发布问答', value: 'wd', isShow: true, placeholders: '分享建筑动态！'},
             ],
         }
     },

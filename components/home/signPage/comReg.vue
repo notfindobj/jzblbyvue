@@ -214,7 +214,6 @@ export default {
             enterButtonText: '获取验证码',
             modal10: false,
             cascaderList: [], // 城市信息
-            cascaderAddress: [],
         }
     },
     mounted () {

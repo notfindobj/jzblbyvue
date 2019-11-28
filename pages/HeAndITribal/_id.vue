@@ -5,6 +5,9 @@
             <div class="he-and-i-con-box">
                 <!-- 一级导航-->
                 <ul class="he-and-i-con-box-nav">
+                    <li v-if="isEnt" @click="getTypeMeunList({}, 123)" :class="currentIndex === 123 ? 'li-active' :''" :key="123">
+                        首页
+                    </li>
                     <li v-for="(item,index) in tribeInfo.MyOrOtherMeun" :key="item.id"
                         :class="currentIndex === index ? 'li-active' :''" @click="getTypeMeunList(item,index)">
                         {{item.Name}}
@@ -13,13 +16,24 @@
                 <div class="he-and-i-con-box-content">
                     <!-- 二级导航-->
                     <div class="he-and-i-con-box-content-left">
-                        <ul class="head-boxs head-boxs-two" v-show="headList && headList.length > 0">
-                            <li :class="twoIndex === itemIndex ? 'li-active' : ''" v-for="(item, itemIndex) in headList" :key="itemIndex" 
-                                @click="changeTwo(item.TypeId, itemIndex)">
-                                {{item.TypeName}}
-                            </li>
-                        </ul>
-                        <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
+                        <div v-show="PersonalCenter !== 'comHome'">
+                            <ul class="head-boxs head-boxs-two" v-show="headList && headList.length > 0">
+                                <li :class="twoIndex === itemIndex ? 'li-active' : ''" v-for="(item, itemIndex) in headList" :key="itemIndex" 
+                                    @click="changeTwo(item.TypeId, itemIndex)">
+                                    {{item.TypeName}}
+                                </li>
+                            </ul>
+                        </div>
+                        <!-- 公司首页 -->
+                        <div v-if="PersonalCenter === 'comHome'" class="comHome">
+                            <div class="comHome-teamuserlist">
+                                <span class="comHome-teamuserlist-name">主创团队</span>
+                                <span class="comHome-teamuserlist-btn" @click="clickTeamuser">邀请队友</span>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                        <crollBox v-if="PersonalCenter !== 'comHome'" :isLast="isLast" @willReachBottom ="willReachBottom" >
                             <HeAndIDownload 
                                 v-if="PersonalCenter === 'HeAndIDownload'"
                                 @clickMenu="clickMenu"
@@ -39,7 +53,24 @@
                 </div>
             </div>
         </div>
-         <ToTop ></ToTop>
+        <ToTop ></ToTop>
+        <Modal v-model="isTeamuser" width="360">
+            <p slot="header" style="text-align:center">
+                <span><h3>邀请队友</h3></span>
+            </p>
+            <div>
+                {{model9}}
+                <Select v-model="model9" filterable remote :remote-method="remoteMethod1" :loading="loading1">
+                    <Option value="New York" label="New York" >
+                        <span>New York</span>
+                        <span style="float:right;color:#ccc">America</span>
+                    </Option>
+                </Select>
+            </div>
+            <div slot="footer">
+                <Button type="primary" size="large" long>Delete</Button>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
@@ -50,7 +81,7 @@
     import Heads from './head'
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
-    import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice} from '~/service/clientAPI'
+    import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice, getCompanyInfo, getQueryData} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     export default {
         layout: 'main',
@@ -65,7 +96,7 @@
         },
         data() {
             return {
-                currentIndex: 0, // 一级高亮
+                currentIndex: 123, // 一级高亮
                 twoIndex: 0, // 二级高亮
                 twoId: 0,
                 itIsMe: false,
@@ -74,7 +105,7 @@
                 headList: [], // 二级导航
                 dataList: [],
                 followList: [],
-                PersonalCenter: 'PersonalCenter',
+                PersonalCenter: 'comHome',
                 pageNum: 1,
                 menuId: 0,
                 isLast: false,
@@ -82,7 +113,12 @@
                 total: 0,   // 总页数
                 resetPriceS: {},
                 rulePrice: {},
-                resetValue: ''
+                resetValue: '',
+                teamuserlist: {},
+                isEnt: true, // true 公司 false 个人
+                isTeamuser: false,
+                model9: '',
+                loading1: false,
             }
         },
         computed: {
@@ -114,7 +150,16 @@
             }
         },
         created () {
-            this.getTypeMeunList(); 
+            // if (this.userInfoID.IsEnt === 1) {
+            //     this.getTypeMeunList({}, 123);
+            //     this.isEnt = true
+            // }
+            // if (this.userInfoID.IsEnt === 2) {
+                this.isEnt = false
+                this.currentIndex = 0;
+                this.PersonalCenter = 'PersonalCenter';
+                this.getTypeMeunList();
+            // }
             if (this.$route.query.id === undefined || this.$route.query.id === this.userInfoID.UserId) {
                 this.itIsMe = false;
             }  else {
@@ -122,6 +167,32 @@
             }
         },
         methods: {
+            async remoteMethod1 (query) {
+                if (query) {
+                    let queryData = {
+                        QueryValue: query,
+                        QueryKey: '',
+                        TypeId: ''
+                    }
+                    this.loading1 = true;
+                    let msg = await getQueryData(queryData)
+                    this.loading1 = false;
+                    console.log(msg)
+                }
+            },
+            clickTeamuser () {
+                this.isTeamuser = true;
+            },
+            // 获取公司首页信息
+            async getCompanyData () {
+                let queryData = {
+                    UserId: this.userId
+                }
+                let msg = await getCompanyInfo(queryData);
+                if (msg) {
+                    this.teamuserlist = msg.teamuserlist;
+                }
+            },
             async clickMenu (row, item, index) {
                 if (item.OperateId === 'szjg') {
                     this.resetPrice(row, item, index)
@@ -274,22 +345,30 @@
                 } else {
                     this.getfollowList(this.IsFollow, true)
                 }
+                
             }, 1500),
             // 点击一级菜单
             async getTypeMeunList (item, inx) {
-                this.currentIndex = inx || 0;
-                this.twoIndex = 0;
-                this.twoId = 0
-                this.pageNum = 1;
-                let queryData = {
-                    typeId: inx || 0,
-                    UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID.UserId
-                }
-                let menuButs = await getTypeMeun(queryData);
-                if (menuButs) {
-                    this.headList = menuButs.typeMenuButs;
-                    this.PersonalCenter = 'HeAndIDownload';
-                    this.getList(inx);
+                if (inx === 123) {
+                    this.PersonalCenter = 'comHome'
+                    this.currentIndex = inx;
+                    this.getCompanyData();
+                    return false
+                } else {
+                    this.currentIndex = inx || 0;
+                    this.twoIndex = 0;
+                    this.twoId = 0
+                    this.pageNum = 1;
+                    let queryData = {
+                        typeId: inx || 0,
+                        UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID.UserId
+                    }
+                    let menuButs = await getTypeMeun(queryData);
+                    if (menuButs) {
+                        this.headList = menuButs.typeMenuButs;
+                        this.PersonalCenter = 'HeAndIDownload';
+                        this.getList(inx);
+                    }
                 }
             },
             changeComponents (index, count) {
@@ -373,6 +452,30 @@
     }
 </script>
 <style lang="less" scoped>
+    .comHome {
+        background: #ffffff;
+        padding: 10px 15px;
+        &-teamuserlist {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: .5px solid #666;
+            padding-bottom: 10px;
+            &-name {
+                font-size: 20px;
+                font-weight: 600px;
+                color: #FF3C00;
+            }
+            &-btn {
+                background: #FF3C00;
+                height: 30px;
+                line-height: 25px;
+                cursor: pointer;
+                padding: 3px 10px;
+                color: #ffffff;
+                border-radius: 3px;
+            }
+        }
+    }
     .dowPics {
         margin: 20px 0;
     }
@@ -439,6 +542,7 @@
             flex-direction: row;
             > li {
                 flex: 1;
+                text-align: center;
                 line-height: 40px;
                 font-size: 16px;
                 color: #333333;
@@ -455,8 +559,9 @@
                         content: '';
                         background: #FF3C00;
                         position: absolute;
-                        left: 0;
+                        left: 50%;
                         top: 38px;
+                        transform: translate(-50%);
                     }
                 }
             }
@@ -467,8 +572,9 @@
                     content: '';
                     background: #FF3C00;
                     position: absolute;
-                    left: 0;
+                    left: 50%;
                     top: 38px;
+                    transform: translate(-50%);
                 }
             }
         }

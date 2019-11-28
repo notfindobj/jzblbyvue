@@ -285,3 +285,11 @@ export const getRecommend = async (params, pages) => {
 export const addFeedbackData = async params => {
   return await request.post(`Feedback/AddFeedbackData`, params)
 }
+// 公司信息
+export const getCompanyInfo = async params => {
+  return await request.post(`CompanyInfo/GetCompanyInfo`, params)
+}
+// 搜索用户
+export const getQueryData = async params => {
+  return await request.post(`Query/QueryData`, params)
+}

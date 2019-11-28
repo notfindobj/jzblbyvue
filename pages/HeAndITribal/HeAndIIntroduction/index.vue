@@ -28,22 +28,26 @@
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">电话：</span>
-                    <span class="list-con">{{userInfo.Mobile}}</span>
+                    <span class="list-con" v-if="userInfo.Mobile">{{userInfo.Mobile}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">擅长：</span>
-                    <span class="list-con">{{userInfo.Expertise}}</span>
+                    <span class="list-con" v-if="userInfo.Expertise">{{userInfo.Expertise}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
                 <li>
                     <i class="icon iconfont"></i>
-                    <span class="list-name">工龄：</span>
-                    <span class="list-con">{{userInfo.Birthday}}</span>
+                    <span class="list-name">生日：</span>
+                    <span class="list-con" v-if="userInfo.Birthday">{{userInfo.Birthday}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">所在地：</span>
-                    <span class="list-con">{{userInfo.Location}}</span>
+                    <span class="list-con" v-if="userInfo.userTypes">{{userInfo.userTypes.Location}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
             </ul>
             <!-- 公司显示 -->
@@ -51,22 +55,26 @@
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">名称：</span>
-                    <span class="list-con">{{userInfo.NickName}}</span>
+                    <span class="list-con" v-if="userInfo.NickName">{{userInfo.NickName}}</span>
+                    <span class="list-cons" @click="enterCenter" v-else>立即完善</span>
                 </li>
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">地址：</span>
-                    <span class="list-con">{{userInfo.Birthday}}</span>
+                    <span class="list-con" v-if="userInfo.userTypes">{{userInfo.userTypes.Location}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
                 <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">电话：</span>
-                    <span class="list-con">{{userInfo.Expertise}}</span>
+                    <span class="list-con" v-if="userInfo.Mobile">{{userInfo.Mobile}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
                  <li>
                     <i class="icon iconfont"></i>
                     <span class="list-name">擅长：</span>
-                    <span class="list-con">{{userInfo.Expertise}}</span>
+                    <span class="list-con" v-if="userInfo.Expertise">{{userInfo.Expertise}}</span>
+                    <span class="list-cons" @click="enterCenter"  v-else>立即完善</span>
                 </li>
             </ul>
             <p class="look-more" @click="enterCenter">查看更多 ></p>
@@ -246,6 +254,14 @@ export default {
                     .list-con {
                         font-size: 12px;
                         color: #333333;
+                    }
+                    .list-cons {
+                        cursor: pointer;
+                        font-size: 12px;
+                        color: #999999;
+                        &:hover {
+                            text-decoration: underline;
+                        }
                     }
                 }
             }

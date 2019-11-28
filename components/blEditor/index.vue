@@ -4,7 +4,7 @@
             <div>
                 <div ref="toolbar" class="editor-toolbar"></div>
                 <div class="text" ref="editor">
-                    <p>分享建筑动态！</p>
+                    <p>{{placeholders}}</p>
                 </div>
             </div>
             <div class="editor-footer">
@@ -103,6 +103,10 @@ export default {
         editorType: {
             type: String,
             default: 'xm'
+        },
+        placeholders: {
+            type: String,
+            default: '分享建筑动态！'
         }
     },
     components: {
@@ -149,7 +153,7 @@ export default {
         this.getPrivacyList();
     },
     mounted() {
-        this.initEditor()
+        this.initEditor();
     },
     methods: {
         initEditor () {
@@ -198,10 +202,16 @@ export default {
                 }
             })
             _this.editor.customConfig.onchange = function (html) {
+                _this.editor.txt.html(_this.getSimpleText(html))
                 _this.onchange(html)
-                
             }
             _this.editor.create();
+        },
+        getSimpleText(html){
+        // 剔除除表情后的所有标签
+            var re1 = new RegExp(/(分享建筑动态！)|(项目详情！)/);//
+            var msg = html.replace(re1,'');//执行替换成空字符
+            return msg;
         },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
@@ -301,6 +311,7 @@ export default {
         },
         // 文本域发生变化
         onchange (html) {
+            console.log('asd')
             // html 即变化之后的内容
             if (this.imgsrc.length !== 0) {
                 let nowimgs = this.getSrc(html)
@@ -309,7 +320,6 @@ export default {
                 })
                 for (let x in merge) {
                     let colds = merge[x].split('/')
-                    console.log(colds)
                 }
                 this.imgsrc = nowimgs
             }
@@ -339,12 +349,12 @@ export default {
             }
             this.$emit('auxiliary',content )
         },
-        clearEditor () {
+        clearEditor (placeholders) {
             this.isPanel = false;
             this.imgsrc = [];
             this.imgList = [];
             this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
-            this.editor.txt.html(`<p>分享建筑动态！</p>`);
+            this.editor.txt.html(`<p>${placeholders}</p>`);
         },
         // 发布
         editorPush () {
