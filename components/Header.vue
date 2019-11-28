@@ -80,7 +80,8 @@ export default {
     },
     computed: {
         ...mapState({
-            auth: state => state.overas.auth
+            auth: state => state.overas.auth,
+            showSign: state => state.overas.showSign,
         }),
         ...mapGetters(['isLogin', 'getCusData', 'getComment'])
     },
@@ -88,12 +89,14 @@ export default {
         if (this.auth) {
             this.getMessage()
         }
-        setInterval(() => {
-            if (!this.isLogin) {
+        let LOGGEDTome = setInterval(() => {
+            if (!this.isLogin && !this.showSign) {
                 this.$store.dispatch('SETUP', true);
                 this.$store.dispatch('LOGGEDIN', 'signIn');
+            } else {
+                clearInterval(LOGGEDTome)
             }
-        }, 1000*10)
+        }, 100)
     },
     methods: {
         async getMessage () {

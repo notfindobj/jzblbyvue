@@ -122,7 +122,7 @@
   import unfold from '../unfold'
   import {getRanNum, analogJump} from '../../plugins/untils/public'
   import {setDemo} from '../../LocalAPI'
-  import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment} from '../../service/clientAPI'
+  import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment, recordFrequency} from '../../service/clientAPI'
   import { mapGetters} from 'vuex'
   var name = getRanNum(5)
   export default {
@@ -189,19 +189,10 @@
     },
     mounted () {
       this.initView()
-      this.newAddBtn()
     },
     methods: {
       Unfold (val) {
         this.isUnfold = val;
-      },
-      newAddBtn(){
-        let _this = this;
-        this.$nextTick(function () {
-          if (_this.$refs.redArticle) {
-            _this.redArticle = _this.$refs.redArticle.offsetHeight
-          }
-        })
       },
       getSimpleText(html){
         // 剔除除表情后的所有标签
@@ -319,8 +310,13 @@
                 that.hide();
               });
             },
-            hidden() {
+            async hidden() {
               _this.isBtnSile = false;
+              //记录用户访问
+              let rec = await recordFrequency({
+                  ItemId: _this.itemInfo.ItemId,
+                  DomainType: _this.itemInfo.TalkType
+              })
               // _this.Viewer.destroy();
               // _this.viewShowBox()
             }

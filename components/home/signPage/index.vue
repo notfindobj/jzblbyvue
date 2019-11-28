@@ -8,6 +8,7 @@
             :mask-closable="false"
             :closable="false"
             @on-visible-change="visibleChange"
+            class="modal-sign"
             class-name="vertical-center-modal">
             <p slot="header" class="modal-header">
                 <i v-if="isItLogged !== 'signIn' && isItLogged !== 'perOrCom'" @click="goBack(oldvals)" class="icon iconfont icon-jiantou1 modal-header-jiantou"></i>
@@ -103,6 +104,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .modal-sign {
+        z-index: 99999;
+        /deep/.ivu-modal-mask, /deep/.ivu-modal-wrap{
+            z-index: 99999 !important;
+        }
+        
+    }
+    .ivu-modal-wrap {
+        z-index: 999999;
+    }
     .modal-header {
         font-size: 20px;
         line-height: 28px;

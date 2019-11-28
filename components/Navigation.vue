@@ -75,7 +75,7 @@
             </div>
             <ul class="main-nav-tab">
                 <li class="resource" @mouseenter="isShowCate=true" @mouseleave="isShowCate=false">
-                    <span>档案库 <i class="iconfont icon-jiantou"></i></span>
+                    <span>档案库<i class="iconfont icon-jiantou"></i></span>
                     <LevelMenu class="banner-nav" v-show="isIndex || isShowCate"></LevelMenu>
                 </li>
                 <li>
@@ -138,6 +138,7 @@
             ...mapState({
                 auth: state => state.overas.auth,
                 searchNav: state => state.overas.searchNav,
+                showSign: state => state.overas.showSign,
             }),
             ...mapGetters(['isLogin'])
         },
@@ -158,12 +159,14 @@
                 this.searchData = sessionStorage.getItem('searchKeyWords');
             }   
             this.isIndex = this.$route.name === 'index';
-            setInterval(() => {
-                if (!this.isLogin) {
+            let LOGGEDTome = setInterval(() => {
+                if (!this.isLogin && !this.showSign) {
                     this.$store.dispatch('SETUP', true);
                     this.$store.dispatch('LOGGEDIN', 'signIn');
+                } else {
+                    clearInterval(LOGGEDTome)
                 }
-            }, 1000*10)
+            }, 100)
         },
         watch: {
             $route(to, from) {

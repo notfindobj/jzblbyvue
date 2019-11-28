@@ -281,3 +281,7 @@ export const getDataByTypeId = async params => {
 export const getRecommend = async (params, pages) => {
   return await request.post(`Other/GetRecommend?typeIds=`+params+'&take='+pages, )
 }
+// 提交反馈
+export const addFeedbackData = async params => {
+  return await request.post(`Feedback/AddFeedbackData`, params)
+}

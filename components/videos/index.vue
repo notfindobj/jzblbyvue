@@ -18,7 +18,7 @@
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 import {getRanNum, addEvent, preventSliding} from '../../plugins/untils/public'
-import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow} from '../../service/clientAPI'
+import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow, recordFrequency} from '../../service/clientAPI'
 export default {
     name: getRanNum(15),
     props: {
@@ -107,7 +107,13 @@ export default {
                     _this.thumbsUp(_this.detaDetails, dianzan)
                 })
                 // 放大
-                document.getElementById(fullScreen).addEventListener('click', function () {
+                document.getElementById(fullScreen).addEventListener('click', async function () {
+                    //记录用户访问
+                    let rec = await recordFrequency({
+                        ItemId: _this.detaDetails.ItemId,
+                        DomainType: _this.detaDetails.TalkType
+                    })
+                    console.log('asd')
                     _this.isShowViewBox = !_this.isShowViewBox;
                     _this.stop()
                     _this.itemVideo.videoTime = that.currentTime();

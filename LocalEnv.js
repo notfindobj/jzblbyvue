@@ -10,7 +10,7 @@ exports.configUrl = {
         } else {
         // 本地环境
             // return 'http://192.168.10.15:8066/api/'
-             return 'https://www.api.jzbl.com/api/'
+            return 'https://www.api.jzbl.com/api/'
         }
     })(),
     // 本地接口
@@ -43,6 +43,6 @@ exports.configUrl = {
     // 文件路径
     fileBaseUrl: (() => {
         return 'http://www.pic.jzbl.com/'
-        // return 'http://192.168.10.15:8066/api/'
+        // return 'http://192.168.10.15:8066/'
     })()
 }
