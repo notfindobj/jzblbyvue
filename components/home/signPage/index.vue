@@ -6,6 +6,7 @@
             :width="modalwidth"
             footer-hide
             :mask-closable="false"
+            :closable="false"
             @on-visible-change="visibleChange"
             class-name="vertical-center-modal">
             <p slot="header" class="modal-header">

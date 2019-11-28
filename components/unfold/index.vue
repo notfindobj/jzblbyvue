@@ -3,7 +3,7 @@
         <div v-if="!isUnfold" class="unfold-top" ref="redArticle" :style="`max-height: ${height+1}px`" v-html="getSimpleText(html)"></div>
         <div v-if="isUnfold" v-html="html"></div>
         <span class="unfold-btn" v-if="redArticle > height" @click="Unfold">
-            {{!isUnfold ?'...展开': '收起'}}
+            {{!isUnfold ?'展开全文': '收起全文'}}
         </span>
     </div>
 </template>
@@ -64,7 +64,7 @@ export default {
             color: #ff3c00;
             cursor: pointer;
             position: absolute;
-            bottom: 0;
+            bottom: 2px;
             right: 0;
             background: #fff;
             box-shadow: -11px 2px 17px #fff;

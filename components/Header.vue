@@ -88,12 +88,12 @@ export default {
         if (this.auth) {
             this.getMessage()
         }
-        if (!this.isLogin) {
-            setInterval(() => {
+        setInterval(() => {
+            if (!this.isLogin) {
                 this.$store.dispatch('SETUP', true);
                 this.$store.dispatch('LOGGEDIN', 'signIn');
-            }, 1000*10)
-        }
+            }
+        }, 1000*10)
     },
     methods: {
         async getMessage () {
