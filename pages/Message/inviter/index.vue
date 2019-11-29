@@ -4,10 +4,12 @@
             <div class="customized-title">
                <div class="customized-title-left">
                     <span>有 <span class="MsgCount-color">{{inviter.MsgCount}}</span> 条服务消息未读</span>
-                    <span class="MsgCount-all" ></span>
+                    <span class="MsgCount-all" v-if="!isEnt"></span>
+                    <span class="MsgCount-all" v-if="isEnt"  @click="setMessage(inviter.Msg, 2)">全部设为已读</span>
                </div>
                <div>
-                   <span class="MsgCount-all-del" >忽略全部</span>
+                   <span class="MsgCount-all-del" v-if="!isEnt">忽略全部</span>
+                   <span class="MsgCount-all-del" v-if="isEnt" @click="setMessage(inviter.Msg, 1)">全部删除</span>
                </div>
             </div>
             <ul class="customized-content">
@@ -18,10 +20,15 @@
                            <span class="MsgTitle">{{item.MsgTitle}}</span>
                            <span>{{item.CreateDate}}</span>
                        </div>
-                       <div class="customized-content-title-right">
+                       <div class="customized-content-title-right" v-if="!isEnt">
                            <span class="customized-content-title-right-del" @click="handleInvite(item, 2)">忽略</span>
                            <span class="customized-content-title-right-agree" v-if="item.ReadStatu === 1" @click="handleInvite(item, 1)">同意</span>
                            <span v-else>已处理</span>
+                       </div>
+                       <div class="customized-content-title-right" v-if="isEnt">
+                           <span class="customized-content-title-right-del" @click="setMessage(item, 1)">删除</span>
+                           <span class="customized-content-title-right-agree" v-if="item.ReadStatu === 1" @click="setMessage(item, 2)">标记为已读</span>
+                           <span v-else>已读</span>
                        </div>
                    </div>
                    <!-- <emotHtml class="customized-content-detailed" v-model="item.MsgContext" @click.native="viewDetails(item)"></emotHtml> -->
@@ -31,17 +38,24 @@
     </div>
 </template>
 <script>
-import {handleInviteUser} from "../../../service/clientAPI"
+import {handleInviteUser, setMessage} from "../../../service/clientAPI"
 import emotHtml from "../../../components/emotHtml"
 import {analogJump} from '../../../plugins/untils/public'
+import { mapState , mapGetters} from 'vuex'
 export default {
     components: {
         emotHtml
     },
     data () {
         return {
-            inviter: {}
+            inviter: {},
+            isEnt: false
         }
+    },
+    computed: {
+        ...mapState({
+            userInfoID: state => state.overas.auth || {}
+        })
     },
     async asyncData({route, store}) {
         let msgType = {
@@ -53,7 +67,55 @@ export default {
             inviter: msg.invite
         }
     },
+    created () {
+        if (this.userInfoID.IsEnt === 1) {
+                this.isEnt = true
+            }
+            // 个人
+            if (this.userInfoID.IsEnt === 2) {
+                this.isEnt = false
+           
+            }
+    },
     methods: {
+        async setMessage (row, type) {
+            let OpId = ""
+            if (row.constructor  === Object) {
+                OpId = row.OpId
+            }
+            if (row.constructor === Array) {
+                let opIdArr = []
+                row.forEach(items => {
+                   opIdArr.push(items.OpId);
+                })
+                OpId = opIdArr.join(',')
+            }
+            let queryData = {
+                OpId: OpId,
+                OpType:type
+            }
+            if (type === 1) {
+                this.$Modal.confirm({
+                    title: '温馨提示',
+                    content: `<p>是否要删除此消息</p>`,
+                    onOk: async () => {
+                        let msg = await setMessage(queryData);
+                        if (msg) {
+                            this.getMegs();
+                        }
+                    },
+                    onCancel: () => {
+                        isReme = false
+                    }
+                });
+            }
+            if (type === 2) {
+                let msg = await setMessage(queryData);
+                if (msg) {
+                    this.getMegs();
+                }
+            }
+        },
         async handleInvite (row, dealtype) {
             let queryData = {
                 sendId: row.DataIds.sendId,
@@ -78,7 +140,7 @@ export default {
             let m = await this.$store.dispatch('getNews', msgType);
             if (m) {
                 this.$store.dispatch('ACInviter', m.invite);
-                this.inviter= msg.invite;
+                this.inviter= m.invite;
             }
         },
         async signMessage (id, type, index) {}
@@ -87,6 +149,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .customized-yuan-color {
+        background: #ff3c00 !important;
+    }
     .MsgTitle {
         font-size: 14px;
         font-weight: bold;

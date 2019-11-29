@@ -3,7 +3,7 @@
         <ul class="message-left">
             <li><nuxt-link to="/Message/customized">评论消息{{getComment.MsgCount || ""}}</nuxt-link></li>
             <li><nuxt-link to="/Message/comment">定制消息{{getCusData.MsgCount || ""}}</nuxt-link></li>
-            <li><nuxt-link to="/Message/inviter">定制消息{{getInviter.MsgCount || ""}}</nuxt-link></li>
+            <li><nuxt-link to="/Message/inviter">团队邀请{{getInviter.MsgCount || ""}}</nuxt-link></li>
         </ul>
         <div class="message-right">
             <nuxt-child />

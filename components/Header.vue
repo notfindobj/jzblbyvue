@@ -54,7 +54,7 @@
                                 <nuxt-link to="/Message/comment">定制消息<Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                             <DropdownItem >
-                                <nuxt-link to="/Message/inviter">定制消息<Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
+                                <nuxt-link to="/Message/inviter">团队邀请<Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>

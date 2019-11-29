@@ -185,25 +185,25 @@
             let tr = await store.dispatch('TribeVisiting', Trid);
             let data = await store.dispatch('getTribeInfo', id);
             let ent = await store.dispatch('isMyTribe', id);
-            let isIsEnt = 2
+            let IsEnt = 2
             if (ent) {
-                isIsEnt = ent
+                IsEnt = ent
             }
             return {
                 userId: id,
-                isIsEnt,
+                IsEnt,
                 itIsMe,
                 tribeInfo: data
             }
         },
         created () {
             // 公司
-            if (this.isIsEnt === 1) {
+            if (this.IsEnt === 1) {
                 this.getTypeMeunList({}, 123);
                 this.isEnt = true
             }
             // 个人
-            if (this.isIsEnt === 2) {
+            if (this.IsEnt === 2) {
                 this.isEnt = false
                 this.currentIndex = 0;
                 this.PersonalCenter = 'PersonalCenter';
