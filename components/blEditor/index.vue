@@ -202,7 +202,10 @@ export default {
                 }
             })
             _this.editor.customConfig.onchange = function (html) {
-                _this.editor.txt.html(_this.getSimpleText(html))
+                var reg = new RegExp(/(分享建筑动态！)|(项目详情！)/);
+                if(html.match(reg)){
+                    _this.editor.txt.html(_this.getSimpleText(html))
+                }
                 _this.onchange(html)
             }
             _this.editor.create();
@@ -349,7 +352,7 @@ export default {
             }
             this.$emit('auxiliary',content )
         },
-        clearEditor (placeholders) {
+        clearEditor (placeholders ='') {
             this.isPanel = false;
             this.imgsrc = [];
             this.imgList = [];

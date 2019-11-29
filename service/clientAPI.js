@@ -287,9 +287,17 @@ export const addFeedbackData = async params => {
 }
 // 公司信息
 export const getCompanyInfo = async params => {
-  return await request.post(`CompanyInfo/GetCompanyInfo`, params)
+  return await request.get(`CompanyInfo/GetCompanyInfo`, params)
 }
 // 搜索用户
 export const getQueryData = async params => {
-  return await request.post(`Query/QueryData`, params)
+  return await request.get(`CompanyInfo/QueryUserInvite?KeyValue=${params}`)
+}
+// 邀请用户
+export const addInviteUser = async params => {
+  return await request.post(`CompanyInfo/InviteUser`, params)
+}
+// 处理邀请信息
+export const handleInviteUser = async params => {
+  return await request.post(`CompanyInfo/UserDealInvite`, params)
 }

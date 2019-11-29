@@ -31,17 +31,20 @@
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>
-                        <Dropdown placement="bottom-start">
-                            <Badge :count="allMessage" class-name="badge-sty"><i class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
-                            <DropdownMenu slot="list">
-                                <DropdownItem >
-                                    <nuxt-link to="/Message/customized">评论消息<Badge v-if="Message.pinglun && Message.pinglun.MsgCount > 0" :count="Message.pinglun.MsgCount"></Badge></nuxt-link>
-                                </DropdownItem>
-                                <DropdownItem >
-                                    <nuxt-link to="/Message/comment">定制消息<Badge v-if="Message.dingzhi && Message.dingzhi.MsgCount > 0" :count="Message.dingzhi.MsgCount"></Badge></nuxt-link>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
+                        <Dropdown class="right-select">
+                        <Badge :count="getComment.MsgCount + getCusData.MsgCount  + getInviter.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
+                        <DropdownMenu slot="list">
+                            <DropdownItem >
+                                <nuxt-link to="/Message/customized">评论消息<Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>
+                            </DropdownItem>
+                            <DropdownItem >
+                                <nuxt-link to="/Message/comment">定制消息<Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
+                            </DropdownItem>
+                            <DropdownItem >
+                                <nuxt-link to="/Message/inviter">定制消息<Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
+                            </DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                     </li>
                 </ul>
             </div>
@@ -140,7 +143,7 @@
                 searchNav: state => state.overas.searchNav,
                 showSign: state => state.overas.showSign,
             }),
-            ...mapGetters(['isLogin'])
+            ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter'])
         },
         components: {
             signPage,
@@ -150,7 +153,7 @@
             if (sessionStorage.getItem('searchIndex')) {
                 this.searchNavs = sessionStorage.getItem('searchIndex')
             }
-            if (this.auth) {
+            if (this.isLogin) {
                 this.getMessage()
             }
             this.region = localStorage.getItem('region') || '上海';
@@ -184,7 +187,10 @@
             async getMessage () {
                 let msg = await this.$store.dispatch('getNews');
                 if (msg) {
-                    this.Message = msg
+                   this.Message = msg;
+                    this.$store.dispatch('ACCusData', msg.dingzhi);
+                    this.$store.dispatch('ACComment', msg.pinglun);
+                    this.$store.dispatch('ACInviter', msg.invite);
                     Object.keys(msg).forEach(item =>{
                         this.allMessage += msg[item].MsgCount;
                     })

@@ -58,6 +58,7 @@ import { getUserData } from '../service/clientAPI'
 export default {
     name: 'PersonalCenter',
     middleware: 'message',
+    layout: 'main',
     data () {
         return {
             GetUserData: {

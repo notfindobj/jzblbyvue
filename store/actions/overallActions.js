@@ -20,6 +20,10 @@ export const overallActions ={
     ACComment({ commit, state }, params) {
         commit("setComment", params)
     },
+    // 设置定制消息
+    ACInviter({ commit, state }, params) {
+        commit("setInviter", params)
+    },
     // 设置cookie
     LOGININ ({ commit, state }, params) {
         commit("setAuth", params)

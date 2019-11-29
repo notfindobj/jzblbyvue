@@ -10,8 +10,9 @@ export const overas = {
         queryBaseData: {},  // 档案库导航
         wxRegister: {}, // 微信注册时的信息,
         sessionStorage: {}, // 存储的数据
-        dingzhi: {},// 存储信息
-        pinglun: {}
+        dingzhi: {},// 存储定制信息
+        pinglun: {},// 存储评论信息
+        inviter: {},// 存储邀请信息
     },
     actions: overallActions,
     getters: overallGetters,

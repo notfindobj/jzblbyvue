@@ -45,13 +45,16 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <Badge :count="getComment.MsgCount + getCusData.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
+                        <Badge :count="getComment.MsgCount + getCusData.MsgCount + getInviter.MsgCount " class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem >
                                 <nuxt-link to="/Message/customized">评论消息<Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                             <DropdownItem >
                                 <nuxt-link to="/Message/comment">定制消息<Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
+                            </DropdownItem>
+                            <DropdownItem >
+                                <nuxt-link to="/Message/inviter">定制消息<Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
@@ -83,10 +86,10 @@ export default {
             auth: state => state.overas.auth,
             showSign: state => state.overas.showSign,
         }),
-        ...mapGetters(['isLogin', 'getCusData', 'getComment'])
+        ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter'])
     },
     mounted () {
-        if (this.auth) {
+        if (this.isLogin) {
             this.getMessage()
         }
         let LOGGEDTome = setInterval(() => {
@@ -105,6 +108,7 @@ export default {
                 this.Message = msg;
                 this.$store.dispatch('ACCusData', msg.dingzhi);
                 this.$store.dispatch('ACComment', msg.pinglun);
+                this.$store.dispatch('ACInviter', msg.invite);
                 Object.keys(msg).forEach(item =>{
                     this.allMessage += msg[item].MsgCount;
                 })
@@ -183,6 +187,12 @@ export default {
                 this.$store.dispatch('LOGININ', null);
                 localStorage.removeItem('LOGININ');
                 this.$Message.success('退出成功！');
+                if (['HeAndITribal-id','Message-customized','Message-comment','Message-inviter',
+                'attention','PersonalCenter-myMessage-userId','PersonalCenter-accountSecurity', 
+                'PersonalCenter-accountBinding', 'PersonalCenter-accountBinding', 'PersonalCenter-records',
+                'PersonalCenter-receivingAddress'].includes(this.$route.name)) {
+                    this.$router.push({name: 'index'})
+                }
             }
         },
     }

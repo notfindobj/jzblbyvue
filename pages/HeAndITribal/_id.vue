@@ -26,11 +26,44 @@
                         </div>
                         <!-- 公司首页 -->
                         <div v-if="PersonalCenter === 'comHome'" class="comHome">
+                            <div>
+                                <h2>{{CompanyIntro.companyName}}</h2>
+                                <div class="comHome-content">
+                                    {{CompanyIntro.Description}}
+                                </div>
+                                <div class="comHome-other">
+                                    <p v-if="CompanyIntro.Labels"><span class="comHome-title">擅长业务：</span>{{CompanyIntro.Labels}}</p>
+                                    <p  v-if="CompanyIntro.Email"><span class="comHome-title">邮箱：</span>{{CompanyIntro.Email}}</p>
+                                    <p  v-if="CompanyIntro.Mobile"><span class="comHome-title">电话：</span>{{CompanyIntro.Mobile}}</p>
+                                    <p  v-if="CompanyIntro.ProvinceName"><span class="comHome-title">地址：</span>{{CompanyIntro.ProvinceName}}{{CompanyIntro.CityName}}{{CompanyIntro.CountyName}}</p>
+                                </div>
+                            </div>
                             <div class="comHome-teamuserlist">
                                 <span class="comHome-teamuserlist-name">主创团队</span>
                                 <span class="comHome-teamuserlist-btn" @click="clickTeamuser">邀请队友</span>
                             </div>
                             <div>
+                                <div class="Swiper-nominate">
+                                    <div class="swiper-wrapper">
+                                        <template v-for="(items, index) in teamuserlist">
+                                            <div class="swiper-slide" :key="index">
+                                                <div class="swiper-slide-item">
+                                                    <nuxt-link target="_blank" :to="{name: 'HeAndITribal-id', params: {id:items.UserId}}">
+                                                    <img :src="(items.HeadIcon)" alt="">
+                                                    </nuxt-link>
+                                                    <div class="swiper-RealName">
+                                                        <span>姓名：{{items.RealName}}</span>
+                                                        <span>人气：{{items.Pop}}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                    <div class="swiper-pagination swiper-pagination-bullets"></div>
+                                </div>
+                                <div class="empty-teamuserlist" v-if="teamuserlist.length < 0">
+                                    暂无队员，<span class="empty-teamuserlist-invitation"  @click="clickTeamuser">立即邀请</span>
+                                </div>
                             </div>
                         </div>
                         <crollBox v-if="PersonalCenter !== 'comHome'" :isLast="isLast" @willReachBottom ="willReachBottom" >
@@ -59,16 +92,20 @@
                 <span><h3>邀请队友</h3></span>
             </p>
             <div>
-                {{model9}}
-                <Select v-model="model9" filterable remote :remote-method="remoteMethod1" :loading="loading1">
-                    <Option value="New York" label="New York" >
-                        <span>New York</span>
-                        <span style="float:right;color:#ccc">America</span>
+                <!-- 有bug -->
+                <Select ref="LongRange" v-model="beinvite" filterable remote clearable :remote-method="remoteMethod1" @on-clear="clearSelect" :loading="loading1">
+                    <Option v-for="(item, index) in Teammate" :value="item.UserId" :label="item.NickName"  :key="index" :disabled="item.isinvite === 1 ? true : false">
+                        <div class="Teammate">
+                            <span class="Teammate-HeadIcon">
+                                <img v-lazy="item.HeadIcon" :alt="item.NickName">
+                            </span>
+                            <span class="Teammate-right">{{item.NickName}}</span>
+                        </div>
                     </Option>
                 </Select>
             </div>
             <div slot="footer">
-                <Button type="primary" size="large" long>Delete</Button>
+                <Button type="primary" size="large" long @click="inTeammate">确定邀请</Button>
             </div>
         </Modal>
     </div>
@@ -81,8 +118,10 @@
     import Heads from './head'
     import ToTop from '../../components/toTop'
     import crollBox from '../../components/crollBox'
-    import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice, getCompanyInfo, getQueryData} from '~/service/clientAPI'
+    import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice, getCompanyInfo, getQueryData, addInviteUser} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
+    import Swiper from "swiper"
+    import 'swiper/dist/css/swiper.min.css'
     export default {
         layout: 'main',
         name: 'PersonalCenter',
@@ -117,8 +156,10 @@
                 teamuserlist: {},
                 isEnt: true, // true 公司 false 个人
                 isTeamuser: false,
-                model9: '',
+                beinvite: '',
                 loading1: false,
+                Teammate: [], // 搜索的队友
+                CompanyIntro: {}
             }
         },
         computed: {
@@ -143,41 +184,93 @@
             }
             let tr = await store.dispatch('TribeVisiting', Trid);
             let data = await store.dispatch('getTribeInfo', id);
+            let ent = await store.dispatch('isMyTribe', id);
+            let isIsEnt = 2
+            if (ent) {
+                isIsEnt = ent
+            }
             return {
                 userId: id,
+                isIsEnt,
                 itIsMe,
                 tribeInfo: data
             }
         },
         created () {
-            // if (this.userInfoID.IsEnt === 1) {
-            //     this.getTypeMeunList({}, 123);
-            //     this.isEnt = true
-            // }
-            // if (this.userInfoID.IsEnt === 2) {
+            // 公司
+            if (this.isIsEnt === 1) {
+                this.getTypeMeunList({}, 123);
+                this.isEnt = true
+            }
+            // 个人
+            if (this.isIsEnt === 2) {
                 this.isEnt = false
                 this.currentIndex = 0;
                 this.PersonalCenter = 'PersonalCenter';
                 this.getTypeMeunList();
-            // }
+            }
             if (this.$route.query.id === undefined || this.$route.query.id === this.userInfoID.UserId) {
                 this.itIsMe = false;
             }  else {
                 this.itIsMe = true;
             }
         },
+        watch: {
+            teamuserlist: function(val) {
+                if(val.length > 0) {
+                    this.initSwiper()
+                }
+            }
+        },
         methods: {
+            initSwiper () {
+                let swiper = new Swiper (".Swiper-nominate",{
+                    slidesPerView: 4,
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    slidesPerGroup: 1,
+                    observer:true,//修改swiper自己或子元素时，自动初始化swiper
+                　　 observeParents:true,//修改swiper的父元素时，自动初始化swiper
+                    //使用分页器
+                    paginationClickable :true,
+                    pagination: {
+                    　　el: '.swiper-pagination',
+                        clickable: true,
+                        renderBullet(index, className) {
+                            return `<span class="${className} swiper-pagination-bullet-custom">${index + 1}</span>`
+                        }
+                    },    
+                    autoplay: {
+                    　　disableOnInteraction: false,  //触碰后自动切换停止
+                　　}
+                })
+            },
+            async inTeammate () {
+                let queryData = {
+                   beinviteId:  this.beinvite
+                }
+                let msg = await addInviteUser(queryData);
+                if (msg) {
+                    this.$Notice.success({
+                        title: '邀请队友',
+                        desc: '邀请成功，请等待对方同意！'
+                    });
+                    this.isTeamuser = false;
+                }
+            },
+            clearSelect () {
+                this.Teammate = [];
+            },
             async remoteMethod1 (query) {
                 if (query) {
-                    let queryData = {
-                        QueryValue: query,
-                        QueryKey: '',
-                        TypeId: ''
-                    }
                     this.loading1 = true;
-                    let msg = await getQueryData(queryData)
+                    let msg = await getQueryData(query)
+                    if (msg) {
+                        this.$set(this, 'Teammate', msg)
+                    } else {
+                        this.$set(this, 'Teammate', [])
+                    }
                     this.loading1 = false;
-                    console.log(msg)
                 }
             },
             clickTeamuser () {
@@ -190,6 +283,7 @@
                 }
                 let msg = await getCompanyInfo(queryData);
                 if (msg) {
+                    this.CompanyIntro = msg;
                     this.teamuserlist = msg.teamuserlist;
                 }
             },
@@ -452,6 +546,70 @@
     }
 </script>
 <style lang="less" scoped>
+    .comHome-content {
+        padding: 10px 0 15px 20px;
+    }
+    .comHome-other {
+        padding: 0 0 15px 20px;
+        font-size: 14px;
+    }
+    .comHome-title {
+        color: #FF3C00;
+    }
+    .swiper-slide-item {
+        text-align: center;
+    }
+    .swiper-RealName {
+        color: #333333;
+    }
+    /deep/.swiper-pagination-bullet{
+        width: 18px;
+        height: 18px;
+        color: #fff;
+    }
+    /deep/.swiper-pagination-bullet-active {
+        background: #FF3C00;
+    }
+    .Swiper-nominate {
+        padding: 20px 0;
+        height: 180px;
+        overflow: hidden;
+        position: relative;
+        img {
+            width: 120px;
+            height: 120px;
+        }
+    }
+    .empty-teamuserlist {
+        color: #808080;
+        text-align: center;
+        padding: 10px 0;
+        &-invitation{
+            color: #FF3C00;
+            cursor: pointer;
+            &:hover{
+                text-decoration: underline;
+            }
+        }
+    }
+    .Teammate {
+        display: flex;
+        &-HeadIcon {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            overflow: hidden;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
+        &-right {
+            padding-left: 10px;
+            line-height: 25px;
+        }
+    }
     .comHome {
         background: #ffffff;
         padding: 10px 15px;

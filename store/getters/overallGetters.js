@@ -20,5 +20,8 @@ export const overallGetters = {
     },
     getComment (state) {
         return state.pinglun
+    },
+    getInviter (state) {
+        return state.inviter
     }
 }

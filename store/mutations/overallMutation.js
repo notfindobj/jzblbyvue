@@ -24,6 +24,9 @@ export const overallMutation = {
   setComment(state, param = {}) {
     state.pinglun = param
   },
+  setInviter(state, param = {}) {
+    state.inviter = param
+  },
   // 存储数据
   setSessionStorage (state, row) {
     state.sessionStorage[row.key] = row.value;

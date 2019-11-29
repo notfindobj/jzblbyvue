@@ -3,15 +3,15 @@
         <div class="customized">
             <div class="customized-title">
                <div class="customized-title-left">
-                    <span>有 <span class="MsgCount-color">{{customized.MsgCount}}</span> 条服务消息未读</span>
-                    <span class="MsgCount-all" @click="signMessage(customized.Msg, 2)">全部设为已读</span>
+                    <span>有 <span class="MsgCount-color">{{inviter.MsgCount}}</span> 条服务消息未读</span>
+                    <span class="MsgCount-all" ></span>
                </div>
                <div>
-                   <span class="MsgCount-all-del"  @click="signMessage(customized.Msg, 1)">全部删除</span>
+                   <span class="MsgCount-all-del" >忽略全部</span>
                </div>
             </div>
             <ul class="customized-content">
-                <li v-for="(item, index) in customized.Msg" :key="index" @click="signMessage(item, 2)">
+                <li v-for="(item, index) in inviter.Msg" :key="index">
                    <div class="customized-content-title">
                        <div>
                            <span :class="item.ReadStatu === 1 ? 'customized-yuan customized-yuan-color': 'customized-yuan'"></span>
@@ -19,19 +19,19 @@
                            <span>{{item.CreateDate}}</span>
                        </div>
                        <div class="customized-content-title-right">
-                           <span class="customized-content-title-right-del" @click="signMessage(item, 1, index)" >删除</span>
-                           <span v-if="item.ReadStatu === 1" @click="signMessage(item, 2)">标记为已读</span>
-                           <span v-else>已读</span>
+                           <span class="customized-content-title-right-del" @click="handleInvite(item, 2)">忽略</span>
+                           <span class="customized-content-title-right-agree" v-if="item.ReadStatu === 1" @click="handleInvite(item, 1)">同意</span>
+                           <span v-else>已处理</span>
                        </div>
                    </div>
-                   <emotHtml class="customized-content-detailed" v-model="item.MsgContext" @click.native="viewDetails(item)"></emotHtml>
+                   <!-- <emotHtml class="customized-content-detailed" v-model="item.MsgContext" @click.native="viewDetails(item)"></emotHtml> -->
                 </li>
             </ul>
         </div>
     </div>
 </template>
 <script>
-import {setMessage} from "../../../service/clientAPI"
+import {handleInviteUser} from "../../../service/clientAPI"
 import emotHtml from "../../../components/emotHtml"
 import {analogJump} from '../../../plugins/untils/public'
 export default {
@@ -40,91 +40,48 @@ export default {
     },
     data () {
         return {
-            customized: {}
+            inviter: {}
         }
     },
     async asyncData({route, store}) {
         let msgType = {
             page: 1,
-            msgType: 0
+            msgType: 3
         }
         let msg = await store.dispatch('getNews', msgType);
         return {
-            customized:msg.pinglun
+            inviter: msg.invite
         }
     },
     methods: {
-        viewDetails (row) {
-            this.signMessage(row, 2)
-            let routeData = this.$router.resolve({
-                name: 'DataDetails',
-                query: {id: row.DataIds.itemId, layout: true }
-            })
-            analogJump(routeData.href);
+        async handleInvite (row, dealtype) {
+            let queryData = {
+                sendId: row.DataIds.sendId,
+                dealtype: dealtype
+            }
+            let msg = await handleInviteUser(queryData)
+            if (msg) {
+                if (dealtype === 1) {
+                    this.$Notice.success({
+                        title: '',
+                        desc: `恭喜你已加入${row.MsgTitle}!`
+                    });
+                }
+                this.getMegs()
+            }
         },
         async getMegs () {
             let msgType = {
                 page: 1,
-                msgType: 0
+                msgType: 3
             }
             let m = await this.$store.dispatch('getNews', msgType);
             if (m) {
-                this.$store.dispatch('ACComment', m.pinglun);
-                this.customized = m.pinglun;
+                this.$store.dispatch('ACInviter', m.invite);
+                this.inviter= msg.invite;
             }
         },
-        async signMessage (id, type, index) {
-            let OpId = ""
-            if (id.constructor  === Object) {
-                OpId = id.OpId
-            }
-            if (id.constructor === Array) {
-                let opIdArr = []
-                id.forEach(items => {
-                   opIdArr.push(items.OpId);
-                })
-                OpId = opIdArr.join(',')
-            }
-            let queryData = {
-                OpId: OpId,
-                OpType:type
-            }
-            let title =""
-            let content = ""
-            title = type === 2 ? "阅读消息": "删除消息"
-            content= type === 2 ? `确定全部阅读消息？` : `删除消息后不可恢复，确定要删除嘛？`
-            if (id.constructor  === Object && type == 2) {
-                let msg = await setMessage(queryData);
-                if (msg) {
-                   this.getMegs()
-                } 
-            } else {
-                this.$Modal.confirm({
-                    title: title,
-                    content: `<p>${content}</p>`,
-                    onOk: async () => {
-                        let msg = await setMessage(queryData);
-                        if (msg) {
-                            if (id.constructor  === Object) {
-                                if (type == 2) {
-                                    this.$set(id, "ReadStatu", 0);
-                                    this.getMegs()
-                                }
-                                if (type == 1) {
-                                    this.customized.Msg.splice(index, 1);
-                                }
-                            }
-                            if (id.constructor === Array) {
-                                this.getMegs()
-                            }
-                        } 
-                    },
-                    onCancel: () => {
-                        return false
-                    }
-                });
-            }
-        }
+        async signMessage (id, type, index) {}
     },
     
 }
@@ -159,6 +116,8 @@ export default {
         height: 15px;
         border-radius: 50%;
         background: #dddddd;
+        position: relative;
+        top: 2px;
     }
     .MsgCount-color {
         color: #ff3c00;
@@ -194,6 +153,12 @@ export default {
                 &-right {
                     &-del {
                         display: none;
+                    }
+                    &-agree {
+                        cursor: pointer;
+                        &:hover {
+                            color: #ff3c00;
+                        }
                     }
                 }
                 &:hover &-right-del{

@@ -124,4 +124,8 @@ export const serverRequest = {
   async geOwnItemList({commit}, params) {
     return await request.post(`ItemList/GetOwnItemList`, params)
   },
+  // 判断是不是公司
+  async isMyTribe({commit}, params) {
+    return await request.post(`MyTribe/IsEnt?userId=${params}`)
+  },
 }
