@@ -48,7 +48,7 @@
                                         <template v-for="(items, index) in teamuserlist">
                                             <div class="swiper-slide" :key="index">
                                                 <div class="swiper-slide-item">
-                                                    <nuxt-link target="_blank" :to="{name: 'HeAndITribal-id', params: {id:items.UserId}}">
+                                                    <nuxt-link target="_blank" :to="{name: 'HeAndITribal-id', query: {id:items.UserId}}">
                                                     <img :src="(items.HeadIcon)" alt="">
                                                     </nuxt-link>
                                                     <div class="swiper-RealName">
@@ -185,6 +185,7 @@
             let tr = await store.dispatch('TribeVisiting', Trid);
             let data = await store.dispatch('getTribeInfo', id);
             let ent = await store.dispatch('isMyTribe', id);
+           
             let IsEnt = 2
             if (ent) {
                 IsEnt = ent
