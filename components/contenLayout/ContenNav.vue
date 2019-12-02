@@ -135,10 +135,11 @@ export default {
       }
     },
     mounted () {
-        this.initSwiper()
+        this.initSwiper();
     },
     methods: {
         initSwiper () {
+            let _this = this;
             this.$nextTick(() => {
                 this.swiperBox = new Swiper (`.swiper-boxs${this.swiperKey}`,{
                     navigation: {
@@ -156,9 +157,15 @@ export default {
             　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
                     autoplay: {
                         delay: 2500,
-                    　　disableOnInteraction: false,  //触碰后自动切换停止
+                        disableOnInteraction: true,  //触碰后自动切换停止
                 　　}
                 })
+                this.swiperBox.el.onmouseover = function(){ //鼠标放上暂停轮播
+                    _this.swiperBox.autoplay.stop();
+                }
+                this.swiperBox.el.onmouseleave = function(){
+                    _this.swiperBox.autoplay.start();
+                }
             })
         },
         viewDetails (row) {
