@@ -49,7 +49,7 @@
                 </li>
             </ul>
         </div>
-        <div class="swiper-boxs" v-show="queryConditions && queryConditions.length <= 0">
+        <div :class="`swiper-boxs${swiperKey} swiper-boxs`" v-show="queryConditions && queryConditions.length <= 0" :key="swiperKey" >
             <div class="swiper-wrapper">
                 <div v-for="(items, index) in userItem" class="swiper-slide" :key="index">
                     <div class="swiper-slide-item" >
@@ -76,7 +76,7 @@
 </template>
 <script>
 import {mapGetters, mapState} from 'vuex'
-import {analogJump} from '../../plugins/untils/public'
+import {analogJump, getRanNum} from '../../plugins/untils/public'
 import Swiper from "swiper"
 import 'swiper/dist/css/swiper.min.css'
 export default {
@@ -112,7 +112,8 @@ export default {
             currentInex: '',
             oneMeun: [],
             clicked: -1,
-            swiperBox: null
+            swiperBox: 0,
+            swiperKey: 'adashasnda'
         }
     },
     computed: {
@@ -129,7 +130,8 @@ export default {
     },
     watch: {
       userItem: function (val, oval) {
-        this.swiperBox.updateSlides();
+        this.swiperKey = getRanNum(10);
+        this.initSwiper()
       }
     },
     mounted () {
@@ -137,24 +139,26 @@ export default {
     },
     methods: {
         initSwiper () {
-            this.swiperBox = new Swiper (".swiper-boxs",{
-                navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev',
-                },
-                slidesPerView: 4,
-                spaceBetween: 20,
-                centeredSlides: true,
-                slidesPerGroup: 1,
-                notNextTick: true,
-                loop:true,  //循环
-                loopFillGroupWithBlank: true,  
-                observer:true,//修改swiper自己或子元素时，自动初始化swiper
-        　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
-                autoplay: {
-                    delay: 2500,
-                　　disableOnInteraction: false,  //触碰后自动切换停止
-            　　}
+            this.$nextTick(() => {
+                this.swiperBox = new Swiper (`.swiper-boxs${this.swiperKey}`,{
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    slidesPerView: 4,
+                    spaceBetween: 20,
+                    centeredSlides: true,
+                    loop:true,  //循环
+                    loopedSlides: 2,
+                    loopAdditionalSlides: 2,
+                    loopFillGroupWithBlank: true,
+                    observer:true,//修改swiper自己或子元素时，自动初始化swiper
+            　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
+                    autoplay: {
+                        delay: 2500,
+                    　　disableOnInteraction: false,  //触碰后自动切换停止
+                　　}
+                })
             })
         },
         viewDetails (row) {
@@ -208,6 +212,10 @@ export default {
         margin-bottom: 10px;
         overflow: hidden;
         position: relative;
+        /deep/.swiper-slide {
+            width: 290px;
+            height: 200px;
+        }
         .swiper-slide-item {
             cursor: pointer;
             width: 290px;
