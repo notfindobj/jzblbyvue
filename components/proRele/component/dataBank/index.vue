@@ -360,6 +360,7 @@ export default {
             if (isBreak) {
                 return false
             }
+            this.typeAttrList
             this.typeAttrList.forEach(ele => {
                 let obg = {
                     AttributesId: "",
@@ -371,7 +372,7 @@ export default {
                 }
                 if (ele.MapLinkage) {
                     if (this.cascaderAddress.length > 0) {
-                        obg.MapLinkage = this.cascaderAddress[cascaderAddress.length - 1] + this.address ? this.address : '';
+                        obg.MapLinkage = this.cascaderAddress[this.cascaderAddress.length - 1] + (this.address ? this.address : '');
                     } else {
                         this.$Message.warning('请选择属性： 所在地');
                         return false;

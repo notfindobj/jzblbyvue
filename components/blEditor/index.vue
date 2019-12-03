@@ -3,8 +3,11 @@
         <div class="editor-box">
             <div>
                 <div ref="toolbar" class="editor-toolbar"></div>
-                <div class="text" ref="editor">
-                    <p>{{placeholders}}</p>
+                <div class="jzeditor">
+                    <div class="text" ref="editor">
+                        <p>{{placeholders}}</p>
+                    </div>
+                    <div class="jzeditor-placeholder" @click="jzEdPlac" v-if="showPlaceholder" ref="jzeditor"></div>
                 </div>
             </div>
             <div class="editor-footer">
@@ -106,7 +109,7 @@ export default {
         },
         placeholders: {
             type: String,
-            default: '分享建筑动态！'
+            default: '分享建筑动态！'  
         }
     },
     components: {
@@ -147,6 +150,7 @@ export default {
             isAgree: false,
             publishMode: '公开',
             privacyList: [],
+            showPlaceholder: false
         }
     },
     created () {
@@ -156,6 +160,12 @@ export default {
         this.initEditor();
     },
     methods: {
+        jzEdPlac () {
+            if (this.$refs.jzeditor) {
+                this.$refs.editor.focus()
+                console.log('...........')
+            }
+        },
         initEditor () {
             let _this = this;
             const Editor = process.browser ? require('wangeditor') : undefined;
@@ -202,6 +212,12 @@ export default {
                 }
             })
             _this.editor.customConfig.onchange = function (html) {
+                let placeholderValue = _this.editor.txt.text();
+                if (placeholderValue.length > 0) {
+                    _this.showPlaceholder= false
+                } else {
+                    _this.showPlaceholder= true
+                }
                 var reg = new RegExp(/(分享建筑动态！)|(项目详情！)/);
                 if(html.match(reg)){
                     _this.editor.txt.html(_this.getSimpleText(html))
@@ -314,7 +330,6 @@ export default {
         },
         // 文本域发生变化
         onchange (html) {
-            console.log('asd')
             // html 即变化之后的内容
             if (this.imgsrc.length !== 0) {
                 let nowimgs = this.getSrc(html)
@@ -374,6 +389,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .jzeditor {
+        position: relative;
+        &-placeholder {
+            position: absolute;
+            top: 5px;
+            z-index: 1111;
+            left: 5px;
+        }
+    }
     /deep/.w-e-toolbar .w-e-menu {
         z-index: 99 !important;
     }
