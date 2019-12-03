@@ -69,8 +69,36 @@
             ...mapGetters(['getSessionStorage'])
         },
         async asyncData({ app, store, route }) {
-            let baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
-            let baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
+            let baseSearchItem = {}
+            if (!(store.state.overas.sessionStorage.baseSearchItem)) {
+                // 搜索页导航数据
+                baseSearchItem = {
+                    key: 'baseSearchItem',
+                    value: {
+                        Pagination: {
+                            SortType: '1',
+                            KeyWords: "",
+                            Order: true,
+                            Page: 1,
+                            Rows: 32
+                       }
+                    }
+                }
+                store.dispatch('Serverstorage', baseSearchItem);
+            }
+            baseSearchItem = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchItem));
+            let baseSearchNav  = {}
+            if (!(store.state.overas.sessionStorage.baseSearchNav)) {
+                // 搜索页导航数据
+                baseSearchNav = {
+                    key: 'baseSearchNav',
+                    value: {
+                        ClassTypeArrList: [{"AttrKey": "e5082f90-f590-4107-8d42-2d37897ef261","AttrValue": "DesignLib"}],
+                    }
+                }
+                store.dispatch('Serverstorage', baseSearchNav);
+            }
+            baseSearchNav = JSON.parse(JSON.stringify(store.state.overas.sessionStorage.baseSearchNav));
             baseSearchItem.Pagination.Page = 1;
             let showLayout = baseSearchNav.title !== '建筑规范';
             // 导航

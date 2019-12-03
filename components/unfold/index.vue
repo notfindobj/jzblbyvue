@@ -4,6 +4,8 @@
         <div v-if="isUnfold" v-html="html"></div>
         <span class="unfold-btn" v-if="redArticle > height" @click="Unfold">
             {{!isUnfold ?'展开全文': '收起全文'}}
+           <i v-if="!isUnfold" class="icon iconfont icon-jiantouxia"></i>
+           <i v-if="isUnfold" class="icon iconfont icon-jiantoushang"></i>
         </span>
     </div>
 </template>

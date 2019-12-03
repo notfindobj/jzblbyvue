@@ -1,14 +1,14 @@
 <template>
     <div>
-        <Form ref="formInline" :model="userItem" :label-width="0">
-            <FormItem prop="userName">
+        <Form ref="formInline" :model="userItem" :rules="ruleInline"  :label-width="0">
+            <FormItem prop="mobile">
                 <Input v-model="userItem.mobile" size="large" type="text" placeholder="请输入手机号码"/>
             </FormItem>
-            <FormItem prop="passWord">
+            <FormItem prop="password">
                 <Input v-model="userItem.password" size="large" type="password" placeholder="请输入密码" @keyup.enter.native="handleSubmit"/>
             </FormItem>
             <FormItem>
-                <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit">登录</Button>
+                <Button type="primary" size="large" class="desabled-btn" @click="handleSubmit('formInline')">登录</Button>
             </FormItem>
         </Form>
         <div class="sign-some">
@@ -43,14 +43,14 @@
                 },
                 ruleInline: {
                     mobile: [
-                        { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+                        { required: true, message: '手机号不能为空', trigger: 'blur' }
                     ],
-                    passWord: [
-                        { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+                    password: [
+                        { required: true, message: '密码不能为空', trigger: 'blur' },
                         {
                             type: 'string',
                             min: 6,
-                            message: 'The password length cannot be less than 6 bits',
+                            message: '密码不能少于6位',
                             trigger: 'blur'
                         }
                     ]
@@ -90,28 +90,32 @@
             retrieve(val) {
                 this.$store.dispatch('LOGGEDIN', val);
             },
-            async handleSubmit() {
-                let postData = {
-                    mobile: this.userItem.mobile,
-                    password: this.userItem.password
-                }
-                let msg = await login(postData);
-                if (msg) {
-                    // ApprovedType 0 审核中 1 不通过
-                    if (msg.ApprovedType === 0) {
-                        this.$Message.warning('您的企业账号还在审核中，请耐心等待！');
-                        return false
-                    } 
-                    if (msg.ApprovedType === 1) {
-                        localStorage.setItem('entInfo', JSON.stringify(msg.entInfo));
-                        this.$store.dispatch('LOGGEDIN', 'comReg');
-                    } else {
-                        this.$store.dispatch('LOGININ', msg);
-                        localStorage.setItem('LOGININ', JSON.stringify(msg))
-                        this.$store.dispatch('SETUP', false)
-                        this.$Message.success('登录成功！');
+            handleSubmit(name) {
+                this.$refs[name].validate(async (valid) => {
+                        if (valid) {
+                            let postData = {
+                            mobile: this.userItem.mobile,
+                            password: this.userItem.password
+                        }
+                        let msg = await login(postData);
+                        if (msg) {
+                            // ApprovedType 0 审核中 1 不通过
+                            if (msg.ApprovedType === 0) {
+                                this.$Message.warning('您的企业账号还在审核中，请耐心等待！');
+                                return false
+                            } 
+                            if (msg.ApprovedType === 1) {
+                                localStorage.setItem('entInfo', JSON.stringify(msg.entInfo));
+                                this.$store.dispatch('LOGGEDIN', 'comReg');
+                            } else {
+                                this.$store.dispatch('LOGININ', msg);
+                                localStorage.setItem('LOGININ', JSON.stringify(msg))
+                                this.$store.dispatch('SETUP', false)
+                                this.$Message.success('登录成功！');
+                            }
+                        }
                     }
-                }
+                })
             }
         }
     }

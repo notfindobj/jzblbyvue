@@ -422,7 +422,7 @@ export default {
                     }
 
                     > p {
-                        width: 65px;
+                        width: 70px;
                         margin-right: 10px;
                         font-weight: bold;
                     }
