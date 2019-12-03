@@ -1,5 +1,6 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');//css样式从js文件中分离出来,需要通过命令行安装 extract-text-webpack-plugin依赖包
 const webpack = require('webpack');
+const TerserPlugin = require('terser-webpack-plugin');
 const {configUrl} = require('./LocalEnv');
 module.exports = {
   /*
@@ -28,9 +29,6 @@ module.exports = {
   // 公共CSS
   css: [
     '~assets/font-face/iconfont.css',
-    'quill/dist/quill.snow.css',
-    'quill/dist/quill.bubble.css',
-    'quill/dist/quill.core.css',
     { src: '@/assets/commom.less', lang: 'less' }
   ],
   // 插件
@@ -38,7 +36,6 @@ module.exports = {
     { src: '~plugins/my-theme/index', ssr: true },
     { src: '~plugins/vMap', ssr: true },
     { src: "~plugins/iconfont.js", ssr: false },
-    { src: '~/plugins/vue-quill-editor', ssr: false },
     { src: '~/plugins/vue-lazyload.js', ssr: false },
     { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
   ],
@@ -69,6 +66,9 @@ module.exports = {
   ** Build configuration
   */
   build: {
+    // 提取css到单独link文件
+    extractCSS: true,
+    transpile: [/^iview/],
     babel: {
       presets({ isServer }) {
         const targets = isServer ? { node: '10' } : { ie: '11' }
@@ -78,13 +78,40 @@ module.exports = {
       }
     },
     // extractCSS: { allChunks: true },
-    optimization: {
-      splitChunks: {
+    optimization: { // 配置代码压缩规则
+      minimizer: [
+        // webpack4 使用的压缩插件，用来替代webpack3的 UglifyJsPlugin
+        new TerserPlugin({
+          terserOptions: {
+            warnings: false,
+            compress: {
+              drop_console: true, // 可选：false,生产移除 console.log
+              pure_funcs: ['console.log']
+            },
+            output: {
+              // 是否保留代码注释
+              comments: false
+            },
+            cache: true,
+            parallel: true,
+            // Must be set to true if using source-maps in production
+            sourceMap: process.env.NODE_ENV !== 'production'
+          }
+        })
+      ],
+      splitChunks: { // 代码打包分割规则
+        chunks: 'all',
         cacheGroups: {
-          commons: {
-            name: "commons",
-            chunks: "initial",
-            minChunks: 2
+          libs: {
+            name: 'chunk-libs',
+            test: /[\\/]node_modules[\\/]/,
+            priority: 10,
+            chunks: 'initial' // only package third parties that are initially dependent
+          },
+          iview: {
+            name: 'chunk-ui',
+            priority: 20,
+            test: /[\\/]node_modules[\\/]_?iview(.*)/
           }
         }
       }
@@ -94,7 +121,12 @@ module.exports = {
       chunk: ({ isDev }) => isDev ? '[name].js' : '[name][chunkhash].js',
       css: ({ isDev }) => isDev ? '[name].css' : '[name][contenthash].css'
     },
-    vendor: ['iview', 'axios'],
+    vendor: ['iview', 'axios', 'video.js'],
+    // 开启打包分析
+    analyze: true,
+    assetFilter: function (assetFilter) {
+      return assetFilter.endsWith('.js')
+    },
     /*
     ** Run ESLint on save
     */

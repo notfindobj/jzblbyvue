@@ -56,7 +56,8 @@
     "less-loader": "^4.1.0",
     "postcss-hexrgba": "^1.0.1",
     "postcss-nested": "^4.1.1",
-    "postcss-responsive-type": "^1.0.0"
+    "postcss-responsive-type": "^1.0.0",
+    "terser-webpack-plugin": "^2.2.1"
   },
   "resolutions": {
     "browserslist": "4.6.3",
