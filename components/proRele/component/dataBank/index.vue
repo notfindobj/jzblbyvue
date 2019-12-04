@@ -16,9 +16,22 @@
                     </div>
                 </div>
             </FormItem>
-            <FormItem label="项目名称" prop="name">
-                <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input"></Input>
-            </FormItem>
+            <Row>
+                <Col span="12">
+                    <FormItem label="项目名称" prop="name">
+                        <Input v-model="formValidate.name" placeholder="请填写项目名称（举例；新中式su模型）" class="publish-input"></Input>
+                    </FormItem>
+                </Col>
+                <Col span="12">
+                    <FormItem label="是否原创" prop="name">
+                        <RadioGroup v-model="IsOriginal">
+                            <Radio label="true">原创</Radio>
+                            <Radio label="false">非原创</Radio>
+                        </RadioGroup>
+                        <span class="original" @click="protocol">《创意免责协议》</span>
+                    </FormItem>
+                </Col>
+            </Row>
             <FormItem label="类型选择" prop="typeString">
                 <div class="type-select">
                     <template v-for="(item) in menuList">
@@ -134,6 +147,7 @@ export default {
             address: '',
             cascaderAddress: [],
             aMap: {},
+            IsOriginal: 'false'
         }
     },
     computed: {
@@ -152,6 +166,9 @@ export default {
       }
     },
     methods: {
+        protocol () {
+
+        },
         // 获取发布的类型
         async getDataList () {
             let msg = await getDataByTypeId();
@@ -396,6 +413,7 @@ export default {
                 ItemTitleImg: this.formValidate.img,
                 CustomizeList: this.serviceSelectList,
                 AttributesList: attrList,
+                IsOriginal: _this.IsOriginal,
                 PdfModel,
                 TypeModel: {
                     TypeId: "",
@@ -423,6 +441,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .original {
+        cursor: pointer;
+    }
     .form-box {
         margin-top: 10px;
     }
@@ -450,6 +471,7 @@ export default {
         flex-wrap: wrap;
         text-align: center;
         background-color: #FEF9F7;
+        margin-top: 10px;
         #container {
             width: 100%;
             height: 100%;
@@ -459,6 +481,8 @@ export default {
         display: flex;
         flex-wrap: wrap;
         background: #FEF9F7;
+        padding-bottom: 10px;
+    
     }
     .typeAttrList-item {
         display: flex;

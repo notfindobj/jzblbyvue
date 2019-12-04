@@ -43,6 +43,8 @@ export default {
             width: 1000px;
             margin: 0 auto;
             padding-top: 30px;
+            background: #fff;
+            padding: 0 10px;
         }
         .publish-tabs {
             width: 100%;

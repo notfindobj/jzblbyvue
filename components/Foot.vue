@@ -75,7 +75,7 @@ export default {
         }
         &-buttom {
             text-align: center;
-            line-height: 79px;
+            line-height: 40px;
             font-size: 12px;
             color: #A9A8A8;
         }

@@ -28,6 +28,7 @@ export default {
     data () {
         return {
             redArticle: 0,
+            topPosition: 0
         }
     },
     mounted () {
@@ -37,18 +38,44 @@ export default {
         newAddBtn(){
             let _this = this;
             this.$nextTick(function () {
-            if (_this.$refs.redArticle) {
-                _this.redArticle = _this.$refs.redArticle.offsetHeight
-            }
+                if (_this.$refs.redArticle) {
+                    _this.redArticle = _this.$refs.redArticle.offsetHeight
+                }
             })
         },
-       getSimpleText(html){
+        ScollPostion() { //滚动条位置
+            var t, l, w, h;
+            if(document.documentElement && document.documentElement.scrollTop) {
+                t = document.documentElement.scrollTop;
+                l = document.documentElement.scrollLeft;
+                w = document.documentElement.scrollWidth;
+                h = document.documentElement.scrollHeight;
+            } else if(document.body) {
+                t = document.body.scrollTop;
+                l = document.body.scrollLeft;
+                w = document.body.scrollWidth;
+                h = document.body.scrollHeight;
+            }
+            return {
+                top: t,
+                left: l,
+                width: w,
+                height: h
+            };
+        },
+        getSimpleText(html){
             // 剔除除表情后的所有标签
             var re1 = new RegExp("<(?!(img).*(data-w-e)).*?>","g");//
             var msg = html.replace(re1,'');//执行替换成空字符
             return msg;
         },
         Unfold () {
+            let {top} = this.ScollPostion()
+            if (!this.isUnfold) {
+                this.topPosition = top
+            } else {
+                window.scrollTo(this.topPosition, this.topPosition)
+            }
             this.$emit('Unfold', !this.isUnfold)
         }
     },
