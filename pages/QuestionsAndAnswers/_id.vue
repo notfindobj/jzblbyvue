@@ -43,39 +43,7 @@
                 </div>
             </div>
             <div class="answer-list">
-                <v-comment
-                    :isShape="false"
-                    :isShow="isShowComment"
-                    :itemId="detailInfo.ItemId"
-                    :commentList="commentList"
-                    :isShowLoading="isLoadingComment"
-                    :isShowInput="false"
-                    @submitReplay="submitReplay"
-                    @delComments="delComments"
-                    @submitLike="submitLike"
-                ></v-comment>
-
-                <!--                <div-->
-                <!--                    class="answer-item"-->
-                <!--                    v-for="(item, index) in commentList"-->
-                <!--                    :key="item.CommentsId"-->
-                <!--                    v-if="index < 3"-->
-                <!--                >-->
-                <!--                    <div class="item-top">-->
-                <!--                        <div class="top-left">-->
-                <!--                            <div class="avatar">-->
-                <!--                                <img :src="item.HeadIcon" alt="">-->
-                <!--                            </div>-->
-                <!--                            <span class="user-name">{{ item.NickName }}</span>-->
-                <!--                        </div>-->
-                <!--                        <span class="top-right">{{ item.CreateDate }}</span>-->
-                <!--                    </div>-->
-                <!--                    <div class="item-middle" v-html="item.Message"></div>-->
-                <!--                    <div class="item-bottom">-->
-                <!--                        <i class="icon iconfont">&#xe664;</i>-->
-                <!--                        <span>回复</span>-->
-                <!--                    </div>-->
-                <!--                </div>-->
+                <commentTool ref="commentTool" :isTopInput="false" :itemInfo="detailInfo" v-show="true"  :firstLoading="true"/>
             </div>
         </div>
         <div class="main-right">
@@ -93,10 +61,6 @@
                         取消关注
                     </Button>
                </div>
-                <!-- <Button type="primary" class="big-btn" size="large" ghost>
-                    <i class="icon iconfont">&#xe60a;</i>
-                    我要提问
-                </Button> -->
             </div>
         </div>
         <ToTop></ToTop>
@@ -106,6 +70,7 @@
     import Viewer from 'viewerjs';
     import 'viewerjs/dist/viewer.css';
     import Emotion from '../../components/Emotion/index'
+    import commentTool from '../../components/commentTool'
     import Comment from '../../components/video/comment'
     import ToTop from '../../components/toTop'
     import { setComments, setFollow, delComment} from '../../service/clientAPI'
@@ -136,6 +101,7 @@
         components: {
             Emotion,
             ToTop,
+            commentTool,
             'v-comment': Comment
         },
         methods: {
@@ -218,21 +184,21 @@
                     this.$Message.warning('请先输入回答内容哦~');
                     return false;
                 }
-                setComments({
-                    ItemId: this.detailInfo.ItemId,
-                    ReplyId: '',
-                    ReplyUserId: '',
-                    IsReply: false,
-                    Message: this.content,
-                    ItemImgSrc: '',
-                    ScopeType: 3
-                }).then(res => {
-                    // this.$Message.success('评论成功');
-                    this.content = '';
-                    this.getComment();
-                })
+                this.$refs.commentTool.setCommentsData(undefined, undefined, undefined, this.content)
+                // setComments({
+                //     ItemId: this.detailInfo.ItemId,
+                //     ReplyId: '',
+                //     ReplyUserId: '',
+                //     IsReply: false,
+                //     Message: this.content,
+                //     ItemImgSrc: '',
+                //     ScopeType: 3
+                // }).then(res => {
+                //     // this.$Message.success('评论成功');
+                //     this.content = '';
+                //     this.getComment();
+                // })
             },
-
             // 回复
             submitReplay(params) {
                 this.isLoadingComment = true;

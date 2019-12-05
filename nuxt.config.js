@@ -67,8 +67,8 @@ module.exports = {
   */
   build: {
     // 提取css到单独link文件
-    extractCSS: true,
-    transpile: [/^iview/],
+    // extractCSS: true,
+    // transpile: [/^iview/],
     babel: {
       presets({ isServer }) {
         const targets = isServer ? { node: '10' } : { ie: '11' }

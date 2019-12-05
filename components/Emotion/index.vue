@@ -45,6 +45,8 @@
         border-radius: 4px;
         overflow: hidden;
         overflow-y: auto;
+        position: absolute;
+        z-index: 111;
     }
 
     .emotion-box-line {

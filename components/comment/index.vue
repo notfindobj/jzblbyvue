@@ -41,10 +41,6 @@ import Emotion from '../Emotion'
  import { uploadFile } from '../../service/clientAPI'
 export default {
     props: {
-        // value : {
-        //     type: String,
-        //     default: '',
-        // },
         placeholder: {
             type: String,
             default: '来说两句吧...',
@@ -118,6 +114,8 @@ export default {
 <style lang="less" scoped>
     .comment-box {
         // padding: 10px 10px;
+        margin-top: 7px;
+        margin-bottom: 5px;
     }
     .comment {
         display: flex;

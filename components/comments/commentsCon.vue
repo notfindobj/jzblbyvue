@@ -37,21 +37,13 @@
                 />
             </div>
         </div>
-        <!-- 评论信息 -->
-        <discuss
-            class="comment-scroll"
-            :discussData="comments"
-            @commentValue="discussValue"
-            @somePraise="somePraise"
-            @delComment="delComment"
-        />
+        <commentTool ref="commentTool" :isTopInput="false" :itemInfo="publish" v-show="true"  :firstLoading="true"/>
     </div>
 </template>
 
 <script>
-  import comment from '../comment'
-  import discuss from './discuss'
-
+import comment from '../comment'
+import commentTool from '../commentTool'
   export default {
     name: 'commentsCon',
     props: {
@@ -85,42 +77,29 @@
     },
     components: {
       comment,
-      discuss
+      commentTool
     },
     methods: {
-      // 项目点赞
-      thumbsUp(item) {
-        this.$emit('thumbsUp', item)
-      },
-      // 转发
-      Forward(item) {
-        this.$emit('Forward', item)
-      },
-      // 收藏
-      Collection(item) {
-        this.$emit('Collection', item)
-      },
-      // 评论
-      commentValue() {
-        this.$emit('commentValue', this.publish, this.commentV)
-      },
-      discussValue(row, val) {
-        this.$emit('discussValue', row, val)
-      },
-      delComment (row) {
-        this.$emit('delComment', row)
-      },
-      // 评论点赞
-      somePraise(item) {
-        this.$emit('somePraise', item)
-      },
-      goTodetails(inx) {
-        alert(inx)
+        // 项目点赞
+        thumbsUp(item) {
+            this.$emit('thumbsUp', item)
+        },
+        // 转发
+        Forward(item) {
+            this.$emit('Forward', item)
+        },
+        // 收藏
+        Collection(item) {
+            this.$emit('Collection', item)
+        },
+        // 评论
+        commentValue() {
+            this.$refs.commentTool.setCommentsData(undefined, undefined, undefined, this.commentV)
+        }
     },
     mounted() {
       this.contentHeight = document.documentElement.clientHeight - 460 + 'px';
     }
-  }
 }
 </script>
 <style lang="less" scoped>

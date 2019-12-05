@@ -18,3 +18,21 @@ Vue.filter('NumFormat', function (value) {
   if (!value) return '0';
   return Number(value).toFixed(0);
 })
+//人性化时间处理 传入时间戳
+Vue.filter('timestamp', function (timestamp) {
+  if (!timestamp) {
+    return
+  }
+  let mistiming = Math.round((Date.now() - new Date(timestamp).getTime()) / 1000);
+  if (mistiming < 1 ) {
+    return '刚刚';
+  }
+  let arrr = ['年', '个月', '星期', '天', '小时', '分钟', '秒'];
+  let arrn = [31536000, 2592000, 604800, 86400, 3600, 60, 1];
+  for (let i = 0; arrn.length; i++) {
+    let inm = Math.floor(mistiming / arrn[i]);
+      if (inm != 0) {
+          return inm + arrr[i] + '前';
+      }
+  }
+})

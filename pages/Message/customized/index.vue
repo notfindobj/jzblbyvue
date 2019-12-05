@@ -93,6 +93,7 @@ export default {
             let content = ""
             title = type === 2 ? "阅读消息": "删除消息"
             content= type === 2 ? `确定全部阅读消息？` : `删除消息后不可恢复，确定要删除嘛？`
+            debugger
             if (id.constructor  === Object && type == 2) {
                 let msg = await setMessage(queryData);
                 if (msg) {
@@ -111,7 +112,8 @@ export default {
                                     this.getMegs()
                                 }
                                 if (type == 1) {
-                                    this.customized.Msg.splice(index, 1);
+                                    this.getMegs()
+                                    // this.customized.Msg.splice(index, 1);
                                 }
                             }
                             if (id.constructor === Array) {

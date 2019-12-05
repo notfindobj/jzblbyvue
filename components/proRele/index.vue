@@ -133,7 +133,8 @@ export default {
             }
             if (isTab) {
                 this.editorTitle = '';
-                this.$refs.editor.clearEditor(tab.placeholders);
+                this.placeholders = tab.placeholders
+                this.$refs.editor.clearEditor();
                 this.$emit('clickEditor', tab.value)
                 if (['tz', 'wd'].includes(tab.value)) {
                     setTimeout(() => {

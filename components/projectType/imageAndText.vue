@@ -8,7 +8,8 @@
             @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
             <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
         </div>
-        <div class="public-block" :class="{'comment-active': itemInfo.isShowComment}">
+        <!-- :class="{'comment-active': itemInfo.isShowComment}" -->
+        <div class="public-block" >
             <div class="block-head" @mouseleave="hideWorks()">
                 <div class="block-head-left">
                     <div class="avatar" @click="goToPersonal(itemInfo)" @mouseenter="showWorks(itemInfo.UserId, itemInfo.ItemId)">
@@ -17,7 +18,7 @@
                     <div class="info">
                         <div>
                           <p class="name">{{ itemInfo.NickName }}</p>
-                          <p class="time">{{ itemInfo.CreateDate }}</p>
+                          <p class="time">{{ itemInfo.CreateDate}}</p>
                         </div>
                         <div class="info-lable">
                           <span v-if="itemInfo.TalkType === 1">图文</span>
@@ -87,9 +88,11 @@
                         <span>{{ itemInfo.itemOperateData.ShareCount}}</span>
                     </span>
                 </div>
-                <div class="foot-child" @click="clickComment">
-                    <i class="icon iconfont">&#xe664;</i>
-                    <span>评论 {{itemInfo.itemOperateData.CommentCount}}</span>
+                <div :class="toolIndex === 0 ? 'foot-child tool-jian' : 'foot-child'" >
+                    <span @click="clickComment(0)">
+                        <i class="icon iconfont">&#xe664;</i>
+                      <span>评论 {{itemInfo.itemOperateData.CommentCount}}</span>
+                    </span>
                 </div>
                 <div class="foot-child">
                   <span @click="clickLike(!itemInfo.itemOperateData.IsLike)">
@@ -99,17 +102,9 @@
                 </div>
             </div>
         </div>
-        <v-comment
-            :key="ViewerIndex"
-            :isShow="itemInfo.isShowComment"
-            :itemId="itemInfo.ItemId"
-            :commentList="commentList"
-            :isShowLoading="isLoadingComment"
-            @submitComment="submitComment"
-            @submitReplay="submitReplay"
-            @submitLike="submitLike"
-            @delComments="delComments"
-        ></v-comment>
+        <div class="commentTool">
+          <commentTool ref="commentTool" :viewMore="5" :itemInfo="itemInfo" v-show="itemInfo.isShowComment" />
+        </div>
         <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
 </template>
@@ -117,7 +112,7 @@
 <script>
   import Viewer from 'viewerjs';
   import 'viewerjs/dist/viewer.css';
-  import Comment from '../video/comment'
+  import commentTool from '../commentTool'
   import share from '../share'
   import unfold from '../unfold'
   import {getRanNum, analogJump} from '../../plugins/untils/public'
@@ -144,8 +139,8 @@
       }
     },
     components: {
-      'v-comment': Comment,
       share,
+      commentTool,
       unfold
     },
     computed: {
@@ -160,7 +155,6 @@
         isTool: '',
         UserProAndFans: {},
         commentList: [], // 评论列表
-        isLoadingComment: false,    // 是否显示评论加载中的动画
         // 左右切换
         itemIndex: 0,
         itemLength: 0,
@@ -174,7 +168,8 @@
           isModal: false
         },
         redArticle: 0,
-        isUnfold: false
+        isUnfold: false,
+        toolIndex: null
       }
     },
     created () {
@@ -203,12 +198,6 @@
       replaceImgs (val) {
         let regex = "/i/s/";
         return val.replace(regex, "/i/");
-      },
-      async delComments (row) {
-        let msg = await delComment(row.CommentsId)
-        if (msg) {
-            this.getComment()
-        }
       },
       dropdownMenu (row, item, index) {
         this.$emit('clickMenu', row, item, index);
@@ -375,69 +364,15 @@
         this.$emit('clickVideo', this.itemInfo, this.index);
       },
       // 点击评论
-      clickComment() {
+      clickComment(m) {
         if (this.itemInfo.isShowComment) {
-          this.$set(this.itemInfo, 'isShowComment', false);
+            this.toolIndex = null
+            this.$set(this.itemInfo, 'isShowComment', false);
           return false;
         }
         this.$set(this.itemInfo, 'isShowComment', true);
-        this.isLoadingComment = true;
-        this.getComment();
-      },
-      // 获取评论
-      getComment() {
-        this.$store.dispatch('getGetComments', {
-          ItemId: this.itemInfo.ItemId,
-          ScopeType: this.setTalkType(this.itemInfo.TalkType)
-        }).then(res => {
-          this.isLoadingComment = false;
-          this.commentList = res;
-        })
-      },
-      // 评论
-      async submitComment(content) {
-        let queryData = {
-          ItemId: this.itemInfo.ItemId,
-          ReplyId: '',
-          ReplyUserId: '',
-          IsReply: false,
-          Message: content,
-          ItemImgSrc: '',
-          ScopeType: this.setTalkType(this.itemInfo.TalkType)
-        }
-        let msg = await setComments(queryData);
-        if (msg) {
-          this.isLoadingComment = true;
-          this.$Message.success('评论成功');
-          this.getComment();
-        }
-      },
-      // 回复
-      async submitReplay(params) {
-        let queryData = {
-          ItemId: this.itemInfo.ItemId,
-          ReplyId: params.commentsId,
-          ReplyUserId: params.userId,
-          IsReply: true,
-          Message: params.content,
-          ItemImgSrc: '',
-          ScopeType: this.setTalkType(this.itemInfo.TalkType)
-        }
-        let msg = await setComments(queryData);
-        if (msg) {
-          this.isLoadingComment = true;
-          this.getComment();
-        }
-      },
-      // 点赞回复
-      async submitLike(obj) {
-        let queryData = {
-          ItemId: this.itemInfo.ItemId,
-          LikeType: 0,
-          CommentsId: obj.commentsId,
-          IsDelete: !obj.flag
-        }
-        let msg = await setthumbsUp(queryData);
+        this.toolIndex = m
+        this.$refs.commentTool.getCommentsList()
       },
       setTalkType (val) {
         let type = val;
@@ -453,6 +388,24 @@
   }
 </script>
 <style lang="less" scoped>
+    .tool-jian {
+      position: relative;
+      &::after {
+        position: absolute;
+        bottom: -26px;
+        border-radius: 3px;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        background: #f7f7f7;
+        content: '';
+        transform: rotate(45deg) translateX(-50%);
+      }
+    }
+    .commentTool {
+        padding: 0 25px;
+        background: #fff;
+    }
     .unfold-picture {
 
     }

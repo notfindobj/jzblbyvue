@@ -4,10 +4,9 @@
             <div>
                 <div ref="toolbar" class="editor-toolbar"></div>
                 <div class="jzeditor">
+                    <div class="jzeditor-placeholder" @click="jzEdPlac" v-if="showPlaceholder" ref="jzeditor">{{placeholders}}</div>
                     <div class="text" ref="editor">
-                        <p>{{placeholders}}</p>
                     </div>
-                    <div class="jzeditor-placeholder" @click="jzEdPlac" v-if="showPlaceholder" ref="jzeditor"></div>
                 </div>
             </div>
             <div class="editor-footer">
@@ -44,8 +43,7 @@
                     </li>
                     <li :class="['sp'].includes(editorType)? 'editor-footer-tool-video' : 'prohibit editor-footer-tool-video '" >
                         <span class="add-video" @click="uploadVideo()">
-                            <i class=" icon iconfont">&#xe624;</i>
-                            视频
+                            <i class="icon iconfont">&#xe624;</i>视频
                         </span>
                         <div class="editor-footer-tool-videos" v-if="['sp'].includes(editorType) && isPanel">
                             <span class="update-horn"></span>
@@ -56,7 +54,7 @@
                                     <uploadVideo 
                                     @clearVideo="clearVideo"
                                     @uploadSuccess="uploadSuccessVideo" />
-                                    <p class="upload-tip">仅支持MP4视频格式，大小不超过50M，请勿上传反动色情等违法视频。</p>
+                                    <p class="upload-tip">仅支持MP4视频格式，大小不超过100M，请勿上传反动色情等违法视频。</p>
                                     <Spin fix v-if="spinShow">
                                         <Icon type="ios-loading" size=18 class="demo-spin-icon-load"></Icon>
                                         <div>上传中</div>
@@ -150,7 +148,7 @@ export default {
             isAgree: false,
             publishMode: '公开',
             privacyList: [],
-            showPlaceholder: false
+            showPlaceholder: true
         }
     },
     created () {
@@ -162,8 +160,7 @@ export default {
     methods: {
         jzEdPlac () {
             if (this.$refs.jzeditor) {
-                this.$refs.editor.focus()
-                console.log('...........')
+                this.$refs.editor.focus();
             }
         },
         initEditor () {
@@ -185,6 +182,7 @@ export default {
                 'undo', // 撤销
                 'redo', // 重复
             ],
+            _this.editor.customConfig.zIndex = 400
             // 表情面板可以有多个 tab ，因此要配置成一个数组。数组每个元素代表一个 tab 的配置
             _this.editor.customConfig.emotions = [
                 {
@@ -218,19 +216,9 @@ export default {
                 } else {
                     _this.showPlaceholder= true
                 }
-                var reg = new RegExp(/(分享建筑动态！)|(项目详情！)/);
-                if(html.match(reg)){
-                    _this.editor.txt.html(_this.getSimpleText(html))
-                }
                 _this.onchange(html)
             }
             _this.editor.create();
-        },
-        getSimpleText(html){
-        // 剔除除表情后的所有标签
-            var re1 = new RegExp(/(分享建筑动态！)|(项目详情！)/);//
-            var msg = html.replace(re1,'');//执行替换成空字符
-            return msg;
         },
         baseUrlRegExp (str) {
             let reg = RegExp(/\http:\/\//);
@@ -372,7 +360,9 @@ export default {
             this.imgsrc = [];
             this.imgList = [];
             this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
-            this.editor.txt.html(`<p>${placeholders}</p>`);
+            // this.editor.txt.html(`<p>${placeholders}</p>`);
+            this.editor.txt.html(`<p><br/></p>`);
+            this.showPlaceholder = true
         },
         // 发布
         editorPush () {
@@ -393,9 +383,10 @@ export default {
         position: relative;
         &-placeholder {
             position: absolute;
+            color: #2b2b2b;
             top: 5px;
-            z-index: 1111;
-            left: 5px;
+            z-index: 300;
+            left: 11px;
         }
     }
     /deep/.w-e-toolbar .w-e-menu {
@@ -598,7 +589,6 @@ export default {
         padding: 0 10px;
         min-height: 150px;
         overflow: hidden;
-        background: #eeed;
         p {
             span {
                 font-size: 16px !important;
@@ -615,6 +605,6 @@ export default {
     }
     .text {
         min-height: 150px;
-        z-index: 400 !important;
+        background: rgba(224, 224, 224, 0.5);
     }
 </style>

@@ -21,3 +21,4 @@ $ npm run generate
 
 For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
 
+wangeditor 修改了源码，4564 行 onchangeTimeout = 200 || 3;   wangeditor.min.js 同步修改

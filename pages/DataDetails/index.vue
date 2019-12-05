@@ -39,14 +39,9 @@
                     <commentsCon
                         :width="'340px'"
                         :publish="detaDetails"
-                        :comments="getGetCommentsData"
                         @thumbsUp="thumbsUp"
                         @Collection="Collection"
-                        @commentValue="commentValue"
-                        @discussValue="discussValue"
-                        @somePraise="somePraise"
                         @Forward="Forward"
-                        @delComment="delComments"
                     />
                 </div>
             </div>
@@ -104,7 +99,6 @@
                 isLayout: true,
                 distanceBottom: 1000,
                 contentHeight: '',   // 评论列表的高度
-                getGetCommentsData: null,
                 modalConfig: {
                     isWxConfig: false
                 },
@@ -148,12 +142,6 @@
                 itemData.reqItemList.Pagination = baseSearchItem.Pagination
             } catch (error) {}
             let getBaseDataDetail = await store.dispatch('getBaseDataDetails', itemData);
-            // 根据项目详情请求评论信息
-            let Comment = {
-                itemId: getBaseDataDetail.ItemEntity.ItemId,
-                ScopeType: 0
-            }
-            let getGetCommentsData = await store.dispatch('getGetComments', Comment);
             let pageTurning = {
                 PrevItemId: getBaseDataDetail.PrevItemId,
                 NextItemId: getBaseDataDetail.NextItemId,
@@ -163,7 +151,6 @@
                 PdfInfo: getBaseDataDetail.PdfInfo,
                 detaDetails: getBaseDataDetail.ItemEntity,
                 ItemAttributesEntities: getBaseDataDetail.ItemAttributesEntities,
-                getGetCommentsData: getGetCommentsData,
                 pageTurning,
                 id: getBaseDataDetail.ItemEntity.ItemId
             }
@@ -277,23 +264,6 @@
                 }
                 this.$set(item, 'islikes', !item.islikes)
             },
-            async somePraise(item) {
-                let queryData = {
-                    ItemId: item.ItemId,
-                    CommentsId: item.CommentsId,
-                    LikeType: 0,
-                    IsDelete: item.islikes
-                }
-                let msg = await setthumbsUp(queryData);
-                if (msg) {
-                    if (item.islikes) {
-                        this.$set(item, 'LikeCount', item.LikeCount - 1)
-                    } else {
-                        this.$set(item, 'LikeCount', item.LikeCount + 1)
-                    }
-                    this.$set(item, 'islikes', !item.islikes)
-                }
-            },
             // 收藏
             async Collection(item) {
                 if (!this.isLogin) {
@@ -313,77 +283,6 @@
                     this.$set(item, 'collections', item.collections + 1)
                 }
                 this.$set(item, 'iscollections', !item.iscollections)
-            },
-            //评论
-            async commentValue(row, val) {
-                if (!this.isLogin) {
-                    this.$store.dispatch('SETUP', true);
-                    this.$store.dispatch('LOGGEDIN', 'signIn');
-                    return false
-                }
-                let queryData = {
-                    ItemId: row.ItemId,
-                    IsReply: false,
-                    Message: val,
-                    ScopeType: 0
-                }
-                let commentMsg = await setComments(queryData)
-                if (commentMsg) {
-                    this.$set(row, 'commentss', row.commentss + 1);
-                    // 根据项目详情请求评论信息
-                    let Comment = {
-                        itemId: this.$route.query.id,
-                        ScopeType: 0
-                    }
-                    let msg = await this.$store.dispatch('getGetComments', Comment);
-                    if (msg) {
-                        this.getGetCommentsData = msg
-                    }
-                }
-            },
-            async delComments (row) {
-
-                let msg = await delComment(row.CommentsId)
-                if (msg) {
-                    // 根据项目详情请求评论信息
-                    let Comment = {
-                        itemId: this.$route.query.id,
-                        ScopeType: 0
-                    }
-                    let msg = await this.$store.dispatch('getGetComments', Comment);
-                    if (msg) {
-                        this.getGetCommentsData = msg
-                    }
-                }
-            },
-            // 评论回复
-            async discussValue(row, val) {
-                if (!this.isLogin) {
-                    this.$store.dispatch('SETUP', true);
-                    this.$store.dispatch('LOGGEDIN', 'signIn');
-                    return false
-                }
-                let queryData = {
-                    ItemId: row.ItemId, // 项目ID
-                    IsReply: true, // 回复
-                    ReplyId: row.CommentsId, // 被回复说说的Id  是取CommentsId 还是ReplyId
-                    ReplyUserId: row.UserId,// 被回复说说发布的ID ReplyUserId
-                    Message: val,
-                    ScopeType: 0 // 项目评论
-                }
-                let commentMsg = await setComments(queryData)
-                if (commentMsg) {
-                    this.$Message.success('回复成功！')
-                    // 根据项目详情请求评论信息
-                    let Comment = {
-                        itemId: this.$route.query.id,
-                        ScopeType: 0
-                    }
-                    let msg = await this.$store.dispatch('getGetComments', Comment);
-                    if (msg) {
-                        this.getGetCommentsData = msg
-                    }
-                }
             },
             // 关注
             async setFollow(item) {

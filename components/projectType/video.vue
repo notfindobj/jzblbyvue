@@ -1,14 +1,15 @@
 <template>
     <div>
-        <div class="public-block" :class="{'comment-active': videoInfo.isShowComment}">
+      <!-- :class="{'comment-active': videoInfo.isShowComment}" -->
+        <div class="public-block" >
             <div class="block-head">
                 <div class="block-head-left" @mouseleave="hideWorks()">
                     <div class="avatar" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 1)">
                         <img @click="goToPersonal(videoInfo)" :src="videoInfo.HeadIcon" alt="">
                     </div>
                     <div class="info">
-                        <p class="name">{{ videoInfo.NickName }}</p>
-                        <p class="time">{{ videoInfo.CreateDate }}</p>
+                        <p class="name">{{videoInfo.NickName }}</p>
+                        <p class="time">{{videoInfo.CreateDate}}</p>
                     </div>
                 </div>
                 <div class="tool-box" v-if="isTool === videoInfo.ItemId" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 0)" @mouseleave="hideWorks()">
@@ -60,9 +61,11 @@
                       <span>{{ videoInfo.itemOperateData.ShareCount }}</span>
                     </span>
                 </div>
-                <div class="foot-child" @click="clickComment">
+                <div :class="toolIndex === 0 ? 'foot-child tool-jian' : 'foot-child'">
+                  <span @click="clickComment(0)">
                     <i class="icon iconfont">&#xe664;</i>
                     <span>评论 {{videoInfo.itemOperateData.CommentCount}}</span>
+                  </span>
                 </div>
                 <div class="foot-child">
                   <span @click="clickLike(videoInfo)">
@@ -72,23 +75,16 @@
                 </div>
             </div>
         </div>
-        <Comment
-            :isShow="videoInfo.isShowComment"
-            :itemId="videoInfo.ItemId"
-            :commentList="commentList"
-            :isShowLoading="isLoadingComment"
-            @submitComment="submitComment"
-            @submitReplay="submitReplay"
-            @submitLike="submitLike"
-            @delComments="delComments"
-        />
+        <div class="commentTool">
+          <commentTool ref="commentTool" :viewMore="5" :itemInfo="videoInfo" v-show="videoInfo.isShowComment" />
+        </div>
         <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
 </template>
 
 <script>
   import share from '../share'
-  import Comment from '../video/comment'
+  import commentTool from '../commentTool'
   import { analogJump } from '../../plugins/untils/public'
   import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow, delComment} from '../../service/clientAPI'
   import { mapGetters} from 'vuex'
@@ -107,7 +103,7 @@
     },
     components: {
       share,
-      Comment
+      commentTool
     },
     computed: {
       ...mapGetters(['isLogin'])
@@ -122,7 +118,8 @@
         qrcodeContent: {},
         configModal: {
           isModal: false
-        }
+        },
+        toolIndex: null
       }
     },
     methods: {
@@ -235,14 +232,15 @@
         this.configModal.isModal = true
       },
       // 点击评论
-      clickComment() {
+      clickComment(m) {
         if (this.videoInfo.isShowComment) {
-          this.$set(this.videoInfo, 'isShowComment', false)
+          this.toolIndex = null
+          this.$set(this.videoInfo, 'isShowComment', false);
           return false;
         }
         this.$set(this.videoInfo, 'isShowComment', true);
-        this.isLoadingComment = true;
-        this.getComment();
+        this.toolIndex = m
+        this.$refs.commentTool.getCommentsList()
       },
       // 获取评论
       getComment() {
@@ -254,58 +252,30 @@
           this.commentList = res;
         })
       },
-      // 评论
-      submitComment(content) {
-        if (!this.isLogin) {
-          this.$store.dispatch('SETUP', true);
-          this.$store.dispatch('LOGGEDIN', 'signIn');
-          return false
-        }
-        this.isLoadingComment = true;
-        setComments({
-          ItemId: this.videoInfo.ItemId,
-          ReplyId: '',
-          ReplyUserId: '',
-          IsReply: false,
-          Message: content,
-          ItemImgSrc: '',
-          ScopeType: 2
-        }).then(res => {
-          this.$Message.success('评论成功');
-          this.getComment();
-        })
-      },
-      // 回复
-      submitReplay(params) {
-        this.isLoadingComment = true;
-        setComments({
-          ItemId: this.videoInfo.ItemId,
-          ReplyId: params.commentsId,
-          ReplyUserId: params.userId,
-          IsReply: true,
-          Message: params.content,
-          ItemImgSrc: '',
-          ScopeType: 2
-        }).then(res => {
-          // this.$Message.success('评论成功');
-          this.getComment();
-        })
-      },
-      // 点赞回复
-      submitLike(obj) {
-        setthumbsUp({
-          ItemId: this.videoInfo.ItemId,
-          LikeType: 0,
-          CommentsId: obj.commentsId,
-          IsDelete: !obj.flag
-        })
-      }
     }
   }
 </script>
 
 <style lang="less" scoped>
   @import "~assets/css/ModulesStyle/index.less";
+  .tool-jian {
+      position: relative;
+      &::after {
+        position: absolute;
+        bottom: -26px;
+        border-radius: 3px;
+        left: 50%;
+        width: 20px;
+        height: 20px;
+        background: #f7f7f7;
+        content: '';
+        transform: rotate(45deg) translateX(-50%);
+      }
+    }
+  .commentTool {
+      padding: 0 25px;
+      background: #fff;
+  }
   .active-tool {
     color: #ff3c00;
   }
