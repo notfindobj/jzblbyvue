@@ -246,6 +246,10 @@ export default {
                     this.$Message.warning('标题不能为空');
                     return false
                 }
+                if (this.editorTitle.length < 4) {
+                    this.$Message.warning('标题不能少于4个字符');
+                    return false
+                }
                 this.spinShow = true
                 let obg = {
                     talkType: 3,
@@ -272,6 +276,10 @@ export default {
                     this.$Message.warning('标题不能为空');
                     return false
                 }
+                if (this.editorTitle.length < 4) {
+                    this.$Message.warning('标题不能少于4个字符');
+                    return false
+                }
                 if (row.editortext === '' && row.imgList.length < 0) {
                     this.$Message.warning('内容不能为空');
                     return false
@@ -294,7 +302,6 @@ export default {
                     } else{
                         this.$router.push({ name: "BuildingCircle-id"})
                     }
-                    
                 } 
             }
             setTimeout(() => {
