@@ -28,7 +28,7 @@
                             <Radio label="true">原创</Radio>
                             <Radio label="false">非原创</Radio>
                         </RadioGroup>
-                        <span class="original" @click="protocol">《创意免责协议》</span>
+                        <span class="original" @click="protocol">《原创免责协议》</span>
                     </FormItem>
                 </Col>
             </Row>

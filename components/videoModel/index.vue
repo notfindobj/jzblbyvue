@@ -26,7 +26,6 @@
                </div>
                <commentsCon
                     :publish="detaDetails"
-                    :comments="comments"
                     @thumbsUp="thumbsUp"
                     @Collection="Collection"
                     @commentValue="commentValue"
@@ -41,7 +40,7 @@
 <script>
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
-import commentsCon from '../commentBox/commentsCon'
+import commentsCon from '../comments/commentsCon'
 import share from '../../components/share'
 import {getRanNum} from '../../plugins/untils/public'
 import { setthumbsUp, setCollection, setFollow, setComments, getComments, recordFrequency, downloadFile} from '../../service/clientAPI'
