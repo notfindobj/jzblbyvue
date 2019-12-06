@@ -187,8 +187,12 @@ export default {
                 }
             }
             if (this.editorName === 'tw') {
-                if (row.editortext === ''&& row.imgList.length < 1) {
+                if (row.editortext === '') {
                     this.$Message.warning('内容不能为空');
+                    return false
+                }
+                if (row.imgList.length < 1) {
+                    this.$Message.warning('请上传图片');
                     return false
                 }
                 this.spinShow = true

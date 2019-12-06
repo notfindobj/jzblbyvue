@@ -11,9 +11,10 @@
                     <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
                 </div>
                 <div style="width：800px" id="pictureBox">
+                    <h2 v-if="detailInfo.TalkTitle" class="pictureBox-title">{{detailInfo.TalkTitle}}</h2>
                     <div v-html="detailInfo.TalkContent"></div>
                     <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TalkType !== 5" :key="index">
-                        <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" :data-original="baseUrlRegExp(replaceImgs(items.smallImgUrl))" >
+                        <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" :data-original="baseUrlRegExp(replaceImgs(items.smallImgUrl))" />
                     </div>
                 </div>
             </div> 
@@ -28,14 +29,9 @@
             </div>
             <commentsCon
                 :publish="detailInfo"
-                :comments="commentsData"
                 @thumbsUp="thumbsUp"
                 @Collection="Collection"
-                @commentValue="commentValue"
-                @discussValue="discussValue"
-                @somePraise="somePraise"
                 @Forward="Forward"
-                @delComment="delComments"
             />
         </div>
         <ToTop/>
@@ -44,7 +40,6 @@
 </template>
 <script>
 import Viewer from 'viewerjs';
-import 'viewerjs/dist/viewer.css';
 import share from '../../components/share'
 import commentsCon from '../../components/comments/commentsCon.vue'
 import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile, delComment} from '../../service/clientAPI'
@@ -60,11 +55,6 @@ export default {
     },
     async asyncData({ store, params }) {
         const data = await store.dispatch('getQADetail', params.id);
-        let queryData ={
-            ItemId: params.id,
-            ScopeType: 2
-        }
-        const cmsg = await store.dispatch('getGetComments', queryData);
         //记录用户访问
         let rec = await recordFrequency({
             ItemId: params.id,
@@ -72,7 +62,6 @@ export default {
         })
         return {
             detailInfo: data,
-            commentsData: cmsg
         }
     },
     computed: {
@@ -83,7 +72,6 @@ export default {
     },
     data () {
         return {
-            commentsData: [],
             isShowViewBox: false,
             isLeftPngF: require('../../assets/images/leftButtonColor.png'),
             isLeftPngR: require('../../assets/images/leftButton.png'),
@@ -213,23 +201,6 @@ export default {
             }
             this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
         },
-        async somePraise(item) {
-            let queryData = {
-                ItemId: item.ItemId,
-                CommentsId: item.CommentsId,
-                LikeType: 0,
-                IsDelete: item.islikes
-            }
-            let msg = await setthumbsUp(queryData);
-            if (msg) {
-                if (item.islikes) {
-                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
-                } else {
-                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
-                }
-                this.$set(item.itemOperateData, 'IsLike', !item.IsLike)
-            }
-        },
         // 收藏
         async Collection(item) {
             let queryData = {
@@ -244,66 +215,6 @@ export default {
                 this.$set(item, 'collections', item.collections + 1)
             }
             this.$set(item, 'iscollections', !item.iscollections)
-        },
-        //评论
-        async commentValue(row, val) {
-            let queryData = {
-                ItemId: row.ItemId,
-                IsReply: false,
-                Message: val,
-                ScopeType: 2
-            }
-            let commentMsg = await setComments(queryData)
-            if (commentMsg) {
-                this.$set(row, 'commentss', row.commentss + 1);
-                // 根据项目详情请求评论信息
-                let Comment = {
-                    itemId: this.$route.params.id,
-                    ScopeType: 2
-                }
-                let msg = await this.$store.dispatch('getGetComments', Comment);
-                if (msg) {
-                    this.commentsData = msg
-                }
-            }
-        },
-        async delComments (row) {
-            let msg = await delComment(row.CommentsId)
-            if (msg) {
-                // 根据项目详情请求评论信息
-                let Comment = {
-                    itemId: this.$route.params.id,
-                    ScopeType: 2
-                }
-                let msg = await this.$store.dispatch('getGetComments', Comment);
-                if (msg) {
-                    this.commentsData = msg
-                }
-            }
-        },
-        // 评论回复
-        async discussValue(row, val) {
-            let queryData = {
-                ItemId: row.ItemId, // 项目ID
-                IsReply: true, // 回复
-                ReplyId: row.CommentsId, // 被回复说说的Id  是取CommentsId 还是ReplyId
-                ReplyUserId: row.UserId,// 被回复说说发布的ID ReplyUserId
-                Message: val,
-                ScopeType: 2// 项目评论
-            }
-            let commentMsg = await setComments(queryData)
-            if (commentMsg) {
-                this.$Message.success('回复成功！')
-                // 根据项目详情请求评论信息
-                let Comment = {
-                    itemId: this.$route.params.id,
-                    ScopeType: 2
-                }
-                let msg = await this.$store.dispatch('getGetComments', Comment);
-                if (msg) {
-                    this.commentsData = msg
-                }
-            }
         },
         // 关注
         async setFollow(item) {
@@ -330,6 +241,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .pictureBox-title {
+        text-align: center;
+    }
     .picture {
         width: 1200px;
         margin: 0 auto;

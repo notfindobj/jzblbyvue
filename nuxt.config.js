@@ -126,7 +126,7 @@ module.exports = {
       chunk: ({ isDev }) => isDev ? '[name].js' : '[name][chunkhash].js',
       css: ({ isDev }) => isDev ? '[name].css' : '[name][contenthash].css'
     },
-    vendor: ['iview', 'axios', 'video.js'],
+    vendor: ['iview', 'axios', 'video.js', 'Viewer'],
     // 开启打包分析
     analyze: true,
     assetFilter: function (assetFilter) {

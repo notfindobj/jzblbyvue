@@ -24,7 +24,7 @@
                                 </div>
                                 <div class="block-foot">
                                     <span v-if="item.IsDeleteBtn" class="block-foot-unfollow">已关注</span>
-                                    <span v-else :class="item.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(item)">{{item.IsFollow ? '已关注': '关注'}}</span>
+                                    <span v-else :class="userPF.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(item.UserId)">{{userPF.IsFollow ? '已关注': '关注'}}</span>
                                     <span class="block-foot-private">私信</span>
                                 </div>
                             </div>
@@ -53,7 +53,7 @@
                                     </div>
                                     <div class="block-foot">
                                         <span v-if="item.IsDeleteBtn" class="block-foot-unfollow">已关注</span>
-                                        <span v-else :class="item.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(item)">{{item.IsFollow ? '已关注': '关注'}}</span>
+                                        <span v-else :class="userPF.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(item.UserId)">{{userPF.IsFollow ? '已关注': '关注'}}</span>
                                         <span class="block-foot-private">私信</span>
                                     </div>
                                 </div>
@@ -104,7 +104,7 @@
                                             </div>
                                             <div class="block-foot">
                                                 <span v-if="items.IsDeleteBtn" class="block-foot-unfollow">已关注</span>
-                                                <span v-else :class="items.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(items)">{{items.IsFollow ? '已关注': '关注'}}</span>
+                                                <span v-else :class="userPF.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(items.ReplyId)">{{userPF.IsFollow ? '已关注': '关注'}}</span>
                                                 <span class="block-foot-private">私信</span>
                                             </div>
                                         </div>
@@ -131,8 +131,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="block-foot">
-                                                    <span v-if="items.IsDeleteBtn" class="block-foot-unfollow">已关注</span>
-                                                    <span v-else :class="items.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(items)">{{items.IsFollow ? '已关注': '关注'}}</span>
+                                                    <span :class="userPF.IsFollow ?'block-foot-unfollow': 'block-foot-follow'" @click="setFollowPop(items.ReplyUserId)">{{userPF.IsFollow ? '已关注': '关注'}}</span>
                                                     <span class="block-foot-private">私信</span>
                                                 </div>
                                             </div>
@@ -423,24 +422,21 @@ export default {
                 this.popperSpin = false;
             }
         },
-        // 关注 后台少字段
-        async setFollowPop(item) {
+        // 关注 
+        async setFollowPop(id) {
             if (!this.isLogin) {
                 this.$store.dispatch('SETUP', true);
                 this.$store.dispatch('LOGGEDIN', 'signIn');
                 return false
             }
-            // if (!this.isLogin) {
-            //     this.$store.dispatch('SETUP', true);
-            //     this.$store.dispatch('LOGGEDIN', 'signIn');
-            //     return false
-            // }
-            // let queryData = {
-            //     UserId: item.UserId,
-            //     IsDelete: item.IsFollow
-            // }
-            // let collectionMsg = await setFollow(queryData)
-            // this.$set(item, 'IsFollow', !item.IsFollow)
+            let queryData = {
+                UserId: id,
+                IsDelete: this.userPF.IsFollow
+            }
+            let msg = await setFollow(queryData)
+            if (msg) {
+                this.$set(this.userPF, 'IsFollow', !this.userPF.IsFollow)
+            }
         },
     }
 }
