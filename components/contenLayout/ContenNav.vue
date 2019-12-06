@@ -78,7 +78,7 @@
 import {mapGetters, mapState} from 'vuex'
 import {analogJump, getRanNum} from '../../plugins/untils/public'
 import Swiper from "swiper"
-import 'swiper/dist/css/swiper.min.css'
+// import 'swiper/dist/css/swiper.min.css'
 export default {
     name: 'contenNav',
     props: {

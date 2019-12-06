@@ -2,18 +2,18 @@
     <div>
         <div v-show="isBtnSile" class="view-left-move" @mouseenter="mousemoveLeft(1)"
             @mouseleave="mousemoveRight" @click="moveLeftClick(1)">
-            <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt="">
+            <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt=""/>
         </div>
         <div v-show="isBtnSile" class="view-right-move" @mouseenter="mousemoveLeft(2)"
             @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
-            <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
+            <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt=""/>
         </div>
         <!-- :class="{'comment-active': itemInfo.isShowComment}" -->
         <div class="public-block" >
             <div class="block-head" @mouseleave="hideWorks()">
                 <div class="block-head-left">
                     <div class="avatar" @click="goToPersonal(itemInfo)" @mouseenter="showWorks(itemInfo.UserId, itemInfo.ItemId)">
-                        <img :src="itemInfo.HeadIcon" alt="" >
+                        <img :src="itemInfo.HeadIcon" alt="" />
                     </div>
                     <div class="info">
                         <div>
@@ -62,16 +62,18 @@
                 </div>
                 <p class="detail-content" v-else v-html="itemInfo.TalkContent"></p>
                 <div class="photo-wrap " :ref="mathId">
-                  <!-- 其他 -->
+                  <template v-if="addFleg">
+                     <!-- 其他 -->
                     <div v-if="itemInfo.TalkType !== 5" :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
-                      <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
+                      <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
                     </div>
                     <!--文章 -->
                     <template v-if="!isUnfold">
-                      <div v-if="itemInfo.TalkType === 5 && imgIndex <4"  :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj"  :key="imgIndex">
-                        <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))">
+                      <div v-if="itemInfo.TalkType === 5 && imgIndex < 3"  :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj"  :key="imgIndex">
+                        <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
                       </div>
                     </template>
+                  </template>
                 </div>
             </div>
             <!-- 搜藏工具 -->
@@ -169,21 +171,20 @@
         },
         redArticle: 0,
         isUnfold: false,
-        toolIndex: null
+        toolIndex: null,
+        addFleg: false
       }
     },
     created () {
       this.mathId = getRanNum(7);
     },
-    watch: {
-      itemInfo: function (val) {
-        this[this.ViewerIndex].destroy();
-        this.mathId = getRanNum(7);
-        setTimeout(this.initView, 500);
-      }
-    },
     mounted () {
-      this.initView()
+      if (this.itemInfo.ResourceObj.length > 0) {
+         this.addFleg = true
+      }
+      setTimeout(() => {
+        this.initView()
+      }, 10)
     },
     methods: {
       Unfold (val) {

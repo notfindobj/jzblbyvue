@@ -343,7 +343,7 @@
   import { mapGetters} from 'vuex'
   import {getRecommend} from '../service/clientAPI'
   import Swiper from "swiper"
-  import 'swiper/dist/css/swiper.min.css'
+//   import 'swiper/dist/css/swiper.min.css'
   export default {
     head: {
         title: '建筑部落',

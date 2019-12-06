@@ -15,8 +15,12 @@ module.exports = {
       { name: 'renderer', content: 'webkit' },
       { hid: 'description', name: 'description', content: '建筑部落' }
     ],
+    link: [
+        {rel: 'stylesheet', href: 'https://unpkg.com/swiper/css/swiper.min.css'}
+    ],
     script: [
       { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
+      { src: 'https://unpkg.com/swiper/js/swiper.min.js' },
       { src: 'https://cdn.bootcss.com/jquery_lazyload/1.9.7/jquery.lazyload.js' },
       { src: 'https://webapi.amap.com/maps?v=1.4.15&key=32fa7552c02016a5f6eefe2a3e062f87&plugin=AMap.Geocoder,AMap.CitySearch,AMap.Marker,AMap.Autocomplete,AMap.Pixel' },
     ],
@@ -30,6 +34,7 @@ module.exports = {
   css: [
     '~assets/font-face/iconfont.css',
     { src: '@/assets/commom.less', lang: 'less' }
+    
   ],
   // 插件
   plugins: [

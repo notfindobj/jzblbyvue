@@ -121,7 +121,7 @@
     import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice, getCompanyInfo, getQueryData, addInviteUser} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     import Swiper from "swiper"
-    import 'swiper/dist/css/swiper.min.css'
+    // import 'swiper/dist/css/swiper.min.css'
     export default {
         layout: 'main',
         name: 'PersonalCenter',
