@@ -8,7 +8,6 @@
             @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
             <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt=""/>
         </div>
-        <!-- :class="{'comment-active': itemInfo.isShowComment}" -->
         <div class="public-block" >
             <div class="block-head" @mouseleave="hideWorks()">
                 <div class="block-head-left">
@@ -25,6 +24,7 @@
                           <span v-if="itemInfo.TalkType === 3">问答</span>
                           <span v-if="itemInfo.TalkType === 5">文章</span>
                           <span v-if="itemInfo.TalkType === 4">{{itemInfo.TypeName}}</span>
+                          <span v-if="itemInfo.IsOriginal">原创</span>
                         </div>
                     </div>
                 </div>
@@ -64,14 +64,26 @@
                 <div class="photo-wrap " :ref="mathId">
                   <template v-if="addFleg">
                      <!-- 其他 -->
-                    <div v-if="itemInfo.TalkType !== 5" :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj" :key="imgIndex">
-                      <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
-                    </div>
+                     <template v-if="itemInfo.TalkType !== 5" >
+                       <div v-for="(item, otherIndex) in itemInfo.ResourceObj"  :class="otherIndex < textLength ? 'img' : 'img itemHide'" :key="otherIndex">
+                        <img v-if="otherIndex < textLength" v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
+                        <img v-if="otherIndex >= textLength" :src="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
+                        <div v-if="otherIndex === (textLength - 1)" class="superLong">
+                            <span>+{{itemInfo.ResourceObj.length - textLength}}</span>
+                        </div>
+                      </div>
+                     </template>
                     <!--文章 -->
                     <template v-if="!isUnfold">
-                      <div v-if="itemInfo.TalkType === 5 && imgIndex < 3"  :class="imgIndex < textLength ? 'img' : 'img itemHide'" v-for="(item, imgIndex) in itemInfo.ResourceObj"  :key="imgIndex">
-                        <img v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
-                      </div>
+                      <template v-if="itemInfo.TalkType === 5" >
+                        <div v-for="(item, imgIndex) in itemInfo.ResourceObj"  :class="imgIndex < 3 ? 'img' : 'img itemHide'"  :key="imgIndex+item.smallImgUrl">
+                          <img v-if="imgIndex < 3" v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
+                          <img v-if="imgIndex >= 3" :src="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
+                          <div v-if=" ((itemInfo.ResourceObj.length - 3) > 0) && imgIndex === 2" class="superLong">
+                              <span>+{{itemInfo.ResourceObj.length - 3}}</span>
+                          </div>
+                        </div>
+                      </template>
                     </template>
                   </template>
                 </div>
@@ -178,6 +190,15 @@
     created () {
       this.mathId = getRanNum(7);
     },
+    watch: {
+      itemInfo: function (val) {
+        this[this.ViewerIndex].destroy();
+        this.mathId = getRanNum(7);
+        this.toolIndex = null
+        setTimeout(this.initView, 500);
+      }
+    },
+
     mounted () {
       if (this.itemInfo.ResourceObj.length > 0) {
          this.addFleg = true
@@ -389,6 +410,28 @@
   }
 </script>
 <style lang="less" scoped>
+    .superLong {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0, .4);
+      display: inline-block;
+      cursor: pointer;
+      span {
+        font-size: 20px;
+        font-weight: bold;
+        color: #fff;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+      }
+      &:hover {
+        display: none;
+      }
+    }
     .tool-jian {
       position: relative;
       &::after {

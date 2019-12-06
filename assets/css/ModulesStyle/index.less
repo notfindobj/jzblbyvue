@@ -56,12 +56,20 @@
       flex-wrap: wrap;
       padding-top: 18px;
       .img {
-        width: 230px;
-        height: 230px;
-        margin-right: 10px;
-        margin-bottom: 10px;
-        background-color: #ccc;
+          width: 230px;
+          height: 230px;
+          margin-right: 10px;
+          background-color: #ccc;
+          margin-bottom: 10px;
+          position: relative;
+          &:nth-child(3n) {
+            margin: 0;
+          }
+        &:hover .superLong{
+          display: none;
+        }
         img {
+          cursor: pointer;
           width: 100%;
           height: 100%;
         }
