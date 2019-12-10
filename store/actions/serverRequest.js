@@ -128,4 +128,8 @@ export const serverRequest = {
   async isMyTribe({commit}, params) {
     return await request.post(`MyTribe/IsEnt?userId=${params}`)
   },
+  // 首页获取推荐
+  async getRec({commit}, params) {
+    return await request.post(`Other/GetRecommend?typeIds=${params.ids}&take=${params.pages}`)
+  },
 }

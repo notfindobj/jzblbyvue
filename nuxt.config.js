@@ -72,8 +72,8 @@ module.exports = {
   */
   build: {
     // 提取css到单独link文件
-    // extractCSS: true,
-    // transpile: [/^iview/],
+    extractCSS: true,
+    transpile: [/^iview/],
     babel: {
       presets({ isServer }) {
         const targets = isServer ? { node: '10' } : { ie: '11' }
@@ -128,10 +128,10 @@ module.exports = {
     },
     vendor: ['iview', 'axios', 'video.js', 'Viewer'],
     // 开启打包分析
-    analyze: true,
-    assetFilter: function (assetFilter) {
-      return assetFilter.endsWith('.js')
-    },
+    // analyze: true,
+    // assetFilter: function (assetFilter) {
+    //   return assetFilter.endsWith('.js')
+    // },
     /*
     ** Run ESLint on save
     */

@@ -5,8 +5,7 @@
                 <div ref="toolbar" class="editor-toolbar"></div>
                 <div class="jzeditor">
                     <div class="jzeditor-placeholder" @click="jzEdPlac" v-if="showPlaceholder" ref="jzeditor">{{placeholders}}</div>
-                    <div class="text" ref="editor">
-                    </div>
+                    <div class="text" ref="editor"></div>
                 </div>
             </div>
             <div class="editor-footer">
@@ -36,7 +35,7 @@
                                             <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
                                         </div>
                                     </draggable>
-                                    <Upload class="upload" :uploadType="2" :nowLength="imgList.length" @uploadSuccess="uploadSuccess" />
+                                    <Upload class="upload" :uploadType="2" :nowLength="imgList.length" @beforeSuccessMD="beforeSuccessMD" @uploadSuccess="uploadSuccess" />
                                 </div>
                             </div>
                         </div>
@@ -93,7 +92,7 @@
 <script>
 import {uploadFile, GetOperatPrivacy} from '../../service/clientAPI'
 import Upload from '../../components/publish/upload'
-import { _debounce, analogJump } from '../../plugins/untils/public'
+import { _debounce, analogJump, getRanNum} from '../../plugins/untils/public'
 import uploadVideo from '../../components/publish/uploadVideo'
 import draggable from 'vuedraggable'
 import { sinaIcon, jzIcon} from '../../assets/Emoticon'
@@ -249,17 +248,26 @@ export default {
             return val.replace(regex, "/i/");
         },
         //  富文本上传图片
-        fileSelected (e) {
+        async fileSelected (e) {
             let _this= this;
+            let asyPos = ''
             let file = e.target.files;
-            if (file.length > 0) {
+            for (let i = 0; i < file.length; i++) {
+                let url = window.URL.createObjectURL(file[i]);
+                let RanNum = getRanNum()
+                _this.editor.txt.append(`<p>
+                    <div class="bl-loading ${RanNum}">
+                        <img data-action="loading" src="${url}" style="max-width:100%;"></img>
+                        <div class="bl-mongolia" contenteditable="false">
+                            <span>正在上传</span>
+                        </div>
+                    </div>
+                <p><br></p></p>`);
                 let data = new FormData();
-                for (let item of file) {
-                    data.append('files', item)
-                }
+                data.append('files', file[i]);
                 uploadFile(data, 1).then(res => {
                     for (let q = 0; q < res.length; q++) {
-                        _this.editor.txt.append(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img><p><br></p></p>`);
+                        $(`.${RanNum}`).replaceWith(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img></p>`)
                         _this.imgList.push(res[q]);
                     }
                     _this.imgsrc = _this.getSrc(_this.editor.txt.html())
@@ -302,6 +310,9 @@ export default {
         },
         // 上传前的钩子函数
         beforeUpload (fileList) {
+        },
+        beforeSuccessMD () {
+            
         },
         uploadSuccess (fileList) {
             for(let i of fileList) {
@@ -379,6 +390,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    /deep/.bl-loading {
+        position: relative;
+        .bl-mongolia {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            background:rgba(255, 255, 255, 0.6);
+            span {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+        }
+    }
     .jzeditor {
         position: relative;
         &-placeholder {

@@ -16,6 +16,7 @@
 
 <script>
   import { uploadFile } from '../../service/clientAPI'
+  import BMF from 'browser-md5-file'
   export default {
     props: {
       uploadType: Number,
@@ -29,9 +30,9 @@
       }
     },
     methods: {
-      fileSelected(e) {
+      async fileSelected(e) {
         let file = e.target.files;
-        let now =  this.nowLength + file.length
+        let now =  this.nowLength + file.length;
         if (now > this.maxLength) {
           this.$Message.info({
                 render: h => {
@@ -40,16 +41,32 @@
             });
           return false
         }
+        const bmf = new BMF();
         if (file.length > 0) {
-          let data = new FormData();
           for (let item of file) {
-            data.append('files', item)
+            bmf.md5(item, (err, md5) => {
+                if (!err) return false
+                let obj = {
+                  url: window.URL.createObjectURL(item),
+                  bmf: md5
+                }
+                this.$emit('beforeSuccessMD', obj);
+              },
+              progress => {
+                console.log('progress number:', progress);
+              },
+            );
           }
-          uploadFile(data, this.uploadType).then(res => {
-            this.$emit('uploadSuccess', res);
-          }).catch(err => {
-            console.log(err, 'uploadErr')
-          })
+
+          for (let i=0; i< file.length; i++) {
+            let data = new FormData();
+            data.append('files', file[i])
+            uploadFile(data, this.uploadType).then(res => {
+              this.$emit('uploadSuccess', res);
+            }).catch(err => {
+              console.log(err, 'uploadErr')
+            })
+          }
         }
       }
     }

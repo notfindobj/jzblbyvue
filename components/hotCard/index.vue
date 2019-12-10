@@ -60,11 +60,14 @@ export default {
             justify-content: space-between;
             padding: 5px 10px;
         }
-        &-content img {
-            width: 100%;
-            height: 100%;
-            transform: scale(1);
-            transition: transform .5s;
+        &-content {
+            height: 230px;;
+            img {
+                width: 100%;
+                height: 100%;
+                transform: scale(1);
+                transition: transform .5s;
+            }
         }
         &-foote {
             position: absolute;

@@ -32,12 +32,14 @@
                 </div>
                 <div class="hot-item-content">
                     <div class="hot-item-left">
-                        <template v-for="(items, index) in hotPro" v-if="index < 4" >
-                            <hotCard :hotCard="items" :key="index" @enterBuild="enterBuild"/>
+                        <template v-if="hotPro">
+                            <hotCard v-for="(items, index) in hotPro" v-if="index < 4" :hotCard="items" :key="index" @enterBuild="enterBuild"/>
                         </template>
                     </div>
                     <div>
-                        <hotVideo v-if="hotVideo.length > 0" :hotVideo="hotVideo[0]" @enterVideo="enterVideo"/>
+                        <template v-if="hotVideo">
+                            <hotVideo v-if="hotVideo.length > 0" :hotVideo="hotVideo[0]" @enterVideo="enterVideo"/>
+                        </template>
                         <ul class="Questions" v-if="hotQue.length > 0">
                             <li v-for="(item, index) in hotQue" :key="index">
                                 <nuxt-link target="_blank" :to="{name: 'QuestionsAndAnswers', params: {id:item.ItemId}}">
@@ -365,11 +367,7 @@
     },
     data() {
         return {
-            editorName: 'tw',
-            hotList: [],
-            hotPro: [],
-            hotVideo: [],
-            hotQue: []
+            editorName: 'tw'
         }
     },
     computed: {
@@ -382,7 +380,22 @@
         hotVideo
     },
     async asyncData({ app, store }) {
-        let [menuData, homeData] = await Promise.all([store.dispatch('getMenu'), store.dispatch('getHomeData')]);
+        let [getRec, menuData, homeData] = await Promise.all([store.dispatch('getRec', {ids: '1,2,3,4', pages: 4}), store.dispatch('getMenu'), store.dispatch('getHomeData')]);
+        let hotPro = []
+        let hotVideo = []
+        let hotQue = []
+        // 热门推荐
+        getRec.forEach(ele => {
+            if (ele.TypeId === 1) {
+                hotPro.push(ele)
+            }
+            if (ele.TypeId === 2) {
+                hotVideo.push(ele)
+            }
+            if (ele.TypeId === 3) {
+                hotQue.push(ele)
+            }
+        })
         let sfq = {};
         let lps = {};
         let xgts = {};
@@ -414,6 +427,10 @@
             }
         });
         return {
+            getRec,
+            hotPro,
+            hotVideo,
+            hotQue,
             sfq,
             lps,
             xgts,
@@ -436,8 +453,6 @@
         }
     },
     mounted () {
-        this.hotPros();
-        this.hotvideo();
         this.initSwiper()
     },
     methods: {
@@ -537,34 +552,6 @@
         // 路由跳转
         jumpRoute(items) {
             this.$router.push({ name: "HeAndITribal-id", query: { id: items.UserId } });
-        },
-        // 热门推荐
-        async hotPros (id = '1,2,3', pages = 4) {
-            let msg = await getRecommend(id, pages);
-            if (msg && msg instanceof Array) {
-                msg.forEach(ele => {
-                    if (ele.TypeId === 1) {
-                        this.hotPro.push(ele)
-                    }
-                    if (ele.TypeId === 2) {
-                        this.hotVideo.push(ele)
-                    }
-                    if (ele.TypeId === 3) {
-                        this.hotQue.push(ele)
-                    }
-                })
-            }
-        },
-        // 热门推荐
-        async hotvideo (id = '2', pages = 1) {
-            let msg = await getRecommend(id, pages);
-            if (msg && msg instanceof Array) {
-                msg.forEach(ele => {
-                    if (ele.TypeId === 2) {
-                        this.hotVideo.push(ele)
-                    }
-                })
-            }
         }
     }
 }
