@@ -68,7 +68,7 @@
                        <div v-for="(item, otherIndex) in itemInfo.ResourceObj"  :class="otherIndex < textLength ? 'img' : 'img itemHide'" :key="otherIndex">
                         <img v-if="otherIndex < textLength" v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
                         <img v-if="otherIndex >= textLength" :src="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
-                        <div v-if="otherIndex === (textLength - 1)" class="superLong">
+                        <div v-if="(itemInfo.ResourceObj.length - textLength) > 0 && otherIndex === (textLength - 1)" class="superLong">
                             <span>+{{itemInfo.ResourceObj.length - textLength}}</span>
                         </div>
                       </div>
@@ -80,7 +80,7 @@
                           <img v-if="imgIndex < 3" v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
                           <img v-if="imgIndex >= 3" :src="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
                           <div v-if=" ((itemInfo.ResourceObj.length - 3) > 0) && imgIndex === 2" class="superLong">
-                              <span>+{{itemInfo.ResourceObj.length - 3}}</span>
+                            <span>+{{itemInfo.ResourceObj.length - 3}}</span>
                           </div>
                         </div>
                       </template>

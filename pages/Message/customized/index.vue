@@ -55,11 +55,59 @@ export default {
     },
     methods: {
         viewDetails (row) {
+            let routeData = {}
+            let showLayout = true 
+            switch (row.DataIds.scopeType) {
+                case 0:
+                    let showLayout = true 
+                    if (row.TypeName === '文本' || row.TypeName === '建筑规范') {
+                        showLayout = false
+                    } else {
+                        showLayout = true
+                    }
+                    routeData = this.$router.resolve({
+                        name: 'DataDetails',
+                        query: {id: row.DataIds.itemId, layout: showLayout }
+                    })
+                    break;
+                case 1:
+                    routeData = this.$router.resolve({
+                        name: 'pictureDetails-id',
+                        params: {id: row.DataIds.itemId }
+                    })
+                    break;
+                case 2:
+                    routeData = this.$router.resolve({
+                        name: 'videoDetails-id',
+                        params: {id: row.DataIds.itemId }
+                    })
+                    break;
+               
+                case 3:
+                    routeData = this.$router.resolve({
+                        name: 'QuestionsAndAnswers-id',
+                        params: {id: row.DataIds.itemId }
+                    })
+                    break;
+                case 4:
+                    if (row.TypeName === '文本' || row.TypeName === '建筑规范') {
+                        showLayout = false
+                    } else {
+                        showLayout = true
+                    }
+                    routeData = this.$router.resolve({
+                        name: 'DataDetails',
+                        query: {id: row.DataIds.itemId, layout: showLayout }
+                    })
+                    break;
+                case 5:
+                    routeData = this.$router.resolve({
+                        name: 'pictureDetails-id',
+                        params: {id: row.DataIds.itemId }
+                    })
+                    break;
+            }
             this.signMessage(row, 2)
-            let routeData = this.$router.resolve({
-                name: 'DataDetails',
-                query: {id: row.DataIds.itemId, layout: true }
-            })
             analogJump(routeData.href);
         },
         async getMegs () {
@@ -93,7 +141,6 @@ export default {
             let content = ""
             title = type === 2 ? "阅读消息": "删除消息"
             content= type === 2 ? `确定全部阅读消息？` : `删除消息后不可恢复，确定要删除嘛？`
-            debugger
             if (id.constructor  === Object && type == 2) {
                 let msg = await setMessage(queryData);
                 if (msg) {

@@ -257,7 +257,7 @@ export default {
             if (item.TalkType === 3) {
                 routeData = this.$router.resolve({
                     name: 'QuestionsAndAnswers-id',
-                    params: {id: row.ItemId }
+                    params: {id: item.ItemId }
                 })
             }
             if (item.TalkType === 5) {
@@ -266,16 +266,16 @@ export default {
                     params: {id: item.ItemId }
                 })
             }
-            if (item.TalkType === 4) {
+            if (item.TalkType === 4 || item.TalkType === 0) {
                 let showLayout = true 
-                if (row.TypeName === '文本' || row.TypeName === '建筑规范') {
+                if (item.TypeName === '文本' || item.TypeName === '建筑规范') {
                     showLayout = false
                 } else {
                     showLayout = true
                 }
                 routeData = this.$router.resolve({
                     name: 'DataDetails',
-                    query: {id: row.ItemId, layout: showLayout }
+                    query: {id: item.ItemId, layout: showLayout }
                 })
             }
             analogJump(routeData.href);
@@ -284,12 +284,28 @@ export default {
         async getCommentsList () {
             this.isSpin = true
             let ScopeType= 0
-            if (this.itemInfo.TalkType === 4) {
-                ScopeType = 0
-            } else if (this.itemInfo.TalkType === 3) {
-                ScopeType = 3
-            } else {
-                ScopeType = 2
+            switch (this.itemInfo.TalkType) {
+                case 0:
+                    ScopeType = 0
+                    break;
+                case 1:
+                    ScopeType = 1
+                    break;
+                case 2:
+                    ScopeType = 2
+                    break;
+                case 4:
+                    ScopeType = 0
+                    break;
+                case 3:
+                    ScopeType = 3
+                    break;
+                case 5:
+                    ScopeType = 5
+                    break;
+                default:
+                    ScopeType = 2
+                    break;
             }
             // 兼容项目详情
             if (this.itemInfo.TalkType === undefined) {
@@ -315,12 +331,28 @@ export default {
                 return false
             }
             let ScopeType= 0
-            if (this.itemInfo.TalkType === 4) {
-                ScopeType = 0
-            } else if (this.itemInfo.TalkType === 3) {
-                ScopeType = 3
-            } else {
-                ScopeType = 2
+            switch (this.itemInfo.TalkType) {
+                case 0:
+                    ScopeType = 0
+                    break;
+                case 1:
+                    ScopeType = 1
+                    break;
+                case 2:
+                    ScopeType = 2
+                    break;
+                case 4:
+                    ScopeType = 0
+                    break;
+                case 3:
+                    ScopeType = 3
+                    break;
+                case 5:
+                    ScopeType = 5
+                    break;
+                default:
+                    ScopeType = 2
+                    break;
             }
             // 兼容项目详情
             if (this.itemInfo.TalkType === undefined) {

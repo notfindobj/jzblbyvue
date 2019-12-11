@@ -1,5 +1,5 @@
 <template>
-    <span v-html="value.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></span>
+    <span class="text-emot" v-html="value.replace(/\[[\u4E00-\u9FA5]{1,3}\]/gi, emotion)"></span>
 </template>
 <script>
 import {getEmotionList} from '../../plugins/untils/public'
@@ -41,4 +41,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .text-emot {
+        word-break: break-all;
+    }
 </style>

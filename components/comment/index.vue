@@ -12,6 +12,7 @@
             :value="value"  -->
             <Input 
                 type="textarea" 
+                :autosize="true"
                 v-model="commentValue"
                 @on-change="onChange"
                 :rows="emotionRows" 
