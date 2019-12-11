@@ -45,7 +45,7 @@
                 </li>
                 <li>
                     <Dropdown class="right-select">
-                        <Badge :count="getComment.MsgCount + getCusData.MsgCount + getInviter.MsgCount " class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
+                        <Badge :count="getComment.MsgCount + getCusData.MsgCount + getInviter.MsgCount " class-name="badge-sty"> <i  class="iconfont icon-xinxi bottom-start-mess"></i></Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem >
                                 <nuxt-link to="/Message/customized">评论消息<Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>

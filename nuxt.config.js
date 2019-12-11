@@ -72,6 +72,7 @@ module.exports = {
   */
   build: {
     // 提取css到单独link文件
+    // extractCSS: { allChunks: true },
     extractCSS: true,
     transpile: [/^iview/],
     babel: {
@@ -82,7 +83,6 @@ module.exports = {
         ]
       }
     },
-    // extractCSS: { allChunks: true },
     optimization: { // 配置代码压缩规则
       minimizer: [
         // webpack4 使用的压缩插件，用来替代webpack3的 UglifyJsPlugin

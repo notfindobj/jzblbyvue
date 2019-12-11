@@ -43,29 +43,27 @@
         }
         const bmf = new BMF();
         if (file.length > 0) {
-          for (let item of file) {
-            bmf.md5(item, (err, md5) => {
-                if (!err) return false
+          for (let i= 0;i< file.length; i++) {
+            let msg = await bmf.md5(file[i], (err, md5) => {
+                if (err) return false
                 let obj = {
-                  url: window.URL.createObjectURL(item),
+                  action: true,
+                  smallImgUrl: window.URL.createObjectURL(file[i]),
                   bmf: md5
                 }
                 this.$emit('beforeSuccessMD', obj);
+                let data = new FormData();
+                data.append('files', file[i])
+                uploadFile(data, this.uploadType, md5).then(res => {
+                  this.$emit('uploadSuccess', res);
+                }).catch(err => {
+                  console.log(err, 'uploadErr')
+                })
               },
               progress => {
                 console.log('progress number:', progress);
               },
             );
-          }
-
-          for (let i=0; i< file.length; i++) {
-            let data = new FormData();
-            data.append('files', file[i])
-            uploadFile(data, this.uploadType).then(res => {
-              this.$emit('uploadSuccess', res);
-            }).catch(err => {
-              console.log(err, 'uploadErr')
-            })
           }
         }
       }

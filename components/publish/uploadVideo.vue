@@ -12,16 +12,23 @@
         :on-remove="removeFile"
     >
         <div class="upload1">
-            <span>
-            <i class="icon iconfont">&#xe613;</i>
-            添加视频
-        </span>
+          <img v-if="previewSrc !== ''" :src="previewSrc" alt="">
+          <span v-else>
+              <i class="icon iconfont">&#xe613;</i>
+              添加视频
+          </span>
         </div>
     </Upload>
 </template>
 <script>
   import { mapState, mapGetters } from 'vuex'
   export default {
+    props: {
+      previewSrc: {
+        type: String,
+        default: ''
+      }
+    },
     data() {
       return {
         baseUrl: process.env.baseUrl,
@@ -57,6 +64,9 @@
 </script>
 
 <style lang="less" scoped>
+    /deep/.ivu-upload-list {
+      position: absolute;
+    }
     .upload1 {
         position: relative;
         width: 132px;
@@ -67,7 +77,10 @@
         font-size: 16px;
         cursor: pointer;
         transition: all .2s linear;
-
+        img {
+          width: 100%;
+          height: 100%;
+        }
         span {
             position: absolute;
             left: 26px;

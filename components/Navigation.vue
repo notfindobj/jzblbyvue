@@ -13,6 +13,11 @@
                     </ul>
                     <li>欢迎您，来到建筑部落！</li>
                     <li class="Headportrait">
+                        <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
+                    </li>
+                </ul>
+                <ul class="home-bar-content-right">
+                    <li class="content">
                         <div class="avatar" v-if="auth" @click="enterCenter">
                             <img :src="auth ? auth.HeadIcon :  $defaultHead" alt="">
                         </div>
@@ -23,16 +28,10 @@
                             <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                         </div>
                     </li>
-                    
-                </ul>
-                <ul class="home-bar-content-right">
-                    <li class="content">
-                        <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
-                    </li>
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>
                         <Dropdown class="right-select">
-                        <Badge :count="getComment.MsgCount + getCusData.MsgCount  + getInviter.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-lingdang bottom-start-mess"></i></Badge>
+                        <Badge :count="getComment.MsgCount + getCusData.MsgCount  + getInviter.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-xinxi bottom-start-mess"></i></Badge>
                         <DropdownMenu slot="list">
                             <DropdownItem >
                                 <nuxt-link to="/Message/customized">评论消息<Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>

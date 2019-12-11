@@ -33,6 +33,9 @@
                                         <div class="img-item" v-for="(item, index) in imgList" :key="index" >
                                             <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
                                             <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
+                                            <div v-if="item.action" class="action-up">
+                                                <span>正在上传</span>
+                                            </div>
                                         </div>
                                     </draggable>
                                     <Upload class="upload" :uploadType="2" :nowLength="imgList.length" @beforeSuccessMD="beforeSuccessMD" @uploadSuccess="uploadSuccess" />
@@ -50,7 +53,8 @@
                                 <div class="updat-content-title">上传视频</div>
                                 <p>发布后，视频将出现在我的部落</p>
                                 <div class="upload-box">
-                                    <uploadVideo 
+                                    <uploadVideo
+                                    :previewSrc='previewSrc'
                                     @clearVideo="clearVideo"
                                     @uploadSuccess="uploadSuccessVideo" />
                                     <p class="upload-tip">仅支持MP4视频格式，大小不超过100M，请勿上传反动色情等违法视频。</p>
@@ -147,7 +151,8 @@ export default {
             isAgree: false,
             publishMode: '公开',
             privacyList: [],
-            showPlaceholder: true
+            showPlaceholder: true,
+            previewSrc: ''
         }
     },
     created () {
@@ -311,21 +316,27 @@ export default {
         // 上传前的钩子函数
         beforeUpload (fileList) {
         },
-        beforeSuccessMD () {
-            
+        beforeSuccessMD (obj) {
+            this.imgList.push(obj);
         },
         uploadSuccess (fileList) {
-            for(let i of fileList) {
-                this.imgList.push(i);
-            }
+            let file = fileList[0];
+            this.imgList.forEach((ele, index) => {
+                if (ele.bmf === file.md5) {
+                    ele.action = false
+                    ele.smallImgUrl = file.smallImgUrl
+                }
+            })
         },
         // 视频
         clearVideo () {
-            this.imgList = []
+            this.imgList = [];
+            this.previewSrc = ''
         },
         uploadSuccessVideo (videoInfo) {
             this.imgList = [];
             this.imgList = [videoInfo];
+            this.previewSrc = videoInfo.smallImgUrl
         },
         // 文本域发生变化
         onchange (html) {
@@ -370,6 +381,7 @@ export default {
             this.isPanel = false;
             this.imgsrc = [];
             this.imgList = [];
+            this.previewSrc = ''
             this.publishMode = this.privacyList[0].Name + '|'+ this.privacyList[0].Id;
             // this.editor.txt.html(`<p>${placeholders}</p>`);
             this.editor.txt.html(`<p><br/></p>`);
@@ -390,6 +402,23 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .action-up {
+        position: absolute;
+        top: 0;
+        background: rgba(214, 214, 214, .6);
+        color: #ffffff;
+        width: 100%;
+        height: 100%;
+        span {
+            position:absolute;
+            display: inline-block;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            text-align: center;
+        }
+    }
     /deep/.bl-loading {
         position: relative;
         .bl-mongolia {
@@ -400,6 +429,9 @@ export default {
             background:rgba(255, 255, 255, 0.6);
             span {
                 position: absolute;
+                font-size: 20px;
+                font-weight: bold;
+                color: #fff;
                 left: 50%;
                 top: 50%;
                 transform: translate(-50%, -50%);
@@ -474,7 +506,6 @@ export default {
         height: 70px;
         margin: 10px 10px 0 0;
         border-radius: 2px;
-        background-color: #ccc;
         overflow: hidden;
         cursor: pointer;
         position: relative;
