@@ -7,7 +7,7 @@
             <div class="comment" :key="index" v-if="index < viewMore">
                 <div class="comment-left">
                     <Poptip trigger="hover" transfer  width="80" popper-class="popper-box" @on-popper-show="popperShow(item.UserId)">
-                        <span @click="jumpPersonal(item)">
+                        <span @click="jumpPersonal(item.UserId)">
                             <img :src="item.HeadIcon" alt="">
                         </span>
                         <div slot="content">
@@ -38,7 +38,7 @@
                 <div class="comment-right">
                     <div class="comment-right-title">
                         <Poptip trigger="hover" transfer  width="100" popper-class="popper-box" @on-popper-show="popperShow(item.UserId)">
-                            <span class="comment-right-title-name" @click="jumpPersonal(item)">{{item.NickName}}</span>
+                            <span class="comment-right-title-name" @click="jumpPersonal(item.UserId)">{{item.NickName}}</span>
                             <div slot="content">
                                 <div class="block" >
                                     <div class="block-title">
@@ -89,7 +89,7 @@
                         <div class="comment-right borderBottom">
                             <div class="comment-right-title">
                                 <Poptip trigger="hover" transfer  width="100" popper-class="popper-box" @on-popper-show="popperShow(items.UserId)">
-                                    <span class="comment-right-title-name" @click="jumpPersonal(items)">{{items.NickName}}</span>
+                                    <span class="comment-right-title-name" @click="jumpPersonal(items.UserId)">{{items.NickName}}</span>
                                     <div slot="content">
                                         <div class="block">
                                             <div class="block-title">
@@ -117,7 +117,7 @@
                                 <span>:</span>
                                 <span>回复
                                     <Poptip trigger="hover" transfer  width="100" popper-class="popper-box" @on-popper-show="popperShow(items.ReplyUserId)">
-                                        <span class="ReplyUserName" @click="jumpPersonal(items)">@{{items.ReplyUserName}}</span>
+                                        <span class="ReplyUserName" @click="jumpPersonal(items.ReplyUserId)">@{{items.ReplyUserName}}</span>
                                         <div slot="content">
                                             <div class="block">
                                                 <div class="block-title">
@@ -235,48 +235,63 @@ export default {
     },
     methods: {
         // 跳转个人中心
-        jumpPersonal  (row) {
-            let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: row.UserId} });
+        jumpPersonal  (id) {
+            let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id:id} });
             analogJump(routeData.href);
         },
         // 跳转详情
         JumpDetails (item) {
             let routeData = {}
-            if (item.TalkType === 1) {
-                routeData = this.$router.resolve({
-                    name: 'pictureDetails-id',
-                    params: {id: item.ItemId }
-                })
-            }
-            if (item.TalkType === 2) {
-                routeData = this.$router.resolve({
-                    name: 'videoDetails-id',
-                    params: {id: item.ItemId }
-                })
-            }
-            if (item.TalkType === 3) {
-                routeData = this.$router.resolve({
-                    name: 'QuestionsAndAnswers-id',
-                    params: {id: item.ItemId }
-                })
-            }
-            if (item.TalkType === 5) {
-                routeData = this.$router.resolve({
-                    name: 'pictureDetails-id',
-                    params: {id: item.ItemId }
-                })
-            }
-            if (item.TalkType === 4 || item.TalkType === 0) {
-                let showLayout = true 
-                if (item.TypeName === '文本' || item.TypeName === '建筑规范') {
-                    showLayout = false
-                } else {
-                    showLayout = true
-                }
-                routeData = this.$router.resolve({
-                    name: 'DataDetails',
-                    query: {id: item.ItemId, layout: showLayout }
-                })
+            let showLayout = true;
+            switch (item.TalkType) {
+                case 0:
+                    let showLayout = true 
+                    if (row.TypeName === '文本' || row.TypeName === '建筑规范') {
+                        showLayout = false
+                    } else {
+                        showLayout = true
+                    }
+                    routeData = this.$router.resolve({
+                        name: 'DataDetails',
+                        query: {id: item.ItemId, layout: showLayout }
+                    })
+                    break;
+                case 1:
+                    routeData = this.$router.resolve({
+                        name: 'pictureDetails-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+                case 2:
+                    routeData = this.$router.resolve({
+                        name: 'videoDetails-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+               
+                case 3:
+                    routeData = this.$router.resolve({
+                        name: 'QuestionsAndAnswers-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+                case 4:
+                    if (row.TypeName === '文本' || row.TypeName === '建筑规范') {
+                        showLayout = false
+                    } else {
+                        showLayout = true
+                    }
+                    routeData = this.$router.resolve({
+                        name: 'DataDetails',
+                        query: {id: item.ItemId, layout: showLayout }
+                    })
+                    break;
+                case 5:
+                    routeData = this.$router.resolve({
+                        name: 'pictureDetails-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
             }
             analogJump(routeData.href);
         },
@@ -317,7 +332,6 @@ export default {
                 ScopeType: ScopeType
             }
             let msg = await getComments(queryData);
-            
             if (msg) {
                 this.comments = msg.Comments;
                 this.isSpin = false
