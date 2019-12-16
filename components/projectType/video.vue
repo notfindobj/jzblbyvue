@@ -8,8 +8,15 @@
                         <img @click="goToPersonal(videoInfo)" :src="videoInfo.HeadIcon" alt="">
                     </div>
                     <div class="info">
-                        <p class="name">{{videoInfo.NickName }}</p>
-                        <p class="time">{{videoInfo.CreateDate}}</p>
+                        <div>
+                          <p class="name">{{videoInfo.NickName }}</p>
+                          <p class="time">{{videoInfo.CreateDate}}</p>
+                        </div>
+                        <div class="info-lable">
+                          <span v-if="videoInfo.TalkType === 2">视频</span>
+                          <span v-if="videoInfo.TalkType === 6">小视频</span>
+                          <span v-if="videoInfo.IsOriginal">原创</span>
+                        </div>
                     </div>
                 </div>
                 <div class="tool-box" v-if="isTool === videoInfo.ItemId" @mouseenter="showWorks(videoInfo.UserId, videoInfo.ItemId, 0)" @mouseleave="hideWorks()">
@@ -258,6 +265,21 @@
 
 <style lang="less" scoped>
   @import "~assets/css/ModulesStyle/index.less";
+  .info {
+      display: flex;
+    }
+    .info-lable {
+      display: flex;
+      align-items: flex-end;
+      span {
+        margin-left: 10px;
+        margin-bottom: 5px;
+        color: #f55e02;
+        background-color: #ffe9da;
+        padding: 1px 5px;
+        border-radius: 2px;
+      }
+    }
   .tool-jian {
       position: relative;
       &::after {

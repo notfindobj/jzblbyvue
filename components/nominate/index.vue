@@ -60,7 +60,7 @@
 import {mapGetters, mapState} from 'vuex'
 import {getUserProAndFans, getRecommend} from '../../service/clientAPI'
 import Swiper from "swiper"
-// import 'swiper/dist/css/swiper.min.css'
+import 'swiper/dist/css/swiper.min.css'
 export default {
     props: {
         valType: {

@@ -16,7 +16,7 @@ module.exports = {
       { hid: 'description', name: 'description', content: '建筑部落' }
     ],
     link: [
-        {rel: 'stylesheet', href: 'https://unpkg.com/swiper/css/swiper.min.css'}
+        {rel: 'stylesheet', href: 'https://unpkg.com/swiper@5.2.1/css/swiper.min.css'}
     ],
     script: [
       { src: 'https://cdn.bootcss.com/jquery/2.2.3/jquery.min.js' },
@@ -72,8 +72,7 @@ module.exports = {
   */
   build: {
     // 提取css到单独link文件
-    // extractCSS: { allChunks: true },
-    extractCSS: true,
+    extractCSS: { allChunks: true },
     transpile: [/^iview/],
     babel: {
       presets({ isServer }) {
@@ -107,7 +106,7 @@ module.exports = {
       splitChunks: { // 代码打包分割规则
         chunks: 'all',
         cacheGroups: {
-          libs: {
+          vendors: {
             name: 'chunk-libs',
             test: /[\\/]node_modules[\\/]/,
             priority: 10,

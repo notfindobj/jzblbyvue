@@ -33,9 +33,9 @@
                                 </div>
                                 <div class="comHome-other">
                                     <p v-if="CompanyIntro.Labels"><span class="comHome-title">擅长业务：</span>{{CompanyIntro.Labels}}</p>
-                                    <p  v-if="CompanyIntro.Email"><span class="comHome-title">邮箱：</span>{{CompanyIntro.Email}}</p>
-                                    <p  v-if="CompanyIntro.Mobile"><span class="comHome-title">电话：</span>{{CompanyIntro.Mobile}}</p>
-                                    <p  v-if="CompanyIntro.ProvinceName"><span class="comHome-title">地址：</span>{{CompanyIntro.ProvinceName}}{{CompanyIntro.CityName}}{{CompanyIntro.CountyName}}</p>
+                                    <p v-if="CompanyIntro.Email"><span class="comHome-title">邮箱：</span>{{CompanyIntro.Email}}</p>
+                                    <p v-if="CompanyIntro.Mobile"><span class="comHome-title">电话：</span>{{CompanyIntro.Mobile}}</p>
+                                    <p v-if="CompanyIntro.ProvinceName"><span class="comHome-title">地址：</span>{{CompanyIntro.ProvinceName}}{{CompanyIntro.CityName}}{{CompanyIntro.CountyName}}</p>
                                 </div>
                             </div>
                             <div class="comHome-teamuserlist">
@@ -121,7 +121,7 @@
     import { getTypeMeun , getFollowOrFans, ItemOperat, getItemPrice, getCompanyInfo, getQueryData, addInviteUser} from '~/service/clientAPI'
     import { _throttle } from '../../plugins/untils/public'
     import Swiper from "swiper"
-    // import 'swiper/dist/css/swiper.min.css'
+    import 'swiper/dist/css/swiper.min.css'
     export default {
         layout: 'main',
         name: 'PersonalCenter',

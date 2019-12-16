@@ -24,6 +24,8 @@
                           <span v-if="itemInfo.TalkType === 3">问答</span>
                           <span v-if="itemInfo.TalkType === 5">文章</span>
                           <span v-if="itemInfo.TalkType === 4">{{itemInfo.TypeName}}</span>
+                          <!-- <span v-if="itemInfo.TalkType === 2">视频</span>
+                          <span v-if="itemInfo.TalkType === 6">小视频</span> -->
                           <span v-if="itemInfo.IsOriginal">原创</span>
                         </div>
                     </div>

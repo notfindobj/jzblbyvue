@@ -9,7 +9,7 @@
                     <template v-for="(item, index) in attentionList">
                         <ImageAndText
                             :key="index"
-                            v-if="item.TalkType !== 2"
+                            v-if="item.TalkType !== 2 && item.TalkType !== 6"
                             :itemInfo="item"
                             :index="index"
                             @clickCollection="clickCollection"
@@ -18,7 +18,7 @@
                         ></ImageAndText>
                         <VideoItem
                             :key="index"
-                            v-if="item.TalkType === 2"
+                            v-if="item.TalkType === 2 || item.TalkType === 6"
                             :videoInfo="item"
                             :index="index"
                             @clickCollection="clickCollection"

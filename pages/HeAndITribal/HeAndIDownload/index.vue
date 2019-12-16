@@ -2,7 +2,7 @@
     <div class="download-box">
         <div class="download-box-con">
               <template v-for="(item, index) in dataList">
-                  <ImageAndText v-if="item.TalkType !== 2" 
+                  <ImageAndText v-if="item.TalkType !== 2 && item.TalkType !== 6" 
                       :textLength="9"
                       :itemInfo.sync="item" 
                       :index="index" :key="index"
@@ -11,7 +11,9 @@
                       @clickMenu="clickMenu"
                       @delComments="delComments"
                   />
-                  <VideoItem :key="index" v-if="item.TalkType === 2" :videoInfo.sync="item" :index="index"
+                  <VideoItem 
+                    :key="index" v-if="item.TalkType === 2 || item.TalkType === 6" 
+                      :videoInfo.sync="item" :index="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
                       @delComments="delComments"

@@ -57,7 +57,7 @@
         },
         async asyncData({ store }) {
             let queryData = {
-                TalkType: 2,
+                TalkType: 99,
                 Page: 1
             };
             const data = await store.dispatch('getTalk', {queryData});
@@ -184,7 +184,7 @@
             // 获取数据
             async getList(row, type) {
                 let queryData = {
-                    TalkType: '2',
+                    TalkType: '99',
                     Page: this.pageNum
                 };
                 const data = await this.$store.dispatch('getTalk', {queryData});
