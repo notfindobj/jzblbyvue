@@ -70,7 +70,7 @@ export default {
             i {
                 position: absolute;
                 right: -8px;
-                top: -9px;
+                top: -14px;
                 font-size: 12px;
                 display: none;
             }

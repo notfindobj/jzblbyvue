@@ -1,7 +1,7 @@
 <template>
     <div>
         <Title/>
-        <msgTab/>
+        <msgTab :TabList="TabList"/>
         <div>
             <msgCard>
                 <div slot="header" class="custom">
@@ -23,13 +23,24 @@ export default {
         Title,
         msgTab,
         msgCard
+    },
+    data () {
+        return {
+            TabList: [
+                {path: '/User/system', label: '系统消息'},
+                {path: '/User/comment', label: '评论消息'},
+                {path: '/User/customized', label: '定制消息'},
+                {path: '/User/Invitation', label: '邀请消息'}
+            ]
+        }
     }
 }
 </script>
 <style lang="less" scoped>
     .custom {
         display: flex;
-        justify-content: space-between;
         line-height: 30px;
+        justify-content: space-between;
+        width: 100%;
     }
 </style>

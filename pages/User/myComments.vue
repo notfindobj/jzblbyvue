@@ -3,7 +3,7 @@
         <Title/>
         <msgTab :TabList="TabList"/>
         <div>
-            <comCard/>
+           <comCard/>
             <comCard :left="false"/>
             <comCard :cintent="false "/>
         </div>
@@ -22,10 +22,13 @@ export default {
     data () {
         return {
             TabList: [
-                {path: '/User/system', label: '系统消息'},
-                {path: '/User/comment', label: '评论消息'},
-                {path: '/User/customized', label: '定制消息'},
-                {path: '/User/Invitation', label: '邀请消息'}
+                {path: '/User/myRelease', label: '我的发布'},
+                {path: '/User/myCollection', label: '我的收藏'},
+                {path: '/User/myDownload', label: '我的下载'},
+                {path: '/User/myComments', label: '我的评论'},
+                {path: '/User/myConcern', label: '我的关注'},
+                {path: '/User/myRecommended', label: '被推荐作品'},
+                {path: '/User/browseRecord', label: '浏览记录'}
             ]
         }
     }

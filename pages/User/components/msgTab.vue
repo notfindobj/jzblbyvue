@@ -1,6 +1,11 @@
 <template>
     <ul class="msgTab">
-        <li>
+        <template v-for="(item, index) in TabList">
+            <li :key="index">
+                <nuxt-link :to="item.path">{{item.label}}</nuxt-link>
+            </li>
+        </template>
+        <!-- <li>
             <nuxt-link to="/User/system">系统消息</nuxt-link>
         </li>
         <li>
@@ -11,9 +16,21 @@
         </li>
         <li>
             <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
-        </li>
+        </li> -->
     </ul>
 </template>
+<script>
+export default {
+    props: {
+        TabList: {
+            type: Array,
+            default: function () {
+                return []
+            }
+        }
+    }
+}
+</script>
 <style lang="less" scoped>
     .msgTab {
         display: flex;

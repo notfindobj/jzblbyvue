@@ -1,11 +1,24 @@
 <template>
-    <div class="ptitle">
-        <span class="ptitle-name">公告title</span>
+    <div class="ptitle" :style="`border-bottom:${bottomLine ? '1px solid #dddddd;' : ''}`">
+        <span class="ptitle-name">{{title}}</span>
     </div>
 </template>
+<script>
+export default {
+    props: {
+        title: {
+            type: String,
+            default: '公告title'
+        },
+        bottomLine: {
+            type: Boolean,
+            default: true
+        },
+    }
+}
+</script>
 <style lang="less" scoped>
     .ptitle {
-        border-bottom: 1px solid #dddddd;
         &-name {
             font-size: 14px;
             font-weight: 600;
