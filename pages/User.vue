@@ -16,11 +16,11 @@
             </li>
             <li>
                 <p>合作设计师</p>
-                <nuxt-link to="/a123">实名认证</nuxt-link>
+                <nuxt-link to="">实名认证</nuxt-link>
             </li>
             <li>
                 <p>订单管理 </p>
-                <nuxt-link to="/a123">需求订单</nuxt-link>
+                <nuxt-link to="">需求订单</nuxt-link>
             </li>
             <li>
                 <p>资产管理 </p>
@@ -45,13 +45,13 @@
                 <nuxt-link to="/User/adminis">身份认证</nuxt-link>
                 <nuxt-link to="/User/myBond">我的保证金</nuxt-link>
                 <nuxt-link to="/User/myInvoice">我的发票</nuxt-link>
-                <nuxt-link to="/a123">收货地址</nuxt-link>
-                <nuxt-link to="/a123">账户安全</nuxt-link>
+                <nuxt-link to="/User/myAddress">收货地址</nuxt-link>
+                <nuxt-link to="/User/security">账户安全</nuxt-link>
             </li>
             <li>
                 <p>保障服务 </p>
-                <nuxt-link to="/a123">我的举报</nuxt-link>
-                <nuxt-link to="/a123">意见反馈</nuxt-link>
+                <nuxt-link to="">我的举报</nuxt-link>
+                <nuxt-link to="">意见反馈</nuxt-link>
             </li>
         </ul>
         <div class="user-right">
@@ -63,6 +63,10 @@
 export default {
     middleware: ['message', 'authenticated'],
     layout: 'main',
+    transition (to, from) {
+        if (!from) { return 'slide-left' }
+        return +to.query.page < +from.query.page ? 'slide-right' : 'slide-left'
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -77,6 +81,7 @@ export default {
             padding: 0;
             background: #ffffff;
             box-shadow: 0px 0px 5px #e2e2e2;
+            height: 950px;
             li {
                 .user-side-title {
                     display: inline-block;

@@ -40,7 +40,7 @@ export default {
     .card {
         display: flex;
         width: 480px;
-        justify-content: start;
+        flex: start;
         margin-top: 20px;
         cursor: pointer;
         &:hover .card-right-title i{

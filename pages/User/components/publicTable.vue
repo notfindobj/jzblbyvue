@@ -1,8 +1,15 @@
 <template>
     <div>
-        <Table size="small" :data="columnsData" :columns="setColumns(columns)" border ></Table>
+        <Table size="small"
+        border 
+        :data="columnsData" 
+        :columns="setColumns(columns)"
+        @on-select="onselect"
+        @on-select-all="onselectall"
+        @on-selection-change="onselectionchange"
+        ></Table>
         <div class="Page">
-            <Page size="small" :total="100" />
+            <Page :total="100" />
         </div>
     </div>
 </template>
@@ -22,43 +29,6 @@ export default {
             }
         }
     },
-    data () {
-        return {
-            // columns1: [
-            //     {
-            //         cut: 'text',
-            //         title: '订单ID',
-            //         key: 'name'
-            //     },
-            //     {
-            //         cut: 'state',
-            //         title: '收入/支出',
-            //         key: 'state',
-            //         state: [{label: '收入', value: '1'}, {label: '支出', value: '2'}]
-            //     },
-            //     {
-            //         title: '金额',
-            //         key: 'address',
-            //         state: '1'
-            //     },
-            //     {
-            //         cut: 'time',
-            //         title: '时间',
-            //         key: 'address'
-            //     },
-            //     {
-            //         title: '状态',
-            //         key: 'address'
-            //     },
-            //     {
-            //         cut: 'btn',
-            //         title: '操作',
-            //         key: 'address',
-            //         state: [{text: '删除', events: 'addVal'}]
-            //     }
-            // ]
-        }
-    },
     methods: {
         setColumns (col = []) {
             col.forEach((ele, index) => {
@@ -66,6 +36,16 @@ export default {
                     case 'text':
                         ele.render= (h, params) => {
                             return h('span', params.row[ele.key]);
+                        }
+                        break;
+                    case 'keys':
+                        ele.render= (h, params) => {
+                            let kTxt = ''
+                            let keys = ele.key.split(',');
+                            for(let i=0; i< keys.length; i++) {
+                                kTxt += params.row[keys[i]]
+                            }
+                            return h('span', kTxt);
                         }
                         break;
                     case 'state':
@@ -96,13 +76,15 @@ export default {
                                         },
                                         on: {
                                             click: () => {
-                                                this[element.events](params.row, params.index, params.column)
+                                                this.$parent[element.events](params.row, params.index, params.column)
                                             }
                                         }
                                     }, element.text)
                                 )
                             })
-                            return h('div', [...btn]);
+                            return h('div',{
+                                class: "btn-position"
+                            }, [...btn]);
                         }
                         break;
                     default:
@@ -110,6 +92,24 @@ export default {
                 }
             })
             return col
+        },
+        /**
+         * 选中某一项触发,返回值为 selection 和 row，分别为已选项和刚选择的项。
+         */
+        onselect (selection, row) {
+            this.$emit('on-select', selection, row)
+        },
+        /**
+         * 点击全选时触发，返回值为 selection，已选项
+         */
+        onselectall (selection) {
+            this.$emit('on-select-all', selection)
+        },
+        /**
+         * 只要选中项发生变化时就会触发，返回值为 selection，已选项。
+         */
+        onselectionchange (selection) {
+            this.$emit('on-selection-change', selection)
         },
         addVal (row) {
             console.log(row)
@@ -121,5 +121,9 @@ export default {
     .Page {
         text-align: center;
         margin-top: 10px;
+    }
+    /deep/.btn-position {
+        display: flex;
+        justify-content: space-between;
     }
 </style>

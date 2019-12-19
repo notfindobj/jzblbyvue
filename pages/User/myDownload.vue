@@ -17,6 +17,7 @@ import Title from './components/title'
 import msgTab from './components/msgTab'
 import baseCard from '../../components/baseCard'
 export default {
+    key: to => to.fullPath,
     components: {
         Title,
         msgTab,

@@ -5,18 +5,6 @@
                 <nuxt-link :to="item.path">{{item.label}}</nuxt-link>
             </li>
         </template>
-        <!-- <li>
-            <nuxt-link to="/User/system">系统消息</nuxt-link>
-        </li>
-        <li>
-            <nuxt-link to="/User/comment">评论消息</nuxt-link>
-        </li>
-        <li>
-            <nuxt-link to="/User/customized">定制消息</nuxt-link>
-        </li>
-        <li>
-            <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
-        </li> -->
     </ul>
 </template>
 <script>
@@ -42,6 +30,7 @@ export default {
                 position: relative;
             }
             .nuxt-link-active {
+                color: #ff3c00;
                 &::before {
                     position: absolute;
                     content: '';
