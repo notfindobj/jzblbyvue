@@ -67,20 +67,44 @@ export default {
                     case 'btn':
                         ele.render= (h, params) => {
                             let btn = []
-                            ele.state.forEach((element, index) => {
-                                btn.push(
-                                        h('Button', {
-                                        props: {
-                                            type: 'error',
-                                            size: 'small'
-                                        },
-                                        on: {
-                                            click: () => {
-                                                this.$parent[element.events](params.row, params.index, params.column)
-                                            }
-                                        }
-                                    }, element.text)
-                                )
+                            ele.state.forEach(element => {
+                                let row = () => {
+                                    switch (element.cut) {
+                                        case 'state':
+                                            let stateBtn = undefined
+                                            element.state.forEach(btns => {
+                                                if (btns.value === params.row[element.key]) {
+                                                    stateBtn =  h('Button', {
+                                                        props: {
+                                                            type: btns.style || 'dashed',
+                                                            size: 'small'
+                                                        },
+                                                        on: {
+                                                            click: () => {
+                                                                this.$parent[element.events](params.row, btns.value, params.index, params.column)
+                                                            }
+                                                        }
+                                                    }, btns.label) 
+                                                }
+                                            })
+                                            return stateBtn
+                                            break;
+                                        default:
+                                            return h('Button', {
+                                                props: {
+                                                    type: element.style || 'dashed',
+                                                    size: 'small'
+                                                },
+                                                on: {
+                                                    click: () => {
+                                                        this.$parent[element.events](params.row, params.index, params.column)
+                                                    }
+                                                }
+                                            }, element.text)
+                                            break;
+                                    }  
+                                }
+                                btn.push(row())
                             })
                             return h('div',{
                                 class: "btn-position"

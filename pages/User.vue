@@ -50,8 +50,8 @@
             </li>
             <li>
                 <p>保障服务 </p>
-                <nuxt-link to="">我的举报</nuxt-link>
-                <nuxt-link to="">意见反馈</nuxt-link>
+                <nuxt-link to="/User/myReport">我的举报</nuxt-link>
+                <nuxt-link to="/User/feedback">意见反馈</nuxt-link>
             </li>
         </ul>
         <div class="user-right">

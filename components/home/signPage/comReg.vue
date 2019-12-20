@@ -35,7 +35,7 @@
                 </Col>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="公司地址:" prop="CompanyAddress">  
-                        <Cascader v-model="CompanyArr" :data="cascaderList" :load-data="loadData"  ></Cascader>
+                        <Cascader v-model="CompanyArr" :data="cascaderList" :load-data="loadData"></Cascader>
                     </FormItem>
                 </Col>
             </Row>

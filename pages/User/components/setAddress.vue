@@ -6,35 +6,21 @@
                 <span class="model-box-header-icon"> <i class="icon iconfont icon-chahao2" @click="closeBtn"></i> </span>
             </div>
             <div class="model-box-boby">
-                <Form class="model-box-boby-form" :label-width="80">
-                    <FormItem label="收货人：">
-                        <Input  placeholder="收货人" v-model="addressData.Receiver" style="width: 160px;" />
+                <Form ref="addres" class="model-box-boby-form" :model="addressData" :rules="ruleAddres" :label-width="90">
+                    <FormItem label="收货人：" prop="Receiver">
+                        <Input  placeholder="收货人" v-model="addressData.Receiver" style="width: 240px;" />
                     </FormItem>
-                    <FormItem label="所在地区：">
-                        <Select size="small" v-model="addressData.ProvinceArea" style="width:95px" @on-change="onChange">
-                            <Option v-for="(items, index) in province" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
-                        </Select>
-                        <Select size="small" v-model="addressData.CityArea" @on-change="onTwoChange" style="width:95px">
-                            <Option v-for="(items, index) in city" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
-                        </Select>
-                        <Select size="small" v-model="addressData.CountyArea" style="width:95px">
-                            <Option v-for="(items, index) in count" :key="index" :value="items.ProvinceCode+'|'+items.ProvinceName" >{{items.ProvinceName}}</Option>
-                        </Select>
+                    <FormItem label="所在地区：" prop="addList">
+                        <Cascader v-model="addressData.addList" :data="cascaderList" :load-data="loadData" style="width: 240px;"></Cascader>
                     </FormItem>
-                    <FormItem label="详细地址：">
+                    <FormItem label="详细地址：" prop="DetailAddress">
                         <Input  placeholder="详细地址" v-model="addressData.DetailAddress" style="width: 340px;" />
                     </FormItem>
-                    <FormItem label="手机号码：">
-                        <Input  placeholder="手机号码" v-model="addressData.MobilePhone" style="width: 160px;" />
+                    <FormItem label="手机号码：" prop="MobilePhone">
+                        <Input  placeholder="手机号码" v-model="addressData.MobilePhone" style="width: 240px;" />
                     </FormItem>
-                    <FormItem label="固定电话：">
-                        <Input  placeholder="固定电话" v-model="addressData.FixedTelephone" style="width: 240px;" />
-                    </FormItem>
-                    <FormItem label="邮箱：">
+                    <FormItem label="邮箱：" prop="Email">
                         <Input  placeholder="邮箱" v-model="addressData.Email" style="width: 240px;" />
-                    </FormItem>
-                    <FormItem label="地址别名：">
-                        <Input  placeholder="地址别名" v-model="addressData.AddressAlias" style="width: 240px;" />
                     </FormItem>
                 </Form>
             </div>
@@ -62,81 +48,109 @@ export default {
     },
     data () {
         return {
-            city: [],
-            count: [],
-            province: []
+            cascaderList: [], // 城市信息
+            ruleAddres: {
+                Receiver: [
+                    { required: true, message: '收货人不能为空', trigger: 'blur' }
+                ],
+                addList: [
+                    {type: 'array', required: true, message: '所在地区不能为空', trigger: 'change'}
+                ],
+                DetailAddress: [
+                    { required: true, message: '详细地址不能为空', trigger: 'blur' }
+                ],
+                MobilePhone: [
+                    { required: true, message: '手机号码不能为空', trigger: 'blur' }
+                ],
+                Email: [
+                    { required: true, message: '邮箱不能为空', trigger: 'blur' }
+                ],
+            }
         }
     },
     mounted() {
-        // this.getCityList();
-        // if (this.addressData.CityArea) {
-        //     this.onChange(this.addressData.ProvinceArea)
-        // }
-        // if (this.addressData.CountyArea) {
-        //     this.onTwoChange(this.addressData.CityArea)
-        // }
+        this.getCascaderData()
     },
     methods: {
         closeBtn () {
             this.$emit('closeBtn')
         },
-        async getCityList (id = '', index) {
+        // 获取联动信息
+        async getCascaderData (id = '') {
             let queryData = {
                 ProvinceCode: id
             }
             let msg = await getProvinceList(queryData);
+            msg.respProvince.forEach(ele => {
+                ele.loading = false;
+                ele.children = [];
+                ele.children = [];
+                ele.level = 1;
+                ele.value = ele.ProvinceCode+','+ele.ProvinceName
+                ele.label = ele.ProvinceName
+            })
             if (msg) {
-                if (id) {
-                    this.city = msg.respProvince;
-                } else {
-                    this.province = msg.respProvince;
-                }
+                this.cascaderList = msg.respProvince;
             }
         },
-        onChange (value) {
-            let val = value.split('|')[0];
-            this.getCityList(val)
-        },
-         async onTwoChange (value) {
-            if (value) {
-                let val = value.split('|')[0];
-                let queryData = {
-                    ProvinceCode: val
-                }
-                let msg = await getProvinceList(queryData);
-                if (msg) {
-                    this.count = msg.respProvince;
-                }
+        async loadData (item, callback) {
+            item.loading = true;
+            let queryData = {
+                ProvinceCode: item.value.split(',')[0]
             }
-        },
-        async saveAddres () {
-            let queryData ={}
-            try {
-                queryData = {
-                    Id: this.addressData.Id,
-                    Receiver: this.addressData.Receiver,
-                    ProvinceAreaId: this.addressData.ProvinceArea.split('|')[0],
-                    ProvinceName: this.addressData.ProvinceArea.split('|')[1],
-                    CityAreaId: this.addressData.CityArea.split('|')[0],
-                    CityName: this.addressData.CityArea.split('|')[1],
-                    CountyAreaId: this.addressData.CountyArea.split('|')[0],
-                    CountName: this.addressData.CountyArea.split('|')[1],
-                    DetailAddress: this.addressData.DetailAddress,
-                    MobilePhone: this.addressData.MobilePhone,
-                    FixedTelephone: this.addressData.FixedTelephone,
-                    Email: this.addressData.Email,
-                    AddressAlias: this.addressData.AddressAlias,
-                    IsDetail: this.addressData.IsDetail || false,
-                }
-            } catch (error) {
-                this.$Message.error('参数错误');
+            let msg = await getProvinceList(queryData);
+            if (msg.respProvince instanceof Array) {
+                msg.respProvince.forEach(ele => {
+                    if (item.level < 2) {
+                        ele.level = item.level + 1;
+                        ele.loading = false;
+                        ele.children = [];
+                    }
+                    ele.value = ele.ProvinceCode+','+ele.ProvinceName
+                    ele.label = ele.ProvinceName
+                })
+            } else {
                 return false
             }
-            let msg  = await setAddressData(queryData);
             if (msg) {
-                this.$Message.success('添加成功');
-                this.$emit('upAddres', true)
+                item.children = msg.respProvince
+                item.loading = false;
+                callback();
             }
+        },
+        saveAddres () {
+            this.$refs['addres'].validate(async (valid) => {
+                if (valid) {
+                    let queryData ={}
+                    try {
+                        queryData = {
+                            Id: this.addressData.Id,
+                            Receiver: this.addressData.Receiver,
+                            ProvinceAreaId: this.addressData.addList[0].split(',')[0],
+                            ProvinceName: this.addressData.addList[0].split(',')[1],
+                            CityAreaId: this.addressData.addList[1].split(',')[0],
+                            CityName: this.addressData.addList[1].split(',')[1],
+                            CountyAreaId: this.addressData.addList[2].split(',')[0],
+                            CountName: this.addressData.addList[2].split(',')[1],
+                            DetailAddress: this.addressData.DetailAddress,
+                            MobilePhone: this.addressData.MobilePhone,
+                            FixedTelephone: this.addressData.FixedTelephone,
+                            Email: this.addressData.Email,
+                            AddressAlias: this.addressData.AddressAlias,
+                            IsDetail: this.addressData.IsDetail || false,
+                        }
+                    } catch (error) {
+                        this.$Message.error('参数错误');
+                        return false
+                    }
+                    let msg  = await setAddressData(queryData);
+                    if (msg) {
+                        this.$Message.success('添加成功');
+                        this.$emit('upAddres', true)
+                    }
+                }
+            })
+            
         }
     }
 }
@@ -155,8 +169,8 @@ export default {
             top: 50%;
             left: 50%;
             transform: translate(-50% ,-50%);
-            width: 812px;
-            height: 534px;
+            width: 700px;
+            height: 500px;
             background: #ffffff;
             font-size: 14px;
             &-header {
