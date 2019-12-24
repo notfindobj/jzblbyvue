@@ -176,7 +176,7 @@ export const GetUserExpertise = async params => {
 export const GetThisUserJobInfo = async params => {
   return await request.get(`UserInfo/GetThisUserJobInfo`, params)
 }
-//获取当前用户所有职业信息接口
+//修改职业信息接口
 export const SetOrAddThisUserJobInfo = async params => {
   return await request.post(`UserInfo/SetOrAddThisUserJobInfo`, params)
 }
@@ -300,4 +300,28 @@ export const addInviteUser = async params => {
 // 处理邀请信息
 export const handleInviteUser = async params => {
   return await request.post(`CompanyInfo/UserDealInvite`, params)
+}
+// 处理邀请信息
+export const getMessage = async params => {
+  return await request.get(`LConnection/GetAppMessage`, params)
+}
+// 反馈
+export const getFeedbackList = async params => {
+  return await request.get(`Feedback/GetFeedbackList`, params)
+}
+// 删除反馈
+export const delFeedbackList = async params => {
+  return await request.post(`Feedback/DelFeedbackData`, params)
+}
+// 获取举报数据
+export const getROSTypes = async params => {
+  return await request.get(`Ros/GetReportList`, params)
+}
+// 获取举报数据
+export const delROSTypes = async params => {
+  return await request.post(`Ros/DelReportData`, params)
+}
+// 新版获取消息
+export const getWebMessage = async params => {
+  return await request.get(`LConnection/GetWebMessage`, params)
 }

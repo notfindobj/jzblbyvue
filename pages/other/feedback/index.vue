@@ -8,7 +8,7 @@
         <Input v-model="feedb.Title" placeholder="请输入标题" style="width: 200px;background: #F8F8F8;"></Input>
       </FormItem>
       <FormItem label="反馈类型" prop="Type">
-        <Select v-model="feedb.Type" placeholder="反馈类型" style="width: 200px;background: #F8F8F8;">
+          <Select v-model="feedb.Type" placeholder="反馈类型" style="width: 200px;background: #F8F8F8;">
                 <Option v-for="(item,index) in cityList" :value="item.value" :key="index">{{ item.label }}</Option>
             </Select>
       </FormItem>

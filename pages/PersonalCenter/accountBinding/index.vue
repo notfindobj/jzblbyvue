@@ -180,7 +180,6 @@
         },
 
         methods: {
-
             // 获取绑定信息
             getInfo() {
                 getAccountBindInfo().then(res => {
@@ -189,7 +188,6 @@
                     this.isBindWX = res.WeChat;
                 })
             },
-
             async bindingWX() {
                 loginByWX().then(res => {
                     const wxWindow = this.loginAtQQ(res, 2);
@@ -214,7 +212,6 @@
                     }, 2000)
                 })
             },
-
             // 绑定qq
             bindQQ() {
                 loginByQQ().then(res => {

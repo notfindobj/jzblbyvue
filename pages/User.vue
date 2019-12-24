@@ -3,7 +3,7 @@
         <ul class="user-side">
             <li>
                <div class="user-side-title">
-                   <img src="http://www.pic.jzbl.com/ItemFiles/UserInfoImg/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/1566125301_s.jpeg" alt="">
+                   <img :src="Identity.HeadIcon" alt="">
                </div>
                <div>嘿嘿嘿</div>
             </li>
@@ -34,14 +34,14 @@
                 <nuxt-link to="/User/myRelease">我的发布</nuxt-link>
                 <nuxt-link to="/User/myCollection">我的收藏</nuxt-link>
                 <nuxt-link to="/User/myDownload">我的下载</nuxt-link>
-                <nuxt-link to="/User/myComments">我的评论</nuxt-link>
+                <!-- <nuxt-link to="/User/myComments">我的评论</nuxt-link> -->
                 <nuxt-link to="/User/myConcern">我的关注</nuxt-link>
-                <nuxt-link to="/User/myRecommended">被推荐作品</nuxt-link>
-                <nuxt-link to="/User/browseRecord">浏览记录</nuxt-link>
+                <!-- <nuxt-link to="/User/myRecommended">被推荐作品</nuxt-link>
+                <nuxt-link to="/User/browseRecord">浏览记录</nuxt-link> -->
             </li>
             <li>
                 <p>账号管理 </p>
-                <nuxt-link to="/User/personalData">账户资料</nuxt-link>
+                <nuxt-link :to="Identity.IsEnt === 2 ? '/User/personalData' : '/User/companyInfo'">账户资料</nuxt-link>
                 <nuxt-link to="/User/adminis">身份认证</nuxt-link>
                 <nuxt-link to="/User/myBond">我的保证金</nuxt-link>
                 <nuxt-link to="/User/myInvoice">我的发票</nuxt-link>
@@ -60,13 +60,23 @@
     </div>
 </template>
 <script>
+import { mapState, mapGetters} from 'vuex'
 export default {
     middleware: ['message', 'authenticated'],
     layout: 'main',
     transition (to, from) {
         if (!from) { return 'slide-left' }
         return +to.query.page < +from.query.page ? 'slide-right' : 'slide-left'
-    }
+    },
+    computed: {
+        ...mapState({
+            Identity: state => state.overas.auth || {}
+        }),
+        ...mapGetters(['isLogin'])
+    },
+    methods: {
+        
+    },
 }
 </script>
 <style lang="less" scoped>

@@ -1,54 +1,89 @@
 <template>
     <div>
-        <Title title="意见反馈"/>
+        <Title title="意见反馈" :bottomLine="false"/>
         <div>
-            欢迎反馈问题，您的意见与建议就是我们的动力！
+            <publicTable :columns="columns" :columnsData="fbData"/>
         </div>
-        <Form class="feedback" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
-            <FormItem label="标题" prop="user">
-                <Input size="small" type="text" v-model="formInline.user" placeholder="标题"></Input>
-            </FormItem>
-            <FormItem label="反馈类型" prop="user">
-                <Select v-model="model1" clearable >
-                    <Option value="1">男</Option>
-                    <Option value="0">女</Option>
-                </Select>
-            </FormItem>
-            <FormItem label="反馈内容" prop="user">
-                <Input v-model="value7" type="textarea" :autosize="{minRows: 2}" placeholder="反馈内容" />
-            </FormItem>
-            <div>
-                将对您的联系方式严格保密
-            </div>
-            <FormItem label="QQ" prop="user">
-                <Input size="small" type="text" v-model="formInline.user" placeholder="QQ"></Input>
-            </FormItem>
-            <FormItem label="联系人电话" prop="user">
-                <Input size="small" type="text" v-model="formInline.user" placeholder="联系人电话"></Input>
-            </FormItem>
-        </Form>
     </div>
 </template>
 <script>
 import Title from './components/title'
+import publicTable from './components/publicTable'
+import {getFeedbackList, delFeedbackList} from '../../service/clientAPI'
 export default {
-    key: to => to.fullPath,
     components: {
-        Title
+        Title,
+        publicTable
     },
     data () {
         return {
-            formInline: {},
-            ruleInline: {},
-            model1: '',
-            value7: ''
+            columns: [
+                {
+                    title: '标题',
+                    key: 'Title'
+                },
+                {
+                    cut: 'state',
+                    title: '反馈类型',
+                    key: 'Type',
+                    state: [{value: 0,label: "网站bug"},{value: 1,label: "意见"},{value: 2,label: "建议"}]
+                },
+                {
+                    title: '反馈内容',
+                    key: 'Contents',
+                    state: '1'
+                },
+                {
+                    cut: 'state',
+                    title: '反馈状态',
+                    key: 'State',
+                    state: [{value: 0,label: "未处理"},{value: 1,label: "已处理"}]
+                },
+                {
+                    cut: 'btn',
+                    title: '操作',
+                    key: 'address',
+                    state: [{text: '删除', events: 'delFeedback'}]
+                }
+            ],
+            cityList: [
+                
+            ],
+            fbData: []
+        }
+    },
+    created () {
+        this.getfbList()
+    },
+    methods: {
+        async getfbList () {
+            let msg = await getFeedbackList();
+            if (msg) {
+                this.fbData = msg;
+            }
+        },
+        // 删除反馈
+        async delFeedback (row) {
+            this.$Modal.confirm({
+                title: '删除反馈',
+                content: '<p>确定删除反馈内容？</p>',
+                onOk: async () => {
+                    let query = {
+                        FeedbackID: row.FeedbackID
+                    }
+                    let mgs = await delFeedbackList(query);
+                    if (mgs) {
+                        this.getfbList()
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
         }
     }
 }
 </script>
 <style lang="less" scoped>
-    .feedback {
-        padding-left: 100px;
-        padding-right: 300px;
-    }
+
 </style>
