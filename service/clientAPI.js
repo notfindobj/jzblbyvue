@@ -325,3 +325,19 @@ export const delROSTypes = async params => {
 export const getWebMessage = async params => {
   return await request.get(`LConnection/GetWebMessage`, params)
 }
+// 用户注销
+export const writOffUser = async params => {
+  return await request.get(`UserInfo/WritOffUser`, params)
+}
+// 获取积分记录
+export const getIntegralList = async params => {
+  return await request.get(`UserIntegral/GetIntegralList`, params)
+}
+// 获取上传凭证
+export const getPostPolicy = async params => {
+  return await request.get(`Upload/GetPostPolicy`, params)
+}
+// 人民币 账单
+export const getBillList = async params => {
+  return await request.get(`Order/GetBillList`, params)
+}

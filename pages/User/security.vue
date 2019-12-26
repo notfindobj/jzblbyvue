@@ -40,17 +40,67 @@
                 <Button @click="openCan">注销</Button>
             </li>
         </ul>
-        <Modal v-model="modal2" width="360">
-            <p slot="header" style="color:#f60;text-align:center">
+        <Modal v-model="modal2" width="520">
+            <p slot="header" style="text-align:center">
                 <Icon type="ios-information-circle"></Icon>
-                <span>Delete confirmation</span>
+                <span>账户注销协议</span>
             </p>
-            <div style="text-align:center">
-                <p>After this task is deleted, the downstream 10 tasks will not be implemented.</p>
-                <p>Will you delete it?</p>
+            <div class="agreement">
+                账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议
+                账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议
+                账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议
+                账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议
+                账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <br>
+                账户注销协议 账户注销协议
+                <div class="agreement-check">
+                    <Checkbox v-model="agreement">
+                        <span class="agreement-check-name">同意用户注销协议</span>
+                    </Checkbox>
+                </div>
             </div>
             <div slot="footer">
-                <Button type="error" size="large" long>Delete</Button>
+                <Button type="error" size="large" long @click="closeAccount">确认注销</Button>
             </div>
         </Modal>
         <Modal v-model="isMobile" width="360" @on-cancel="onCancel">
@@ -97,7 +147,7 @@
 </template>
 <script>
 import Title from './components/title'
-import {getAccountBindInfo, loginByWX, bindingByWX, loginByQQ, getMobileCode, SetChangeMobile} from '../../service/clientAPI'
+import {getAccountBindInfo, loginByWX, bindingByWX, loginByQQ, getMobileCode, SetChangeMobile,writOffUser} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -131,7 +181,8 @@ export default {
                 mobile: '',
                 MobileVerifyCode: '',
                 NewPwd: ''
-            }
+            },
+            agreement: false
         }
     },
     created () {
@@ -299,10 +350,33 @@ export default {
                     }
                 }
         },
+        // 用户注销
+        async closeAccount () {
+            if (this.agreement) {
+                let msg = await writOffUser();
+                if (msg) {
+                    this.$Message.warning("请先同意注销协议");
+                }
+            } else {
+                this.$Message.success("请先同意注销协议");
+            }
+        }
     },
 }
 </script>
 <style lang="less" scoped>
+    .agreement {
+        max-height: 450px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        &-check {
+            text-align: center;
+        }
+        .agreement-check-name {
+            font-size: 14px;
+            font-weight: bold;
+        }
+    }
     .security {
         li {
             border-bottom: 1px solid #eaeaea;

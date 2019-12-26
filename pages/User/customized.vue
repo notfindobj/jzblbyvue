@@ -60,5 +60,6 @@ export default {
         line-height: 30px;
         justify-content: space-between;
         width: 100%;
+        padding-right: 6px;
     }
 </style>

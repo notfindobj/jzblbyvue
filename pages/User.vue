@@ -20,7 +20,7 @@
             </li>
             <li>
                 <p>订单管理 </p>
-                <nuxt-link to="">需求订单</nuxt-link>
+                <nuxt-link to="/User/downloadOrder">需求订单</nuxt-link>
             </li>
             <li>
                 <p>资产管理 </p>
@@ -99,6 +99,7 @@ export default {
                     width: 80px;
                     height: 80px;
                     overflow: hidden;
+                    border: 1px solid #eaeaea;
                     img {
                         width: 100%;
                         height: 100%;

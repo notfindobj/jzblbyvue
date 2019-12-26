@@ -40,8 +40,10 @@ export default {
                     key: 'CreateDate'
                 },
                 {
+                    cut: 'state',
                     title: '处理结果',
-                    key: 'address'
+                    key: 'State',
+                    state: [{label: '未处理 ', value: 0}, {label: '已处理', value: 1}]
                 },
                 {
                     cut: 'btn',

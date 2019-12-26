@@ -1,24 +1,15 @@
 <template>
     <div>
-        <Title title="人民币收支详情"/>
-        <div class="bill">
-           <div class="bill-title">
-                <div class="bill-title-num">
-                    <span>账户余额：</span>
-                    <span>0.00元</span>
-                </div>
-                <Button>提现</Button>
-           </div>
-           <div class="bill-search">
-                <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
-                <Select v-model="model1" clearable style="width:200px">
-                    <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
-                </Select>
-                <Button>提现</Button>
-           </div>
-           <div>
-               <publicTable :columns="columns" :columnsData="rmbGoods.billlist"/>
-           </div>
+        <Title title="订单明细" :bottomLine="false"/>
+        <div class="tribalBill-search">
+            <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+            <Select v-model="model1" clearable style="width:200px">
+                <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            </Select>
+            <Button>提现</Button>
+        </div>
+        <div>
+            <publicTable :columns="columns1" :columnsData="data1"/>
         </div>
     </div>
 </template>
@@ -35,16 +26,16 @@ export default {
         return {
             cityList: [
                 {
-                    value: '0',
-                    label: '收入'
+                    value: 'New York',
+                    label: 'New York'
                 },
                 {
-                    value: '1',
-                    label: '支出'
+                    value: 'London',
+                    label: 'London'
                 }
             ],
             model1: '',
-            columns: [
+            columns1: [
                 {
                     cut: 'text',
                     title: '订单ID',
@@ -77,7 +68,6 @@ export default {
                     state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            rmbGoods: {},
             data1: [
                 {
                     name: 'John Brown',
@@ -107,33 +97,23 @@ export default {
                     date: '2016-10-04',
                     state: '2'
                 }
-            ]
+            ],
+            orderList: []
         }
     },
     created () {
-        this.getBillData()
+        // this.getBillData()
     },
     methods: {
         async getBillData () {
             let msg = await getBillList();
-            if (msg) {
-                this.rmbGoods = msg
-            }
             console.log(msg)
         }
     },
 }
 </script>
 <style lang="less" scoped>
-   .bill {
-       &-title {
-           margin: 10px 0;
-           &-num {
-                display: inline-block;
-                font-size: 14px;
-                margin-right: 30px;
-           }
-       }
+   .tribalBill {
        &-search {
            margin-bottom: 10px;
        }

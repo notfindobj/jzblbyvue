@@ -95,10 +95,10 @@ export default {
                 if (valid) {
                     const obj = {
                         name: this.serviceName,
-                        serviceId: this.serviceValidate.serviceId,
-                        money: this.serviceValidate.money,
-                        mobile: this.serviceValidate.mobile,
-                        desc: this.serviceValidate.desc
+                        customizedTypeId: this.serviceValidate.serviceId,
+                        customizedMoney: this.serviceValidate.money,
+                        customizeMobile: this.serviceValidate.mobile,
+                        customizeDescription: this.serviceValidate.desc
                     };
                     _this.$emit('clickModalConfirm', obj)
                 }

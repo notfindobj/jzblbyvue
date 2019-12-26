@@ -17,7 +17,7 @@
                 <Button>提现</Button>
            </div>
            <div>
-               <publicTable :columns="columns1" :columnsData="data1"/>
+               <publicTable :columns="columns" :columnsData="integralData"/>
            </div>
         </div>
     </div>
@@ -25,6 +25,7 @@
 <script>
 import Title from './components/title'
 import publicTable from './components/publicTable'
+import {getIntegralList} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -43,28 +44,33 @@ export default {
                 }
             ],
             model1: '',
-            columns1: [
+            columns: [
                 {
                     cut: 'state',
                     title: '消耗/获取',
-                    key: 'state',
-                    state: [{label: '消耗', value: '1'}, {label: '获取', value: '2'}, {label: '获取', value: '3'}]
+                    key: 'Type',
+                    state: [{label: '获取', value: 0}, {label: '消耗', value: 1}]
                 },
                 {
+                    cut: 'text',
                     title: '分数',
-                    key: 'address',
-                    state: '1'
+                    key: 'Score'
                 },
                 {
-                    cut: 'time',
+                    cut: 'text',
+                    title: '剩余积分',
+                    key: 'Score'
+                },
+                {
+                    cut: 'text',
                     title: '时间',
-                    key: 'date'
+                    key: 'CreateDate'
                 },
                 {
                     cut: 'state',
                     title: '类型',
-                    key: 'state',
-                    state: [{label: '签到', value: '1'}, {label: '评论', value: '2'}, {label: '发表文章', value: '3'}]
+                    key: 'ScoreType',
+                    state: [{label: '注册', value: 1}, {label: '发布', value: 2}, {label: '资源下载', value: 3}, {label: '部落币转换', value: 4}, {label: '签到', value: 5}]
                 },
                 {
                     cut: 'btn',
@@ -73,38 +79,20 @@ export default {
                     state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            data1: [
-                {
-                    name: 'John Brown',
-                    age: 18,
-                    address: '0.00',
-                    date: '2016-10-03',
-                    state: '1'
-                },
-                {
-                    name: 'Jim Green',
-                    age: 24,
-                    address: 'London No. 1 Lake Park',
-                    date: '2016-10-01',
-                    state: '1'
-                },
-                {
-                    name: 'Joe Black',
-                    age: 30,
-                    address: 'Sydney No. 1 Lake Park',
-                    date: '2016-10-02',
-                    state: '2'
-                },
-                {
-                    name: 'Jon Snow',
-                    age: 26,
-                    address: 'Ottawa No. 2 Lake Park',
-                    date: '2016-10-04',
-                    state: '3'
-                }
-            ]
+            integralData: []
         }
-    }
+    },
+    created () {
+        this.getIntegral()
+    },
+    methods: {
+        async getIntegral () {
+            let msg = await getIntegralList();
+            if (msg) {
+                this.integralData = msg.Integrallist;
+            }
+        }
+    },
 }
 </script>
 <style lang="less" scoped>

@@ -2,7 +2,7 @@
     <div>
         <Title title="账户资料"/>
         <div class="user-box">
-            <Form class="personalData"  :model="userInfo" :rules="ruleInline" :label-width="100">
+            <Form class="personalData" :model="userInfo" :rules="ruleInline" :label-width="100">
                 <FormItem label="" >
                     <div class="user-header">
                         <img :src="Identity.HeadIcon" alt="">
@@ -153,7 +153,7 @@ export default {
             let msg = await getUserData(value);
             if (msg) {
                 this.userInfo = msg;
-                this.userInfo.addresList = [msg.ProvinceAreaId, msg.CityAreaId, msg.CountyAreaId];
+                this.$set(this.userInfo, 'addresList', [msg.ProvinceAreaId + '|' + msg.ProvinceName,msg.CityAreaId + '|' + msg.CityName, msg.CountyAreaId + '|' + msg.CountyName])
             }
         },
         // 获取职业信息
@@ -161,7 +161,7 @@ export default {
             let msg = await GetThisUserJobInfo(value);
             if (msg.jobInfos) {
                 msg.jobInfos.forEach(ele => {
-                    ele.addresList = [ele.ProvinceAreaId, ele.CityAreaId, ele.CountyAreaId];
+                    this.$set(ele, 'addresList', [ele.ProvinceAreaId + '|' + ele.ProvinceName,ele.CityAreaId + '|' + ele.CityName, ele.CountyAreaId + '|' + ele.CountyName])
                 })
                 this.jobInfo = msg.jobInfos;
             }
@@ -184,7 +184,7 @@ export default {
                 ele.children = [];
                 ele.children = [];
                 ele.level = 1;
-                ele.value = ele.ProvinceCode
+                ele.value = ele.ProvinceCode+'|'+ele.ProvinceName
                 ele.label = ele.ProvinceName
             })
             if (msg) {
@@ -194,7 +194,7 @@ export default {
         async loadData (item, callback) {
             item.loading = true;
             let queryData = {
-                ProvinceCode: item.value
+                ProvinceCode: item.value.split('|')[0]
             }
             let msg = await getProvinceList(queryData);
             if (msg.respProvince instanceof Array) {
@@ -204,7 +204,7 @@ export default {
                         ele.loading = false;
                         ele.children = [];
                     }
-                    ele.value = ele.ProvinceCode
+                    ele.value = ele.ProvinceCode+'|'+ele.ProvinceName
                     ele.label = ele.ProvinceName
                 })
             } else {
@@ -224,6 +224,16 @@ export default {
             }
             if (!this.controlUser) {
                 let query = this.userInfo;
+                try {
+                    query.ProvinceAreaId = this.userInfo.addresList[0].split('|')[0];
+                    query.ProvinceName = this.userInfo.addresList[0].split('|')[1];
+                    query.CityAreaId = this.userInfo.addresList[1].split('|')[0];
+                    query.CityName = this.userInfo.addresList[1].split('|')[1];
+                    query.CountyAreaId = this.userInfo.addresList[2].split('|')[0];
+                    query.CountyName = this.userInfo.addresList[2].split('|')[1];
+                } catch (error) {
+                    
+                }
                 let msg = await setUserData(query);
                 if (msg) {
                     this.controlUser = true;
@@ -250,7 +260,17 @@ export default {
             }
             if (!this.controlwork) {
                 let query = this.jobInfo[0];
-                console.log(query)
+                let t = this.jobInfo[0]
+                try {
+                    query.ProvinceAreaId = t.addresList[0].split('|')[0];
+                    query.ProvinceName = t.addresList[0].split('|')[1];
+                    query.CityAreaId = t.addresList[1].split('|')[0];
+                    query.CityName = t.addresList[1].split('|')[1];
+                    query.CountyAreaId = t.addresList[2].split('|')[0];
+                    query.CountyName = t.addresList[2].split('|')[1];
+                } catch (error) {
+                    
+                }
                 if (query.OperatHoursEnd > query.OperatHoursStart) {
                     let msg = await SetOrAddThisUserJobInfo(query)
                     if (msg) {

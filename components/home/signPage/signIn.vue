@@ -91,7 +91,7 @@
                 this.$store.dispatch('LOGGEDIN', val);
             },
             handleSubmit(name) {
-                this.$refs[name].validate(async (valid) => {
+                this.$refs['formInline'].validate(async (valid) => {
                         if (valid) {
                             let postData = {
                             mobile: this.userItem.mobile,
