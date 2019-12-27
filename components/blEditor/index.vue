@@ -32,7 +32,7 @@
                                     <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
                                         <div class="img-item" v-for="(item, index) in imgList" :key="index" >
                                             <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
-                                            <img :src="baseUrlRegExp(item.smallImgUrl)" alt="">
+                                            <img :src="item.smallImgUrl" alt="">
                                             <div v-if="item.action" class="action-up">
                                                 <span>正在上传</span>
                                             </div>
@@ -224,14 +224,6 @@ export default {
             }
             _this.editor.create();
         },
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str.match(reg)){
-                return str
-            } else {
-                return this.fileBaseUrl+ str
-            }
-        },
         ViewProtocol (row) {
             this.$store.dispatch('SETUP', false);
             let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
@@ -334,9 +326,10 @@ export default {
             this.previewSrc = ''
         },
         uploadSuccessVideo (videoInfo) {
+            let v = videoInfo[0]
             this.imgList = [];
-            this.imgList = [videoInfo];
-            this.previewSrc = videoInfo.smallImgUrl
+            this.imgList = [v];
+            this.previewSrc = v.smallImgUrl
         },
         // 文本域发生变化
         onchange (html) {

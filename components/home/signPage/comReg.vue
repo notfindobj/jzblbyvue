@@ -49,14 +49,14 @@
             <Row>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="营业执照:" prop="BusLicImgId">
-                        <div @click="changeFile('updataFile')" :class="companyAttr.BusLicImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.BusLicImg)}');`">
+                        <div @click="changeFile('updataFile')" :class="companyAttr.BusLicImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${companyAttr.BusLicImg}');`">
                             <input ref="updataFile" type="file" @change="changeUpFile('updataFile', 10)" style="display: none;">
                         </div>
                     </FormItem>
                 </Col>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="企业LOGO:" >
-                        <div @click="changeFile('logo')" :class="companyAttr.CompanyImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${baseUrlRegExp(companyAttr.CompanyImg)}');`">
+                        <div @click="changeFile('logo')" :class="companyAttr.CompanyImgId ? 'updataFile-cameras ivu-icon ivu-icon-ios-camera' : 'updataFile-camera ivu-icon ivu-icon-ios-camera'" :style="`background-image: url('${companyAttr.CompanyImg}');`">
                             <input ref="logo" type="file" @change="changeUpFile('logo', 11)" style="display: none;">
                         </div>
                     </FormItem>
@@ -76,12 +76,12 @@
             </Row>
             <FormItem label="经办人身份证:" prop="IDCardImgNegaId">
                 <div @click="changeFile('card')"
-                :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgPosi)}');`"
+                :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${companyAttr.IDCardImgPosi}');`"
                  >
                     <input ref="card" type="file" @change="changeUpFile('card', 9)" style="display: none;">
                 </div>
                 <div  @click="changeFile('unCard')" 
-                :class="companyAttr.IDCardImgNegaId ? 'updataFile-cameras iconfont icon-shenfenzhengfanmian' : 'updataFile-camera iconfont icon-shenfenzhengfanmian'" :style="`background-image: url('${baseUrlRegExp(companyAttr.IDCardImgNega)}');`">
+                :class="companyAttr.IDCardImgNegaId ? 'updataFile-cameras iconfont icon-shenfenzhengfanmian' : 'updataFile-camera iconfont icon-shenfenzhengfanmian'" :style="`background-image: url('${companyAttr.IDCardImgNega}');`">
                     <input ref="unCard" type="file" @change="changeUpFile('unCard', 9)" style="display: none;">
                 </div>
             </FormItem>
@@ -126,7 +126,6 @@
      </div>
 </template>
 <script>
-import {baseUrlRegExp} from '../../../plugins/untils/public'
 import {getEntType, registerEnterprise , uploadFile, getMobileCode, getProvinceList} from '../../../service/clientAPI'
 import {validatePassCheck, validateIdentity} from '../../../plugins/untils/Verify'
 export default {
@@ -134,7 +133,6 @@ export default {
     middleware: 'authenticated',
     data() {
         return {
-            baseUrlRegExp,
             companyAttr: {
                 Business:[],
                 "CompanyName": "", // 公司名称 

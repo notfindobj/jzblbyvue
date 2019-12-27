@@ -31,13 +31,13 @@
                     <template v-for="(items, index) in recommend">
                         <div class="swiper-slide" v-if="[1,2,4].includes(items.TypeId)"  :key="index">
                             <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
-                                <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                                <img :src="items.ImgSrc" alt="">
                             </nuxt-link>
                             <nuxt-link v-else-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
-                                <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                                <img :src="items.ImgSrc" alt="">
                             </nuxt-link>
                             <nuxt-link v-else target="_blank" :to="{name: 'pictureDetails-id', params: {id:items.ItemId, }}">
-                                <img :src="baseUrlRegExp(items.ImgSrc)" alt="">
+                                <img :src="items.ImgSrc" alt="">
                             </nuxt-link>
                         </div>
                     </template>
@@ -111,14 +111,6 @@ export default {
                 　　disableOnInteraction: false,  //触碰后自动切换停止
             　　}
             })
-        },
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str && str.match(reg)){
-                return str
-            } else {
-                return process.env.fileBaseUrl+ str
-            }
         },
         // 获取推荐
         async getRecommendList (val) {

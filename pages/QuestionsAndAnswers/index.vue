@@ -41,7 +41,7 @@
                                             </div>
                                             <div class="item-right">
                                                 <div class="img" @click="goDetail(item.QAId)">
-                                                    <img v-if="item.Img" :src="fileBaseUrl + item.Img.smallImgUrl" alt="">
+                                                    <img v-if="item.Img" :src="item.Img.smallImgUrl" alt="">
                                                 </div>
                                             </div>
                                         </div>
@@ -90,7 +90,6 @@ export default {
     data() {
         return {
             editorName: 'wd',
-            fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
             htzhIcon: require('~/assets/images/htzq.png'),
             swiperOption: {
                 slidesPerView: 1,

@@ -14,8 +14,8 @@
                 </div>
                 <div class="video-wrap" v-if="isShowModal">
                     <video ref="video" :poster="videoInfo.Imgs[0].smallImgUrl" >
-                        <source :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl" type="video/mp4" >
-                        <source :src="fileBaseUrl + videoInfo.Imgs[0].videoUrl" type="video/ogg" >
+                        <source :src="videoInfo.Imgs[0].videoUrl" type="video/mp4" >
+                        <source :src="videoInfo.Imgs[0].videoUrl" type="video/ogg" >
                         您的浏览器不支持Video标签。
                     </video>
                     <div class="controls-box">
@@ -147,7 +147,6 @@
 
         data() {
             return {
-                fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
                 isEnd: false,   // 是否结束状态
                 isPause: true,  // 是否暂停状态
                 progressWidth: 0,   // 播放进度百分比

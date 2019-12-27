@@ -2,8 +2,8 @@
     <div v-transfer-dom class="view-box-model" @click="handleClose" @keyup.esc="handleClose()" tabindex='1'>
         <div class="view-box" @click.stop>
              <div id="view">
-                <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered">
-                    <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
+                <video :ref="videoRef" :poster="itemVideo.smallImgUrl" class="vjs-matrix video-js vjs-big-play-centered">
+                    <source :src="itemVideo.videoUrl" type="video/mp4" >
                 </video>
              </div>
              <div class="close-box" @click="handleClose">
@@ -65,7 +65,6 @@ export default {
             configShare: {
                 isModal: false
             },
-            fileBaseUrl: process.env.fileBaseUrl,
             attribute: [],
             comments: [],
             isShowViewBox: true,
@@ -105,14 +104,6 @@ export default {
             let msg = await getComments(queryData);
             if (msg) {
                 this.comments = msg;
-            }
-        },
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str.match(reg)){
-                return str
-            } else {
-                return this.fileBaseUrl+ str
             }
         },
         // 关闭按钮

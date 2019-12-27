@@ -1,7 +1,7 @@
 <template>
     <div class="hotCard" @click="enterBuild(hotCard)">
         <div class="hotCard-content">
-            <img :src="baseUrlRegExp(hotCard.ImgSrc)" alt="">
+            <img :src="hotCard.ImgSrc" alt="">
         </div>
         <div class="hotCard-top">
             <span><i class="iconfont icon-chakan"></i>{{hotCard.itemOperateData.ReadCount}}</span>
@@ -26,14 +26,6 @@ export default {
     methods: {
         enterBuild (hotCard) {
             this.$emit('enterBuild', hotCard);
-        },
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str.match(reg)){
-                return str
-            } else {
-                return process.env.fileBaseUrl+ str
-            }
         }
     },
 }

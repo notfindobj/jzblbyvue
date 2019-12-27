@@ -117,7 +117,6 @@
     },
     data() {
       return {
-        fileBaseUrl: process.env.fileBaseUrl,
         isTool: '',
         UserProAndFans: {},
         commentList: [], // 评论列表
@@ -158,14 +157,6 @@
       },
       hideWorks (id) {
         this.isTool = '';
-      },
-      baseUrlRegExp (str) {
-          let reg = RegExp(/\http:\/\//);
-          if(str && str.match(reg)){
-            return str
-          } else {
-            return this.fileBaseUrl+ str
-          }
       },
       // 跳转部落
       goToPersonal (row) {

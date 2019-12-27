@@ -14,7 +14,7 @@
                     <h2 v-if="detailInfo.TalkTitle" class="pictureBox-title">{{detailInfo.TalkTitle}}</h2>
                     <div v-html="detailInfo.TalkContent"></div>
                     <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TalkType !== 5" :key="index">
-                        <img :src="baseUrlRegExp(items.smallImgUrl)" :alt="items.fileName" :data-original="baseUrlRegExp(replaceImgs(items.smallImgUrl))" />
+                        <img :src="items.smallImgUrl" :alt="items.fileName" :data-original="replaceImgs(items.smallImgUrl)" />
                     </div>
                 </div>
             </div> 
@@ -91,14 +91,6 @@ export default {
       this.initView()
     },
     methods: {
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str.match(reg)){
-                return str
-            } else {
-                return process.env.fileBaseUrl+ str
-            }
-        },
         replaceImgs (val) {
             let regex = "/i/s/";
             return val.replace(regex, "/i/");

@@ -15,7 +15,7 @@
         </div>
         <div class="comCard-pro">
             <div class="comCard-pro-left" v-if="content.ItemTitleImg">
-                <img :src="fileBaseUrl +content.ItemTitleImg" alt="">
+                <img :src="content.ItemTitleImg" alt="">
             </div>
             <div class="comCard-pro-right">
                 <div>
@@ -35,11 +35,6 @@ export default {
         content: {
             type: Object,
             default: () => {}   
-        }
-    },
-    data () {
-        return {
-            fileBaseUrl: process.env.fileBaseUrl
         }
     },
     methods: {

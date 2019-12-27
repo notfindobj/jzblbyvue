@@ -68,8 +68,8 @@
                      <!-- 其他 -->
                      <template v-if="itemInfo.TalkType !== 5" >
                        <div v-for="(item, otherIndex) in itemInfo.ResourceObj"  :class="otherIndex < textLength ? 'img' : 'img itemHide'" :key="otherIndex">
-                        <img v-if="otherIndex < textLength" v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
-                        <img v-if="otherIndex >= textLength" :src="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
+                        <img v-if="otherIndex < textLength" v-lazy="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
+                        <img v-if="otherIndex >= textLength" :src="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
                         <div v-if="(itemInfo.ResourceObj.length - textLength) > 0 && otherIndex === (textLength - 1)" class="superLong">
                             <span>+{{itemInfo.ResourceObj.length - textLength}}</span>
                         </div>
@@ -79,8 +79,8 @@
                     <template v-if="!isUnfold">
                       <template v-if="itemInfo.TalkType === 5" >
                         <div v-for="(item, imgIndex) in itemInfo.ResourceObj"  :class="imgIndex < 3 ? 'img' : 'img itemHide'"  :key="imgIndex+item.smallImgUrl">
-                          <img v-if="imgIndex < 3" v-lazy="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
-                          <img v-if="imgIndex >= 3" :src="baseUrlRegExp(item.smallImgUrl)" alt="" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))"/>
+                          <img v-if="imgIndex < 3" v-lazy="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
+                          <img v-if="imgIndex >= 3" :src="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
                           <div v-if=" ((itemInfo.ResourceObj.length - 3) > 0) && imgIndex === 2" class="superLong">
                             <span>+{{itemInfo.ResourceObj.length - 3}}</span>
                           </div>
@@ -166,7 +166,6 @@
       let ViewerIndex = getRanNum(6)
       return {
         ViewerIndex,
-        fileBaseUrl: process.env.fileBaseUrl,
         mathId: '',
         isTool: '',
         UserProAndFans: {},
@@ -335,14 +334,6 @@
             }
           })
         })
-      },
-      baseUrlRegExp (str) {
-          let reg = RegExp(/\http:\/\//);
-          if(str && str.match(reg)){
-            return str
-          } else {
-            return this.fileBaseUrl+ str
-          }
       },
       // 跳转部落
       goToPersonal (row) {

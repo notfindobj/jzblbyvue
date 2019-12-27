@@ -43,7 +43,6 @@
         data() {
             return {
                 editorName: 'sp',
-                fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
                 pageNum: 1,
                 videoList: [],
                 isLast: false,

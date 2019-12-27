@@ -1,8 +1,8 @@
 <template>
     <div class="test_two_box">
        <div class="video-box">
-            <video :ref="videoRef" :poster="baseUrlRegExp(itemVideo.smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
-                <source :src="baseUrlRegExp(itemVideo.videoUrl)" type="video/mp4" >
+            <video :ref="videoRef" :poster="itemVideo.smallImgUrl" class="vjs-matrix video-js vjs-big-play-centered" >
+                <source :src="itemVideo.videoUrl" type="video/mp4" >
             </video>
             <div class="video-img" @mouseover="videoMouseover" @mouseout="videoMouseout" @click="play" @dblclick="dbPlay"></div>
        </div>
@@ -37,7 +37,6 @@ export default {
     },
     data() {
         return {
-            fileBaseUrl: process.env.fileBaseUrl,
             myPlayer: null,
             videoRef: '',
             videoCon: '',
@@ -206,14 +205,6 @@ export default {
                 ScopeType: 2
             }
             let msg =  this.$store.dispatch('getGetComments', queryData)
-        },
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str.match(reg)){
-                return str
-            } else {
-                return this.fileBaseUrl+ str
-            }
         },
         initScroll () {
             let that = this;

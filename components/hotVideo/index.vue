@@ -1,8 +1,8 @@
 <template>
     <div class="hotVide">
         <div class="hotVide-content" @click="enterVideo(hotVideo)">
-            <video v-if="hotVideo.ResourceObj.length > 0" :ref="videoRef" autoplay="autoplay" :poster="baseUrlRegExp(hotVideo.ResourceObj[0].smallImgUrl)" class="vjs-matrix video-js vjs-big-play-centered" >
-                <source :src="baseUrlRegExp(hotVideo.ResourceObj[0].videoUrl)" type="video/mp4" >
+            <video v-if="hotVideo.ResourceObj.length > 0" :ref="videoRef" autoplay="autoplay" :poster="hotVideo.ResourceObj[0].smallImgUrl" class="vjs-matrix video-js vjs-big-play-centered" >
+                <source :src="hotVideo.ResourceObj[0].videoUrl" type="video/mp4" >
             </video>
         </div>
         <div class="hotVide-top" v-html="hotVideo.Title"></div>
@@ -42,14 +42,6 @@ export default {
     methods: {
         enterVideo (hotVideo) {
             this.$emit('enterVideo', hotVideo)
-        },
-        baseUrlRegExp (str) {
-            let reg = RegExp(/\http:\/\//);
-            if(str && str.match(reg)){
-                return str
-            } else {
-                return process.env.fileBaseUrl+ str
-            }
         },
         initVideo() {
             let _this = this;

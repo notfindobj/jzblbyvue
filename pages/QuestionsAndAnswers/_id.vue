@@ -15,7 +15,7 @@
             </div>
             <div class="img-row" :ref="mathId">
                 <div class="img" v-for="item in detailInfo.ResourceObj" :key="item.smallImgUrl" >
-                    <img :src="fileBaseUrl + item.smallImgUrl" :data-original="baseUrlRegExp(replaceImgs(item.smallImgUrl))" alt="" >
+                    <img :src="item.smallImgUrl" :data-original="replaceImgs(item.smallImgUrl)" alt="" >
                 </div>
             </div>
             <div class="editor-wrap">
@@ -79,7 +79,6 @@
         layout: 'main',
         data() {
             return {
-                fileBaseUrl: process.env.fileBaseUrl,   // 文件的域名
                 content: '',
                 commentList: [],    // 评论列表
                 isShowEmotion: false,
@@ -105,14 +104,6 @@
             'v-comment': Comment
         },
         methods: {
-            baseUrlRegExp (str) {
-                let reg = RegExp(/\http:\/\//);
-                if(str && str.match(reg)){
-                    return str
-                } else {
-                    return process.env.fileBaseUrl+ str
-                }
-            },
             replaceImgs (val) {
                 let regex = "/i/s/";
                 return val.replace(regex, "/i/");
