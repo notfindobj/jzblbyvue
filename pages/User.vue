@@ -27,22 +27,22 @@
                 <nuxt-link to="/User/rmbBill">人民币收支详情</nuxt-link>
                 <nuxt-link to="/User/tribalBill">部落币收支详情</nuxt-link>
                 <nuxt-link to="/User/integralBill">我的积分</nuxt-link>
-                <nuxt-link to="/a123">我的卡券</nuxt-link>
+                <!-- <nuxt-link to="/a123">我的卡券</nuxt-link> -->
             </li>
             <li>
                 <p>首页管理 </p>
-                <nuxt-link to="/User/myRelease">我的发布</nuxt-link>
-                <nuxt-link to="/User/myCollection">我的收藏</nuxt-link>
-                <nuxt-link to="/User/myDownload">我的下载</nuxt-link>
+                <nuxt-link to="/HeAndITribal">我的发布</nuxt-link>
+                <nuxt-link to="/HeAndITribal">我的收藏</nuxt-link>
+                <nuxt-link to="/HeAndITribal">我的下载</nuxt-link>
                 <!-- <nuxt-link to="/User/myComments">我的评论</nuxt-link> -->
-                <nuxt-link to="/User/myConcern">我的关注</nuxt-link>
+                <nuxt-link to="/HeAndITribal">我的关注</nuxt-link>
                 <!-- <nuxt-link to="/User/myRecommended">被推荐作品</nuxt-link>
                 <nuxt-link to="/User/browseRecord">浏览记录</nuxt-link> -->
             </li>
             <li>
                 <p>账号管理 </p>
                 <nuxt-link :to="Identity.IsEnt === 2 ? '/User/personalData' : '/User/companyInfo'">账户资料</nuxt-link>
-                <nuxt-link to="/User/adminis">身份认证</nuxt-link>
+                <nuxt-link :to="Identity.IsEnt === 2 ? '/User/attestation' : '/User/adminis'">身份认证</nuxt-link>
                 <nuxt-link to="/User/myBond">我的保证金</nuxt-link>
                 <nuxt-link to="/User/myInvoice">我的发票</nuxt-link>
                 <nuxt-link to="/User/myAddress">收货地址</nuxt-link>

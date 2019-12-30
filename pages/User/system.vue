@@ -3,8 +3,8 @@
         <Title/>
         <msgTab :TabList="TabList"/>
         <div>
-            <msgCard/>
-            <msgCard :bodyType="false"/>
+            <!-- <msgCard/>
+            <msgCard :bodyType="false"/> -->
         </div>
     </div>
 </template>

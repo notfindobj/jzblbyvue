@@ -1,5 +1,5 @@
 <template>
-    <div class="comCard">
+    <div class="comCard" >
         <div class="comCard-content">
            <div class="comCard-content-txt">
                <span class="comCard-content-txt-name">{{content.NickName}}</span>:
@@ -13,14 +13,13 @@
            </div>
            <i class="icon iconfont icon-chahao3" @click="delMsg(content)"></i>
         </div>
-        <div class="comCard-pro">
+        <div class="comCard-pro" @click="clickCom(content)">
             <div class="comCard-pro-left" v-if="content.ItemTitleImg">
                 <img :src="content.ItemTitleImg" alt="">
             </div>
             <div class="comCard-pro-right">
                 <div>
                     <span class="comCard-pro-right-title">@{{content.ItemNickName}}</span>
-                    <!-- <span>项目</span> -->
                 </div>
                 <div >
                    {{content.MsgTitle}}
@@ -40,6 +39,9 @@ export default {
     methods: {
         delMsg (row) {
             this.$emit('delMsg', row);
+        },
+        clickCom (row) {
+            this.$emit('clickCom', row)
         }
     },
 }
@@ -51,6 +53,8 @@ export default {
         width: 700px;
         padding: 10px;
         border-radius: 3px;
+        box-shadow: none;
+        transition: box-shadow .2s;
         cursor: pointer;
         &:hover .comCard-content i{
             display: inline-block;
@@ -95,6 +99,10 @@ export default {
                     font-weight: 600;
                 }
             }
+        }
+        &:hover {
+            transition: box-shadow .2s;
+            box-shadow: 0 2px 15px #999999;
         }
     }
 </style>

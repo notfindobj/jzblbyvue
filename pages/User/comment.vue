@@ -8,7 +8,7 @@
                     <div class="msg-time">
                         {{items.CreateDate}}
                     </div>
-                    <comCard :content="items" @delMsg="delMsg(items, index)"/>
+                    <comCard :content="items" @clickCom="clickCom" @delMsg="delMsg(items, index)"/>
                 </div>
             </template>
         </div>
@@ -19,6 +19,7 @@ import Title from './components/title'
 import msgTab from './components/msgTab'
 import comCard from './components/comCard'
 import {setMessage, getWebMessage} from '../../service/clientAPI'
+import {analogJump} from '../../plugins/untils/public'
 export default {
     components: {
         Title,
@@ -58,6 +59,61 @@ export default {
             if (msg) {
                 this.msgPList.splice(index, 1)
             }
+        },
+        clickCom (item) {
+            let routeData = {}
+            let showLayout = true;
+            switch (item.ItemType) {
+                case 0:
+                    let showLayout = true 
+                    if (item.TypeName === '文本' || item.TypeName === '建筑规范') {
+                        showLayout = false
+                    } else {
+                        showLayout = true
+                    }
+                    routeData = this.$router.resolve({
+                        name: 'DataDetails',
+                        query: {id: item.ItemId, layout: showLayout }
+                    })
+                    break;
+                case 1:
+                    routeData = this.$router.resolve({
+                        name: 'pictureDetails-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+                case 2:
+                    routeData = this.$router.resolve({
+                        name: 'videoDetails-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+               
+                case 3:
+                    routeData = this.$router.resolve({
+                        name: 'QuestionsAndAnswers-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+                case 4:
+                    if (item.TypeName === '文本' || item.TypeName === '建筑规范') {
+                        showLayout = false
+                    } else {
+                        showLayout = true
+                    }
+                    routeData = this.$router.resolve({
+                        name: 'DataDetails',
+                        query: {id: item.ItemId, layout: showLayout }
+                    })
+                    break;
+                case 5:
+                    routeData = this.$router.resolve({
+                        name: 'pictureDetails-id',
+                        params: {id: item.ItemId }
+                    })
+                    break;
+            }
+            analogJump(routeData.href);
         }
     },
 }

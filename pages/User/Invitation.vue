@@ -4,12 +4,17 @@
         <msgTab :TabList="TabList"/>
         <div>
             <template v-for="(items, index) in invitationList">
-                <msgCard :key="index" :content="items">
-                    <div slot="footer" class="invitation-foot">
-                        <Button type="primary">拒绝</Button>
-                        <Button type="primary">立即加入</Button>
+                <div :key="index" >
+                    <div class="msg-time">
+                        {{items.CreateDate}}
                     </div>
-                </msgCard>
+                    <msgCard :content="items">
+                        <div slot="footer" class="invitation-foot">
+                            <Button type="primary" @click="handleInvite(items, 2)">拒绝</Button>
+                            <Button type="primary" @click="handleInvite(items, 1)">立即加入</Button>
+                        </div>
+                    </msgCard>
+                </div>
             </template>
         </div>
     </div>
@@ -18,7 +23,7 @@
 import Title from './components/title'
 import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
-import {setMessage, getWebMessage} from '../../service/clientAPI'
+import {getWebMessage, handleInviteUser} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -49,6 +54,21 @@ export default {
                 this.invitationList = msg.invite.Msg;
             }
         },
+        async handleInvite (row, dealtype) {
+            let queryData = {
+                sendId: row.DataIds.sendId,
+                dealtype: dealtype
+            }
+            let msg = await handleInviteUser(queryData)
+            if (msg) {
+                if (dealtype === 1) {
+                    this.$Notice.success({
+                        title: '',
+                        desc: `恭喜你已加入${row.MsgTitle}!`
+                    });
+                }
+            }
+        },
     },
 }
 </script>
@@ -57,5 +77,10 @@ export default {
         display: flex;
         justify-content: space-between;
         margin-top: 15px;
+    }
+    .msg-time {
+        width: 550px;
+        text-align: center;
+        margin: 20px 0;
     }
 </style>

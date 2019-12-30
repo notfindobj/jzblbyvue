@@ -170,9 +170,6 @@ export default {
                 return false
             }
             this.$router.push({ name: "HeAndITribal-id" })
-            // if (this.$route.name === "HeAndITribal-id") {
-            //     window.location.reload();
-            // }
         },
         searchPach () {
             this.$router.push({ name: "searchPage" });
@@ -190,7 +187,7 @@ export default {
                 if (['HeAndITribal-id','Message-customized','Message-comment','Message-inviter',
                 'attention','PersonalCenter-myMessage-userId','PersonalCenter-accountSecurity', 
                 'PersonalCenter-accountBinding', 'PersonalCenter-accountBinding', 'PersonalCenter-records',
-                'PersonalCenter-receivingAddress'].includes(this.$route.name)) {
+                'PersonalCenter-receivingAddress', 'User-myReport'].includes(this.$route.name)) {
                     this.$router.push({name: 'index'})
                 }
             }

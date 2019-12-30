@@ -15,12 +15,22 @@
             </TabPane>
             <TabPane label="发票设置" name="name2">
                 <div>发票信息以当前选择为准，请谨慎填写。</div>
+                <div class="type">
+                    <div class="type-label">
+                        发票类型
+                    </div>
+                    <div>
+                        <Button size="small" :type="isType ? 'primary':'dashed'" @click="isType = true">个人</Button>
+                        <Button size="small" :type="isType ? 'dashed':'primary'" @click="isType = false">企业</Button>
+                    </div>
+                </div>
                 <!-- 个人类型 -->
-                <Form v-if="false" class="personalData" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
+                <Form v-if="isType" class="personalData" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
                     <FormItem label="纳税人类型" prop="user">
                         <Select v-model="model1" clearable >
-                            <Option value="1">男</Option>
-                            <Option value="0">女</Option>
+                            <Option :value="2">法人</Option>
+                            <Option :value="1">个体工商户</Option>
+                            <Option :value="0">自然人</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="开票类型" prop="user">
@@ -52,11 +62,12 @@
                     </FormItem>
                 </Form>
                 <!-- 企业类型 -->
-                <Form class="personalData" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
+                <Form v-if="!isType" class="personalData" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
                     <FormItem label="纳税人类型" prop="user">
                         <Select v-model="model1" clearable >
-                            <Option value="1">男</Option>
-                            <Option value="0">女</Option>
+                            <Option :value="2">法人</Option>
+                            <Option :value="1">个体工商户</Option>
+                            <Option :value="0">自然人</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="开票类型" prop="user">
@@ -65,47 +76,45 @@
                             <Option value="0">女</Option>
                         </Select>
                     </FormItem>
-                    <FormItem label="公司名称" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="名称（昵称）"></Input>
+                    <FormItem label="公司名称" prop="CompanyName">
+                        <Input size="small" type="text" v-model="formInline.CompanyName" placeholder="名称（昵称）"></Input>
                     </FormItem>
-                    <FormItem label="发票抬头" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                    <FormItem label="发票抬头" prop="InvoiceTitle">
+                        <Input size="small" type="text" v-model="formInline.InvoiceTitle" placeholder="发票抬头"></Input>
                     </FormItem>
-                    <FormItem label="纳税人识别号" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                    <FormItem label="纳税人识别号" prop="Identification">
+                        <Input size="small" type="text" v-model="formInline.Identification" placeholder="纳税人识别号"></Input>
                     </FormItem>
-                    <FormItem label="注册地址" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                    <FormItem label="注册地址" prop="RegisteredAddress">
+                        <Input size="small" type="text" v-model="formInline.RegisteredAddress" placeholder="注册地址"></Input>
                     </FormItem>
-                    <FormItem label="公司电话" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                    <FormItem label="公司电话" prop="CompanyTel">
+                        <Input size="small" type="text" v-model="formInline.CompanyTel" placeholder="公司电话"></Input>
                     </FormItem>
-                    <FormItem label="开户行" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                    <FormItem label="开户行" prop="OpeningBank">
+                        <Input size="small" type="text" v-model="formInline.OpeningBank" placeholder="开户行"></Input>
                     </FormItem>
-                    <FormItem label="银行卡号" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                    <FormItem label="银行卡号" prop="BankCardNumber">
+                        <Input size="small" type="text" v-model="formInline.BankCardNumber" placeholder="银行卡号"></Input>
                     </FormItem>
-                    <FormItem label="邮寄地址" prop="user">
+                    <FormItem label="邮寄地址" prop="MailingAddress">
                         <Cascader v-model="value2" clearable :data="data"></Cascader>
                     </FormItem>
-                    <FormItem label="详细地址" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="详细地址"></Input>
+                    <FormItem label="详细地址" prop="DetailAddress">
+                        <Input size="small" type="text" v-model="formInline.DetailAddress" placeholder="详细地址"></Input>
                     </FormItem>
-                    <FormItem label="联系人姓名" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="联系人姓名"></Input>
+                    <FormItem label="联系人姓名" prop="ContactName">
+                        <Input size="small" type="text" v-model="formInline.ContactName" placeholder="联系人姓名"></Input>
                     </FormItem>
-                    <FormItem label="联系人电话" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="联系人电话"></Input>
+                    <FormItem label="联系人电话" prop="ContactPhoneuser">
+                        <Input size="small" type="text" v-model="formInline.ContactPhone" placeholder="联系人电话"></Input>
                     </FormItem>
-                    <FormItem label="邮箱" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="邮箱"></Input>
+                    <FormItem label="邮箱" prop="ContactEmail">
+                        <Input size="small" type="text" v-model="formInline.ContactEmail" placeholder="邮箱"></Input>
                     </FormItem>
                     <FormItem label="上传资料" prop="user">
                         <div class="upInvoive">
-                            <div class="upInvoive-item">
-
-                            </div>
+                            <div class="upInvoive-item"></div>
                         </div>
                     </FormItem>
                 </Form>
@@ -129,6 +138,7 @@ export default {
             value7:'',
             model2:'',
             value: '',
+
             cityList: [
                 {
                     value: 'New York',
@@ -213,12 +223,22 @@ export default {
                     date: '2016-10-04',
                     state: '3'
                 }
-            ]
+            ],
+            isType: false
         }
     }
 }
 </script>
 <style lang="less" scoped>
+    .type {
+        display: flex;
+        margin-left: 70px;
+        margin-bottom: 20px;
+        margin-top: 20px;
+        &-label {
+            margin-right: 10px;
+        }
+    }
    .tribalBill {
        &-title {
            margin: 10px 0;

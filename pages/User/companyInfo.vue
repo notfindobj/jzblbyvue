@@ -2,7 +2,6 @@
     <div>
         <Title title="账户资料"/>
         <div class="user-box">
-            <!-- <Tag color="success">success</Tag> -->
             <Form class="personalData" ref="formInline" :model="comInfo" :rules="ruleInline" :label-width="100">
                 <FormItem >
                     <div class="user-header">
@@ -17,30 +16,30 @@
                     <Input size="small" type="text" v-model="comInfo.Nickname" :disabled="controlCom" placeholder="公司名称"></Input>
                 </FormItem>
                 <FormItem label="公司全称" prop="user">
-                    <Input size="small" type="text" v-model="comInfo.RealName" placeholder="公司全称"></Input>
+                    <Input size="small" type="text" v-model="comInfo.RealName"  :disabled="controlCom"  placeholder="公司全称"></Input>
                 </FormItem>
                 <FormItem label="公司擅长" prop="user">
-                    <Input size="small" type="text" clearable v-model="formInline.user" placeholder="个人擅长"></Input>
+                    <Input size="small" type="text" clearable v-model="formInline.user"  :disabled="controlCom"  placeholder="个人擅长"></Input>
                 </FormItem>
                 <FormItem label="公司电话" prop="user">
-                    <Input size="small" type="text" clearable v-model="comInfo.Telephone" placeholder="个人擅长"></Input>
+                    <Input size="small" type="text" clearable v-model="comInfo.Telephone"  :disabled="controlCom"  placeholder="个人擅长"></Input>
                 </FormItem>
                 <FormItem label="公司邮件" prop="user">
-                    <Input size="small" type="text" clearable v-model="comInfo.Email" placeholder="个人擅长"></Input>
+                    <Input size="small" type="text" clearable v-model="comInfo.Email"  :disabled="controlCom"  placeholder="个人擅长"></Input>
                 </FormItem>
                 <FormItem label="公司类型" prop="user">
-                    <Select v-model="comInfo.EmotionalStateId" clearable >
+                    <Select v-model="comInfo.EmotionalStateId" clearable  :disabled="controlCom" >
                         <Option v-for="item in entTypeList" :value="item.EntTypeId" :key="item.EntTypeId">{{ item.EntName }}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="公司所在地" prop="user">
-                    <Cascader v-model="comInfo.addresList" :data="cascaderList" :load-data="loadData"></Cascader>
+                    <Cascader v-model="comInfo.addresList" :data="cascaderList" :load-data="loadData"  :disabled="controlCom" ></Cascader>
                 </FormItem>
                 <FormItem label="详细地址" prop="user">
-                    <Input size="small" type="text" clearable v-model="comInfo.user" placeholder="个人擅长"></Input>
+                    <Input size="small" type="text" clearable v-model="comInfo.user" placeholder="详细地址"  :disabled="controlCom" ></Input>
                 </FormItem>
                 <FormItem label="公司简介" prop="user">
-                    <Input v-model="value7" type="textarea" :autosize="{minRows: 2}" placeholder="个人简介"/>
+                    <Input v-model="comInfo.Description" type="textarea" :autosize="{minRows: 2}" placeholder="公司简介"  :disabled="controlCom" />
                 </FormItem>
             </Form>
             <div class="user-btn">
@@ -65,54 +64,7 @@ export default {
             model2: '1',
             value7: '',
             value2: ['jiangsu', 'suzhou', 'zhuozhengyuan'],
-            data: [{
-                    value: 'beijing',
-                    label: '北京',
-                    children: [
-                        {
-                            value: 'gugong',
-                            label: '故宫'
-                        },
-                        {
-                            value: 'tiantan',
-                            label: '天坛'
-                        },
-                        {
-                            value: 'wangfujing',
-                            label: '王府井'
-                        }
-                    ]
-                }, {
-                    value: 'jiangsu',
-                    label: '江苏',
-                    children: [
-                        {
-                            value: 'nanjing',
-                            label: '南京',
-                            children: [
-                                {
-                                    value: 'fuzimiao',
-                                    label: '夫子庙',
-                                }
-                            ]
-                        },
-                        {
-                            value: 'suzhou',
-                            label: '苏州',
-                            children: [
-                                {
-                                    value: 'zhuozhengyuan',
-                                    label: '拙政园',
-                                },
-                                {
-                                    value: 'shizilin',
-                                    label: '狮子林',
-                                }
-                            ]
-                        }
-                    ],
-            }],
-            controlCom: false,
+            controlCom: true,
             comInfo: {},
             entTypeList: [],
             cascaderList: []

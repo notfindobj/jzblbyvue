@@ -4,28 +4,37 @@
         <msgTab :TabList="TabList"/>
         <div>
             <template v-for="(items, index) in dzList">
-                <msgCard :key="index" :content="items">
-                    <div slot="header" class="custom">
-                        <div>
-                           {{items.MsgTitle}}
-                        </div>
-                        <Button type="primary">查看</Button>
+                <div :key="index">
+                    <div class="msg-time">
+                        {{items.CreateDate}}
                     </div>
-                </msgCard>
+                    <msgCard :content="items" @clickCom="clickCom">
+                        <div slot="header" class="custom">
+                            <div>
+                            {{items.MsgTitle}}
+                            </div>
+                            <Button type="primary" @click="viewCus(items)">查看定制详情</Button>
+                        </div>
+                    </msgCard>
+                </div>
             </template>
         </div>
+        <Custom v-if="isCustom" :customId="customId" @dataDetailsMaskClose="dataDetailsMaskClose"/>
     </div>
 </template>
 <script>
 import Title from './components/title'
 import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
+import Custom from './components/custom'
 import {setMessage, getWebMessage} from '../../service/clientAPI'
+import {analogJump} from '../../plugins/untils/public'
 export default {
     components: {
         Title,
         msgTab,
-        msgCard
+        msgCard,
+        Custom
     },
     data () {
         return {
@@ -35,7 +44,9 @@ export default {
                 {path: '/User/customized', label: '定制消息'},
                 {path: '/User/Invitation', label: '邀请消息'}
             ],
-            dzList: []
+            dzList: [],
+            customId: {},
+            isCustom: false
         }
     },
     created () {
@@ -51,6 +62,20 @@ export default {
                 this.dzList = msg.dingzhi.Msg;
             }
         },
+        clickCom (row) {
+            let routeData = this.$router.resolve({
+                name: 'DataDetails',
+                query: {id: row.DataIds.itemId, layout: true }
+            })
+            analogJump(routeData.href);
+        },
+        viewCus (row) {
+            this.customId = row.DataIds;
+            this.isCustom = true
+        },
+        dataDetailsMaskClose () {
+            this.isCustom = false;
+        },
     },
 }
 </script>
@@ -61,5 +86,10 @@ export default {
         justify-content: space-between;
         width: 100%;
         padding-right: 6px;
+    }
+    .msg-time {
+        width: 550px;
+        text-align: center;
+        margin: 20px 0;
     }
 </style>

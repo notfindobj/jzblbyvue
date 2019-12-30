@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="card-left">
-           <img src="http://www.pic.jzbl.com/ItemFiles/UserInfoImg/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/1566125301_s.jpeg" alt="">
+           <img :src="content.HeadIcon" alt="">
         </div>
         <div class="card-right">
             <div class="card-right-title">
@@ -15,8 +15,8 @@
                     <div class="card-right-body-content">
                         {{content.Description}}
                     </div>
-                    <div class="card-right-body-img" v-if="bodyType">
-                        <img src="https://www.pic.jzbl.com//buildingcircle/ee8e00ed-6390-4eba-9214-6c457d50b2fa/2019-12-09/i/s/e770a39f1575945579.jpg" alt="">
+                    <div class="card-right-body-img" v-if="content.ItemTitleImg" @click="clickCom(content)">
+                        <img :src="content.ItemTitleImg" alt="">
                     </div>
                  </slot>
             </div>
@@ -32,12 +32,13 @@ export default {
         content: {
             type: Object,
             default: () => {}   
-        },
-        bodyType: {
-            type: Boolean,
-            default: true
-        },
-    }
+        }
+    },
+    methods: {
+        clickCom (row) {
+            this.$emit('clickCom', row)
+        }
+    },
 }
 </script>
 <style lang="less" scoped>

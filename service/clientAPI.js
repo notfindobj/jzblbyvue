@@ -341,3 +341,15 @@ export const getPostPolicy = async params => {
 export const getBillList = async params => {
   return await request.get(`Order/GetBillList`, params)
 }
+// 部落币明细
+export const getTribalCoins = async params => {
+  return await request.get(`UserTribalCoins/GetTribalCoinsList`, params)
+}
+// 获取实名认证信息
+export const getUserInfo = async params => {
+  return await request.get(`UserInfo/GetUserCertification`, params)
+}
+// 设置实名认证信息
+export const setCertification = async params => {
+  return await request.post(`UserInfo/SetUserCertification`, params)
+}

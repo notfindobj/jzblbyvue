@@ -17,7 +17,7 @@
                 <Button>提现</Button>
            </div>
            <div>
-               <publicTable :columns="columns1" :columnsData="data1"/>
+               <publicTable :columns="columns" :columnsData="tribalCoinData"/>
            </div>
         </div>
     </div>
@@ -25,6 +25,7 @@
 <script>
 import Title from './components/title'
 import publicTable from './components/publicTable'
+import {getTribalCoins} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -43,31 +44,37 @@ export default {
                 }
             ],
             model1: '',
-            columns1: [
+            columns: [
                 {
                     cut: 'text',
                     title: '订单ID',
-                    key: 'name'
+                    key: 'ID'
+                },
+                {
+                    cut: 'state',
+                    title: '渠道',
+                    key: 'ScoreType',
+                    state: [{label: '人民币充值 ', value: 1}, {label: '资源下载 ', value: 2}, {label: '提现 ', value: 3}]
                 },
                 {
                     cut: 'state',
                     title: '收入/支出',
-                    key: 'state',
-                    state: [{label: '收入', value: '1'}, {label: '支出', value: '2'}]
+                    key: 'Type',
+                    state: [{label: '获取', value: 0}, {label: '消耗', value: 1}]
                 },
                 {
+                    cut: 'text',
                     title: '金额',
-                    key: 'address',
-                    state: '1'
+                    key: 'Score',
                 },
                 {
                     cut: 'time',
                     title: '时间',
-                    key: 'date'
+                    key: 'CreateDate'
                 },
                 {
-                    title: '状态',
-                    key: 'address'
+                    title: '备注',
+                    key: 'Memo'
                 },
                 {
                     cut: 'btn',
@@ -76,38 +83,20 @@ export default {
                     state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            data1: [
-                {
-                    name: 'John Brown',
-                    age: 18,
-                    address: '0.00',
-                    date: '2016-10-03',
-                    state: '1'
-                },
-                {
-                    name: 'Jim Green',
-                    age: 24,
-                    address: 'London No. 1 Lake Park',
-                    date: '2016-10-01',
-                    state: '1'
-                },
-                {
-                    name: 'Joe Black',
-                    age: 30,
-                    address: 'Sydney No. 1 Lake Park',
-                    date: '2016-10-02',
-                    state: '2'
-                },
-                {
-                    name: 'Jon Snow',
-                    age: 26,
-                    address: 'Ottawa No. 2 Lake Park',
-                    date: '2016-10-04',
-                    state: '2'
-                }
-            ]
+            tribalCoinData: []
         }
-    }
+    },
+    created () {
+        this.getTribalCoinsList()
+    },
+    methods: {
+        async getTribalCoinsList () {
+            let msg = await getTribalCoins()
+            if (msg) {
+                this.tribalCoinData = msg
+            }
+        }
+    },
 }
 </script>
 <style lang="less" scoped>

@@ -5,7 +5,7 @@
            <div class="bill-title">
                 <div class="bill-title-num">
                     <span>账户余额：</span>
-                    <span>0.00元</span>
+                    <span>{{rmbGoods.yue}}元</span>
                 </div>
                 <Button>提现</Button>
            </div>
@@ -48,94 +48,94 @@ export default {
                 {
                     cut: 'text',
                     title: '订单ID',
-                    key: 'name'
+                    key: 'OrderId'
+                },
+                 {
+                    cut: 'text',
+                    title: '名称',
+                    key: 'ItemName'
+                },
+                {
+                    cut: 'text',
+                    title: '来源',
+                    key: 'Description'
                 },
                 {
                     cut: 'state',
                     title: '收入/支出',
-                    key: 'state',
-                    state: [{label: '收入', value: '1'}, {label: '支出', value: '2'}]
+                    key: 'BillStatus',
+                    state: [{label: '收入', value: 0}, {label: '支出', value: 1}]
                 },
                 {
+                    cut: 'text',
                     title: '金额',
-                    key: 'address',
+                    key: 'Money',
+                    width: 70,
                     state: '1'
                 },
                 {
                     cut: 'time',
                     title: '时间',
-                    key: 'date'
+                    key: 'CreateDate'
                 },
                 {
+                    cut: 'time',
                     title: '状态',
-                    key: 'address'
+                    key: 'CreateDate'
                 },
                 {
                     cut: 'btn',
                     title: '操作',
                     key: 'address',
-                    state: [{text: '删除', events: 'addVal'}]
+                    state: [{text: '删除', events: 'delRmbRec'}]
                 }
             ],
             rmbGoods: {},
-            data1: [
-                {
-                    name: 'John Brown',
-                    age: 18,
-                    address: '0.00',
-                    date: '2016-10-03',
-                    state: '1'
-                },
-                {
-                    name: 'Jim Green',
-                    age: 24,
-                    address: 'London No. 1 Lake Park',
-                    date: '2016-10-01',
-                    state: '1'
-                },
-                {
-                    name: 'Joe Black',
-                    age: 30,
-                    address: 'Sydney No. 1 Lake Park',
-                    date: '2016-10-02',
-                    state: '2'
-                },
-                {
-                    name: 'Jon Snow',
-                    age: 26,
-                    address: 'Ottawa No. 2 Lake Park',
-                    date: '2016-10-04',
-                    state: '2'
-                }
-            ]
         }
     },
     created () {
-        this.getBillData()
+        this.getBillData();
     },
     methods: {
         async getBillData () {
             let msg = await getBillList();
             if (msg) {
-                this.rmbGoods = msg
+                this.rmbGoods = msg;
             }
-            console.log(msg)
+        },
+        async delRmbRec (row) {
+            this.$Modal.confirm({
+                title: '收支详情',
+                content: '<p>确定删除收支详情？</p>',
+                onOk: async () => {
+                    // let query = {
+                    //     Id: row.Id
+                    // }
+                    // let mgs = await delROSTypes(query);
+                    // if (mgs) {
+                    //     this.getRsList()
+                    // }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
         }
     },
 }
 </script>
 <style lang="less" scoped>
    .bill {
-       &-title {
-           margin: 10px 0;
-           &-num {
+        &-title {
+            margin: 10px 0;
+            &-num {
                 display: inline-block;
                 font-size: 14px;
                 margin-right: 30px;
-           }
-       }
-       &-search {
-           margin-bottom: 10px;
-       }
+            }
+        }
+        &-search {
+            margin-bottom: 10px;
+        }
    }
 </style>
