@@ -74,7 +74,7 @@
                         </Select>
                     </FormItem>
                     <FormItem label="开票类型" prop="user">
-                        <Select v-model="model1" clearable >
+                        <Select v-model="cominvoiceData.InvoiceType" clearable >
                             <Option value="1">男</Option>
                             <Option value="0">女</Option>
                         </Select>
@@ -101,7 +101,7 @@
                         <Input size="small" type="text" v-model="cominvoiceData.BankCardNumber" placeholder="银行卡号"></Input>
                     </FormItem>
                     <FormItem label="邮寄地址" prop="MailingAddress">
-                        <Cascader v-model="cascaderAddress" :data="cascaderList" :load-data="loadData" style="width:225px"></Cascader>
+                        <Cascader v-model="comAddress" :data="cascaderList" :load-data="loadData" style="width:225px"></Cascader>
                     </FormItem>
                     <FormItem label="详细地址" prop="DetailAddress">
                         <Input size="small" type="text" v-model="cominvoiceData.DetailAddress" placeholder="详细地址"></Input>
@@ -123,7 +123,6 @@
                     <FormItem >
                         <Button type="primary" @click="setInvoice(1)">提交</Button>
                     </FormItem>
-                    
                 </Form>
             </TabPane>
         </Tabs>
@@ -140,23 +139,8 @@ export default {
     },
     data () {
         return {
-            formInline: {},
             ruleInline: {},
-            value2:[],
-            value7:'',
-            model2:'',
             value: '',
-            cityList: [
-                {
-                    value: 'New York',
-                    label: 'New York'
-                },
-                {
-                    value: 'London',
-                    label: 'London'
-                }
-            ],
-            model1: '',
             columns: [
                 {
                     title: '发票号码',
@@ -200,7 +184,6 @@ export default {
                     state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            data: [],
             data1: [
                 {
                     name: 'John Brown',
@@ -232,7 +215,7 @@ export default {
                 }
             ],
             invoiceAddress: [],
-            cascaderAddress: [],
+            comAddress: [],
             invoiceData: {},
             cominvoiceData: {},
             cascaderList: [],
@@ -288,23 +271,28 @@ export default {
             }
         },
         async setInvoice (index) {
-             let query = {}
+            let query = {}
             if (index === 0) {
                 query = this.invoiceData;
                 query.ProvinceId = this.invoiceAddress[0];
                 query.CityId = this.invoiceAddress[1];
                 query.AreaId = this.invoiceAddress[2];
+                query.Type = 0
             }
             if (index === 1) {
-                query = this.cominvoiceData
+                query = this.cominvoiceData;
+                query.ProvinceId = this.comAddress[0];
+                query.CityId = this.comAddress[1];
+                query.AreaId = this.comAddress[2];
+                query.Type = 1
             }
             let msg = await setUserInvoice(query);
             if (msg) {
-                console.log(msg)
+                this.$Message.success('信息提交成功！')
             }
         },
         async getInvoice (type = 0) {
-            this.isType = type === 0 ? true : false 
+            this.isType = type === 0 ? true : false;
             let query = {
                 Type: type
             }
@@ -313,10 +301,11 @@ export default {
             if (msg) {
                 if (type === 0) {
                     this.invoiceData = msg;
-                    this.invoiceAddress = [msg.ProvinceId, msg.CityId, msg.AreaId ];
+                    this.invoiceAddress = [msg.ProvinceId, msg.CityId, msg.AreaId];
                 }
                 if (type === 1) {
                     this.cominvoiceData = msg;
+                    this.comAddress = [msg.ProvinceId, msg.CityId, msg.AreaId];
                 }
             }
         }
