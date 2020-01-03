@@ -353,3 +353,19 @@ export const getUserInfo = async params => {
 export const setCertification = async params => {
   return await request.post(`UserInfo/SetUserCertification`, params)
 }
+// 获取银行列表
+export const getBankList = async params => {
+  return await request.get(`UserInfo/GetBankList`, params)
+}
+// 获取发票设置
+export const getUserInvoice = async params => {
+  return await request.get(`UserInfo/GetUserInvoice`, params)
+}
+// 获取发票设置
+export const setUserInvoice = async params => {
+  return await request.post(`UserInfo/SetUserInvoice`, params)
+}
+// 账户预览
+export const getUserAccount = async params => {
+  return await request.get(`UserInfo/GetUserAccount`, params)
+}

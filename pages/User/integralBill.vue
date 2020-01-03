@@ -1,23 +1,23 @@
 <template>
     <div>
-        <Title/>
+        <Title title="我的积分"/>
         <div class="tribalBill">
            <div class="tribalBill-title">
                 <div class="tribalBill-title-num">
                     <span>积分余额：</span>
-                    <span>0.00元</span>
+                    <span>{{integral}}</span>
                 </div>
                 <Button>获取更多</Button>
            </div>
            <div class="tribalBill-search">
-                <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+                <DatePicker type="daterange" :value="searchTime" @on-change="onChange" placement="bottom-end" placeholder="选择时间" style="width: 200px"></DatePicker>
                 <Select v-model="model1" clearable style="width:200px">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-                <Button>提现</Button>
+                <Button @click="getIntegral">查询</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="integralData"/>
+               <publicTable :columns="columns" :columnsData="integralData" :total="total"/>
            </div>
         </div>
     </div>
@@ -35,12 +35,12 @@ export default {
         return {
             cityList: [
                 {
-                    value: 'New York',
-                    label: 'New York'
+                    value: '1',
+                    label: '消耗'
                 },
                 {
-                    value: 'London',
-                    label: 'London'
+                    value: '0',
+                    label: '获取'
                 }
             ],
             model1: '',
@@ -71,25 +71,31 @@ export default {
                     title: '类型',
                     key: 'ScoreType',
                     state: [{label: '注册', value: 1}, {label: '发布', value: 2}, {label: '资源下载', value: 3}, {label: '部落币转换', value: 4}, {label: '签到', value: 5}]
-                },
-                {
-                    cut: 'btn',
-                    title: '操作',
-                    key: 'address',
-                    state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            integralData: []
+            searchTime: [],
+            integralData: [],
+            integral: 0,
+            total: 0
         }
     },
     created () {
         this.getIntegral()
     },
     methods: {
+        onChange (val) {
+            this.searchTime = val
+        },
         async getIntegral () {
-            let msg = await getIntegralList();
+            let query = {
+                startDate: this.searchTime[0],
+                EndDate: this.searchTime[1],
+            }
+            let msg = await getIntegralList(query);
             if (msg) {
                 this.integralData = msg.Integrallist;
+                this.total = msg.pagination.records,
+                this.integral = msg.IntegralSum
             }
         }
     },

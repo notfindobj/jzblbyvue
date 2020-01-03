@@ -10,14 +10,14 @@
                 <Button>提现</Button>
            </div>
            <div class="bill-search">
-                <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+                <DatePicker type="daterange" :value="searchTime" @on-change="onChange" placement="bottom-end" placeholder="选择时间" style="width: 200px"></DatePicker>
                 <Select v-model="model1" clearable style="width:200px">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-                <Button>提现</Button>
+                <Button @click="getBillData">搜索</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="rmbGoods.billlist"/>
+               <publicTable :columns="columns" :columnsData="rmbGoods.billlist" :total="total"/>
            </div>
         </div>
     </div>
@@ -76,13 +76,14 @@ export default {
                 {
                     cut: 'time',
                     title: '时间',
-                    key: 'CreateDate'
+                    key: 'CreateDate',
+                    format: 'YYYY-MM-DD'
                 },
-                {
-                    cut: 'time',
-                    title: '状态',
-                    key: 'CreateDate'
-                },
+                // {
+                //     cut: 'text',
+                //     title: '状态',
+                //     key: 'CreateDate',
+                // },
                 {
                     cut: 'btn',
                     title: '操作',
@@ -91,16 +92,26 @@ export default {
                 }
             ],
             rmbGoods: {},
+            searchTime: [],
+            total: 0
         }
     },
     created () {
         this.getBillData();
     },
     methods: {
+        onChange (val) {
+            this.searchTime = val
+        },
         async getBillData () {
-            let msg = await getBillList();
+            let query = {
+                startDate: this.searchTime[0],
+                EndDate: this.searchTime[1],
+            }
+            let msg = await getBillList(query);
             if (msg) {
                 this.rmbGoods = msg;
+                this.total = msg.pagination.records
             }
         },
         async delRmbRec (row) {

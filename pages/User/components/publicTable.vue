@@ -9,11 +9,12 @@
         @on-selection-change="onselectionchange"
         ></Table>
         <div class="Page">
-            <Page :total="100" />
+            <Page :total="total" />
         </div>
     </div>
 </template>
 <script>
+import $moment from 'moment'
 export default {
     props: {
         columns: {
@@ -27,6 +28,10 @@ export default {
             default: function () {
                 return []
             }
+        },
+        total: {
+            type: Number,
+            default: 10
         }
     },
     methods: {
@@ -61,7 +66,7 @@ export default {
                         break;
                     case 'time':
                         ele.render= (h, params) => {
-                            return h('span', params.row[ele.key]);
+                            return h('span', $moment(params.row[ele.key]).format(ele.format || 'YYYY-MM-DD'));
                         }
                         break;
                     case 'btn':

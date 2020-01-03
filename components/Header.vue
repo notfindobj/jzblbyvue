@@ -36,8 +36,27 @@
                     <img  @click="enterCenter" :src="auth ? auth.HeadIcon : $defaultHead" alt="">
                     <span class="user-name" v-if="!auth" @click="SignIn">登录</span>
                     <div class="user-name" v-else>
-                        <span @click="enterCenter">{{auth.NickName}}</span>
-                        <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                        <Dropdown>
+                            <a href="javascript:void(0)">
+                                <span @click="enterCenter">{{auth.NickName}}</span>
+                                <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                                <Icon type="ios-arrow-down"></Icon>
+                            </a>
+                            <DropdownMenu slot="list">
+                                <DropdownItem>
+                                    <nuxt-link to="/User/system">系统消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <nuxt-link to="/User/comment">评论消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <nuxt-link to="/User/customized">定制消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
                     </div>
                 </li>
                 <li>
@@ -149,7 +168,8 @@ export default {
             this.$router.push({ name: "dataBase"});
         },
         enterCenter () {
-            this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
+            // this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
+            this.$router.push({ name: "User-overview", params: {userId: this.auth.UserId}});
         },
         // 在线地图
         onlineMap() {
@@ -189,6 +209,9 @@ export default {
                 'PersonalCenter-accountBinding', 'PersonalCenter-accountBinding', 'PersonalCenter-records',
                 'PersonalCenter-receivingAddress', 'User-myReport'].includes(this.$route.name)) {
                     this.$router.push({name: 'index'})
+                }
+                if (this.$route.name.indexOf('User') !== -1) {
+                     this.$router.push({name: 'index'})
                 }
             }
         },

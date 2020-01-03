@@ -13,9 +13,9 @@
                 <FormItem label="个人头像" prop="user">
                     <div class="user-header">
                         <img :src="userInfo.HeadIcon" alt="">
-                        <div class="user-header-mol"  @click="modifyHead('headIcon')">
+                        <div class="user-header-mol" @click="modifyHead('headIcon')">
                             <span>修改头像</span>
-                            <input type="file" style="display: none;" ref="headIcon" @change="upHeadIcon">
+                            <input type="file" style="display: none;" ref="headIcon" @change="upHeadIcon('headIcon')">
                         </div>
                     </div>
                     <div class="user-tips">
@@ -23,17 +23,15 @@
                     </div>
                 </FormItem>
                 <FormItem label="身份证正面" prop="user">
-                    <div class="card" @click="modifyHead('IDCardImgPos')" :style="`background(${userInfo.IDCardImgPosiSrc})`">
-                        <!-- IDCardImgPosiId -->
+                    <div class="card" @click="modifyHead('IDCardImgPos')" :style="`background-image: url(${userInfo.IDCardImgPosiSrc});`">
                         <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <input type="file" style="display: none;" ref="IDCardImgPos" @change="upHeadIcon">
+                        <input type="file" style="display: none;" ref="IDCardImgPos" @change="upHeadIcon('IDCardImgPos')">
                     </div>
                 </FormItem>
                 <FormItem label="身份证反面" prop="user">
-                    <div class="card"  @click="modifyHead('IDCardImgNega')" :style="`background(${userInfo.IDCardImgNegaSrc})`">
-                        <!-- IDCardImgNegaId -->
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                        <input type="file" style="display: none;" ref="IDCardImgNega" @change="upHeadIcon">
+                    <div class="card" @click="modifyHead('IDCardImgNega')" :style="`background-image: url(${userInfo.IDCardImgNegaSrc});`">
+                        <Icon class="card-icon" type="ios-cloud-upload" size="52" style="color: #3399ff" v-if="userInfo.IDCardImgNegaSrc"></Icon>
+                        <input type="file" style="display: none;" ref="IDCardImgNega" @change="upHeadIcon('IDCardImgNega')">
                     </div>
                     <div class="card-tips">
                         请上传彩色二代身份证，可以是扫描件或数码相机照片，要求姓名、证件号码、脸部、地址都清晰可见。支持JPG，PNG，BMP格式，文件大小不超过200K。查看范例
@@ -44,7 +42,7 @@
                 </div>
                 <FormItem label="银行名称" prop="user">
                     <Select v-model="userInfo.BankId" clearable style="width: 240px;">
-                        <Option :value="1">工商银行</Option>
+                        <Option v-for="(item, index) in bankList" :value="item.BankId" :key="index">{{item.BankName}}</Option>
                     </Select>
                 </FormItem>
                 <FormItem label="银行卡号" prop="user">
@@ -67,7 +65,7 @@
 <script>
 import Title from './components/title'
 import { userInfo } from 'os'
-import {getUserInfo, setCertification, uploadFile} from '../../service/clientAPI'
+import {getUserInfo, setCertification, uploadFile, getBankList} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -127,12 +125,14 @@ export default {
                         }
                     ],
             }],
+            bankList: [],
             BankId: '',
             userInfo: {}
         }
     },
     created () {
-        this.getUserInfoList()
+        this.getUserInfoList();
+        this.getBankData();
     },
     methods: {
         async getUserInfoList () {
@@ -143,19 +143,7 @@ export default {
         },
         async setCer () {
             let queery  = {};
-            queery = {
-                "IDCard":"12345698080",    
-                "IDCardName":"温枢",
-                "HeadIcon":"",
-                "IDCardImgPosiId":"2342",
-                "IDCardImgNegaId":"be9a469b-cd9e-4f78-84ea-5be67df65a2e",
-                "BankId":"be9a469b-cd9e-4f78-84ea-5be67df65a2e",
-                "BankName":"中国银行",
-                "BankCardNumber":"123456789",
-                "OpeningBank":"张江支行",
-                "BankPhone":"123456",
-                "EntType":1
-            }
+            queery = this.userInfo
             let msg = await setCertification(queery);
             if (msg) {
                 this.$Message.success('资料提交成功，请等待后台审核！')
@@ -164,8 +152,14 @@ export default {
         modifyHead (name) {
             this.$refs[name].click()
         },
+        async getBankData () {
+            let msg = await getBankList();
+            if (msg) {
+                this.bankList = msg
+            }
+        },
         // 修改头像
-        async upHeadIcon (event) {
+        async upHeadIcon (name) {
             let file = event.target.files;
             let data = new FormData();
             for (let item of file) {
@@ -174,15 +168,16 @@ export default {
             let msg = await uploadFile(data, 11);
             if (msg) {
                 if (name === 'headIcon') {
-                    this.userInfo.HeadIcon = msg.fileUrl
+                    this.$set(this.userInfo, 'HeadIcon', msg.fileUrl);
                     this.userInfo.HeadIconId = msg.fileId
                 }
                 if (name === 'IDCardImgPos') {
-                    this.userInfo.IDCardImgPosiSrc = msg.fileUrl
+                    this.$set(this.userInfo, 'IDCardImgPosiSrc', msg.fileUrl);
+                    debugger
                     this.userInfo.IDCardImgPosiId = msg.fileId
                 }
                 if (name === 'IDCardImgNega') {
-                    this.userInfo.IDCardImgNegaSrc = msg.fileUrl
+                    this.$set(this.userInfo, 'IDCardImgNegaSrc', msg.fileUrl);
                     this.userInfo.IDCardImgNegaId = msg.fileId
                 }
             }
@@ -243,6 +238,7 @@ export default {
         margin: 10px 0;
         color: #8c8c8c;
         padding-right: 30px;
+        background-size: 100% 100%;
     }
     .card {
         border: 1px dashed #cccccc;
@@ -250,5 +246,8 @@ export default {
         width: 250px;
         text-align: center;
         height: 55px;
+        height: 160px;
+        line-height: 160px;
+        background-size: 100% 100%;
     }
 </style>

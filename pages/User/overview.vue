@@ -3,14 +3,14 @@
         <div class="overview-property">
             <div class="overview-property-item">
                 <p class="overview-property-item-name">人民币余额:</p>
-                <p class="overview-property-item-num">0</p>
+                <p class="overview-property-item-num">{{account.RMB}}</p>
                 <div class="overview-property-item-btn">
                     <span>提现</span>
                 </div>
             </div>
             <div class="overview-property-item">
                 <p class="overview-property-item-name">部落币余额:</p>
-                <p class="overview-property-item-num">0</p>
+                <p class="overview-property-item-num">{{account.TribalCoins}}</p>
                 <div class="overview-property-item-btn">
                     <span>充值</span>
                     <span>提现</span>
@@ -18,7 +18,7 @@
             </div>
             <div class="overview-property-item">
                 <p class="overview-property-item-name">我的积分:</p>
-                <p class="overview-property-item-num">0</p>
+                <p class="overview-property-item-num">{{account.Integral}}</p>
                 <div class="overview-property-item-btn">
                     <span>签到</span>
                     <span>获取更多</span>
@@ -34,6 +34,27 @@
         </div>
     </div>
 </template>
+<script>
+import {getUserAccount} from '../../service/clientAPI'
+export default {
+    data () {
+        return {
+            account: {}
+        }
+    },
+    created () {
+        this.getAccount()
+    },
+    methods: {
+        async getAccount () {
+            let msg = await getUserAccount();
+            if (msg) {
+                this.account = msg;
+            }
+        }
+    },
+}
+</script>
 <style lang="less" scoped>
     .overview {
         &-property {

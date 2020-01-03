@@ -23,10 +23,28 @@
                         </div>
                         <span class="sign-btn" v-if="!auth" @click="SignIn">登录</span>
                         <span class="sign-btn" v-if="!auth" @click="register">注册</span>
-                        <div v-else style="display: inline-block;">
-                            <span @click="enterCenter">{{auth.NickName}}</span>
-                            <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
-                        </div>
+                        <Dropdown v-else >
+                            <a href="javascript:void(0)">
+                                <span @click="enterCenter">{{auth.NickName}}</span>
+                                <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                                <Icon type="ios-arrow-down"></Icon>
+                            </a>
+                            <DropdownMenu slot="list">
+                                <DropdownItem>
+                                    <nuxt-link to="/User/system">系统消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <nuxt-link to="/User/comment">评论消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <nuxt-link to="/User/customized">定制消息</nuxt-link>
+                                </DropdownItem>
+                                <DropdownItem>
+                                    <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </Dropdown>
+                        
                     </li>
                     <li class="content" @click="onlineMap">在线地图</li>
                     <li>
@@ -267,7 +285,8 @@
                 window.open('https://map.51240.com/zhongguo__map/')
             },
             enterCenter () {
-                this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
+                this.$router.push({ name: "User-overview", params: {userId: this.auth.UserId}});
+                // this.$router.push({ name: "PersonalCenter-myMessage-userId", params: {userId: this.auth.UserId}});
             },
             // 百度搜索
             onSearch() {

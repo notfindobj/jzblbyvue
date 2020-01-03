@@ -3,7 +3,9 @@
         <ul class="user-side">
             <li>
                <div class="user-side-title">
-                   <img :src="Identity.HeadIcon" alt="">
+                   <nuxt-link to="/User/overview">
+                       <img :src="Identity.HeadIcon" alt="">
+                   </nuxt-link>
                </div>
                <div>嘿嘿嘿</div>
             </li>
@@ -100,9 +102,16 @@ export default {
                     height: 80px;
                     overflow: hidden;
                     border: 1px solid #eaeaea;
-                    img {
+                    cursor: pointer;
+                    a {
+                        display: inline-block;
                         width: 100%;
                         height: 100%;
+                        padding: 0;
+                        img {
+                            width: 100%;
+                            height: 100%;
+                        }
                     }
                 }
                 p {

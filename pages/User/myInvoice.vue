@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Title :bottomLine="false"/>
+        <Title title="我的发票" :bottomLine="false"/>
         <Tabs value="name1">
             <TabPane label="我的发票" name="name1">
                 <div class="tribalBill-search">
@@ -11,7 +11,7 @@
                     <Input placeholder="发票状态" style="width: 120px" />
                     <Button>搜索</Button>
             </div>
-                <publicTable :columns="columns1" :columnsData="data1"/>
+                <publicTable :columns="columns" :columnsData="data1"/>
             </TabPane>
             <TabPane label="发票设置" name="name2">
                 <div>发票信息以当前选择为准，请谨慎填写。</div>
@@ -20,51 +20,54 @@
                         发票类型
                     </div>
                     <div>
-                        <Button size="small" :type="isType ? 'primary':'dashed'" @click="isType = true">个人</Button>
-                        <Button size="small" :type="isType ? 'dashed':'primary'" @click="isType = false">企业</Button>
+                        <Button size="small" :type="isType ? 'primary':'dashed'" @click="getInvoice(0)">个人</Button>
+                        <Button size="small" :type="isType ? 'dashed':'primary'" @click="getInvoice(1)">企业</Button>
                     </div>
                 </div>
                 <!-- 个人类型 -->
-                <Form v-if="isType" class="personalData" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
+                <Form v-if="isType" class="personalData" ref="formInline" :model="invoiceData" :rules="ruleInline" :label-width="100">
                     <FormItem label="纳税人类型" prop="user">
-                        <Select v-model="model1" clearable >
+                        <Select v-model="invoiceData.TaxpayerType" clearable >
                             <Option :value="2">法人</Option>
                             <Option :value="1">个体工商户</Option>
                             <Option :value="0">自然人</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="开票类型" prop="user">
-                        <Select v-model="model1" clearable >
-                            <Option value="1">男</Option>
-                            <Option value="0">女</Option>
+                        <Select v-model="invoiceData.InvoiceType" clearable >
+                            <Option :value="1">男</Option>
+                            <Option :value="0">女</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="客户名称" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="名称（昵称）"></Input>
+                        <Input size="small" type="text" v-model="invoiceData.CustomerName" placeholder="名称（昵称）"></Input>
                     </FormItem>
                     <FormItem label="发票抬头" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="真实姓名"></Input>
+                        <Input size="small" type="text" v-model="invoiceData.InvoiceTitle" placeholder="真实姓名"></Input>
                     </FormItem>
                     <FormItem label="邮寄地址" prop="user">
-                        <Cascader v-model="value2" clearable :data="data"></Cascader>
+                        <Cascader v-model="invoiceAddress" :data="cascaderList" :load-data="loadData" style="width:225px"></Cascader>
                     </FormItem>
                     <FormItem label="详细地址" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="详细地址"></Input>
+                        <Input size="small" type="text" v-model="invoiceData.DetailAddress" placeholder="详细地址"></Input>
                     </FormItem>
                     <FormItem label="联系人姓名" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="联系人姓名"></Input>
+                        <Input size="small" type="text" v-model="invoiceData.ContactName" placeholder="联系人姓名"></Input>
                     </FormItem>
                     <FormItem label="联系人电话" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="联系人电话"></Input>
+                        <Input size="small" type="text" v-model="invoiceData.ContactPhone" placeholder="联系人电话"></Input>
                     </FormItem>
                     <FormItem label="邮箱" prop="user">
-                        <Input size="small" type="text" v-model="formInline.user" placeholder="邮箱"></Input>
+                        <Input size="small" type="text" v-model="invoiceData.ContactEmail" placeholder="邮箱"></Input>
+                    </FormItem>
+                    <FormItem >
+                        <Button type="primary" @click="setInvoice(0)">提交</Button>
                     </FormItem>
                 </Form>
                 <!-- 企业类型 -->
-                <Form v-if="!isType" class="personalData" ref="formInline" :model="formInline" :rules="ruleInline" :label-width="100">
+                <Form v-if="!isType" class="personalData" ref="formInline" :model="cominvoiceData" :rules="ruleInline" :label-width="100">
                     <FormItem label="纳税人类型" prop="user">
-                        <Select v-model="model1" clearable >
+                        <Select v-model="cominvoiceData.TaxpayerType" clearable >
                             <Option :value="2">法人</Option>
                             <Option :value="1">个体工商户</Option>
                             <Option :value="0">自然人</Option>
@@ -77,46 +80,50 @@
                         </Select>
                     </FormItem>
                     <FormItem label="公司名称" prop="CompanyName">
-                        <Input size="small" type="text" v-model="formInline.CompanyName" placeholder="名称（昵称）"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.CompanyName" placeholder="名称（昵称）"></Input>
                     </FormItem>
                     <FormItem label="发票抬头" prop="InvoiceTitle">
-                        <Input size="small" type="text" v-model="formInline.InvoiceTitle" placeholder="发票抬头"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.InvoiceTitle" placeholder="发票抬头"></Input>
                     </FormItem>
                     <FormItem label="纳税人识别号" prop="Identification">
-                        <Input size="small" type="text" v-model="formInline.Identification" placeholder="纳税人识别号"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.Identification" placeholder="纳税人识别号"></Input>
                     </FormItem>
                     <FormItem label="注册地址" prop="RegisteredAddress">
-                        <Input size="small" type="text" v-model="formInline.RegisteredAddress" placeholder="注册地址"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.RegisteredAddress" placeholder="注册地址"></Input>
                     </FormItem>
                     <FormItem label="公司电话" prop="CompanyTel">
-                        <Input size="small" type="text" v-model="formInline.CompanyTel" placeholder="公司电话"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.CompanyTel" placeholder="公司电话"></Input>
                     </FormItem>
                     <FormItem label="开户行" prop="OpeningBank">
-                        <Input size="small" type="text" v-model="formInline.OpeningBank" placeholder="开户行"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.OpeningBank" placeholder="开户行"></Input>
                     </FormItem>
                     <FormItem label="银行卡号" prop="BankCardNumber">
-                        <Input size="small" type="text" v-model="formInline.BankCardNumber" placeholder="银行卡号"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.BankCardNumber" placeholder="银行卡号"></Input>
                     </FormItem>
                     <FormItem label="邮寄地址" prop="MailingAddress">
-                        <Cascader v-model="value2" clearable :data="data"></Cascader>
+                        <Cascader v-model="cascaderAddress" :data="cascaderList" :load-data="loadData" style="width:225px"></Cascader>
                     </FormItem>
                     <FormItem label="详细地址" prop="DetailAddress">
-                        <Input size="small" type="text" v-model="formInline.DetailAddress" placeholder="详细地址"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.DetailAddress" placeholder="详细地址"></Input>
                     </FormItem>
                     <FormItem label="联系人姓名" prop="ContactName">
-                        <Input size="small" type="text" v-model="formInline.ContactName" placeholder="联系人姓名"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.ContactName" placeholder="联系人姓名"></Input>
                     </FormItem>
                     <FormItem label="联系人电话" prop="ContactPhoneuser">
-                        <Input size="small" type="text" v-model="formInline.ContactPhone" placeholder="联系人电话"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.ContactPhone" placeholder="联系人电话"></Input>
                     </FormItem>
                     <FormItem label="邮箱" prop="ContactEmail">
-                        <Input size="small" type="text" v-model="formInline.ContactEmail" placeholder="邮箱"></Input>
+                        <Input size="small" type="text" v-model="cominvoiceData.ContactEmail" placeholder="邮箱"></Input>
                     </FormItem>
                     <FormItem label="上传资料" prop="user">
                         <div class="upInvoive">
                             <div class="upInvoive-item"></div>
                         </div>
                     </FormItem>
+                    <FormItem >
+                        <Button type="primary" @click="setInvoice(1)">提交</Button>
+                    </FormItem>
+                    
                 </Form>
             </TabPane>
         </Tabs>
@@ -125,6 +132,7 @@
 <script>
 import Title from './components/title'
 import publicTable from './components/publicTable'
+import {getUserInvoice, setUserInvoice, getProvinceList} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -138,7 +146,6 @@ export default {
             value7:'',
             model2:'',
             value: '',
-
             cityList: [
                 {
                     value: 'New York',
@@ -150,7 +157,7 @@ export default {
                 }
             ],
             model1: '',
-            columns1: [
+            columns: [
                 {
                     title: '发票号码',
                     key: 'address',
@@ -224,9 +231,96 @@ export default {
                     state: '3'
                 }
             ],
-            isType: false
+            invoiceAddress: [],
+            cascaderAddress: [],
+            invoiceData: {},
+            cominvoiceData: {},
+            cascaderList: [],
+            isType: true
         }
-    }
+    },
+    created () {
+        this.getInvoice()
+        this.getCascaderData()
+    },
+    methods: {
+        // 获取联动信息
+        async getCascaderData (id = '') {
+            let queryData = {
+                ProvinceCode: id
+            }
+            let msg = await getProvinceList(queryData);
+            msg.respProvince.forEach(ele => {
+                ele.loading = false;
+                ele.children = [];
+                ele.children = [];
+                ele.level = 1;
+                ele.value = ele.ProvinceCode
+                ele.label = ele.ProvinceName
+            })
+            if (msg) {
+                this.cascaderList = msg.respProvince;
+            }
+        },
+        async loadData (item, callback) {
+            item.loading = true;
+            let queryData = {
+                ProvinceCode: item.value
+            }
+            let msg = await getProvinceList(queryData);
+            if (msg.respProvince instanceof Array) {
+                msg.respProvince.forEach(ele => {
+                    if (item.level < 2) {
+                        ele.level = item.level + 1;
+                        ele.loading = false;
+                        ele.children = [];
+                    }
+                    ele.value = ele.ProvinceCode
+                    ele.label = ele.ProvinceName
+                })
+            } else {
+                return false
+            }
+            if (msg) {
+                item.children = msg.respProvince
+                item.loading = false;
+                callback();
+            }
+        },
+        async setInvoice (index) {
+             let query = {}
+            if (index === 0) {
+                query = this.invoiceData;
+                query.ProvinceId = this.invoiceAddress[0];
+                query.CityId = this.invoiceAddress[1];
+                query.AreaId = this.invoiceAddress[2];
+            }
+            if (index === 1) {
+                query = this.cominvoiceData
+            }
+            let msg = await setUserInvoice(query);
+            if (msg) {
+                console.log(msg)
+            }
+        },
+        async getInvoice (type = 0) {
+            this.isType = type === 0 ? true : false 
+            let query = {
+                Type: type
+            }
+            this.invoiceData = {}
+            let msg = await getUserInvoice(query);
+            if (msg) {
+                if (type === 0) {
+                    this.invoiceData = msg;
+                    this.invoiceAddress = [msg.ProvinceId, msg.CityId, msg.AreaId ];
+                }
+                if (type === 1) {
+                    this.cominvoiceData = msg;
+                }
+            }
+        }
+    },
 }
 </script>
 <style lang="less" scoped>

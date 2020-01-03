@@ -38,9 +38,10 @@
                     <DatePicker v-model="userInfo.Birthday" :disabled="controlUser" type="date" clearable placeholder="请选择生日" ></DatePicker>
                 </FormItem>
                 <FormItem label="职业类型" prop="user">
-                    <Select v-model="model2" clearable  :disabled="controlUser">
+                    <Cascader :data="jobType" :disabled="controlUser"></Cascader>
+                    <!-- <Select v-model="model2" clearable >
                         <Option value="1">修图</Option>
-                    </Select>
+                    </Select> -->
                 </FormItem>
                 <FormItem label="个人擅长" prop="user">
                     <Input size="small" type="text"  :disabled="controlUser" clearable v-model="userInfo.Gender" placeholder="个人擅长"></Input>
@@ -108,7 +109,7 @@
 </template>
 <script>
 import Title from './components/title'
-import {getProvinceList, getUserData, GetOperatPrivacy,GetThisUserJobInfo, setUserData, SetOrAddThisUserJobInfo, uploadFile} from '../../service/clientAPI'
+import {getProvinceList, getUserData, GetOperatPrivacy,GetThisUserJobInfo, setUserData, SetOrAddThisUserJobInfo, uploadFile, getCareerData} from '../../service/clientAPI'
 import { mapState, mapGetters} from 'vuex'
 export default {
     components: { 
@@ -126,6 +127,7 @@ export default {
             Privacy: [],
             cascaderList: [], // 城市信息
             Jurisdiction: [],  // 权限
+            jobType: []
         }
     },
     computed: {
@@ -146,6 +148,7 @@ export default {
         this.getOperaList()
         this.getJobList(query)
         this.getWorkList()
+        this.getCareerList()
     },
     methods: {
         // 获取账户信息
@@ -308,6 +311,12 @@ export default {
                 info.HeadIcon = msg.smallImgUrl;
                 this.$store.dispatch('LOGININ', info);
                 localStorage.setItem('LOGININ', JSON.stringify(info))
+            }
+        },
+        async getCareerList () {
+            let msg = await getCareerData();
+            if (msg) {
+                this.jobType = msg.Careers;
             }
         }
     },

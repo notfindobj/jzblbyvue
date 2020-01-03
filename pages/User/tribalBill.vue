@@ -1,23 +1,23 @@
 <template>
     <div>
-        <Title/>
+        <Title title="部落币"/>
         <div class="tribalBill">
            <div class="tribalBill-title">
                 <div class="tribalBill-title-num">
                     <span>部落币余额：</span>
-                    <span>0.00元</span>
+                    <span>{{integral}}</span>
                 </div>
                 <Button>提现</Button>
            </div>
            <div class="tribalBill-search">
-                <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+                <DatePicker type="daterange" :value="searchTime" @on-change="onChange" placement="bottom-end" placeholder="选择时间" style="width: 200px"></DatePicker>
                 <Select v-model="model1" clearable style="width:200px">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-                <Button>提现</Button>
+                <Button @click="getTribalCoinsList">搜索</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="tribalCoinData"/>
+               <publicTable :columns="columns" :columnsData="tribalCoinData" :total="total"/>
            </div>
         </div>
     </div>
@@ -83,17 +83,29 @@ export default {
                     state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            tribalCoinData: []
+            searchTime: [],
+            tribalCoinData: [],
+            integral: 0,
+            total: 0
         }
     },
     created () {
         this.getTribalCoinsList()
     },
     methods: {
+        onChange (val) {
+            this.searchTime = val
+        },
         async getTribalCoinsList () {
-            let msg = await getTribalCoins()
+            let query = {
+                startDate: this.searchTime[0],
+                EndDate: this.searchTime[1]
+            }
+            let msg = await getTribalCoins(query)
             if (msg) {
-                this.tribalCoinData = msg
+                this.tribalCoinData = msg.List,
+                this.total = msg.pagination.records,
+                this.integral = msg.Sum
             }
         }
     },

@@ -10,8 +10,8 @@
                     </div>
                     <msgCard :content="items">
                         <div slot="footer" class="invitation-foot">
-                            <Button type="primary" @click="handleInvite(items, 2)">拒绝</Button>
-                            <Button type="primary" @click="handleInvite(items, 1)">立即加入</Button>
+                            <Button :disabled="items.InviteStatus !== 0"  type="primary" @click="handleInvite(items, 2)">拒绝</Button>
+                            <Button :disabled="items.InviteStatus !== 0" type="primary" @click="handleInvite(items, 1)">立即加入</Button>
                         </div>
                     </msgCard>
                 </div>
