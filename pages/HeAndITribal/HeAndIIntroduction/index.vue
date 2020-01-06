@@ -112,14 +112,14 @@ export default {
     },
     methods: {
         enterCenter () {
-            let routeData = this.$router.resolve({ name: 'PersonalCenter-myMessage-userId', params: { userId: this.userInfo.UserId} });
+            let routeData = this.$router.resolve({ name: 'User-personalData'});
             analogJump(routeData.href);
         },
         change(inx, count) {
             this.currentIndex = inx;
             this.$emit('changeComponents', inx, count)
         },
-        // 路由跳转
+        // 路由跳转 ?ZY[14}?Q,b^
         jumpRoute(items) {
             if (!items.UserId) {
                 this.$Message.error('用户ID为空！');

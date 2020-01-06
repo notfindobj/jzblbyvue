@@ -357,7 +357,7 @@ export const setCertification = async params => {
 export const getBankList = async params => {
   return await request.get(`UserInfo/GetBankList`, params)
 }
-// 获取发票设置
+// 获取发票设置 
 export const getUserInvoice = async params => {
   return await request.get(`UserInfo/GetUserInvoice`, params)
 }
@@ -368,4 +368,12 @@ export const setUserInvoice = async params => {
 // 账户预览
 export const getUserAccount = async params => {
   return await request.get(`UserInfo/GetUserAccount`, params)
+}
+// 充值
+export const rechargeBLB = async params => {
+  return await request.post(`AllPay/TribalCoinsRecharge`, params)
+}
+// 签到
+export const addSignInData = async params => {
+  return await request.post(`UserIntegral/AddSignInData`, params)
 }

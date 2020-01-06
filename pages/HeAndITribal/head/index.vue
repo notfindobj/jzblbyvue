@@ -11,7 +11,7 @@
                 </Dropdown>
             </div>
             <div class="my-Introduction">
-                <div class="my-head-portrait" @click="enterCenter(userInfo)">
+                <div class="my-head-portrait" >
                     <img :src="userInfo.HeadIcon " alt=".">
                 </div>
                 <p class="my-name">{{ userInfo.NickName }}
@@ -242,7 +242,6 @@ export default {
                     text-align: center;
                 }
             }
-
             .my-Introduction {
                 width: 100%;
                 height: 100%;
@@ -250,30 +249,25 @@ export default {
                 position: absolute;
                 left: 0px;
                 top: 0;
-
                 .my-head-portrait {
                     width: 100px;
                     height: 100px;
                     border-radius: 50%;
-                    cursor: pointer;
-                    background: #f5a623;
+                    // cursor: pointer;
                     margin: 25px auto 10px;
                     overflow: hidden;
-
                     > img {
                         display: inline-block;
                         width: 100%;
                         height: 100%;
                     }
                 }
-
                 .my-name {
                     text-align: center;
                     font-size: 22px;
                     color: #FFFFFF;
                     // margin-bottom: 10px;
                 }
-
                 .my-Introduction-con {
                     height: calc(~"100% - 200px");
                     text-align: center;

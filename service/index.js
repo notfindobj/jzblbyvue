@@ -27,7 +27,7 @@ service.interceptors.response.use(
   res => {
     // 服务器端
     if (process.server) {
-      if (res.data.Code === 200) {
+      if (res.data.Code === 200 && res.data.Success) {
         return res.data.Data
       } else if (res.data.Code === 500) {
         return {statusCode: 500, message: 'You need back to login again'}
@@ -37,7 +37,7 @@ service.interceptors.response.use(
     }
     // 客户端
     if (process.client) {
-      if (res.data.Code === 200) {
+      if (res.data.Code === 200 && res.data.Success) {
         if (!res.data.Data) {
           res.data.Data = 1
         }
@@ -54,7 +54,7 @@ service.interceptors.response.use(
           }
       } else {
         Message.warning(res.data.Msg);
-        // return res.data.Data
+        // return res.data.Data 
       }
     }
   },
