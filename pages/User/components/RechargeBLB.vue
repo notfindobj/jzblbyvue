@@ -1,5 +1,5 @@
 <template>
-    <div class="money" v-if="modal1">
+    <div class="money">
         <div class="money-box">
             <div class="money-box-title">
                 <p>部落币充值</p>
@@ -31,7 +31,6 @@ import {rechargeBLB} from '../../../service/clientAPI'
 export default {
     data () {
         return {
-            modal1: false,
             moneyUrl: '',
             rechanrgNum: ''
         }
@@ -41,17 +40,19 @@ export default {
     },
     methods: {
         async ok () {
-            let query = {
-                Money: this.rechanrgNum,
-                IsDebug: true
-            }
-            let msg = await rechargeBLB(query);
-            if (msg) {
-                this.moneyUrl = msg
+            if (this.rechanrgNum> 0) {
+                let query = {
+                    Money: this.rechanrgNum,
+                    IsDebug: true
+                }
+                let msg = await rechargeBLB(query);
+                if (msg) {
+                    this.moneyUrl = msg
+                }
             }
         },
         closeBtn () {
-            this.$Message.info('Clicked cancel');
+            this.$emit('closeBtn')
         }
     }
 }
@@ -70,7 +71,7 @@ export default {
             display: inline-block;
             position: absolute;
             left: 50%;
-            top: 50%;
+            top: 30%;
             transform: translate(-50%,-50%);
             background: #fff;
             border-radius: 3px;

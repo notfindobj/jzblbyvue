@@ -184,36 +184,7 @@ export default {
                     state: [{text: '删除', events: 'addVal'}]
                 }
             ],
-            data1: [
-                {
-                    name: 'John Brown',
-                    age: 18,
-                    address: '0.00',
-                    date: '2016-10-03',
-                    state: '1'
-                },
-                {
-                    name: 'Jim Green',
-                    age: 24,
-                    address: 'London No. 1 Lake Park',
-                    date: '2016-10-01',
-                    state: '1'
-                },
-                {
-                    name: 'Joe Black',
-                    age: 30,
-                    address: 'Sydney No. 1 Lake Park',
-                    date: '2016-10-02',
-                    state: '2'
-                },
-                {
-                    name: 'Jon Snow',
-                    age: 26,
-                    address: 'Ottawa No. 2 Lake Park',
-                    date: '2016-10-04',
-                    state: '3'
-                }
-            ],
+            data1: [],
             invoiceAddress: [],
             comAddress: [],
             invoiceData: {},

@@ -9,8 +9,8 @@ exports.configUrl = {
             return 'https://www.api.jzbl.com/api/'
         } else {
         // 本地环境
-            return 'http://192.168.10.15:8066/api/'
-            //  return 'https://www.api.jzbl.com/api/'
+            // return 'http://192.168.10.15:8066/api/'
+             return 'https://www.api.jzbl.com/api/'
         }
     })(),
     // 本地接口
@@ -24,8 +24,8 @@ exports.configUrl = {
         } else {
         // 本地环境 
             // return 'http://192.168.10.14:8555'
-            //  return 'https://www.jzbl.com/'
-            return 'http://192.168.10.07:8889'
+             return 'https://www.jzbl.com/'
+            // return 'http://192.168.10.07:8889'
         }
     })(),
     serverPort: (() => {
@@ -42,7 +42,18 @@ exports.configUrl = {
     })(),
     // 文件路径
     fileBaseUrl: (() => {
-        // return 'https://www.pic.jzbl.com/'
-        return 'http://192.168.10.15:8066/'
+        return 'https://www.pic.jzbl.com/'
+        // return 'http://192.168.10.15:8066/'
+    })(),
+    /**
+        h5详情页
+        http://www.m.jzbl.com/#/builddetail?sid=eaa09eec-b7c1-43f7-b932-6a58410bbece&type=1
+
+        query参数说明: 
+        sid: 说说或者项目id
+        type: 1 说说 、2 项目
+    */
+    h5BaseUrl: (()=> {
+        return 'http://www.m.jzbl.com/#'
     })()
 }

@@ -98,6 +98,10 @@
                     无可添加定制服务
                 </span>
             </FormItem>
+            <FormItem label="收费权限" v-if="isMonetary">
+                <Checkbox v-model="IsAllowIntegral">支持积分下载</Checkbox>
+                <Checkbox v-model="IsAllowTribalCoins">支持部落币下载</Checkbox>
+            </FormItem>
             <FormItem label="项目描述">
                 <Input v-model="formValidate.description" type="textarea" placeholder="请填写项目描述" />
             </FormItem>
@@ -137,7 +141,7 @@ export default {
             menuList: [],
             typeAttrList: [],
             serviceList: [], // 定制服务类型列表
-            serviceSelectList: [], // 选择后定制服务类型列表
+            serviceSelectList: [], // 选择后定制服务类型列表  www.ijmc.xyz
             cusConfig: {
                 serviceModal: false
             },
@@ -147,7 +151,11 @@ export default {
             address: '',
             cascaderAddress: [],
             aMap: {},
-            IsOriginal: 'false'
+            IsOriginal: 'false',
+            isMonetary: false,
+            IsAllowTribalCoins: false,
+            IsAllowIntegral: false,  //积分
+            monetarySupport: 0
         }
     },
     computed: {
@@ -166,9 +174,7 @@ export default {
       }
     },
     methods: {
-        protocol () {
-
-        },
+        protocol () {},
         // 获取发布的类型
         async getDataList () {
             let msg = await getDataByTypeId();
@@ -221,9 +227,16 @@ export default {
         },
         // 选择类型
         async clickType(id, name, type) {
+            this.isMonetary = false
+            let m = ['efa20b33-6dd9-4eb4-85c8-55ea854fee89', '412c275f-3a6b-45b0-b3b2-a69a36666e8a']
+            if (!m.includes(id)) {
+                this.isMonetary = true;
+            }
             let that = this;
             this.formValidate.typeString = id;
             this.typeFile = null;
+            this.IsAllowIntegral = false,
+            this.IsAllowTribalCoins = false,
             this.price = '';
             this.getServiceList(id)
             let msg = await this.getProjectTypeList(id);
@@ -414,6 +427,8 @@ export default {
                 CustomizeList: this.serviceSelectList,
                 AttributesList: attrList,
                 IsOriginal: _this.IsOriginal,
+                IsAllowIntegral: _this.IsAllowIntegral ? 1 : 0,//积分
+                IsAllowTribalCoins: _this.IsAllowTribalCoins ? 1 : 0,  //部落币
                 PdfModel,
                 TypeModel: {
                     TypeId: "",
@@ -435,7 +450,6 @@ export default {
                     _this.$emit('protPush', false)
                 }
             })
-            
         }
     },
 }

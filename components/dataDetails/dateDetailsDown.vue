@@ -15,6 +15,14 @@
             <img :src="item.typeIcon" alt="">
             <span>{{item.typeName}}</span>
           </li>
+          <li :class="currentIndex == 2 ? 'li-active' : ''" @click="chosePayType(2)" v-if="payInfos.IsAllowIntegral">
+            <img src="../../assets/images/payZFB.png" alt="">
+            <span>部落币支付</span>
+          </li>
+          <li :class="currentIndex == 3 ? 'li-active' : ''" @click="chosePayType(3)"  v-if="payInfos.IsAllowTribalCoins" >
+            <img src="../../assets/images/payZFB.png" alt="">
+            <span>积分支付</span>
+          </li>
         </ul>
       </div>
       <div class="window-btn">
@@ -25,7 +33,7 @@
   </div>
 </template>
 <script>
-  import{setAiliPay, setWechatPay} from '../../service/clientAPI'
+  import{setAiliPay, setWechatPay, otherDownload} from '../../service/clientAPI'
   export default {
     name: 'detaDetailsDown',
     props: {
@@ -40,15 +48,17 @@
       return {
         payType:[
           {
+            isShow: true,
             typeName:'微信支付',
             typeCode: '',
             typeIcon: require('../../assets/images/WeChat.png')
           },
           {
+            isShow: true,
             typeName:'支付宝支付',
             typeCode:'',
             typeIcon: require('../../assets/images/payZFB.png')
-          },
+          }
         ],
         currentIndex: 0
       }
@@ -66,6 +76,7 @@
         this.$emit('dataDetailsMaskClose',{type:'Down'})
       },
       async payment (value) {
+        console.log(this.payInfos)
         let qq =
           {
           "Money": value.Price,
@@ -79,6 +90,16 @@
         // 支付宝
         } else if (this.currentIndex === 1) {
           msg = await setAiliPay(qq);
+        } else if (this.currentIndex === 2) {
+          // 部落币下载
+          qq.Type = 2
+          qq.Money = qq.Money * 10
+          msg = await otherDownload(qq);
+        } else if (this.currentIndex === 3) {
+          // 积分下载
+          qq.Type = 2
+          qq.Money = qq.Money * 10
+          msg = await otherDownload(qq);
         }
         if (msg) {
           let pay ={
@@ -101,8 +122,8 @@
     top: 0px;
     z-index: 999;
     .mask-con{
-      width: 594px;
-      height: 336px;
+      width: 620px;
+      height: 400px;
       padding: 20px 30px 30px 36px;
       background: #FFFFFF;
       border-radius: 4px;
@@ -157,7 +178,6 @@
         margin-bottom: 16px;
       }
       .window-type{
-        height: 56px;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -165,14 +185,16 @@
         margin-bottom: 34px;
         .pay-type{
           font-size: 14px;
+          width: 110px;
           color: #333333;
         }
         >ul{
           display: flex;
           flex-direction: row;
           align-items: center;
-          justify-content: center;
+          justify-content: space-between;
           flex-wrap: wrap;
+          width: 65%;
           >li{
             width: 140px;
             height: 56px;
@@ -185,8 +207,9 @@
             display: flex;
             flex-direction: row;
             align-items: center;
-            justify-content: center;
+            justify-content: space-around;
             cursor: pointer;
+            margin-top: 10px;
             >img{
               display: inline-block;
               width: 40px;

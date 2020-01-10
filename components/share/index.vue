@@ -35,24 +35,25 @@ export default {
         qrcode (row) {
             let content = ''
             // 图文
+            debugger
             switch(row.TalkType) {
                 case 1: 
-                    content =  `${process.env.localUrl}pictureDetails/${row.ItemId}`
+                    content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=1`
                     break;
                 case 2: 
-                    content =  `${process.env.localUrl}videoDetails/${row.ItemId}`
+                    content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=1`
                     break;
                 case 3: 
-                    content =  `${process.env.localUrl}QuestionsAndAnswers/${row.ItemId}`
+                    content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=1`
                     break;
                 case 4: 
-                    content =  `${process.env.localUrl}DataDetails?id=${row.ItemId}&layout=true`
+                    content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=2`
                     break;
                 case 5: 
-                    content =  `${process.env.localUrl}pictureDetails/${row.ItemId}`
+                    content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=1`
                     break;
                 default:
-                    content =  `${process.env.localUrl}pictureDetails/${this.$route.fullPath}`
+                    content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=2`
             }
             QRCode.toDataURL(content)
             .then(url => {

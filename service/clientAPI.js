@@ -377,3 +377,11 @@ export const rechargeBLB = async params => {
 export const addSignInData = async params => {
   return await request.post(`UserIntegral/AddSignInData`, params)
 }
+// 部落币下载
+export const otherDownload = async params => {
+  return await request.post(`AllPay/OtherDownload`, params)
+}
+// 提现
+export const withdrawal = async params => {
+  return await request.post(`AllPay/Withdrawal`, params)
+}

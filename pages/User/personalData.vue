@@ -38,13 +38,24 @@
                     <DatePicker v-model="userInfo.Birthday" :disabled="controlUser" type="date" clearable placeholder="请选择生日" ></DatePicker>
                 </FormItem>
                 <FormItem label="职业类型" prop="user">
-                    <Cascader :data="jobType" :disabled="controlUser"></Cascader>
-                    <!-- <Select v-model="model2" clearable >
-                        <Option value="1">修图</Option>
-                    </Select> -->
+                    <template v-for="(item, index) in userInfo.Careers">
+                        <Tag :key="index" closable color="warning">{{item.label}}</Tag>
+                    </template>
+                    <template>
+                        <div v-if="!controlUser">
+                            <Cascader :data="jobType" v-model="Careers"></Cascader> 
+                            <Button @click="addCareers">确定添加</Button>
+                        </div>
+                    </template>
                 </FormItem>
                 <FormItem label="个人擅长" prop="user">
-                    <Input size="small" type="text"  :disabled="controlUser" clearable v-model="userInfo.Gender" placeholder="个人擅长"></Input>
+                    <template v-for="(item, index) in userInfo.LabelData">
+                        <Tag :key="index" closable color="warning">{{item.LabelName}}</Tag>
+                    </template>
+                    <div v-if="!controlUser">
+                        <Input size="small" type="text" v-if="!controlUser" v-model="labelD" clearable placeholder="个人擅长"></Input>
+                        <Button @click="addLabel">确定添加</Button>
+                    </div>
                 </FormItem>
                 <FormItem label="个人简介" prop="user">
                     <Input v-model="userInfo.Description"  :disabled="controlUser" type="textarea" :autosize="{minRows: 2}" placeholder="个人简介" />
@@ -55,7 +66,7 @@
             </div>
         </div>
         <Title title="工作经历"/>
-        <template v-for="(items, index) in jobInfo">
+        <template v-for="(items, index) in userInfo.Jobs">
             <Form class="work" :model="items" :rules="ruleInline" :label-width="100" :key="index">
                 <Row>
                     <Col span="11">
@@ -127,7 +138,9 @@ export default {
             Privacy: [],
             cascaderList: [], // 城市信息
             Jurisdiction: [],  // 权限
-            jobType: []
+            jobType: [],
+            Careers:[], // 职业类型,
+            labelD: ''
         }
     },
     computed: {
@@ -146,7 +159,6 @@ export default {
         this.getUserInfo(query)
         this.getCascaderData()
         this.getOperaList()
-        this.getJobList(query)
         this.getWorkList()
         this.getCareerList()
     },
@@ -157,16 +169,6 @@ export default {
             if (msg) {
                 this.userInfo = msg;
                 this.$set(this.userInfo, 'addresList', [msg.ProvinceAreaId + '|' + msg.ProvinceName,msg.CityAreaId + '|' + msg.CityName, msg.CountyAreaId + '|' + msg.CountyName])
-            }
-        },
-        // 获取职业信息
-        async getJobList (value) {
-            let msg = await GetThisUserJobInfo(value);
-            if (msg.jobInfos) {
-                msg.jobInfos.forEach(ele => {
-                    this.$set(ele, 'addresList', [ele.ProvinceAreaId + '|' + ele.ProvinceName,ele.CityAreaId + '|' + ele.CityName, ele.CountyAreaId + '|' + ele.CountyName])
-                })
-                this.jobInfo = msg.jobInfos;
             }
         },
         // 个人资料 感觉状态
@@ -237,6 +239,14 @@ export default {
                 } catch (error) {
                     
                 }
+                query.Lables = ''
+                query.CareersIds = ''
+                query.LabelData.forEach(ele => {
+                    query.Lables += ele.LabelName+'，'
+                })
+                query.Careers.forEach(ele => {
+                    query.CareersIds += ele.value+'，'
+                })
                 let msg = await setUserData(query);
                 if (msg) {
                     this.controlUser = true;
@@ -262,8 +272,8 @@ export default {
                 return false
             }
             if (!this.controlwork) {
-                let query = this.jobInfo[0];
-                let t = this.jobInfo[0]
+                let query = this.userInfo.Jobs[0];
+                let t = this.userInfo.Jobs[0];
                 try {
                     query.ProvinceAreaId = t.addresList[0].split('|')[0];
                     query.ProvinceName = t.addresList[0].split('|')[1];
@@ -271,9 +281,7 @@ export default {
                     query.CityName = t.addresList[1].split('|')[1];
                     query.CountyAreaId = t.addresList[2].split('|')[0];
                     query.CountyName = t.addresList[2].split('|')[1];
-                } catch (error) {
-                    
-                }
+                } catch (error) {}
                 if (query.OperatHoursEnd > query.OperatHoursStart) {
                     let msg = await SetOrAddThisUserJobInfo(query)
                     if (msg) {
@@ -292,6 +300,26 @@ export default {
                     });
                 }
             }
+        },
+        // 添加职业类型
+        addCareers () {
+            let query = {
+                "delId":"",
+                "value":this.Careers[1].split('|')[0],
+                "label": this.Careers[1].split('|')[1],
+                "children":""
+            }
+           this.userInfo.Careers.push(query);
+           this.Careers = []
+        },
+        addLabel () {
+            let query = {
+                "LabelId":"",
+                "LabelName": this.labelD,
+                "SortCode":""
+            }
+           this.userInfo.LabelData.push(query);
+           this.labelD = ''
         },
         modifyHead () {
             this.$refs.headIcon.click()
@@ -316,6 +344,14 @@ export default {
         async getCareerList () {
             let msg = await getCareerData();
             if (msg) {
+                msg.Careers.forEach(ele => {
+                    ele.value = ele.value+'|'+ele.label;
+                    if (ele.children.length > 0) {
+                        ele.children.forEach(e => {
+                            e.value = e.value+'|'+e.label;
+                        })
+                    }
+                })
                 this.jobType = msg.Careers;
             }
         }
@@ -323,6 +359,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .bg-Tag {
+        background: #ff3c00;
+    }
     .user-box {
         display: flex;
         justify-content: space-between;

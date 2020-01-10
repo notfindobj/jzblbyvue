@@ -118,6 +118,7 @@
             :footer-hide="true"
             :header-hide="true"
             width="400"
+            :z-index="99999999"
             :mask-closable="false"
             @on-cancel="onCancel"
             class-name="vertical-center-modal">
@@ -346,7 +347,7 @@ export default {
                     delete comUser.IDCardImgNega;
                     let msg = await registerEnterprise(comUser);
                     if (msg) {
-                        this.modal10 = true;
+                        this.modal10 = true; 
                     }
                 }
             })

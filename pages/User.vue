@@ -16,14 +16,14 @@
                 <nuxt-link to="/User/customized">定制消息</nuxt-link>
                 <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
             </li>
-            <li>
+            <!-- <li>
                 <p>合作设计师</p>
                 <nuxt-link to="">实名认证</nuxt-link>
-            </li>
-            <li>
+            </li> -->
+            <!-- <li>
                 <p>订单管理 </p>
                 <nuxt-link to="/User/downloadOrder">需求订单</nuxt-link>
-            </li>
+            </li> -->
             <li>
                 <p>资产管理 </p>
                 <nuxt-link to="/User/rmbBill">人民币收支详情</nuxt-link>
@@ -93,7 +93,9 @@ export default {
             padding: 0;
             background: #ffffff;
             box-shadow: 0px 0px 5px #e2e2e2;
-            height: 950px;
+            height: 730px;
+            position: sticky;
+            top: 60px;
             li {
                 .user-side-title {
                     display: inline-block;

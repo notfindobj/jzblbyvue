@@ -364,7 +364,7 @@
                             }
                         }
                     }, 3000)
-                } else {
+                } else if (type === 1) {
                     window.location.href = config.data
                 }
                 this.isShowDateDetailsDown = false;
