@@ -12,9 +12,9 @@
             <li>
                 <p>消息中心</p>
                 <nuxt-link to="/User/system">系统消息</nuxt-link>
-                <nuxt-link to="/User/comment">评论消息</nuxt-link>
-                <nuxt-link to="/User/customized">定制消息</nuxt-link>
-                <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
+                <nuxt-link to="/User/comment">评论消息{{getComment.MsgCount || ""}}</nuxt-link>
+                <nuxt-link to="/User/customized">定制消息{{getCusData.MsgCount || ""}}</nuxt-link>
+                <nuxt-link to="/User/Invitation">邀请消息{{getInviter.MsgCount || ""}}</nuxt-link>
             </li>
             <!-- <li>
                 <p>合作设计师</p>
@@ -74,7 +74,7 @@ export default {
         ...mapState({
             Identity: state => state.overas.auth || {}
         }),
-        ...mapGetters(['isLogin'])
+        ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter'])
     },
     methods: {
         

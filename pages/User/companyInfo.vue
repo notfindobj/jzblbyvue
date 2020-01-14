@@ -18,19 +18,32 @@
                 <FormItem label="公司全称" prop="user">
                     <Input size="small" type="text" v-model="comInfo.RealName"  :disabled="controlCom"  placeholder="公司全称"></Input>
                 </FormItem>
-                <FormItem label="公司擅长" prop="user">
-                    <Input size="small" type="text" clearable v-model="formInline.user"  :disabled="controlCom"  placeholder="个人擅长"></Input>
-                </FormItem>
+               
                 <FormItem label="公司电话" prop="user">
-                    <Input size="small" type="text" clearable v-model="comInfo.Telephone"  :disabled="controlCom"  placeholder="个人擅长"></Input>
+                    <Input size="small" type="text" clearable v-model="comInfo.Telephone" :disabled="controlCom" placeholder="个人擅长"></Input>
                 </FormItem>
                 <FormItem label="公司邮件" prop="user">
-                    <Input size="small" type="text" clearable v-model="comInfo.Email"  :disabled="controlCom"  placeholder="个人擅长"></Input>
+                    <Input size="small" type="text" clearable v-model="comInfo.Email"  :disabled="controlCom" placeholder="个人擅长"></Input>
+                </FormItem>
+                 <FormItem label="公司擅长" prop="user">
+                     <template v-for="(item, index) in comInfo.LabelData">
+                        <Tag :key="index"  color="warning"  :name="item.LabelId" @on-close="delUserLabel">{{item.LabelName}}</Tag>
+                    </template>
+                    <div v-if="!controlCom">
+                        <Input size="small" type="text" v-if="!controlCom" v-model="labelD" clearable placeholder="个人擅长"></Input>
+                        <Button @click="addLabel">确定添加</Button>
+                    </div>
                 </FormItem>
                 <FormItem label="公司类型" prop="user">
-                    <Select v-model="comInfo.EmotionalStateId" clearable  :disabled="controlCom" >
-                        <Option v-for="item in entTypeList" :value="item.EntTypeId" :key="item.EntTypeId">{{ item.EntName }}</Option>
-                    </Select>
+                    <template v-for="(item, index) in comInfo.Careers">
+                        <Tag :key="index"  color="warning" :name="item.delId" @on-close="delUserTyepLabel">{{item.label}}</Tag>
+                    </template>
+                    <template>
+                        <div v-if="!controlCom">
+                            <Cascader :data="jobType" v-model="Careers"></Cascader> 
+                            <Button @click="addCareers">确定添加</Button>
+                        </div>
+                    </template>
                 </FormItem>
                 <FormItem label="公司所在地" prop="user">
                     <Cascader v-model="comInfo.addresList" :data="cascaderList" :load-data="loadData"  :disabled="controlCom" ></Cascader>
@@ -50,7 +63,7 @@
 </template>
 <script>
 import Title from './components/title'
-import {getUserData, getEntType, getProvinceList, uploadFile} from '../../service/clientAPI'
+import {getUserData, getEntType, getProvinceList, uploadFile, getCareerData, delUserExpertise, delareerTyepInfo} from '../../service/clientAPI'
 import { mapState, mapGetters} from 'vuex'
 export default {
     components: { 
@@ -67,7 +80,10 @@ export default {
             controlCom: true,
             comInfo: {},
             entTypeList: [],
-            cascaderList: []
+            cascaderList: [],
+            jobType: [],
+            Careers: [],
+            labelD: ''
         }
     },
     computed: {
@@ -83,8 +99,68 @@ export default {
         this.getComInfo(query);
         this.getEntTypeList();
         this.getCascaderData();
+        this.getCareerList()
     },
     methods: {
+         // 删除职业类型
+        async delUserTyepLabel (e, name) {
+            let query = {
+                userId: this.Identity.UserId
+            }
+            this.$Modal.confirm({
+                title: '删除标签',
+                content: '<p>请否确定职业类型标签!</p>',
+                onOk: async () => {
+                    let msg = await delareerTyepInfo(name);
+                    if (msg) { 
+                        this.getUserInfo(query)
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+        },
+        // 删除标签
+        async delUserLabel (e, name) {
+            console.log(name)
+            this.$Modal.confirm({
+                title: '删除标签',
+                content: '<p>请否确定删除标签!</p>',
+                onOk: async () => {
+                    let msg = await delUserExpertise({LabelId: name});
+                    if (msg) { 
+                        let query = {
+                            userId: this.Identity.UserId
+                        }
+                        this.getComInfo(query)
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+        },
+        // 添加职业类型
+        addCareers () {
+            let query = {
+                "delId":"",
+                "value":this.Careers[1].split('|')[0],
+                "label": this.Careers[1].split('|')[1],
+                "children":""
+            }
+           this.comInfo.Careers.push(query);
+           this.Careers = []
+        },
+         addLabel () {
+            let query = {
+                "LabelId":"",
+                "LabelName": this.labelD,
+                "SortCode":""
+            }
+           this.comInfo.LabelData.push(query);
+           this.labelD = ''
+        },
         // 获取联动信息
         async getCascaderData (id = '') {
             let queryData = {
@@ -169,6 +245,20 @@ export default {
             }
             if (!this.controlCom) {
                 this.controlCom = true;
+            }
+        },
+        async getCareerList () {
+            let msg = await getCareerData();
+            if (msg) {
+                msg.Careers.forEach(ele => {
+                    ele.value = ele.value+'|'+ele.label;
+                    if (ele.children.length > 0) {
+                        ele.children.forEach(e => {
+                            e.value = e.value+'|'+e.label;
+                        })
+                    }
+                })
+                this.jobType = msg.Careers;
             }
         }
     },

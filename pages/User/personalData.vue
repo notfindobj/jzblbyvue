@@ -39,7 +39,7 @@
                 </FormItem>
                 <FormItem label="职业类型" prop="user">
                     <template v-for="(item, index) in userInfo.Careers">
-                        <Tag :key="index" closable color="warning">{{item.label}}</Tag>
+                        <Tag :key="index" closable color="warning" :name="item.delId" @on-close="delUserTyepLabel(index, item.delId)">{{item.label}}</Tag>
                     </template>
                     <template>
                         <div v-if="!controlUser">
@@ -50,7 +50,7 @@
                 </FormItem>
                 <FormItem label="个人擅长" prop="user">
                     <template v-for="(item, index) in userInfo.LabelData">
-                        <Tag :key="index" closable color="warning">{{item.LabelName}}</Tag>
+                        <Tag :key="index" closable color="warning"  :name="item.LabelId" @on-close="delUserLabel(index, item.LabelId)">{{item.LabelName}}</Tag>
                     </template>
                     <div v-if="!controlUser">
                         <Input size="small" type="text" v-if="!controlUser" v-model="labelD" clearable placeholder="个人擅长"></Input>
@@ -120,7 +120,9 @@
 </template>
 <script>
 import Title from './components/title'
-import {getProvinceList, getUserData, GetOperatPrivacy,GetThisUserJobInfo, setUserData, SetOrAddThisUserJobInfo, uploadFile, getCareerData} from '../../service/clientAPI'
+import {getProvinceList, getUserData, GetOperatPrivacy,GetThisUserJobInfo,
+delareerTyepInfo,delUserExpertise,
+setUserData, SetOrAddThisUserJobInfo, uploadFile, getCareerData} from '../../service/clientAPI'
 import { mapState, mapGetters} from 'vuex'
 export default {
     components: { 
@@ -163,6 +165,52 @@ export default {
         this.getCareerList()
     },
     methods: {
+        // 删除职业类型
+        async delUserTyepLabel (index, name) {
+            let query = {
+                userId: this.Identity.UserId
+            }
+            this.$Modal.confirm({
+                title: '删除标签',
+                content: '<p>请否确定职业类型标签!</p>',
+                onOk: async () => {
+                    if (!name) {
+                        this.userInfo.Careers.splice(index, 1)
+                        return
+                    }
+                    let msg = await delareerTyepInfo(name);
+                    if (msg) { 
+                        this.getUserInfo(query)
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+        },
+        // 删除标签
+        async delUserLabel (index, name) {
+            this.$Modal.confirm({
+                title: '删除标签',
+                content: '<p>请否确定删除标签!</p>',
+                onOk: async () => {
+                    if (!name) {
+                        this.userInfo.LabelData.splice(index, 1)
+                        return
+                    }
+                    let msg = await delUserExpertise({LabelId: name});
+                    if (msg) { 
+                        let query = {
+                            userId: this.Identity.UserId
+                        }
+                        this.getUserInfo(query)
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+        },
         // 获取账户信息
         async getUserInfo(value) {
             let msg = await getUserData(value);
@@ -242,10 +290,10 @@ export default {
                 query.Lables = ''
                 query.CareersIds = ''
                 query.LabelData.forEach(ele => {
-                    query.Lables += ele.LabelName+'，'
+                    query.Lables += ele.LabelName+','
                 })
                 query.Careers.forEach(ele => {
-                    query.CareersIds += ele.value+'，'
+                    query.CareersIds += ele.value+','
                 })
                 let msg = await setUserData(query);
                 if (msg) {

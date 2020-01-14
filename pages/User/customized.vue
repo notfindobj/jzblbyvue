@@ -60,6 +60,7 @@ export default {
             let msg = await getWebMessage(query);
             if (msg) {
                 this.dzList = msg.dingzhi.Msg;
+                this.$store.dispatch('ACComment', msg.dingzhi.MsgCount);
             }
         },
         clickCom (row) {
