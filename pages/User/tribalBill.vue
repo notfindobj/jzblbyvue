@@ -80,7 +80,7 @@ export default {
                     cut: 'btn',
                     title: '操作',
                     key: 'address',
-                    state: [{text: '删除', events: 'addVal'}]
+                    state: [{text: '删除', events: 'delVal'}]
                 }
             ],
             searchTime: [],
@@ -93,6 +93,9 @@ export default {
         this.getTribalCoinsList()
     },
     methods: {
+        delVal (row) {
+            console.log(row)
+        },
         onChange (val) {
             this.searchTime = val
         },
