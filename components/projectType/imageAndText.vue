@@ -213,7 +213,7 @@
         this.isUnfold = val;
       },
       getSimpleText(html){
-        // 剔除除表情后的所有标签
+        // 剔除除表情后的所有标签 <img
         var re1 = new RegExp("<(?!(img).*(data-w-e)).*?>","g");//
         var msg = html.replace(re1,'');//执行替换成空字符
         return msg;
