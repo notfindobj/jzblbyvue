@@ -1,9 +1,13 @@
 <template>
-    <div>
-        <Title/>
+    <div id="system">
+        <Title title="消息中心"/>
         <msgTab :TabList="TabList"/>
         <div>
+            <span style=" color: #a5a5a5;
+            display: inline-block;
+            margin: 10px;">暂无消息</span>
             <!-- <msgCard/>
+            
             <msgCard :bodyType="false"/> -->
         </div>
     </div>
@@ -14,6 +18,7 @@ import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
 import {getMessage} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         msgTab,

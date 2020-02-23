@@ -7,7 +7,7 @@
                        <img :src="Identity.HeadIcon" alt="">
                    </nuxt-link>
                </div>
-               <div>嘿嘿嘿</div>
+               <div>{{Identity.NickName}}</div>
             </li>
             <li>
                 <p>消息中心</p>

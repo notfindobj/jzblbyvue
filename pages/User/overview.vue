@@ -129,7 +129,7 @@ export default {
         },
         async getWithdrawal () {
             let query = {
-                "Money": 10,
+                "Money": this.blb,
                 "OpType": 1,
                 "WithdrawalType": 2
             }

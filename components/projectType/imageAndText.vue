@@ -311,6 +311,7 @@
             title: false,
             zoomRatio: 0.4,
             maxZoomRatio: 3,
+            minZoomRatio: 0.2,
             view: function(e) {
               _this.itemLength = e.target.childElementCount;
               _this.itemIndex = e.detail.index;

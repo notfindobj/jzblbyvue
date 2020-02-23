@@ -19,6 +19,7 @@ import publicTable from './components/publicTable'
 import setAddress from './components/setAddress'
 import {delAddressData, setAddressData} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         publicTable,

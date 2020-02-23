@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Title/>
+        <Title title="评论消息"/>
         <msgTab :TabList="TabList"/>
         <div>
             <template v-for="(items, index) in msgPList">
@@ -21,6 +21,7 @@ import comCard from './components/comCard'
 import {setMessage, getWebMessage} from '../../service/clientAPI'
 import {analogJump} from '../../plugins/untils/public'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         msgTab,

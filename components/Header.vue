@@ -60,7 +60,7 @@
                     </div>
                 </li>
                 <li>
-                    <div class="online-map" @click="onlineMap">在线地图</div>
+                    <!-- <div class="online-map" @click="onlineMap">在线地图</div> -->
                 </li>
                 <li>
                     <Dropdown class="right-select">

@@ -11,6 +11,7 @@ import Title from './components/title'
 import publicTable from './components/publicTable'
 import {getFeedbackList, delFeedbackList} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         publicTable

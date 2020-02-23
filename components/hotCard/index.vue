@@ -63,6 +63,7 @@ export default {
         }
         &-foote {
             position: absolute;
+            padding-left: 10px;
             height: 40px;
             background: #fff;
             line-height: 20px;

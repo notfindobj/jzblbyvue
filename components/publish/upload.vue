@@ -85,9 +85,11 @@
 
         i {
             position: absolute;
-            left: 26px;
+            left: 22px;
             top: 22px;
             z-index: 1;
+            font-size: 22px;
+            color: #b6b6b6;
         }
 
         a {

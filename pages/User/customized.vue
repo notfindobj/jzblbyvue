@@ -1,8 +1,11 @@
 <template>
     <div>
-        <Title/>
+        <Title title="定制消息"/>
         <msgTab :TabList="TabList"/>
         <div>
+            <span v-if="!dzList || dzList.length <= 0" style=" color: #a5a5a5;
+            display: inline-block;
+            margin: 10px;">暂无消息</span>
             <template v-for="(items, index) in dzList">
                 <div :key="index">
                     <div class="msg-time">
@@ -18,6 +21,7 @@
                     </msgCard>
                 </div>
             </template>
+            
         </div>
         <Custom v-if="isCustom" :customId="customId" @dataDetailsMaskClose="dataDetailsMaskClose"/>
     </div>
@@ -30,6 +34,7 @@ import Custom from './components/custom'
 import {setMessage, getWebMessage} from '../../service/clientAPI'
 import {analogJump} from '../../plugins/untils/public'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         msgTab,

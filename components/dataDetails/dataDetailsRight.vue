@@ -37,7 +37,7 @@
                         <span v-else>{{item.ItemSubAttributeFullName}}</span>
                     </li>
                 </ul>
-                <i v-if="attribute.length > 4"
+                <i v-if="attribute.length > 5"
                    :class="isShowIcon ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
                    @click="unAnddown()"></i>
             </div>

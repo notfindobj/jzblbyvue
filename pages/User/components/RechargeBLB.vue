@@ -15,7 +15,7 @@
                         <span class="money-box-boby-content-item-label">
                             充值金额：
                         </span>
-                        <Input v-model="rechanrgNum" style="width: 300px"></Input>
+                        <Input v-model="rechanrgNum" type="number" style="width: 300px"></Input>
                     </div>
                     <iframe style="display: none;" v-if="moneyUrl" :src="moneyUrl" frameborder="0"></iframe>
                 </div>

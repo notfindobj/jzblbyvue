@@ -46,7 +46,7 @@
                         </Dropdown>
                         
                     </li>
-                    <li class="content" @click="onlineMap">在线地图</li>
+                    <!-- <li class="content" @click="onlineMap">在线地图</li> -->
                     <li>
                         <Dropdown class="right-select">
                         <Badge :count="getComment.MsgCount + getCusData.MsgCount  + getInviter.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-xinxi bottom-start-mess"></i></Badge>
@@ -117,6 +117,9 @@
                 <li>
                     <a href="javasrcipt:(0)"  @click="goMytribe">我的部落</a>
                     <!-- <nuxt-link to="/HeAndITribal"></nuxt-link> -->
+                </li>
+                <li>
+                    <a target="_blank" href="https://map.51240.com/zhongguo__map/">在线地图</a>
                 </li>
             </ul>
             <!-- <div class="main-nav-publish" @click="publish">发布</div> -->

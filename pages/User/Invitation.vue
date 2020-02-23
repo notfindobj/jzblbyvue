@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Title/>
+        <Title title="邀请消息"/>
         <msgTab :TabList="TabList"/>
         <div>
             <template v-for="(items, index) in invitationList">
@@ -25,6 +25,7 @@ import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
 import {getWebMessage, handleInviteUser} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         msgTab,
