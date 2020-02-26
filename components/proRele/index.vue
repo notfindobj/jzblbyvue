@@ -180,6 +180,8 @@ export default {
                             let layout = true
                             if (this.pdfBul.includes(this.protPushData.TypeModel.ItemTypeId)) {
                                 layout = false
+                                window.location.href = `DataDetails?id=${msg.ItemId}&layout=${layout}`
+                                return false
                             }
                             this.$router.push({name: 'DataDetails',query: {id: msg.ItemId, layout: layout}})
                         }

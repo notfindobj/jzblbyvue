@@ -327,7 +327,7 @@ export const getWebMessage = async params => {
 }
 // 用户注销
 export const writOffUser = async params => {
-  return await request.get(`UserInfo/WritOffUser`, params)
+  return await request.post(`UserInfo/WritOffUser`, params)
 }
 // 获取积分记录
 export const getIntegralList = async params => {
