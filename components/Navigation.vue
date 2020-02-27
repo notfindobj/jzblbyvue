@@ -47,7 +47,7 @@
                         
                     </li>
                     <!-- <li class="content" @click="onlineMap">在线地图</li> -->
-                    <li>
+                    <!-- <li>
                         <Dropdown class="right-select">
                         <Badge :count="getComment.MsgCount + getCusData.MsgCount  + getInviter.MsgCount" class-name="badge-sty"> <i  class="iconfont icon-xinxi bottom-start-mess"></i></Badge>
                         <DropdownMenu slot="list">
@@ -62,7 +62,7 @@
                             </DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>
