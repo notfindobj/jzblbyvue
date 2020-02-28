@@ -26,6 +26,16 @@ export default {
 }
 </script>
 <style lang="less">
+  html, body{
+        font-family: "微软雅黑" " Microsoft YaHei", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue" !important;
+        font-size: 16px;
+        word-spacing: 1px;
+        -ms-text-size-adjust: 100%;
+        -webkit-text-size-adjust: 100%;
+        -moz-osx-font-smoothing: grayscale;
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+    }
   .back-home {
       position: absolute;
       top: 204px;
