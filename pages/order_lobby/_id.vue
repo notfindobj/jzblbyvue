@@ -3,10 +3,10 @@
         <div class="order-left">
             <div class="order-left-title">
                 <div class="order-left-title-box">
-                    <h2>四川成都天府新区135m²平层住宅设计</h2>
+                    <h2>{{orderType.ProvinceName}}{{orderType.CityName}}{{orderType.Area}}m²{{orderType.TypeName}}设计</h2>
                     <ul>
-                        <li>2020-02-28 11:52 发布</li>
-                        <li>信息编号：344703</li>
+                        <li>{{orderType.CreateDate}} 发布</li>
+                        <li>信息编号：{{orderType.ID}}</li>
                     </ul>
                 </div>
                 <div class="order-left-title-btn">
@@ -17,30 +17,29 @@
                 <ul>
                     <li>
                         <label>项目地点：</label>
-                        <span>成都</span>
+                        <span>{{orderType.CityName}}</span>
                     </li>
                     <li>
                         <label>项目类型：</label>
-                        <span>平层住宅</span>
+                        <span>{{orderType.TypeName}}</span>
                     </li>
                     <li>
                         <label>项目规模：</label>
-                        <span>135m2</span>
+                        <span>{{orderType.Area}}m²</span>
                     </li>
                     <li>
                         <label>设计预算：</label>
-                        <span>10000-50000</span>
+                        <span>{{orderType.BudgetName}}</span>
                     </li>
                     <li>
                         <label>业主姓名：</label>
-                        <span>黄先生</span>
+                        <span>{{orderType.CreateUserId}}</span>
                     </li>
                 </ul>
             </div>
             <div class="order-left-remarks">
                 <p class="order-left-remarks-name">设计要求</p>
-                <div class="order-left-remarks-content">
-                    四川成都天府新区135m²平层住宅设计，毛坯房，需要硬装及软装设计，已交房，只接受本地设计师，喜欢风格不限，接受设计费80-100元/m²，平时都方便接听。（指定）
+                <div class="order-left-remarks-content">{{orderType.Remark}}
                 </div>
             </div>
         </div>
@@ -50,6 +49,17 @@
 <script>
 export default {
     layout: 'main',
+    async asyncData({ store , params}) {
+        let query = {
+            Id: params.id
+        }
+        const orderType = await store.dispatch('getOrderDel', query);
+        console.log(query)
+        return {
+            orderType
+        }
+    },
+    
 }
 </script>
 <style lang="less" scoped>

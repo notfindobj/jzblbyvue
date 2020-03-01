@@ -52,6 +52,8 @@ service.interceptors.response.use(
           if (window.location.href !== "https://www.jzbl.com/") {
             window.location.href="https://www.jzbl.com"
           }
+      } else if (res.data.Code === 1001) {
+        return res.data
       } else {
         Message.warning(res.data.Msg);
         // return res.data.Data 

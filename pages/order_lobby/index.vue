@@ -1,59 +1,14 @@
 <template>
     <div class="order">
         <div class="order-title">
-            <div class="order-title-item">
-                <label class="order-title-item-left">空间类别：</label>
+            <div class="order-title-item" :key="index" v-for="(items, index) in orderType">
+                <label class="order-title-item-left">{{items.typename}}：</label>
                 <div class="order-title-item-right">
-                    <template v-for="(item, index) in items">
-                        <span v-if="index <= 20" :key="index">{{item}}</span>
-                        <span :key="index" v-if="index > 20 && isviewMore">{{item}}</span>
+                    <template v-for="(item, index) in items.list">
+                        <span v-if="index <= 20" :key="index">{{item.FullName}}</span>
+                        <span :key="index" v-if="index > 20 && isviewMore">{{item.FullName}}</span>
                     </template>
-                    <label @click="viewMore">{{!isviewMore ? "查看更多" : "收起"}}</label>
-                </div>
-            </div>
-            <div class="order-title-item">
-                <label class="order-title-item-left">类型：</label>
-                <div class="order-title-item-right">
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>空间类别</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>空间类</span>
-                    <span>河南</span>
-                    <span>空间类别</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>空间类</span>
-                    <span>河南</span>
-                    <span>空间类别</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                </div>
-            </div>
-            <div class="order-title-item">
-                <label class="order-title-item-left">面积：</label>
-                <div class="order-title-item-right">
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>空间类别</span>
-                    <span>河南</span>
-                    <span>河南</span>
-                    <span>空间类</span>
-                    <span>河南</span>
-                    <span>空间类别</span>
-                    <span>河南</span>
-                    <span>河南</span>
+                    <label v-if="index > 20" @click="viewMore">{{!isviewMore ? "查看更多" : "收起"}}</label>
                 </div>
             </div>
         </div>
@@ -72,38 +27,22 @@
         </div>
         <div class="order-list">
             <div class="order-list-left">
-                <div class="order-list-left-items">
+                <div class="order-list-left-items" :key="index" v-for="(items, index) in orderList">
                     <div class="order-list-left-items-left">
                         <div class="order-list-left-items-left-title">
-                            <span class="order-list-left-items-left-title-name">福建福州市晋安区100m²平层住宅设计</span> 
-                            <span class="order-list-left-items-left-title-price">6000-10000</span>
+                            <span class="order-list-left-items-left-title-name">{{items.ProvinceName}}{{items.CityName}}{{items.Area}}m²{{items.TypeName}}设计</span> 
+                            <span class="order-list-left-items-left-title-price">{{items.BudgetName}}</span>
                         </div>
                         <ul>
-                            <li>福建</li>
-                            <li>平层住宅</li>
-                            <li>100m²</li>
-                            <li>福建</li>
+                            <li>{{items.ProvinceName}}</li>
+                            <li>{{items.TypeName}}</li>
+                            <li>{{items.Area}}m²</li>
+                            <li>{{setTime(items.CreateDate)}}</li>
                         </ul>
                     </div>
                     <div class="order-list-left-items-right">
-                        <Button style="background: #ff3c00;color:#ffffff;" @click="orderLpbby">申请接单</Button>
-                    </div>
-                </div>
-                <div class="order-list-left-items">
-                    <div class="order-list-left-items-left">
-                        <div class="order-list-left-items-left-title">
-                            <span class="order-list-left-items-left-title-name">福建福州市晋安区100m²平层住宅设计</span> 
-                            <span class="order-list-left-items-left-title-price">6000-10000</span>
-                        </div>
-                        <ul>
-                            <li>福建</li>
-                            <li>平层住宅</li>
-                            <li>100m²</li>
-                            <li>福建</li>
-                        </ul>
-                    </div>
-                    <div class="order-list-left-items-right">
-                        <Button style="background: #dddddd;color:#898989;" @click="getUserInfo">查看详情</Button>
+                        <!-- <Button style="background: #ff3c00;color:#ffffff;" @click="orderLpbby">申请接单</Button> -->
+                        <Button style="background: #dddddd;color:#898989;" @click="getUserInfo(items.ID)">查看详情</Button>
                     </div>
                 </div>
                 <Page :total="100" />
@@ -113,14 +52,19 @@
     </div>
 </template>
 <script>
+import $moment from 'moment'
 export default {
     data () {
         return {
-            isviewMore: false,
-            items: ["河南", "湖南", "河南", "河南", "河南", 
-            "河南", "河南", "河南", "新疆", "湖南", "上海", 
-            "河南", "江苏", "河南", "新疆", "上海", "江苏", 
-            "河南", "河南", "河南", "河南", "上海", "新疆"]
+            isviewMore: false
+        }
+    },
+    async asyncData({ store }) {
+        const orderType = await store.dispatch('getOrderType');
+        const orderList = await store.dispatch('getOrderList');
+        return {
+            orderType,
+            orderList
         }
     },
     methods: {
@@ -131,9 +75,13 @@ export default {
         viewMore () {
             this.isviewMore = !this.isviewMore
         },
-        async getUserInfo() {
-            this.$router.push({name: 'order_lobby-id', params: {id: "asdasd"}})
+        async getUserInfo(id) {
+            this.$router.push({name: 'order_lobby-id', params: {id: id}})
         },
+        setTime (time) {
+            $moment.locale('zh-cn'); 
+            return $moment(time).format('LL'); 
+        }
     }
 }
 </script>
