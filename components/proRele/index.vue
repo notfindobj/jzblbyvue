@@ -36,7 +36,7 @@ export default {
             editorTitle: '',
             protPushData: {},
             Building: ['da970ced-f63b-4c93-96d2-8ccffc860f02', 'e5082f90-f590-4107-8d42-2d37897ef261' ,'412c275f-3a6b-45b0-b3b2-a69a36666e8a'],
-            pdfBul: ['f7399e5e-82a6-47e0-942e-fcae1a68af40', 'efa20b33-6dd9-4eb4-85c8-55ea854fee89'],
+            pdfBul: ['f7399e5e-82a6-47e0-942e-fcae1a68af40', 'efa20b33-6dd9-4eb4-85c8-55ea854fee89', '9626945d-6f04-4b61-9190-a273a4d94e05'],
             navigationID: [
                 {
                     value: 'e5082f90-f590-4107-8d42-2d37897ef261',
@@ -180,6 +180,8 @@ export default {
                             let layout = true
                             if (this.pdfBul.includes(this.protPushData.TypeModel.ItemTypeId)) {
                                 layout = false
+                                window.location.href = `DataDetails?id=${msg.ItemId}&layout=${layout}`
+                                return false
                             }
                             this.$router.push({name: 'DataDetails',query: {id: msg.ItemId, layout: layout}})
                         }

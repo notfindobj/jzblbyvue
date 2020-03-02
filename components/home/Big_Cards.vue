@@ -63,7 +63,7 @@ export default {
         margin-top: 5px;
         display: inline-block;
         border-radius: 3px;
-        height: 475px;
+        height: 466px;
         border: 1px solid #ccc;
         box-shadow: none;
         transition: box-shadow .5s;

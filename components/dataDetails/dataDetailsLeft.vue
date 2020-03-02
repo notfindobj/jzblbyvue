@@ -79,6 +79,7 @@
             title: false,
             zoomRatio: 0.4,
             maxZoomRatio: 3,
+            minZoomRatio: 0.2,
             show: function (e) {
               _this.isShowViewBox = true;
             },

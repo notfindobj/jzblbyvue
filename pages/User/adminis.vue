@@ -58,7 +58,7 @@
                 </FormItem>
                 <FormItem label="身份证正面" prop="user">
                     <div class="card" @click="modifyHead('IDCardImgPos')" :style="`background-image: url(${comData.IDCardImgPosiSrc});`">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <Icon type="ios-cloud-upload" custom="ivu-icon ivu-icon-ios-camera" size="52" style="color: #3399ff"></Icon>
                         <input type="file" style="display: none;" ref="IDCardImgPos" @change="upHeadIcon('IDCardImgPos')">
                     </div>
                 </FormItem>
@@ -86,6 +86,7 @@
 import Title from './components/title'
 import {getUserInfo, setCertification} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
     },

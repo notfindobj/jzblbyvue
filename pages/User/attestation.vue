@@ -14,7 +14,7 @@
                     <div class="user-header">
                         <img :src="userInfo.HeadIcon" alt="">
                         <div class="user-header-mol" @click="modifyHead('headIcon')">
-                            <span>修改头像</span>
+                            <Icon type="md-cloud-upload" size="52" style="margin-top: 12px;"/>
                             <input type="file" style="display: none;" ref="headIcon" @change="upHeadIcon('headIcon')">
                         </div>
                     </div>
@@ -24,13 +24,13 @@
                 </FormItem>
                 <FormItem label="身份证正面" prop="user">
                     <div class="card" @click="modifyHead('IDCardImgPos')" :style="`background-image: url(${userInfo.IDCardImgPosiSrc});`">
-                        <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+                        <Icon custom="iconfont icon-shenfenzhengzhengmian" size="52" style="color: #3399ff"></Icon>
                         <input type="file" style="display: none;" ref="IDCardImgPos" @change="upHeadIcon('IDCardImgPos')">
                     </div>
                 </FormItem>
                 <FormItem label="身份证反面" prop="user">
                     <div class="card" @click="modifyHead('IDCardImgNega')" :style="`background-image: url(${userInfo.IDCardImgNegaSrc});`">
-                        <Icon class="card-icon" type="ios-cloud-upload" size="52" style="color: #3399ff" v-if="userInfo.IDCardImgNegaSrc"></Icon>
+                        <Icon custom="iconfont icon-shenfenzhengfanmian" size="52" style="color: #3399ff" ></Icon>
                         <input type="file" style="display: none;" ref="IDCardImgNega" @change="upHeadIcon('IDCardImgNega')">
                     </div>
                     <div class="card-tips">
@@ -67,6 +67,7 @@ import Title from './components/title'
 import { userInfo } from 'os'
 import {getUserInfo, setCertification, uploadFile, getBankList} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
     },
@@ -215,10 +216,8 @@ export default {
             cursor: pointer;
             top: 0;
             left: 0;
-            display: none;
             width: 80px;
             height: 80px;
-            background: rgba(0,0,0,.4);
             color: #ffffff;
             text-align: center;
             span {

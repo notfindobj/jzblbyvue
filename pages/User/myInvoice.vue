@@ -35,8 +35,8 @@
                     </FormItem>
                     <FormItem label="开票类型" prop="user">
                         <Select v-model="invoiceData.InvoiceType" clearable >
-                            <Option :value="1">男</Option>
-                            <Option :value="0">女</Option>
+                            <Option :value="1">增值税发票</Option>
+                            <Option :value="0">普通发票</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="客户名称" prop="user">
@@ -75,8 +75,8 @@
                     </FormItem>
                     <FormItem label="开票类型" prop="user">
                         <Select v-model="cominvoiceData.InvoiceType" clearable >
-                            <Option value="1">男</Option>
-                            <Option value="0">女</Option>
+                            <Option :value="1">增值税发票</Option>
+                            <Option :value="0">普通发票</Option>
                         </Select>
                     </FormItem>
                     <FormItem label="公司名称" prop="CompanyName">
@@ -133,6 +133,7 @@ import Title from './components/title'
 import publicTable from './components/publicTable'
 import {getUserInvoice, setUserInvoice, getProvinceList} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         publicTable

@@ -68,7 +68,7 @@ export default {
     }
     .cards {
         position: relative;
-        margin-top: 10px;
+        margin-top: 5px;
         display: inline-block;
         border-radius: 3px;
         border: 1px solid #ccc;

@@ -10,6 +10,7 @@
         </div>
         <div class="main-left">
             <h3 class="detail-title">{{ detailInfo.TalkTitle }}</h3>
+            <span>发布时间：{{detailInfo.CreateDate}}</span>
             <div class="ql-container ql-snow">
                 <div class="ql-editor detail-text" v-html="detailInfo.TalkContent"></div>
             </div>
@@ -176,6 +177,9 @@
                     return false;
                 }
                 this.$refs.commentTool.setCommentsData(undefined, undefined, undefined, this.content)
+                .then(res => {
+                    this.content = '';
+                })
                 // setComments({
                 //     ItemId: this.detailInfo.ItemId,
                 //     ReplyId: '',
@@ -244,6 +248,7 @@
                         title: false,
                         zoomRatio: 0.4,
                         maxZoomRatio: 3,
+                        minZoomRatio: 0.2,
                         view: function(e) {
                             _this.itemLength = e.target.childElementCount;
                             _this.itemIndex = e.detail.index;

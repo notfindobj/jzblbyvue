@@ -112,6 +112,7 @@ export default {
                     title: false,
                     zoomRatio: 0.4,
                     maxZoomRatio: 3,
+                    minZoomRatio: 0.2,
                     show: function (e) {
                         _this.isShowViewBox = true;
                     },
@@ -182,16 +183,18 @@ export default {
             let queryData = {
                 ItemId: item.ItemId,
                 LikeType: 1,
-                IsDelete: item.islikes
+                IsDelete: item.itemOperateData.IsLike
             }
             let thumbsUpMsg = await setthumbsUp(queryData);
-            debugger
-            if (item.islikes) {
-                this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
-            } else {
-                this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
+            if (thumbsUpMsg) {
+                if (item.itemOperateData.IsLike) {
+                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
+                } else {
+                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
+                }
+                this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
+                console.log(item.itemOperateData)
             }
-            this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
         },
         // 收藏
         async Collection(item) {
@@ -202,9 +205,9 @@ export default {
             }
             let collectionMsg = await setCollection(queryData)
             if (item.iscollections) {
-                this.$set(item, 'collections', item.collections - 1)
+                this.$set(item, 'collections', (item.collections) - 1)
             } else {
-                this.$set(item, 'collections', item.collections + 1)
+                this.$set(item, 'collections', (item.collections) + 1)
             }
             this.$set(item, 'iscollections', !item.iscollections)
         },

@@ -125,6 +125,7 @@ delareerTyepInfo,delUserExpertise,
 setUserData, SetOrAddThisUserJobInfo, uploadFile, getCareerData} from '../../service/clientAPI'
 import { mapState, mapGetters} from 'vuex'
 export default {
+    scrollToTop: true,
     components: { 
         Title,
     },
@@ -407,6 +408,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    /deep/.ivu-input[disabled], fieldset[disabled] .ivu-input {
+        color: #8d8d8d;
+    }
+    /deep/.ivu-select-disabled .ivu-select-selected-value {
+        color: #8d8d8d;
+    }
     .bg-Tag {
         background: #ff3c00;
     }

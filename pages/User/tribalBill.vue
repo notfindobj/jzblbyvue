@@ -27,6 +27,7 @@ import Title from './components/title'
 import publicTable from './components/publicTable'
 import {getTribalCoins} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
         publicTable

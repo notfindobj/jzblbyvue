@@ -62,7 +62,7 @@
                                     :on-success="uploadSuccess"
                                     :on-remove="removeFile"
                                     :on-exceeded-size="handleMaxSize"
-                                    style="display: inline-block;"
+                                    style="display: inline-block;width: 220px;"
                                 >
                                   <Button icon="ios-cloud-upload-outline" >上传文件</Button>
                               </Upload>
@@ -80,7 +80,7 @@
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs+'MapLinkage'" class="typeAttrList-item" v-if="items.ValueSource ==='MapLinkage'">
                             <span>详细地址</span>
-                            <input v-model="address" class="address-input" id="tipinput" placeholder="请输入相信地址（选填）" style="width: 220px;"/>
+                            <input v-model="address" class="address-input" id="tipinput" placeholder="请输入详细地址（选填）" style="width: 220px;"/>
                         </div>
                         <div class="attr-map-box" :key="items.ItemSubAttributeId+indexs+'Map'" v-if="items.ValueSource ==='MapLinkage'">
                             <div id="container" ref="container"></div>
@@ -503,6 +503,10 @@ export default {
         width: 50%;
         justify-content: space-around;
         margin-top: 15px;
+        > span {
+            display: inline-block;
+            width: 120px;
+        }
     }
     .add-service-btn {
         display: inline-block;

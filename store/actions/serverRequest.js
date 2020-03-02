@@ -132,4 +132,16 @@ export const serverRequest = {
   async getRec({commit}, params) {
     return await request.post(`Other/GetRecommend?typeIds=${params.ids}&take=${params.pages}`)
   },
+  // 订单类型
+  async getOrderType({commit}, params) {
+    return await request.get(`OrderReceiving/GetReceivingList`)
+  },
+  // 订单列表
+  async getOrderList({commit}, params) {
+    return await request.post(`OrderReceiving/GetOrderReceiving`, params)
+  },
+  // 订单详情
+  async getOrderDel({commit}, params) {
+    return await request.get(`OrderReceiving/GetReceivingDetail`, params)
+  },
 }

@@ -149,6 +149,7 @@
 import Title from './components/title'
 import {getAccountBindInfo, loginByWX, bindingByWX, loginByQQ, getMobileCode, SetChangeMobile,writOffUser} from '../../service/clientAPI'
 export default {
+    scrollToTop: true,
     components: {
         Title,
     },

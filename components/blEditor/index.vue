@@ -485,6 +485,7 @@ export default {
     .upload {
         float: left;
         margin-top: 10px;
+        border: 2px dashed #b6b6b6;
     }
     .upload-box {
         margin-top: 10px;
@@ -533,9 +534,11 @@ export default {
     }
     .add-img {
         color: #00B358;
+        font-weight: bold;
     }
     .add-video {
         color: #ff3c00;
+        font-weight: bold;
     }
     .editor-tab {
         display: flex;
