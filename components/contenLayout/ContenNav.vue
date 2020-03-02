@@ -172,7 +172,7 @@ export default {
             let ItemType = Number(sessionStorage.getItem('searchIndex') || 0);
             let routeData = this.$router.resolve({
                 name: 'DataDetails',
-                query: {id: row.ItemId, layout: (ItemType !== 6 && ItemType !== 7) ? true : false}
+                query: {id: row.ItemId, layout: (ItemType === 6 || ItemType === 7) ? false : true}
             })
             analogJump(routeData.href);
         },

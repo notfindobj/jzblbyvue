@@ -3,12 +3,12 @@
         <div @mouseleave="mouseleave()">
             <div class="banner-nav">
                 <div
-                    v-for="items in oneMeun"
+                    v-for="(items, i) in oneMeun"
                     :key="items.ItemAttributesId"
                     :data-id="items.ItemAttributesId"
                     :class="items.ItemAttributesId === id ?  'banner-nav-items cursorHover': 'banner-nav-items'"
                     @mouseenter="mouseenter(items.ItemAttributesId)"
-                    @click="goList(items)">
+                    @click="goList(items, i)">
                     {{items.ItemAttributesFullName}}
                     <div>
                         <div class="sub-banner-nav" :class="items.ItemAttributesId === id ?  'show': 'hide'">
@@ -97,7 +97,7 @@
                 analogJump(routeData.href);
             },
             // 点击一级分类
-            async goList(cate) {
+            async goList(cate, index) {
                 // 搜索页导航数据
                 let baseSearchNav = {
                     key: 'baseSearchNav',
@@ -106,6 +106,7 @@
                         title: cate.ItemAttributesFullName,
                     }
                 }
+                sessionStorage.setItem('searchIndex', index)
                 this.$store.dispatch('Serverstorage', baseSearchNav);
                 let msgs = await setDemo('baseSearchNav', baseSearchNav);
                 // 搜索页项目数据
