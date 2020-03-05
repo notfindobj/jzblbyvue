@@ -9,7 +9,11 @@
             <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
                 <div v-if="detaDetails.IsDownload" ref="immediatelyDown" @click="immediatelyDown(detaDetails)">
                   <p>立即下载</p>
-                  <p><span class="btn-group-Price">￥{{detaDetails.Price}}</span></p>
+                  <p>
+                    <span class="btn-group-Price">RMB：{{detaDetails.Price}}</span>
+                    <span class="btn-group-Price">部落币：{{detaDetails.Price*5}}</span>
+                    <span class="btn-group-Price">积分：{{detaDetails.Price * 20}}</span>
+                  </p>
                 </div>
                 <div v-if="detaDetails.IsCustomized" @click="customthis()"> 
                   <p>同款定制</p> 

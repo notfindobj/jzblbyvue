@@ -134,7 +134,7 @@ export const serverRequest = {
   },
   // 订单类型
   async getOrderType({commit}, params) {
-    return await request.get(`OrderReceiving/GetReceivingList`)
+    return await request.post(`OrderReceiving/GetReceivingList`, params)
   },
   // 订单列表
   async getOrderList({commit}, params) {

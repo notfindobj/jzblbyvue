@@ -1,6 +1,6 @@
 <template>
      <div class="comreg">
-        <Form :model="companyAttr" ref="companyAttr" :rules="rules" label-position="right" :label-width="100">
+        <Form :model="companyAttr" ref="companyAttr" :rules="rules" label-position="left" :label-width="100">
             <Row>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="公司名称:" prop="CompanyName">
@@ -22,26 +22,29 @@
                     </FormItem>
                 </Col>
                 <Col span="12">
-                    <FormItem label="营业期限:" prop="Business">
-                        <DatePicker type="daterange" format="yyyy/MM/dd" v-model="companyAttr.Business" placement="bottom-end" placeholder="Select date" style="width: 100%"></DatePicker>
+                    <FormItem label="公司地址:" prop="CompanyAddress">  
+                        <Cascader v-model="CompanyArr" :data="cascaderList" :load-data="loadData"></Cascader>
                     </FormItem>
+                    <!-- <FormItem label="营业期限:" prop="Business">
+                        <DatePicker type="daterange" format="yyyy/MM/dd" v-model="companyAttr.Business" placement="bottom-end" placeholder="Select date" style="width: 100%"></DatePicker>
+                    </FormItem> -->
                 </Col>
             </Row>
             <Row>
                 <Col span="12" style="padding-right:10px">
-                    <FormItem label="营业执照编号:" prop="BusLicRegNum">  
+                    <!-- <FormItem label="营业执照编号:" prop="BusLicRegNum">  
                         <Input v-model="companyAttr.BusLicRegNum" ></Input>
-                    </FormItem>
+                    </FormItem> -->
                 </Col>
                 <Col span="12" style="padding-right:10px">
-                    <FormItem label="公司地址:" prop="CompanyAddress">  
+                    <!-- <FormItem label="公司地址:" prop="CompanyAddress">  
                         <Cascader v-model="CompanyArr" :data="cascaderList" :load-data="loadData"></Cascader>
-                    </FormItem>
+                    </FormItem> -->
                 </Col>
             </Row>
             <Row>
                 <Col span="16" style="padding-right:10px">
-                    <FormItem label="公司详细地址:" prop="CompanyAddress">  
+                    <FormItem label="门牌号:" prop="CompanyAddress">  
                         <Input v-model="companyAttr.CompanyAddress"  placeholder="公司详细地址"></Input>
                     </FormItem>
                 </Col>
@@ -69,9 +72,9 @@
                     </FormItem>
                 </Col>
                 <Col span="12">
-                    <FormItem label="经办人身份证号码:" prop="IDCordId">
+                    <!-- <FormItem label="经办人身份证号码:" prop="IDCordId">
                         <Input v-model="companyAttr.IDCordId"></Input>
-                    </FormItem>
+                    </FormItem> -->
                 </Col>
             </Row>
             <FormItem label="经办人身份证:" prop="IDCardImgNegaId">
@@ -175,9 +178,9 @@ export default {
                 Authcode: [
                     {required: true, message: '选项不能为空！', trigger: 'blur'}
                 ],
-                IDCordId: [
-                    {required: true, message: '选项不能为空！', trigger: 'blur'}
-                ],
+                // IDCordId: [
+                //     {required: true, message: '选项不能为空！', trigger: 'blur'}
+                // ],
                 IDCardName: [
                     {required: true, message: '选项不能为空！', trigger: 'blur'}
                 ],
@@ -190,12 +193,12 @@ export default {
                 CompanyTypeId: [
                     {required: true, message: '选项不能为空！', trigger: 'change'}
                 ],
-                Business: [
-                    {required: true, message: '选项不能为空！', trigger: 'blur', pattern: /.+/}
-                ],
-                BusLicRegNum: [
-                    {required: true, message: '选项不能为空！', trigger: 'blur'}
-                ],
+                // Business: [
+                //     {required: true, message: '选项不能为空！', trigger: 'blur', pattern: /.+/}
+                // ],
+                // BusLicRegNum: [
+                //     {required: true, message: '选项不能为空！', trigger: 'blur'}
+                // ],
                 CellphoneNumber: [
                     {required: true, validator: validatePassCheck, trigger: 'blur' }
                 ],
@@ -336,8 +339,8 @@ export default {
             this.$refs[name].validate(async (valid) => {
                 if (valid) {
                     let comUser = JSON.parse(JSON.stringify(this.companyAttr));
-                    comUser.BusLicBegin = comUser.Business[0];
-                    comUser.BusLicEnd =  comUser.Business[1];
+                    comUser.BusLicBegin = ""
+                    comUser.BusLicEnd = ""
                     comUser.CompanyProvinceId = _this.CompanyArr[0]
                     comUser.CompanyCityId = _this.CompanyArr[1]
                     comUser.CompanyAreaId = _this.CompanyArr[2]

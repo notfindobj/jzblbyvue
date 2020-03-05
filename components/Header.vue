@@ -28,6 +28,9 @@
                     <a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a>
                 </li>
                 <li>
+                    <nuxt-link to="/order_lobby">接单大厅</nuxt-link>
+                </li>
+                <li>
                     <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
                 </li>
             </ul>

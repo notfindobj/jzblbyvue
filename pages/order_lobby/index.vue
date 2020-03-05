@@ -1,35 +1,51 @@
 <template>
     <div class="order">
         <div class="order-title">
-            <div class="order-title-item" :key="index" v-for="(items, index) in orderType">
-                <label class="order-title-item-left">{{items.typename}}：</label>
-                <div class="order-title-item-right">
-                    <template v-for="(item, index) in items.list">
-                        <span v-if="index <= 20" :key="index">{{item.FullName}}</span>
-                        <span :key="index" v-if="index > 20 && isviewMore">{{item.FullName}}</span>
-                    </template>
-                    <label v-if="index > 20" @click="viewMore">{{!isviewMore ? "查看更多" : "收起"}}</label>
-                </div>
+            <div class="order-title-item" v-if="searchData.length > 0">
+                <label class="order-title-item-left">选择属性：</label>
+                <template v-for="(items, searcindex) in searchData">
+                    <div class="order-title-item-rightTop" :key="searcindex+ 1000">
+                        <span @click="delSelectBtns(items)">
+                            {{items.AttrValueFullName}}
+                            <i class="iconfont icon-chahao3"></i>
+                        </span>
+                    </div>
+                </template>
             </div>
+            <template v-for="(items, indexs) in orderType">
+                <div class="order-title-item" :key="`${indexs}${items.typename}`" v-if="items.list.length > 0">
+                    <label class="order-title-item-left">{{items.typename}}：</label>
+                    <div class="order-title-item-right">
+                        <template v-for="(item, index) in items.list">
+                            <span @click="selectBtns(item, items)" v-if="index <= 20" :key="index">{{item.FullName}}</span>
+                            <span @click="selectBtns(item, items)" :key="index" v-if="index > 20 && isviewMore">{{item.FullName}}</span>
+                        </template>
+                        <label v-if="indexs === 0" @click="viewMore">{{!isviewMore ? "查看更多" : "收起"}}</label>
+                    </div>
+                </div>
+            </template>
         </div>
         <div class="order-choice">
             <div class="order-choice-left">
-                <span>
+                <span :class="quertData.sortby === 1 ? 'bgColor' : ''" @click="screenData(1)">
                     发布时间
+                    <i class="iconfont icon-jiantou_xia"></i>
                 </span>
-                <span>
+                <span :class="quertData.sortby === 2 ? 'bgColor' : ''" @click="screenData(2)">
                     总面积
+                    <i class="iconfont icon-jiantou_xia"></i>
                 </span>
+                <Checkbox v-model="sortby" @on-change="checkboxChange">仅显示可接单项目</Checkbox>
             </div>
             <div class="order-choice-right">
-                总订单数：88888
+                总订单数：{{paginationData.records}}
             </div>
         </div>
         <div class="order-list">
             <div class="order-list-left">
                 <div class="order-list-left-items" :key="index" v-for="(items, index) in orderList">
                     <div class="order-list-left-items-left">
-                        <div class="order-list-left-items-left-title">
+                        <div class="order-list-left-items-left-title" @click="getUserInfo(items.ID)">
                             <span class="order-list-left-items-left-title-name">{{items.ProvinceName}}{{items.CityName}}{{items.Area}}m²{{items.TypeName}}设计</span> 
                             <span class="order-list-left-items-left-title-price">{{items.BudgetName}}</span>
                         </div>
@@ -41,38 +57,253 @@
                         </ul>
                     </div>
                     <div class="order-list-left-items-right">
-                        <!-- <Button style="background: #ff3c00;color:#ffffff;" @click="orderLpbby">申请接单</Button> -->
-                        <Button style="background: #dddddd;color:#898989;" @click="getUserInfo(items.ID)">查看详情</Button>
+                        <Button v-if="items.Status === 0" style="background: #ff3c00;color:#ffffff;" @click="orderLpbby">申请接单</Button>
+                        <Button v-if="items.Status === 1"  style="background: #dddddd;color:#898989;" @click="getUserInfo(items.ID)">查看详情</Button>
                     </div>
                 </div>
-                <Page :total="100" />
+                <Page :total="paginationData.records" @on-change="pageChange"/>
             </div>
             <div class="order-list-right"></div>
         </div>
+        <Modal
+            title="温馨提示"
+            v-model="authentication"
+            @on-ok="onOk"
+            class-name="vertical-center-modal">
+            <p>您还没有实名认证，请先实名认证。确定跳转到认证页面吗？</p>
+        </Modal>
+        <Modal
+            title="请选择所在城市"
+            v-model="isviewMore"
+            @on-ok="onMoreOk"
+            class-name="vertical-center-modal">
+            <div>
+                <Select v-model="oneFullName" style="width:200px" @on-change="changeSelect">
+                    <Option v-for="item in cascaderList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+                <Select v-model="FullName" style="width:200px">
+                    <Option v-for="item in cascader" :value="item.value" :key="item.value">{{ item.label }}</Option>
+                </Select>
+            </div>
+        </Modal>
     </div>
 </template>
 <script>
 import $moment from 'moment'
+import {analogJump } from '../../plugins/untils/public'
+import {getProvinceList, putOrder} from '../../service/clientAPI'
+import { mapState} from 'vuex'
 export default {
+    layout: 'main',
     data () {
         return {
-            isviewMore: false
+            isviewMore: false,
+            orderList: [],
+            paginationData: {},
+            typeList: {
+                CityName: '',
+                BudgetId: '',
+                BudgetName: '',
+                WorkTypeId: '',
+                WorkTypeName: '',
+                Area: ''
+            },
+            quertData: {
+                sortby: 1,
+                isaccept: 0,
+                Page: 1,
+                Rows: 10
+            },
+            searchData: [],
+            orderType: [],
+            sortby: false,
+            authentication: false,
+            cascaderList: [],
+            cascader: [],
+            FullName: "",
+            oneFullName: ""
         }
+    },
+    computed: {
+        ...mapState({
+            Identity: state => state.overas.auth || {}
+        })
     },
     async asyncData({ store }) {
-        const orderType = await store.dispatch('getOrderType');
-        const orderList = await store.dispatch('getOrderList');
+        let typeList = {
+            CityName: '',
+            BudgetId: '',
+            BudgetName: '',
+            WorkTypeId: '',
+            WorkTypeName: '',
+            Area: ''
+        }
+        const orderType = await store.dispatch('getOrderType', typeList);
+        let quertData = {
+            CityName: '',
+            TypeId: '',
+            BudgetId: '',
+            WorkTypeId: '',
+            Area: '',
+            sortby: '',
+            isaccept: '',
+            Page: 1,
+            Rows: 10
+        }
+        const orderList = await store.dispatch('getOrderList', quertData);
         return {
-            orderType,
-            orderList
+            orderType: orderType.datas,
+            orderList: orderList.datalist,
+            paginationData: orderList.paginationData
         }
     },
+    created () {
+        this.getTypeList()
+        this.getCascaderData()
+    },
     methods: {
+        changeSelect (val) {
+            this.getTwoData(val)
+        },
+        onMoreOk () {
+            this.typeList.CityName = this.FullName.split('|')[1]
+            this.getTypeList()
+            this.getOrderList()
+        },
+        async getCascaderData (id = '') {
+            let queryData = {
+                ProvinceCode: id
+            }
+            let msg = await getProvinceList(queryData);
+            msg.respProvince.forEach(ele => {
+                ele.loading = false;
+                ele.children = [];
+                ele.children = [];
+                ele.level = 1;
+                ele.value = ele.ProvinceCode+"|"+ele.ProvinceName
+                ele.label = ele.ProvinceName
+            })
+            if (msg) {
+                this.cascaderList = msg.respProvince;
+            }
+        },
+        async getTwoData (item) {
+            let queryData = {
+                ProvinceCode: item.split("|")[0]
+            }
+            let msg = await getProvinceList(queryData);
+            msg.respProvince.forEach(ele => {
+                ele.loading = false;
+                ele.children = [];
+                ele.children = [];
+                ele.level = 1;
+                ele.value = ele.ProvinceCode+"|"+ele.ProvinceName
+                ele.label = ele.ProvinceName
+            })
+            if (msg) {
+                this.cascader = msg.respProvince;
+            }
+        },
         orderLpbby () {
-            this.$Message.warning("正在完善")
+            if (this.Identity.IsCertificate === 1) {
+                this.$Notice.success({
+                    title: '订单通知',
+                    desc: '您的需求以通知甲方，待甲方同意后您可获取甲方的联系方式！'
+                });
+                return false
+            } else {
+                this.authentication = true;
+            }
+        },
+        onOk () {
+            let routeData = this.$router.resolve({ name: 'User-attestation'});
+            analogJump(routeData.href);
+        },
+        delSelectBtns (rows) {
+            switch (rows.AttrKeyFullName) {
+                case '所在城市':
+                    this.typeList.CityName = ""
+                    break;
+                case "项目类型":
+                    this.typeList.TypeId = ""
+                    this.typeList.TypeName = ""
+                    break;
+                case "工作内容":
+                    this.typeList.WorkTypeId = ""
+                    this.typeList.WorkTypeName = ""
+                    break;
+                case "建筑面积":
+                    this.typeList.Area = ""
+                    break;
+                case "设计预算":
+                    this.typeList.BudgetName = ""
+                    this.typeList.BudgetId = ""
+                    break;
+            }
+            this.getTypeList()
+            this.getOrderList()
+        },
+        selectBtns (row, rows) {
+             switch (rows.typename) {
+                case '所在城市':
+                    this.typeList.CityName = row.FullName
+                    break;
+                case "项目类型":
+                    this.typeList.TypeId = row.ModuleId
+                    this.typeList.TypeName = row.FullName
+                    break;
+                case "工作内容":
+                    this.typeList.WorkTypeId = row.ModuleId
+                    this.typeList.WorkTypeName = row.FullName
+                    break;
+                case "建筑面积":
+                    this.typeList.Area = row.FullName
+                    break;
+                case "设计预算":
+                    this.typeList.BudgetName = row.FullName
+                    this.typeList.BudgetId = row.ModuleId
+                    break;
+            }
+            this.getTypeList()
+            this.getOrderList()
+        },
+        pageChange (index) {
+            this.quertData.Page = index;
+            this.getOrderList()
+        },
+        screenData (val) {
+            this.quertData.sortby = val;
+            this.sortby = false;
+            this.quertData.isaccept = 0;
+            this.getOrderList()
+        },
+        // 可接订单
+        checkboxChange (val) {
+            this.quertData.isaccept = val ? 1 : 0;
+            this.quertData.sortby = '';
+            this.getOrderList()
+        },
+        async getTypeList () {
+            let quertData = this.typeList
+            let order = await this.$store.dispatch('getOrderType', quertData);
+            if (order) {
+                this.orderType= order.datas
+                this.searchData = order.selectBtns
+            }
+        },
+        //  获取订单列表
+        async getOrderList () {
+            let quertData = { ...this.quertData, ...this.typeList}
+            let order = await this.$store.dispatch('getOrderList', quertData);
+            if (order) {    
+                this.orderList= order.datalist,
+                this.paginationData= order.paginationData
+            }
         },
         // 个人资料
         viewMore () {
+            this.FullName= "",
+            this.oneFullName= ""
             this.isviewMore = !this.isviewMore
         },
         async getUserInfo(id) {
@@ -81,11 +312,23 @@ export default {
         setTime (time) {
             $moment.locale('zh-cn'); 
             return $moment(time).format('LL'); 
+        },
+        setArea (val) {
+            let area = []
+            val.split("-").forEach((ele, index) => {
+                area[index] = parseInt(ele);
+            });
+            let parm = `${area[0]},${area[1] ? area[1] : 0}`;
+            console.log(parm)
+            return parm
         }
     }
 }
 </script>
 <style lang="less" scoped>
+    .bgColor {
+        color: #ff3c00;
+    }
     .ivu-page {
         text-align: center;
         margin-top: 40px;
@@ -126,6 +369,29 @@ export default {
                         }
                     }
                 }
+                &-rightTop {
+                    display: inline-block;
+                    margin-right: 15px;
+                    label {
+                        color: #ff3c00;
+                        cursor: pointer;
+                    }
+                    span {
+                        padding: 2px 10px;
+                        display: inline-block;
+                        border: 1px solid #e2e2e2;
+                        border-radius: 3px;
+                        margin-top: 3px;
+                        color: #333333;
+                        i  {
+                            font-size: 10px;
+                        }
+                        &:hover {
+                            cursor: pointer;
+                            color: #ff3c00;
+                        }
+                    }
+                }
             }
         }
         &-choice {
@@ -139,6 +405,10 @@ export default {
                 span {
                     margin-right: 10px;
                     cursor: pointer;
+                    i {
+                        font-size: 14px;
+                        margin-left: -5px;
+                    }
                 }
             }
             &-right {

@@ -112,7 +112,7 @@ export default {
                     title: false,
                     zoomRatio: 0.4,
                     maxZoomRatio: 3,
-                    minZoomRatio: 0.2,
+                    minZoomRatio: 0.5,
                     show: function (e) {
                         _this.isShowViewBox = true;
                     },

@@ -119,6 +119,9 @@
                     <!-- <nuxt-link to="/HeAndITribal"></nuxt-link> -->
                 </li>
                 <li>
+                    <nuxt-link to="/order_lobby">接单大厅</nuxt-link>
+                </li>
+                <li>
                     <a target="_blank" href="https://map.51240.com/zhongguo__map/">在线地图</a>
                 </li>
             </ul>

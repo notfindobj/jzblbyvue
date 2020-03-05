@@ -385,3 +385,7 @@ export const otherDownload = async params => {
 export const withdrawal = async params => {
   return await request.post(`AllPay/Withdrawal`, params)
 }
+// 提现
+export const putOrder = async params => {
+  return await request.post(`OrderReceiving/SetOrderReceiving`, params)
+}
