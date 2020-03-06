@@ -1,7 +1,8 @@
 <template>
     <div>
+      <!-- :src="`${pdfBaseUrl}pdfjs/web/viewer.html?path=${PdfInfo.FilePath}`" -->
         <iframe class="pdfIframe" width="100%" height="100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true"
-                :src="`${pdfBaseUrl}pdfjs/web/viewer.html?path=${PdfInfo.FilePath}`"
+                :src="`${pdfBaseUrl}pdfjs/web/viewer.html?path=${setBasePdf(PdfInfo.FilePath)}`"
                 frameborder="0"></iframe>
     </div>
 </template>
@@ -27,6 +28,11 @@
         return {
           pdfBaseUrl: process.env.fileBaseUrl
         }
+    },
+    methods:{
+      setBasePdf (val) {
+        return val.replace("http://www.pic.jzbl.com", '')
+      }
     }
   }
 </script>

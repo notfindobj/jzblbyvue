@@ -389,3 +389,7 @@ export const withdrawal = async params => {
 export const putOrder = async params => {
   return await request.post(`OrderReceiving/SetOrderReceiving`, params)
 }
+//用户申请订单 
+export const takeOrders = async params => {
+  return await request.post(`OrderReceiving/TakeOrders`, params)
+}

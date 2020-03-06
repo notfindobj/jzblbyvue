@@ -1,50 +1,68 @@
 <template>
     <div>
-        <input type="file" value="上传文件" @change="upData">
+        <Upload
+            multiple
+            type="drag"
+            :headers= "headers"
+            :action="uploadHost"
+            :data="uploadData"
+            :before-upload="beforeUpload"
+            :on-success="handleSuccess"
+        >
+            <Button icon="ios-cloud-upload-outline">Upload files</Button>
+        </Upload>
+        <img :src="`${filePath}?x-oss-process=image/resize,m_fill,h_100,w_200`" alt="">
     </div>
 </template>
 <script>
-// let client = new OSS({
-//     region: 'oss-cn-shanghai',
-//     accessKeyId: 'LTAI4FmRKvcZWCxx9xKhrtE2',
-//     accessKeySecret: 'HMM8yiPdmJinY5kaLWojAX7BrnekuD',
-//     bucket: 'jzbl-pic'
-// });
-import OSS from 'ali-oss'
-import {getPostPolicy} from '../../service/clientAPI'
-import ossRequest from '../../oss'
-export default {
-    data () {
-        return {
-            client: null
-        }
+// 引入生成上传参数方法
+import {oss} from './ossUpload.js'
+export default{
+  data() {
+    return{
+        headers: {
+            "Content-Type" : "image/jpg"
+        },
+        // 附件上传路径
+        uploadHost: '',
+        // 附件上传携带参数
+        uploadData: {},
+        // 上传后返回的存储的文件名
+        fileName: '',
+        // 上传后返回的文件存储地址
+        filePath: ''
+      }
+  
+  },
+  methods: {
+    // 在Upload组件的钩子before-upload中获取到生成的参数信息
+    beforeUpload(file) {
+      return oss(file.name).then(res => {
+        console.log('ossupload', res);
+        
+        this.uploadHost = res.host
+        this.uploadData = res;
+      })
     },
-    methods: {
-        upData (e) {
-            let _this= this;
-            let file = e.target.files[0];
-            let query = {
-                publishType: 0,
-                fileType: 0
-            }
-            getPostPolicy(query).then(async res => {
-                let uploadObj = res;
-                // 获取到上传凭证成功之后 封装请求的数据
-                let request = new FormData();
-                request.append("OSSAccessKeyId", uploadObj.accessid); //Bucket 拥有者的Access Key Id。
-                request.append("policy", uploadObj.policy); //policy规定了请求的表单域的合法性
-                request.append("Signature", uploadObj.signature); //根据Access Key Secret和policy计算的签名信息，OSS验证该签名信息从而验证该Post请求的合法性
-                request.append("key", `${uploadObj.publishpath+file.name}`); //文件名字，可设置路径
-                request.append("success_action_status", '200'); // 让服务端返回200,不然，默认会返回204
-                request.append('file', file); //需要上传的文件 file 
-                let msg = await ossRequest.post(uploadObj.host, request);
-                if (msg) {
-                    console.log(msg)
-                }
-            }).catch(err => {
-                console.log('>>>>>>>>>>', err)
-            })
-        }
-    },
+    // 上传成功的回调函数
+    handleSuccess(res, file, fileList) {
+      console.log('handleSuccess',res)
+      /* 上传成功后，文件服务器会返回上传文件在oss上存储位置、文件名及相关信息
+      {
+        filename: "test/file-dir/JdzYDhdrtF.jpg"
+        height: "683"
+        mimeType: "image/jpeg"
+        size: "186142"
+        url: "http://xxxx.xxx.com/test/file-dir/JdzYDhdrtF.jpg"
+        width: "1024"
+      }
+     *
+    */
+
+    // 根据自己的业务场景，将返回的文件位置信息和其他表单信息一起提交给后端进行业务关联，在其他地方需要使用附件时可以根据url位置找到上传的文件 
+    //   this.fileName= res.data.filename,
+      this.filePath= this.uploadData.host + '/'+ this.uploadData.key
+    }
+  }
 }
 </script>

@@ -57,7 +57,7 @@
                         </ul>
                     </div>
                     <div class="order-list-left-items-right">
-                        <Button v-if="items.Status === 0" style="background: #ff3c00;color:#ffffff;" @click="orderLpbby">申请接单</Button>
+                        <Button v-if="items.Status === 0" style="background: #ff3c00;color:#ffffff;" @click="orderLpbby(items)">申请接单</Button>
                         <Button v-if="items.Status === 1"  style="background: #dddddd;color:#898989;" @click="getUserInfo(items.ID)">查看详情</Button>
                     </div>
                 </div>
@@ -91,7 +91,7 @@
 <script>
 import $moment from 'moment'
 import {analogJump } from '../../plugins/untils/public'
-import {getProvinceList, putOrder} from '../../service/clientAPI'
+import {getProvinceList, putOrder, takeOrders} from '../../service/clientAPI'
 import { mapState} from 'vuex'
 export default {
     layout: 'main',
@@ -204,12 +204,19 @@ export default {
                 this.cascader = msg.respProvince;
             }
         },
-        orderLpbby () {
+        async orderLpbby (row) {
             if (this.Identity.IsCertificate === 1) {
-                this.$Notice.success({
-                    title: '订单通知',
-                    desc: '您的需求以通知甲方，待甲方同意后您可获取甲方的联系方式！'
-                });
+                let query =  {
+                    Id: row.ID,
+                    Remark: "" 
+                }
+                let msg = await takeOrders(query);
+                if (msg) {
+                    this.$Notice.success({
+                        title: '订单通知',
+                        desc: '您的需求以通知甲方，待甲方同意后您可获取甲方的联系方式！'
+                    });
+                }
                 return false
             } else {
                 this.authentication = true;
@@ -234,6 +241,7 @@ export default {
                     break;
                 case "建筑面积":
                     this.typeList.Area = ""
+                    this.typeList.AreaId = ""
                     break;
                 case "设计预算":
                     this.typeList.BudgetName = ""
@@ -258,6 +266,7 @@ export default {
                     break;
                 case "建筑面积":
                     this.typeList.Area = row.FullName
+                    this.typeList.AreaId = row.ModuleId
                     break;
                 case "设计预算":
                     this.typeList.BudgetName = row.FullName
