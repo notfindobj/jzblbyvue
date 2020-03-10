@@ -32,7 +32,8 @@
                                     <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
                                         <div class="img-item" v-for="(item, index) in imgList" :key="index" >
                                             <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
-                                            <img :src="item.smallImgUrl" alt="">
+                                            <img v-if="item.action" :src="`${item.smallImgUrl}`" :alt="item.action">
+                                            <img v-else :src="`${item.smallImgUrl}?x-oss-process=image/resize,m_fill,h_70,w_70`" :alt="item.action">
                                             <div v-if="item.action" class="action-up">
                                                 <span>正在上传</span>
                                             </div>
@@ -56,6 +57,7 @@
                                     <uploadVideo
                                     :previewSrc='previewSrc'
                                     @clearVideo="clearVideo"
+                                    @beforeSuccess="beforeSuccess"
                                     @uploadSuccess="uploadSuccessVideo" />
                                     <p class="upload-tip">仅支持MP4视频格式，大小不超过100M，请勿上传反动色情等违法视频。</p>
                                     <Spin fix v-if="spinShow">
@@ -305,16 +307,23 @@ export default {
             this.imgList.splice(index, 1)
             // this.$delete(this.imgList, index);
         },
-        // 上传前的钩子函数
-        beforeUpload (fileList) {
+        beforeSuccess () {
+            this.imgList = [];
         },
         beforeSuccessMD (obj) {
-            this.imgList.push(obj);
+            if (this.imgList.length > 29) {
+                this.$Message.info({
+                    render: h => {
+                        return h('span', `图片上传最多不能超过30张`)
+                    }
+                });
+            } else {
+                this.imgList.push(obj);
+            }
         },
-        uploadSuccess (fileList) {
-            let file = fileList[0];
+        uploadSuccess (file) {
             this.imgList.forEach((ele, index) => {
-                if (ele.bmf === file.md5) {
+                if (ele.bmf === file.name) {
                     ele.action = false
                     ele.smallImgUrl = file.smallImgUrl
                 }
@@ -326,10 +335,9 @@ export default {
             this.previewSrc = ''
         },
         uploadSuccessVideo (videoInfo) {
-            let v = videoInfo[0]
             this.imgList = [];
-            this.imgList = [v];
-            this.previewSrc = v.smallImgUrl
+            this.imgList = [videoInfo];
+            this.previewSrc = videoInfo.smallImgUrl
         },
         // 文本域发生变化
         onchange (html) {
@@ -485,7 +493,7 @@ export default {
     .upload {
         float: left;
         margin-top: 10px;
-        border: 2px dashed #b6b6b6;
+        // border: 2px dashed #b6b6b6;
     }
     .upload-box {
         margin-top: 10px;
@@ -535,10 +543,20 @@ export default {
     .add-img {
         color: #00B358;
         font-weight: bold;
+        i {
+            position: relative;
+            top: 1px;
+            left: 2px;
+        }
     }
     .add-video {
         color: #ff3c00;
         font-weight: bold;
+        i {
+            position: relative;
+            top: 2px;
+            left: -2px;
+        }
     }
     .editor-tab {
         display: flex;
@@ -563,7 +581,6 @@ export default {
         }
     }
     .editor-footer {
-        border-top: 1px solid #d4d6d4;
         display: flex;
         justify-content: space-between;
         line-height: 40px;

@@ -1,28 +1,27 @@
 <template>
-    <Upload
-        ref="uploadFile"
-        @click.stop=""
-        :action="baseUrl + 'Upload/DataUpload?uploadType=7'"
-        :headers="{
-            Authorization: token
-        }"
-        accept="video/mp4"
-        :before-upload="beforeUpload"
-        :on-success="uploadSuccess"
-        :on-remove="removeFile"
-    >
-        <div class="upload1">
-          <img v-if="previewSrc !== ''" :src="previewSrc" alt="">
+  <ossUp 
+    accept="video/mp4"
+    :maxsize="maxSize"
+    :showUploadList="true"
+    @uploadSuccess="uploadSuccess"
+    @beforeUpload="beforeUpload">
+    </Upload>
+    <div class="upload1">
+          <img v-if="previewSrc !== ''" :src="`${previewSrc}?x-oss-process=video/snapshot,t_10000,m_fast`" alt="">
           <span v-else>
               <i class="icon iconfont">&#xe613;</i>
               添加视频
           </span>
         </div>
-    </Upload>
+  </ossUp>
 </template>
 <script>
   import { mapState, mapGetters } from 'vuex'
+  import ossUp from "../ossUp/ossUp"
   export default {
+    components: {
+      ossUp
+    },
     props: {
       previewSrc: {
         type: String,
@@ -31,22 +30,21 @@
     },
     data() {
       return {
+        maxSize: 1024 * 50,
         baseUrl: process.env.baseUrl,
         token: ''
       }
     },
     computed: {
-        ...mapState({
-            userInfo: state => state.overas.auth || {},
-        }),
+      ...mapState({
+          userInfo: state => state.overas.auth || {},
+      })
     },
     methods: {
       // 上传前
-      beforeUpload() {
-        if (this.$refs['uploadFile'].fileList.length > 0) {
-          this.$refs['uploadFile'].clearFiles();
-        }
-          this.$emit('clearVideo');
+      beforeUpload(file) {
+        this.$emit('beforeUpload', file);
+        console.log(file)
       },
       // 删除文件
       removeFile() {
@@ -54,7 +52,7 @@
       },
       // 上传成功
       uploadSuccess(res) {
-        this.$emit('uploadSuccess', res.Data)
+        this.$emit('uploadSuccess', res)
       }
     },
     created() {
