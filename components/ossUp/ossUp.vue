@@ -1,20 +1,18 @@
 <template>
-    <div>
-        <Upload
-            ref="uploadFile"
-            multiple
-            type="drag"
-            :show-upload-list="showUploadList"
-            :accept="accept"
-            :action="uploadHost"
-            :data="uploadData"
-            :before-upload="beforeUpload"
-            :on-success="handleSuccess" >
-            <slot>
-              <Button icon="ios-cloud-upload-outline">Upload files</Button>
-            </slot>
-        </Upload>
-    </div>
+    <Upload
+        ref="uploadFile"
+        multiple
+        type="drag"
+        :show-upload-list="showUploadList"
+        :accept="accept"
+        :action="uploadHost"
+        :data="uploadData"
+        :before-upload="beforeUpload"
+        :on-success="handleSuccess" >
+        <slot>
+          <Button icon="ios-cloud-upload-outline">Upload files</Button>
+        </slot>
+    </Upload>
 </template>
 <script>
 // 引入生成上传参数方法
@@ -34,6 +32,7 @@ export default{
     },
   data() {
     return{
+        imgBaseUrl: process.env.imgBaseUrl,
         // 附件上传路径
         uploadHost: '',
         // 附件上传携带参数
@@ -66,12 +65,12 @@ export default{
         }
       })
     },
-    // 上传成功的回调函数
+    // 上传成功的回调函数 imgBaseUrl
     handleSuccess(res, file, filelist) {
       let obj = {
         name: file.name,
         action: false,
-        smallImgUrl: this.uploadData.host + '/'+ this.uploadData.key
+        smallImgUrl: this.imgBaseUrl + '/'+ this.uploadData.key
       }
       this.$emit('uploadSuccess', obj);
     }

@@ -13,14 +13,13 @@
                     <li :class="!['sp'].includes(editorType)? 'editor-footer-tool-img' : 'editor-footer-tool-img prohibit'" >
                         <span class="add-img" @click="uploadPic()">
                             <i class=" icon iconfont">&#xe631;</i>
-                            <input
-                                style="display:none;"
-                                type="file"
-                                @change="fileSelected"
-                                name="avatar"
-                                ref="uploadPic"
-                                multiple="multiple"
-                                accept="image/gif,image/jpeg,image/jpg,image/png" >
+                            <ossUp
+                                style="display:none"
+                                accept="image/gif,image/jpeg,image/jpg,image/png"
+                                @beforeUpload="fileSelected"
+                                @uploadSuccess="fileSuccess">
+                                <div ref="uploadPic" ></div>
+                            </ossUp>
                             图片
                         </span>
                         <div class="editor-footer-tool-pic" :style="`width: ${boxWidth};height: ${boxHeight}`" v-if="['tw', 'wd'].includes(editorType)  && isPanel">
@@ -32,8 +31,8 @@
                                     <draggable v-model="imgList" group="people" @start="drag=true" @end="drag=false" :animation="500">
                                         <div class="img-item" v-for="(item, index) in imgList" :key="index" >
                                             <i class="icon iconfont icon-chahao2 chahao" @click.stop="delImg(index)"></i>
-                                            <img v-if="item.action" :src="`${item.smallImgUrl}`" :alt="item.action">
-                                            <img v-else :src="`${item.smallImgUrl}?x-oss-process=image/resize,m_fill,h_70,w_70`" :alt="item.action">
+                                            <img :src="`${item.smallImgUrl}`" :alt="item.action">
+                                            <!-- <img v-else :src="`${item.smallImgUrl}?x-oss-process=image/resize,m_fill,h_70,w_70`" :alt="item.action"> -->
                                             <div v-if="item.action" class="action-up">
                                                 <span>正在上传</span>
                                             </div>
@@ -93,6 +92,7 @@
                 </ul>
             </div>
         </div>
+
     </div>
 </template>
 <script>
@@ -102,6 +102,7 @@ import { _debounce, analogJump, getRanNum} from '../../plugins/untils/public'
 import uploadVideo from '../../components/publish/uploadVideo'
 import draggable from 'vuedraggable'
 import { sinaIcon, jzIcon} from '../../assets/Emoticon'
+import ossUp from "../ossUp/ossUp"
 import { mapGetters } from 'vuex'
 export default {
     name: 'editor',
@@ -118,7 +119,8 @@ export default {
     components: {
         draggable,
         Upload,
-        uploadVideo
+        uploadVideo,
+        ossUp
     },
     computed: {
         ...mapGetters(['isLogin']),
@@ -242,41 +244,32 @@ export default {
         selectIsPublic (name) {
             this.publishMode = name;
         },
-        replaceImgs (val) {
-            let regex = "/i/s/";
-            return val.replace(regex, "/i/");
-        },
         //  富文本上传图片
-        async fileSelected (e) {
-            let _this= this;
-            let asyPos = ''
-            let file = e.target.files;
-            for (let i = 0; i < file.length; i++) {
-                let url = window.URL.createObjectURL(file[i]);
-                let RanNum = getRanNum()
-                _this.editor.txt.append(`<p>
-                    <div class="bl-loading ${RanNum}">
-                        <img data-action="loading" src="${url}" style="max-width:100%;"></img>
-                        <div class="bl-mongolia" contenteditable="false">
-                            <span>正在上传</span>
-                        </div>
+        async fileSelected (file) {
+            this.editor.txt.append(`<p>
+                <div class="bl-loading loading${this.setImgClass(file.bmf)}">
+                    <img data-action="loading" src="${file.smallImgUrl}" style="max-width:100%;"></img>
+                    <div class="bl-mongolia" contenteditable="false">
+                        <span>正在上传</span>
                     </div>
-                <p><br></p></p>`);
-                let data = new FormData();
-                data.append('files', file[i]);
-                uploadFile(data, 1).then(res => {
-                    for (let q = 0; q < res.length; q++) {
-                        $(`.${RanNum}`).replaceWith(`<p><img src="${res[q].smallImgUrl}" style="max-width:100%;"></img></p>`)
-                        _this.imgList.push(res[q]);
-                    }
-                    _this.imgsrc = _this.getSrc(_this.editor.txt.html())
-                }).catch(err => {
-                    console.log(err, 'uploadErr')
-                })
-            }
+                </div>
+            <p><br></p></p>`);
+            this.imgList.push(file);
+        },
+        // 富文本上传图片成功
+        fileSuccess (file) {
+            let name = file.name
+            this.imgList.forEach((ele, index) => {
+                if (ele.bmf === file.name) {
+                    ele.action = false
+                    ele.smallImgUrl = file.smallImgUrl;
+                }
+            })
+            $(`.loading${this.setImgClass(name)}`).replaceWith(`<p><img src="${file.smallImgUrl}" style="max-width:100%;"></img></p>`);
+            this.imgsrc = this.getSrc(this.editor.txt.html())
         },
         // 图片
-        uploadPic () {
+        uploadPic () { 
             if (!this.isLogin) {
                 this.$emit('notLogged');
                 return false
@@ -398,11 +391,17 @@ export default {
                 isAgree: this.isAgree
             }
             this.$emit('editorPush',content )
+        },
+        setImgClass (val) {
+            return val.split('.')[0]
         }
     }
 }
 </script>
 <style lang="less" scoped>
+    .max_w {
+        width: 100%;
+    }
     .action-up {
         position: absolute;
         top: 0;

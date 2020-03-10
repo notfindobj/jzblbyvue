@@ -53,6 +53,7 @@ module.exports = {
     baseUrl: configUrl.baseUrl,
     fileBaseUrl: configUrl.fileBaseUrl,
     localUrl: configUrl.localUrl,
+    imgBaseUrl: configUrl.imgBaseUrl,
     h5BaseUrl: configUrl.h5BaseUrl
   },
   proxyTable: [

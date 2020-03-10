@@ -1,5 +1,6 @@
 <template>
     <div>
+      <img src="https://www.pic1.jzbl.com/buildingcircle/94749b37-12ac-4651-9a85-86b03a475c3d/2020-03-10/f/Jn7FWdJ2Ta.jpg" alt="">
         <Upload
             multiple
             type="drag"
