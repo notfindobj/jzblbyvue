@@ -16,11 +16,11 @@
             <span>{{item.typeName}}</span>
           </li>
           <li :class="currentIndex == 2 ? 'li-active' : ''" @click="chosePayType(2)" v-if="payInfos.IsAllowIntegral">
-            <img src="../../assets/images/payZFB.png" alt="">
+            <img src="../../assets/images/buluobi.png" alt="">
             <span>部落币支付</span>
           </li>
           <li :class="currentIndex == 3 ? 'li-active' : ''" @click="chosePayType(3)"  v-if="payInfos.IsAllowTribalCoins" >
-            <img src="../../assets/images/payZFB.png" alt="">
+            <img src="../../assets/images/jifen.png" alt="">
             <span>积分支付</span>
           </li>
         </ul>
@@ -76,7 +76,6 @@
         this.$emit('dataDetailsMaskClose',{type:'Down'})
       },
       async payment (value) {
-        console.log(this.payInfos)
         let qq =
           {
           "Money": value.Price,
@@ -92,7 +91,7 @@
           msg = await setAiliPay(qq);
         } else if (this.currentIndex === 2) {
           // 部落币下载
-          qq.Type = 2
+          qq.Type = 1
           qq.Money = qq.Money * 10
           msg = await otherDownload(qq);
         } else if (this.currentIndex === 3) {

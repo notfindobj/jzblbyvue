@@ -1,5 +1,5 @@
 <template>
-    <div @click.stop="">
+    <div @click.stop="" id="ly-emotion">
         <div class="emotion-box" :style="{height: height + 'px' }">
             <emotion class="emotion-item" v-for="(item, i) in list" :key="i" @click.native.stop="clickHandler(item)" >{{item.title}}</emotion>
         </div>
@@ -22,12 +22,20 @@
       }
     },
     async mounted () {
+      let _this = this;
       this.list = await getEmotionList();
+       $(document).mouseup(function (e) {
+        var _con = $("#ly-emotion")
+        if(!_con.is(e.target) && _con.has(e.target).length === 0){ // Mark 1
+          _this.$emit("closeEmotion", false)
+        }
+      })
     },
     methods: {
       clickHandler(item) {
         this.$emit('emotion', item)
-      }
+      },
+      
     },
     components: {
       Emotion

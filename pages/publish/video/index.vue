@@ -57,7 +57,7 @@
 <script>
   import Upload from '../../../components/publish/uploadVideo'
   import Emotion from '../../../components/Emotion/index'
-  import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
+  import {publishData, GetOperatPrivacy} from '../../../service/clientAPI'
   import { _debounce } from '../../../plugins/untils/public'
 
   export default {
@@ -120,7 +120,7 @@
           this.$Message.warning('您还没有上传视频');
           return false;
         }
-        releaseStatement({
+        publishData({
           talkType: 2,
           talkTitle: this.content,
           talkContent: '',

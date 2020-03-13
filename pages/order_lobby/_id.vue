@@ -33,8 +33,14 @@
                     </li>
                     <li>
                         <label>业主姓名：</label>
-                        <span>{{orderType.CreateUserId}}</span>
+                        <span>{{orderType.OrderUserName}}</span>
                     </li>
+                    <template  v-if="orderType.Status === 1">
+                        <li>
+                            <label>业主电话：</label>
+                            <span>{{orderType.UserPhone}}</span>
+                        </li>
+                    </template>
                 </ul>
             </div>
             <div class="order-left-remarks">
@@ -54,7 +60,6 @@ export default {
             Id: params.id
         }
         const orderType = await store.dispatch('getOrderDel', query);
-        console.log(query)
         return {
             orderType
         }

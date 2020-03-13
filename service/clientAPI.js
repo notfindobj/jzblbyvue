@@ -59,7 +59,10 @@ export const setComments = async (params) => {
 export const releaseStatement = async (params) => {
   return await request.post('Publish/ReleaseTalk', params)
 }
-
+// 发布说说 说说指的是（图文，视频，问答）
+export const publishData = async (params) => {
+  return await request.post('Publish/ReleaseTalkForOssData', params)
+}
 // 数据上传
 export const uploadFile = async (params, uploadType, md5= '') => {
   return await request.postFile(`Upload/DataUpload?uploadType=${ uploadType }&md5=${md5}`, params)
@@ -392,4 +395,24 @@ export const putOrder = async params => {
 //用户申请订单 
 export const takeOrders = async params => {
   return await request.post(`OrderReceiving/TakeOrders`, params)
+}
+//甲方确认订单 
+export const OrderReceiving = async params => {
+  return await request.post(`OrderReceiving/ConfirmOrders`, params)
+}
+//获取待确认/确认订单列表 
+export const getOrderList = async params => {
+  return await request.post(`OrderReceiving/GetConfirmReceiveOrders`, params)
+}
+// 获取接单信息列表
+export const getReceiveOrders = async params => {
+  return await request.post(`OrderReceiving/GetUserReceiveOrders`, params)
+}
+// 获取已签单列表
+export const getinishedOrders = async params => {
+  return await request.post(`OrderReceiving/GetFinishedOrders`, params)
+}
+// 获取已签单列表
+export const getUserOrder = async params => {
+  return await request.post(`OrderReceiving/GetUserOrderReceiving`, params)
 }

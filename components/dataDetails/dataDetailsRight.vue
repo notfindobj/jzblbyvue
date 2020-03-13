@@ -6,20 +6,19 @@
                 <p class="works-name">{{detaDetails.NickName}}</p>
                 <div v-if="!(userInfoID && userInfoID.UserId === detaDetails.UserId)" :class="!detaDetails.IsFollow ? 'focus-btn': 'focus-btn-gray'" @click="setFollow(detaDetails)">{{!detaDetails.IsFollow? '+ 关注' : '已关注'}}</div>
             </div>
-            <div v-if="detaDetails.IsCustomized||detaDetails.IsDownload" class="btn-group">
-                <div v-if="detaDetails.IsDownload" ref="immediatelyDown" @click="immediatelyDown(detaDetails)">
-                  <p>立即下载</p>
-                  <p>
-                    <span class="btn-group-Price">RMB：{{detaDetails.Price}}</span>
-                    <span class="btn-group-Price">部落币：{{detaDetails.Price*5}}</span>
-                    <span class="btn-group-Price">积分：{{detaDetails.Price * 20}}</span>
-                  </p>
-                </div>
-                <div v-if="detaDetails.IsCustomized" @click="customthis()"> 
-                  <p>同款定制</p> 
-                  <p><span class="btn-group-Price">￥{{detaDetails.FirCusPri}}</span></p>
-                </div>
+            <div v-if="detaDetails.IsDownload" class="btn-group" ref="immediatelyDown" @click="immediatelyDown(detaDetails)">
+              <p>立即下载</p>
+              <ul>
+                <li>RMB：{{detaDetails.Price}}</li>
+                <li>部落币：{{detaDetails.Price*5}}</li>
+                <li>积分：{{detaDetails.Price * 20}}</li>
+              </ul>
             </div>
+             <div v-if="detaDetails.IsCustomized" class="btn-Customized" @click="customthis()"> 
+                  <div>
+                    同款定制 <span>￥1{{detaDetails.FirCusPri}}00</span>
+                  </div>
+                </div>
             <div class="data-info comments-status-box">
                 <div class="comments-box-status">
                     <div class="comments-box-status-left">
@@ -45,7 +44,6 @@
                    :class="isShowIcon ? 'icon iconfont icon-jiantou-shang-shixin-yuanxing' : 'icon iconfont icon-xiangxiayuanjiantouxiajiantouxiangxiamianxing'"
                    @click="unAnddown()"></i>
             </div>
-           
         </div>
     </div>
 </template>
@@ -239,14 +237,12 @@
                 padding: 0 10px;
                 margin-bottom: 10px;
                 position: relative;
-
                 .data-name {
                     font-size: 14px;
                     color: #333333;
                     line-height: 40px;
                     border-bottom: 1px solid #D9D9D9;
                 }
-
                 .data-introduce {
                     padding: 10px 0;
                     height: 137px;
@@ -290,7 +286,6 @@
                     bottom: 11px;
                     cursor: pointer;
                 }
-
                 .data-introduce-active {
                     height: auto;
                 }
@@ -298,48 +293,41 @@
 
             .btn-group {
                 width: 100%;
-                height: 71px;
+                padding: 10px 0;
                 background: #ffffff;
                 border-radius: 4px;
                 margin-bottom: 10px;
-                display: flex;
-                flex-direction: row;
-                align-items: center;
-                justify-content: center;
                 overflow: hidden;
-                > div {
+                cursor: pointer;
+                p {
+                  text-align: center;
+                  font-size: 20px;
+                  font-weight: bold;
+                }
+                ul {
+                    display: flex;
                     flex: 1;
-                    font-size: 22px;
+                    justify-content: space-around;
+                    margin-top: 5px;
+                  li {
+                    display: inline-block;
                     text-align: center;
-                    cursor: pointer;
-                    &:hover {
-                        color: #FF3C00;
-                        position: relative; 
-                        p:after {
-                            width: 30px;
-                            height: 2px;
-                            content: '';
-                            background: #FF3C00;
-                            border-radius: 1px;
-                            position: absolute;
-                            left: 50%;
-                            transform: translateX(-50%);
-                            top: 30px;
-                        }
+                    width: 100%;
+                    line-height: 25px;
+                    position: relative;
+                    &:not(:last-child) {
+                      &::after {
+                        position: absolute;
+                        content: '';
+                        background: #dcd8d685;
+                        width: 1px;
+                        height: 25px;
+                        display: inline-block;
+                        top: 0px;
+                        right: 0px;
+                      }
                     }
-                    &:nth-child(1) {
-                        position: relative;
-                        &:before {
-                            width: 2px;
-                            height: 60px;
-                            content: '';
-                            background: #D8D8D8;
-                            border-radius: 1px;
-                            position: absolute;
-                            right: -3px;
-                            top: 5px;
-                        }
-                    }
+                  }
                 }
             }
             .box {
@@ -347,6 +335,23 @@
                 border-radius: 4px;
             }
         }
-
+    }
+    .btn-Customized {
+      padding: 10px 0;
+      background: #ffffff;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      text-align: center;
+      background: #fff;
+      font-size: 20px;
+      font-weight: bold;
+      color: #515a6e;
+      cursor: pointer;
+      padding-left: 55px;
+      span {
+        font-size: 14px;
+        color: #ff3c00;
+        font-weight: 100;
+      }
     }
 </style>

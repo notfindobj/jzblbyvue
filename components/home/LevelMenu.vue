@@ -15,8 +15,7 @@
                             <div class="sub-banner-nav-items">
                                 <template v-for="item in items.ChildNode">
                                     <div class="sub-banner-nav-items-title" :key="item.ItemAttributesId">
-                                        <span
-                                            class="sub-banner-nav-items-title-type">{{item.ItemAttributesFullName}}:</span>
+                                        <span class="sub-banner-nav-items-title-type">{{item.ItemAttributesFullName}}:</span>
                                         <div style="display:inline-block;width:85%">
                                             <div v-for="it in item.ChildNode" :key="it.ItemAttributesId"
                                                  class="sub-banner-nav-items-title-content">
@@ -176,16 +175,13 @@
         min-height: 400px;
         padding: 7px 0;
         background: #ffffff;
-
         &-items {
             color: #666666;
             padding: 0 65px 0 27px;
-
             &-title {
                 text-align: left;
                 font-size: 14px;
                 display: flex;
-
                 &-content {
                     display: inline-block;
 
@@ -202,15 +198,13 @@
                         }
                     }
                 }
-
                 &-type {
                     width: 86px;
                     display: inline-block;
-                    text-align: center;
+                    text-align: left;
                     font-weight: bold;
                 }
             }
-
         }
 
     }

@@ -17,7 +17,7 @@ import Tabls from './component/tabls'
 import dataBank from './component/dataBank'
 import blEditor from '../blEditor'
 import { mapGetters} from 'vuex'
-import {publishProject, uploadFile, releaseStatement} from '../../service/clientAPI'
+import {publishProject, uploadFile, publishData} from '../../service/clientAPI'
 export default {
     components: {
         Tabls,
@@ -205,7 +205,7 @@ export default {
                     talkContent: row.editorContent,
                     listImg: row.imgList
                 }
-                let msg = await releaseStatement(obg);
+                let msg = await publishData(obg);
                 if (msg) {
                     if (this.$route.name === 'BuildingCircle-id') {
                         this.$Message.success('发布成功！');
@@ -230,7 +230,7 @@ export default {
                     displayPrivacyId: row.publishMode.split('|')[1],
                     listImg: row.imgList
                 }
-                let msg = await releaseStatement(obg);
+                let msg = await publishData(obg);
                 if (msg) {
                     if (this.$route.name === 'videos' || this.$route.name === 'BuildingCircle-id') {
                         this.$Message.success('发布成功！');
@@ -265,7 +265,7 @@ export default {
                     displayPrivacyId: row.publishMode.split('|')[1],
                     listImg: row.imgList
                 }
-                let msg = await releaseStatement(obg);
+                let msg = await publishData(obg);
                 if (msg) {
                     if (this.$route.name === 'QuestionsAndAnswers' || this.$route.name === 'BuildingCircle-id') {
                        this.$Message.success('发布成功！');
@@ -298,7 +298,7 @@ export default {
                     displayPrivacyId: row.publishMode.split('|')[1],
                     listImg: row.imgList
                 }
-                let msg = await releaseStatement(obg);
+                let msg = await publishData(obg);
                 if (msg) {
                     if (this.$route.name === 'BuildingCircle-id') {
                         this.$Message.success('发布成功！');

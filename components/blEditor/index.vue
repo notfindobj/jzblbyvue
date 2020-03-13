@@ -258,14 +258,16 @@ export default {
         },
         // 富文本上传图片成功
         fileSuccess (file) {
-            let name = file.name
+            let name = file.name;
+            let imgsrcs= ""
             this.imgList.forEach((ele, index) => {
                 if (ele.bmf === file.name) {
                     ele.action = false
-                    ele.smallImgUrl = file.smallImgUrl;
+                    ele.smallImgUrl = ele.key;
+                    imgsrcs = ele.key
                 }
             })
-            $(`.loading${this.setImgClass(name)}`).replaceWith(`<p><img src="${file.smallImgUrl}" style="max-width:100%;"></img></p>`);
+            $(`.loading${this.setImgClass(name)}`).replaceWith(`<p><img src="${imgsrcs}" style="max-width:100%;"></img></p>`);
             this.imgsrc = this.getSrc(this.editor.txt.html())
         },
         // 图片
@@ -318,7 +320,7 @@ export default {
             this.imgList.forEach((ele, index) => {
                 if (ele.bmf === file.name) {
                     ele.action = false
-                    ele.smallImgUrl = file.smallImgUrl
+                    ele.smallImgUrl = ele.key
                 }
             })
         },

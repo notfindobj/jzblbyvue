@@ -1,22 +1,22 @@
 <template>
     <div>
-        <Title title="订单明细" :bottomLine="false"/>
+        <Title title="我的订单" :bottomLine="false"/>
         <div class="tribalBill-search">
-            <DatePicker type="daterange" placement="bottom-end" placeholder="Select date" style="width: 200px"></DatePicker>
+            <DatePicker type="daterange" placement="bottom-end" placeholder="时间搜索" style="width: 200px"></DatePicker>
             <Select v-model="model1" clearable style="width:200px">
                 <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
             </Select>
             <Button>提现</Button>
         </div>
         <div>
-            <publicTable :columns="columns1" :columnsData="data1"/>
+            <publicTable :columns="columns" :columnsData="orderList"/>
         </div>
     </div>
 </template>
 <script>
 import Title from './components/title'
 import publicTable from './components/publicTable'
-import {getBillList} from '../../service/clientAPI'
+import {getOrderList} from '../../service/clientAPI'
 export default {
     components: {
         Title,
@@ -26,88 +26,68 @@ export default {
         return {
             cityList: [
                 {
-                    value: 'New York',
-                    label: 'New York'
+                    value: '0',
+                    label: '待确认'
                 },
-                {
-                    value: 'London',
-                    label: 'London'
+                 {
+                    value: '1',
+                    label: '已接受'
+                },
+                 {
+                    value: '2',
+                    label: '已回绝'
                 }
             ],
             model1: '',
-            columns1: [
+            columns: [
                 {
                     cut: 'text',
-                    title: '订单ID',
-                    key: 'name'
+                    title: '项目名称',
+                    key: 'OrderDesc'
                 },
                 {
                     cut: 'state',
-                    title: '收入/支出',
-                    key: 'state',
-                    state: [{label: '收入', value: '1'}, {label: '支出', value: '2'}]
-                },
-                {
-                    title: '金额',
-                    key: 'address',
-                    state: '1'
-                },
-                {
-                    cut: 'time',
-                    title: '时间',
-                    key: 'date'
-                },
-                {
                     title: '状态',
-                    key: 'address'
+                    key: 'Status',
+                    state: [{label: '待确认 ', value: 0}, {label: '已接受 ', value: 1}, {label: '已回绝', value: 2}]
                 },
                 {
-                    cut: 'btn',
-                    title: '操作',
-                    key: 'address',
-                    state: [{text: '删除', events: 'addVal'}]
-                }
-            ],
-            data1: [
-                {
-                    name: 'John Brown',
-                    age: 18,
-                    address: '0.00',
-                    date: '2016-10-03',
-                    state: '1'
+                    cut: 'text',
+                    title: '甲方姓名',
+                    key: 'OrderUserName',
                 },
                 {
-                    name: 'Jim Green',
-                    age: 24,
-                    address: 'London No. 1 Lake Park',
-                    date: '2016-10-01',
-                    state: '1'
+                    cut: 'text',
+                    title: '甲方电话',
+                    key: 'OrderPhone',
                 },
                 {
-                    name: 'Joe Black',
-                    age: 30,
-                    address: 'Sydney No. 1 Lake Park',
-                    date: '2016-10-02',
-                    state: '2'
+                    cut: 'text',
+                    title: '乙方姓名',
+                    key: 'UserName',
                 },
-                {
-                    name: 'Jon Snow',
-                    age: 26,
-                    address: 'Ottawa No. 2 Lake Park',
-                    date: '2016-10-04',
-                    state: '2'
+                  {
+                    cut: 'text',
+                    title: '乙方电话',
+                    key: 'UsePhone',
                 }
             ],
             orderList: []
         }
     },
     created () {
-        // this.getBillData()
+        this.getBillData()
     },
     methods: {
         async getBillData () {
-            let msg = await getBillList();
-            console.log(msg)
+            let query = {
+                Page: 1,
+                Rows: 20
+            }
+            let msg = await getOrderList(query);
+            if (msg) {
+                this.orderList = msg.datalist;
+            }
         }
     },
 }

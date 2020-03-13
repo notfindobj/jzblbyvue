@@ -23,7 +23,7 @@
 import Title from './components/title'
 import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
-import {getWebMessage, handleInviteUser} from '../../service/clientAPI'
+import {getMessage, handleInviteUser} from '../../service/clientAPI'
 export default {
     scrollToTop: true,
     components: {
@@ -50,7 +50,7 @@ export default {
             let query = {
                 msgType: '3'
             }
-            let msg = await getWebMessage(query);
+            let msg = await getMessage(query);
             if (msg) {
                 this.invitationList = msg.invite.Msg;
             }

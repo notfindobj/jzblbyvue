@@ -340,14 +340,39 @@
             },
             // 支付接口调用成功的回调
             async payment(config, type, id) {
-                if (type === 0) {
-                    this.modalConfig.isWxConfig = true;
-                    this.paymentConfig = config;
-                    this.downloadTime = setInterval(async () => {
+                switch(type) {
+                    case 0:
+                        this.modalConfig.isWxConfig = true;
+                        this.paymentConfig = config;
+                        this.downloadTime = setInterval(async () => {
+                            let msg = await downloadFile(id);
+                            if (typeof(msg)=='string') {
+                                clearInterval(this.downloadTime);
+                                this.modalConfig.isWxConfig = false;
+                                try {
+                                    let name = msg.split('&')[1]
+                                    var eleLink = document.createElement('a');
+                                    eleLink.download = '';
+                                    eleLink.style.display = 'none';
+                                    eleLink.href = msg.split('&')[0];
+                                    // 触发点击
+                                    document.body.appendChild(eleLink);
+                                    eleLink.click();
+                                    // 然后移除
+                                    document.body.removeChild(eleLink);
+                                } catch (error) {
+                                    console.log('下载出错')
+                                }
+                            }
+                        }, 3000)
+                        break;
+                    case 1:
+                        window.location.href = config.data
+                        break;
+                    case 2:
+                        this.detaDetails.IsPay = true;
                         let msg = await downloadFile(id);
                         if (typeof(msg)=='string') {
-                            clearInterval(this.downloadTime);
-                            this.modalConfig.isWxConfig = false;
                             try {
                                 let name = msg.split('&')[1]
                                 var eleLink = document.createElement('a');
@@ -363,10 +388,28 @@
                                 console.log('下载出错')
                             }
                         }
-                    }, 3000)
-                } else if (type === 1) {
-                    window.location.href = config.data
-                }
+                        break;
+                    case 3:
+                        this.detaDetails.IsPay = true;
+                         msg = await downloadFile(id);
+                        if (typeof(msg)=='string') {
+                            try {
+                                let name = msg.split('&')[1]
+                                var eleLink = document.createElement('a');
+                                eleLink.download = '';
+                                eleLink.style.display = 'none';
+                                eleLink.href = msg.split('&')[0];
+                                // 触发点击
+                                document.body.appendChild(eleLink);
+                                eleLink.click();
+                                // 然后移除
+                                document.body.removeChild(eleLink);
+                            } catch (error) {
+                                console.log('下载出错')
+                            }
+                        }
+                        break;
+                } 
                 this.isShowDateDetailsDown = false;
                 this.isShowDataDetailsCustom = false;
             },

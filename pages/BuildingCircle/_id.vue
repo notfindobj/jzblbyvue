@@ -40,7 +40,7 @@ import crollBox from '../../components/crollBox'
 import nominate from '../../components/nominate'
 import ToTop from '../../components/toTop'
 import { _throttle } from '../../plugins/untils/public'
-import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, releaseStatement, getRecommend} from '../../service/clientAPI'
+import { setComments, setthumbsUp, setCollection, setFollow, ItemOperat, publishData, getRecommend} from '../../service/clientAPI'
 import proRele from "../../components/proRele"
 import {mapGetters, mapState} from 'vuex'
 export default {

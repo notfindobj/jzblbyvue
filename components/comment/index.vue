@@ -32,6 +32,7 @@
         </div>
         <Emotion
             v-if="isEmotion"
+            @closeEmotion="closeEmotion"
             @emotion="handleEmotion"
             :height="120"
         />
@@ -70,6 +71,9 @@ export default {
       Emotion
     },
     methods:{
+        closeEmotion (val) {
+            this.isEmotion = val
+        },
         hideEmtion () {
             this.isEmotion = !this.isEmotion
         },

@@ -12,7 +12,8 @@
             </div>
             <i class="code-jian"></i>
         </div>
-        <div class="content pushObj"  @click="goPublish">发布</div>
+        <div v-if="isDemand" class="content pushObj"  @click="goPublish">发布</div>
+        <div v-else class="demand"  @click="publishDemand">发布需求</div>
     </div>
 </template>
 <script>
@@ -21,6 +22,10 @@ import { mapGetters} from 'vuex'
 export default {
     props: {
         isShowToTop: {
+            type: Boolean,
+            default: true
+        },
+        isDemand: {
             type: Boolean,
             default: true
         }
@@ -54,6 +59,14 @@ export default {
                 }
             })();
         },
+        publishDemand () {
+            if (!this.isLogin) {
+                this.$store.dispatch('SETUP', true);
+                this.$store.dispatch('LOGGEDIN', 'signIn');
+                return false
+            }
+            this.$router.push('/release_demand')
+        },
         goPublish() {
             if (!this.isLogin) {
                 this.$store.dispatch('SETUP', true);
@@ -80,6 +93,20 @@ export default {
         line-height: 50px;
         cursor: pointer;
         transition: all .1s ease-in;
+    }
+    .demand {
+        position: fixed;
+        left: 50%;
+        margin-left: 600px;
+        width: 35px;
+        padding-left: 5px;
+        height: 80px;
+        writing-mode: vertical-lr;
+        text-align: center;
+        top: 156px;
+        background-color: #ff3c00;
+        cursor: pointer;
+        color: #fff;
     }
     .content {
         bottom: 200px;

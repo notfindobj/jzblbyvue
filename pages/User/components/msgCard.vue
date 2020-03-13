@@ -1,7 +1,9 @@
 <template>
     <div class="card">
         <div class="card-left">
-           <img :src="content.HeadIcon" alt="">
+            <slot name="name">
+                <img :src="content.HeadIcon" alt="">
+            </slot>
         </div>
         <div class="card-right">
             <div class="card-right-title">

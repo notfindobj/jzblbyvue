@@ -15,15 +15,20 @@
                 <nuxt-link to="/User/comment">评论消息{{getComment.MsgCount || ""}}</nuxt-link>
                 <nuxt-link to="/User/customized">定制消息{{getCusData.MsgCount || ""}}</nuxt-link>
                 <nuxt-link to="/User/Invitation">邀请消息{{getInviter.MsgCount || ""}}</nuxt-link>
+                
+                <!-- <nuxt-link to="/User/order">订单消息{{getInviter.MsgCount || ""}}</nuxt-link> -->
             </li>
             <!-- <li>
                 <p>合作设计师</p>
                 <nuxt-link to="">实名认证</nuxt-link>
             </li> -->
-            <!-- <li>
+            <li>
                 <p>订单管理 </p>
-                <nuxt-link to="/User/downloadOrder">需求订单</nuxt-link>
-            </li> -->
+                <nuxt-link to="/User/Bookingorder">我收到的预约</nuxt-link>
+                <nuxt-link to="/User/applicationOrder">我的接单申请</nuxt-link>
+                <nuxt-link to="/User/releaseDemand">我发布的订单</nuxt-link>
+                <nuxt-link to="/User/completedOrder">我的签单项目</nuxt-link>
+            </li>
             <li>
                 <p>资产管理 </p>
                 <nuxt-link to="/User/rmbBill">人民币收支详情</nuxt-link>
@@ -83,17 +88,17 @@ export default {
 </script>
 <style lang="less" scoped>
     .user {
-        width :1024px;
+        width :1100px;
         margin: 0 auto;
         display: flex;
-        justify-content: space-between;
+        justify-content: space-around;
         &-side {
-            width: 120px;
+            width: 180px;
             text-align: left;
             padding: 0;
             background: #ffffff;
             box-shadow: 0px 0px 5px #e2e2e2;
-            height: 730px;
+            height: 830px;
             position: sticky;
             top: 60px;
             li {
@@ -117,12 +122,12 @@ export default {
                     }
                 }
                 p {
-                    padding-left: 30px;
+                    padding-left: 27px;
                     font-size: 14px;
                     font-weight: 600;
                 }
                 a {
-                    padding-left: 30px;
+                    padding-left: 40px;
                     line-height: 25px;
                     display: block;
                     position: relative;

@@ -93,7 +93,7 @@
   import Upload from '../../../components/publish/upload'
   import draggable from 'vuedraggable'
   import { _debounce, analogJump } from '../../../plugins/untils/public'
-  import { getQALabel, addLabel, releaseStatement } from '../../../service/clientAPI'
+  import { getQALabel, addLabel, publishData } from '../../../service/clientAPI'
 
   export default {
     data() {
@@ -199,7 +199,7 @@
             };
             webLabel.push(obj);
           }
-          releaseStatement({
+          publishData({
             talkType: 3,
             talkTitle: this.formValidate.title,
             talkContent: this.formValidate.content,

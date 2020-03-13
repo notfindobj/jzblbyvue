@@ -17,7 +17,7 @@
                 <Button @click="getBillData">搜索</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="rmbGoods.billlist" :total="total"/>
+               <publicTable :columns="columns" :columnsData="rmbGoods.billlist" :total="total" @pageChange="getBillData"/>
            </div>
         </div>
     </div>
@@ -104,10 +104,11 @@ export default {
         onChange (val) {
             this.searchTime = val
         },
-        async getBillData () {
+        async getBillData (val = 1) {
             let query = {
                 startDate: this.searchTime[0],
                 EndDate: this.searchTime[1],
+                page: val
             }
             let msg = await getBillList(query);
             if (msg) {

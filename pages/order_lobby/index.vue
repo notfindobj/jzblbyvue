@@ -58,7 +58,7 @@
                     </div>
                     <div class="order-list-left-items-right">
                         <Button v-if="items.Status === 0" style="background: #ff3c00;color:#ffffff;" @click="orderLpbby(items)">申请接单</Button>
-                        <Button v-if="items.Status === 1"  style="background: #dddddd;color:#898989;" @click="getUserInfo(items.ID)">查看详情</Button>
+                        <Button v-if="items.Status === 1 || items.Status === 2"  style="background: #dddddd;color:#898989;" @click="getUserInfo(items.ID)">查看详情</Button>
                     </div>
                 </div>
                 <Page :total="paginationData.records" @on-change="pageChange"/>
@@ -86,15 +86,20 @@
                 </Select>
             </div>
         </Modal>
+        <ToTop :isDemand="false"></ToTop>
     </div>
 </template>
 <script>
 import $moment from 'moment'
+import ToTop from '../../components/toTop'
 import {analogJump } from '../../plugins/untils/public'
 import {getProvinceList, putOrder, takeOrders} from '../../service/clientAPI'
 import { mapState} from 'vuex'
 export default {
     layout: 'main',
+    components: {
+        ToTop
+    },
     data () {
         return {
             isviewMore: false,
@@ -315,7 +320,7 @@ export default {
             this.oneFullName= ""
             this.isviewMore = !this.isviewMore
         },
-        async getUserInfo(id) {
+        getUserInfo(id) {
             this.$router.push({name: 'order_lobby-id', params: {id: id}})
         },
         setTime (time) {
@@ -328,7 +333,6 @@ export default {
                 area[index] = parseInt(ele);
             });
             let parm = `${area[0]},${area[1] ? area[1] : 0}`;
-            console.log(parm)
             return parm
         }
     }

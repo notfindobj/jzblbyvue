@@ -18,7 +18,7 @@
 import Title from './components/title'
 import msgTab from './components/msgTab'
 import comCard from './components/comCard'
-import {setMessage, getWebMessage} from '../../service/clientAPI'
+import {setMessage, getMessage} from '../../service/clientAPI'
 import {analogJump} from '../../plugins/untils/public'
 export default {
     scrollToTop: true,
@@ -46,7 +46,7 @@ export default {
             let query = {
                 msgType: '0'
             }
-            let msg = await getWebMessage(query);
+            let msg = await getMessage(query);
             if (msg) {
                 this.msgPList = msg.pinglun.Msg;
             }

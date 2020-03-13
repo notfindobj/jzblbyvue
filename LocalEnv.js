@@ -55,7 +55,7 @@ exports.configUrl = {
 
         query参数说明: 
         sid: 说说或者项目id
-        type: 1 说说 、2 项目
+        type: 1 说说 、2 项目 
     */
     h5BaseUrl: (()=> {
         return 'http://www.m.jzbl.com/#'

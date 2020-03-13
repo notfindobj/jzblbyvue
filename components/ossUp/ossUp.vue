@@ -38,7 +38,7 @@ export default{
         // 附件上传携带参数
         uploadData: {},
         // 上传后返回的存储的文件名
-        fileName: '',
+        fileName: {},
         // 上传后返回的文件存储地址
         filePath: ''
       }
@@ -51,6 +51,7 @@ export default{
       return oss(file.name).then(res => {
         this.uploadHost = res.host
         this.uploadData = res;
+        this.fileName = res;
         if (this.accept === "video/mp4") {
           _this.$refs['uploadFile'].clearFiles();
           _this.$emit('beforeUpload',file,  res)
@@ -58,11 +59,13 @@ export default{
         } else {
           let obj = {
             action: true,
+            key: _this.imgBaseUrl + res.key,
             smallImgUrl: window.URL.createObjectURL(file),
-            bmf: file.name
+            bmf: file.name,
           }
           _this.$emit('beforeUpload', obj)
         }
+        return res
       })
     },
     // 上传成功的回调函数 imgBaseUrl
@@ -70,6 +73,7 @@ export default{
       let obj = {
         name: file.name,
         action: false,
+        key: file.key,
         smallImgUrl: this.imgBaseUrl + '/'+ this.uploadData.key
       }
       this.$emit('uploadSuccess', obj);

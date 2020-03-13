@@ -65,7 +65,7 @@
   import Emotion from '../../../components/Emotion/index'
   import draggable from 'vuedraggable'
   import { _debounce } from '../../../plugins/untils/public'
-  import {releaseStatement, GetOperatPrivacy} from '../../../service/clientAPI'
+  import {publishData, GetOperatPrivacy} from '../../../service/clientAPI'
   export default {
     data() {
       return {
@@ -111,7 +111,7 @@
           this.$Message.warning('发布内容不能为空');
           return false;
         }
-        releaseStatement({
+        publishData({
           talkType: 1,
           talkTitle: '',
           displayPrivacyId: this.publishMode.split('|')[1],

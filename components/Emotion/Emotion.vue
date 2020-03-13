@@ -1,5 +1,5 @@
 <template>
-    <div class="ly-emotion">
+    <div class="ly-emotion" >
         <slot></slot>
     </div>
 </template>
@@ -8,11 +8,13 @@
   export default {
     name: 'ly-emotion',
     mounted() {
+      let _this = this
       const name = this.$el.innerHTML;
       let imgHTML = `<img  style="width: 100%;" src="http://www.pic.jzbl.com/ItemFiles/Emoticon/QQ/${name}_QQ.gif">`;
       this.$nextTick(() => {
         this.$el.innerHTML = imgHTML
       })
+     
     },
   }
 </script>

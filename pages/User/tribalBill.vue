@@ -17,7 +17,7 @@
                 <Button @click="getTribalCoinsList">搜索</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="tribalCoinData" :total="total"/>
+               <publicTable :columns="columns" :columnsData="tribalCoinData" :total="total" @pageChange="getTribalCoinsList"/>
            </div>
         </div>
     </div>
@@ -100,10 +100,11 @@ export default {
         onChange (val) {
             this.searchTime = val
         },
-        async getTribalCoinsList () {
+        async getTribalCoinsList (val =1) {
             let query = {
                 startDate: this.searchTime[0],
-                EndDate: this.searchTime[1]
+                EndDate: this.searchTime[1],
+                page: val
             }
             let msg = await getTribalCoins(query)
             if (msg) {

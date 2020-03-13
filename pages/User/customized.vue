@@ -31,7 +31,7 @@ import Title from './components/title'
 import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
 import Custom from './components/custom'
-import {setMessage, getWebMessage} from '../../service/clientAPI'
+import {setMessage, getMessage} from '../../service/clientAPI'
 import {analogJump} from '../../plugins/untils/public'
 export default {
     scrollToTop: true,
@@ -62,7 +62,7 @@ export default {
             let query = {
                 msgType: '1'
             }
-            let msg = await getWebMessage(query);
+            let msg = await getMessage(query);
             if (msg) {
                 this.dzList = msg.dingzhi.Msg;
                 this.$store.dispatch('ACComment', msg.dingzhi.MsgCount);

@@ -32,13 +32,13 @@
             </ul>
             <div class="comment-box">
                 <comment
-                    v-if="isComment"
+                    v-if="isComment" 
                     v-model="commentV"
                     @commentValue="commentValue"
                 />
             </div>
         </div>
-        <commentTool ref="commentTool" :isTopInput="false" :itemInfo="publish" v-show="true"  :firstLoading="true"/>
+        <commentTool ref="commentTool" :isTopInput="false" :itemInfo="publish" v-show="true" :firstLoading="true"/>
     </div>
 </template>
 

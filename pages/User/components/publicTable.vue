@@ -9,7 +9,7 @@
         @on-selection-change="onselectionchange"
         ></Table>
         <div class="Page">
-            <Page :total="total" />
+            <Page :total="total" @on-change="pageChange"/>
         </div>
     </div>
 </template>
@@ -82,7 +82,8 @@ export default {
                                                     stateBtn =  h('Button', {
                                                         props: {
                                                             type: btns.style || 'dashed',
-                                                            size: 'small'
+                                                            size: 'small',
+                                                            disabled: btns.disabled || false
                                                         },
                                                         on: {
                                                             click: () => {
@@ -98,7 +99,8 @@ export default {
                                             return h('Button', {
                                                 props: {
                                                     type: element.style || 'dashed',
-                                                    size: 'small'
+                                                    size: 'small',
+                                                    disabled: element.disabled || false
                                                 },
                                                 on: {
                                                     click: () => {
@@ -140,6 +142,9 @@ export default {
         onselectionchange (selection) {
             this.$emit('on-selection-change', selection)
         },
+        pageChange (val) {
+            this.$emit("pageChange", val)
+        },
         addVal (row) {
             console.log(row)
         }
@@ -154,5 +159,8 @@ export default {
     /deep/.btn-position {
         display: flex;
         justify-content: space-between;
+        button {
+            margin-right: 10px;
+        }
     }
 </style>

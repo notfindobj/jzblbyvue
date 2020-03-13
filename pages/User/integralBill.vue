@@ -17,7 +17,7 @@
                 <Button @click="getIntegral">查询</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="integralData" :total="total"/>
+               <publicTable :columns="columns" :columnsData="integralData" :total="total" @pageChange="getIntegral"/>
            </div>
         </div>
     </div>
@@ -57,11 +57,11 @@ export default {
                     title: '分数',
                     key: 'Score'
                 },
-                {
-                    cut: 'text',
-                    title: '剩余积分',
-                    key: 'Score'
-                },
+                // {
+                //     cut: 'text',
+                //     title: '剩余积分',
+                //     key: 'Score'
+                // },
                 {
                     cut: 'text',
                     title: '时间',
@@ -71,7 +71,7 @@ export default {
                     cut: 'state',
                     title: '类型',
                     key: 'ScoreType',
-                    state: [{label: '注册', value: 1}, {label: '发布', value: 2}, {label: '资源下载', value: 3}, {label: '部落币转换', value: 4}, {label: '签到', value: 5}]
+                    state: [{label: '注册', value: 1}, {label: '发布', value: 2}, {label: '资源下载', value: 3}, {label: '部落币转换', value: 4}, {label: '签到', value: 5}, {label: '发布问答', value: 6}]
                 }
             ],
             searchTime: [],
@@ -87,10 +87,11 @@ export default {
         onChange (val) {
             this.searchTime = val
         },
-        async getIntegral () {
+        async getIntegral (val = 0) {
             let query = {
                 startDate: this.searchTime[0],
                 EndDate: this.searchTime[1],
+                page: val
             }
             let msg = await getIntegralList(query);
             if (msg) {

@@ -162,6 +162,7 @@ export default {
     .demand-re {
         text-align: left;
         line-height: 20px;
+        color: #9e9c9c;
     }
     .demand {
         background: url('../../assets/images/banner_bg.png') center;
