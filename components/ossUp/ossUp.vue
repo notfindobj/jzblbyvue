@@ -54,7 +54,7 @@ export default{
         this.fileName = res;
         if (this.accept === "video/mp4") {
           _this.$refs['uploadFile'].clearFiles();
-          _this.$emit('beforeUpload',file,  res)
+          _this.$emit('beforeUpload', file,  res)
           return false
         } else {
           let obj = {

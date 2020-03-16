@@ -1,7 +1,7 @@
 <template>
     <div class="test_two_box">
        <div class="video-box">
-            <video :ref="videoRef" :poster="itemVideo.smallImgUrl" class="vjs-matrix video-js vjs-big-play-centered" >
+            <video :ref="videoRef" :poster="`${itemVideo.videoUrl}?x-oss-process=video/snapshot,t_10000,m_fast`" class="vjs-matrix video-js vjs-big-play-centered" >
                 <source :src="itemVideo.videoUrl" type="video/mp4" >
             </video>
             <div class="video-img" @mouseover="videoMouseover" @mouseout="videoMouseout" @click="play" @dblclick="dbPlay"></div>

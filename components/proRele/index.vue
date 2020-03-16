@@ -228,7 +228,8 @@ export default {
                     talkTitle: row.editorContent,
                     talkContent: '',
                     displayPrivacyId: row.publishMode.split('|')[1],
-                    listImg: row.imgList
+                    listImg: row.imgList,
+                    Duration: row.Duration
                 }
                 let msg = await publishData(obg);
                 if (msg) {

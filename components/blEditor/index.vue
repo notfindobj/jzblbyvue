@@ -156,7 +156,8 @@ export default {
             publishMode: '公开',
             privacyList: [],
             showPlaceholder: true,
-            previewSrc: ''
+            previewSrc: '',
+            Duration: ''
         }
     },
     created () {
@@ -302,8 +303,9 @@ export default {
             this.imgList.splice(index, 1)
             // this.$delete(this.imgList, index);
         },
-        beforeSuccess () {
+        beforeSuccess (file) {
             this.imgList = [];
+            this.getTimes(file)
         },
         beforeSuccessMD (obj) {
             if (this.imgList.length > 29) {
@@ -330,9 +332,12 @@ export default {
             this.previewSrc = ''
         },
         uploadSuccessVideo (videoInfo) {
+            let obj = videoInfo 
+            obj.videoUrl = videoInfo.smallImgUrl
             this.imgList = [];
-            this.imgList = [videoInfo];
-            this.previewSrc = videoInfo.smallImgUrl
+            this.previewSrc = obj.smallImgUrl
+            obj.smallImgUrl = ""
+            this.imgList = [obj];
         },
         // 文本域发生变化
         onchange (html) {
@@ -390,12 +395,25 @@ export default {
                 editorContent: `<p>${this.editor.txt.html()}</p>`,
                 editortext: this.editor.txt.text(),
                 publishMode: this.publishMode,
-                isAgree: this.isAgree
+                isAgree: this.isAgree,
+                Duration: this.Duration
             }
             this.$emit('editorPush',content )
         },
         setImgClass (val) {
             return val.split('.')[0]
+        },
+        getTimes(content) {
+            let _this = this
+            //获取录音时长
+            let url = URL.createObjectURL(content);
+            //经测试，发现audio也可获取视频的时长
+            let audioElement = new Audio(url);
+            let duration;
+            audioElement.addEventListener("loadedmetadata",  function (_event) {
+                duration = audioElement.duration;
+                _this.Duration = duration
+            });
         }
     }
 }

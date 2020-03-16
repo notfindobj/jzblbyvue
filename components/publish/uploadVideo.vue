@@ -5,14 +5,13 @@
     :showUploadList="true"
     @uploadSuccess="uploadSuccess"
     @beforeUpload="beforeUpload">
-    </Upload>
-    <div class="upload1">
-          <img v-if="previewSrc !== ''" :src="`${previewSrc}?x-oss-process=video/snapshot,t_10000,m_fast`" alt="">
-          <span v-else>
-              <i class="icon iconfont">&#xe613;</i>
-              添加视频
-          </span>
-        </div>
+      <div class="upload1">
+        <img v-if="previewSrc !== ''" :src="`${previewSrc}?x-oss-process=video/snapshot,t_10000,m_fast`" alt="">
+        <span v-else>
+            <i class="icon iconfont">&#xe613;</i>
+            添加视频
+        </span>
+      </div>
   </ossUp>
 </template>
 <script>
@@ -43,8 +42,7 @@
     methods: {
       // 上传前
       beforeUpload(file) {
-        this.$emit('beforeUpload', file);
-        console.log(file)
+        this.$emit('beforeSuccess', file);
       },
       // 删除文件
       removeFile() {
@@ -52,6 +50,7 @@
       },
       // 上传成功
       uploadSuccess(res) {
+        debugger
         this.$emit('uploadSuccess', res)
       }
     },
