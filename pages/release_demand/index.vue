@@ -165,7 +165,7 @@ export default {
         color: #9e9c9c;
     }
     .demand {
-        background: url('../../assets/images/banner_bg.png') center;
+        background: url('../../assets/images/banner_bg.jpg') center;
         width: 100%;
         min-width: 1200px;
         &-bg {
