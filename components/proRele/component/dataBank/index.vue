@@ -101,6 +101,9 @@
             <FormItem label="收费权限" v-if="isMonetary">
                 <Checkbox v-model="IsAllowIntegral">支持积分下载</Checkbox>
                 <Checkbox v-model="IsAllowTribalCoins">支持部落币下载</Checkbox>
+                <div class="tishi">
+                    温馨提示：1元 = 10部落币 &nbsp;&nbsp; 1部落币= 10积分
+                </div>
             </FormItem>
             <FormItem label="项目描述">
                 <Input v-model="formValidate.description" type="textarea" placeholder="请填写项目描述" />
@@ -455,6 +458,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .tishi {
+        color: #c3c3c3;
+        line-height: 20px;
+        font-size: 12px;
+        margin-bottom: -15px;
+    }
     .original {
         cursor: pointer;
     }

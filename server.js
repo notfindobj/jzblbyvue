@@ -4,7 +4,6 @@ const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const {configUrl} = require('./LocalEnv');
 const app = require('express')()
-// const timeout = require('connect-timeout')
 const session = require('express-session');
 const axios = require('axios');
 const qs = require('qs');

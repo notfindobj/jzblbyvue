@@ -10,8 +10,8 @@
               <p>立即下载</p>
               <ul>
                 <li>RMB：{{detaDetails.Price}}</li>
-                <li>部落币：{{detaDetails.Price*5}}</li>
-                <li>积分：{{detaDetails.Price * 20}}</li>
+                <li>部落币：{{detaDetails.Price * 10}}</li>
+                <li>积分：{{detaDetails.Price * 100}}</li>
               </ul>
             </div>
              <div v-if="detaDetails.IsCustomized" class="btn-Customized" @click="customthis()"> 
