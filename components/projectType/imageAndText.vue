@@ -404,6 +404,9 @@
   }
 </script>
 <style lang="less" scoped>
+    .public-block {
+      overflow: hidden;
+    }
     .superLong {
       position: absolute;
       top: 0;

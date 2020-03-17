@@ -2,7 +2,7 @@
     <div>
         <Title title="我收到的预约" :bottomLine="false"/>
         <div>
-            <publicTable :columns="columns" :columnsData="orderList"/>
+            <publicTable :columns="columns" :columnsData="orderList"  :total="total" :pageSize="rows" @pageChange="getMsgList"/>
         </div>
     </div>
 </template>
@@ -28,7 +28,7 @@ export default {
                 {
                     cut: 'text',
                     title: '申请人',
-                    key: 'OrderUserName'
+                    key: 'UserName'
                 },
                 {
                     cut: 'time',
@@ -47,22 +47,25 @@ export default {
                     ]
                 }
             ],
-            orderList: []
+            orderList: [],
+            total: 0,
+            rows: 15
         }
     },
     created () {
         this.getMsgList()
     },
     methods: {
-        async getMsgList () {
+        async getMsgList (val = 1) {
             let query = {
                 OrderStatus: 0,
-                Page: 1,
-                Rows: 20,
+                Page: val,
+                Rows: this.rows,
             }
             let msg = await getOrderList(query);
             if (msg) {
                 this.orderList = msg.datalist;
+                this.total = msg.paginationData.records
             }
         },
         viewTribe (row) {
@@ -76,9 +79,9 @@ export default {
             let msg = await OrderReceiving(query);
             if (msg) {
                 this.$Notice.success({
-                        title: '订单提示',
-                        desc: `请在我的签单项目中查看 联系人信息`
-                    });
+                    title: '订单提示',
+                    desc: `请在我的签单项目中查看 联系人信息`
+                });
             }
         },
         getUserInfo(row) {

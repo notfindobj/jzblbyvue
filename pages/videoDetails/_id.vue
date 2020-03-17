@@ -1,14 +1,12 @@
 <template>
     <div class="videod">
-        <div class="videod-title">
-            {{videoDetails.TalkTitle}}
-        </div>
+        <div class="videod-title" v-html="videoDetails.TalkTitle"></div>
         <video ref="videoRef" :poster="videoDetails.ResourceObj[0].smallImgUrl" class="vjs-matrix video-js vjs-big-play-centered">
             <source :src="videoDetails.ResourceObj[0].videoUrl" type="video/mp4" >
         </video>
         <commentsCon
             :publish="videoDetails"
-            :comments="commentsData"
+            :comments="commentsData.Comments"
             @thumbsUp="thumbsUp"
             @Collection="Collection"
             @commentValue="commentValue"
@@ -230,8 +228,12 @@ export default {
     .videod {
         width: 1200px;
         margin: 0 auto;
+        background: #fff;
+        margin-top: 10px;
         &-title {
             text-align: center;
+            font-size: 16px;
+            line-height: 30px;
         }
     }
 </style> 

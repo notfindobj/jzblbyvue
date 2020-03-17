@@ -7,19 +7,19 @@
         <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
       </div>
       <p class="window-name">项目名称：{{payInfos.ItemName}}</p>
-      <p class="window-price">支付金额：{{payInfos.Price}}元</p>
+      <p class="window-price">支付金额：{{payMoney > 0? payMoney : payInfos.Price}}</p>
       <div class="window-type">
         <div class="pay-type">支付方式：</div>
         <ul>
-          <li v-for="(item,index) in payType" @click="chosePayType(index)" :key="index" :class="currentIndex == index ? 'li-active' : ''">
+          <li v-for="(item,index) in payType" @click="chosePayType(index, payInfos.Price)" :key="index" :class="currentIndex == index ? 'li-active' : ''">
             <img :src="item.typeIcon" alt="">
             <span>{{item.typeName}}</span>
           </li>
-          <li :class="currentIndex == 2 ? 'li-active' : ''" @click="chosePayType(2)" v-if="payInfos.IsAllowIntegral">
+          <li :class="currentIndex == 2 ? 'li-active' : ''" @click="chosePayType(2, payInfos.TribalCoinsPrice)" v-if="payInfos.IsAllowIntegral">
             <img src="../../assets/images/buluobi.png" alt="">
             <span>部落币支付</span>
           </li>
-          <li :class="currentIndex == 3 ? 'li-active' : ''" @click="chosePayType(3)"  v-if="payInfos.IsAllowTribalCoins" >
+          <li :class="currentIndex == 3 ? 'li-active' : ''" @click="chosePayType(3, payInfos.IntegralPrice)"  v-if="payInfos.IsAllowTribalCoins" >
             <img src="../../assets/images/jifen.png" alt="">
             <span>积分支付</span>
           </li>
@@ -60,7 +60,8 @@
             typeIcon: require('../../assets/images/payZFB.png')
           }
         ],
-        currentIndex: 0
+        currentIndex: 0,
+        payMoney: 0
       }
     },
     components: {
@@ -69,8 +70,9 @@
     },
     mounted () {},
     methods: {
-      chosePayType(inx) {
-        this.currentIndex = inx
+      chosePayType(inx, m) {
+        this.currentIndex = inx,
+        this.payMoney = m
       },
       closeMask () {
         this.$emit('dataDetailsMaskClose',{type:'Down'})
@@ -78,7 +80,7 @@
       async payment (value) {
         let qq =
           {
-          "Money": value.Price,
+          "Money": this.payMoney,
           "ItemId": value.ItemId,
           "IsDebug": false
         }
@@ -92,18 +94,16 @@
         } else if (this.currentIndex === 2) {
           // 部落币下载
           qq.Type = 1
-          qq.Money = qq.Money * 10
           msg = await otherDownload(qq);
         } else if (this.currentIndex === 3) {
           // 积分下载
           qq.Type = 2
-          qq.Money = qq.Money * 10
           msg = await otherDownload(qq);
         }
         if (msg) {
           let pay ={
             data: msg,
-            Price: this.payInfos.Price
+            Price: this.payMoney
           }
           this.$emit('payment', pay, this.currentIndex, value.ItemId)
         }

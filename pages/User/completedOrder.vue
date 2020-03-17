@@ -2,7 +2,7 @@
     <div>
         <Title title="我的签单项目" :bottomLine="false"/>
         <div>
-            <publicTable :columns="columns" :columnsData="orderList"/>
+            <publicTable :columns="columns" :columnsData="orderList"  :total="total" :pageSize="rows" @pageChange="getMsgList"/>
         </div>
     </div>
 </template>
@@ -51,21 +51,24 @@ export default {
                     ]
                 }
             ],
-            orderList: []
+            orderList: [],
+            total: 0,
+            rows: 15
         }
     },
     created () {
         this.getMsgList()
     },
     methods: {
-        async getMsgList () {
+        async getMsgList (val =1) {
             let query = {
-                Page: 1,
-                Rows: 20,
+                Page: val,
+                Rows: this.rows,
             }
             let msg = await getinishedOrders(query);
             if (msg) {
                 this.orderList = msg.datalist;
+                this.total = msg.paginationData.records
             }
         },
         viewTribe (row) {

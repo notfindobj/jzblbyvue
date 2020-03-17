@@ -1,8 +1,8 @@
 <template>
     <div>
-        <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
-            <div class="container-box">
-                <div class="container">
+        <div class="container-box">
+            <div class="container">
+                <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="editor-jzbl">
                         <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
                     </div>
@@ -29,12 +29,12 @@
                     <div v-if="attentionList.length <= 0" class="attentionListSty">
                         暂无关注数据
                     </div>
-                </div>
-                <nominate />
+                </crollBox>
+                <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
             </div>
-            <ToTop ></ToTop>
-            <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
-        </crollBox>
+            <nominate />
+        </div>
+        <ToTop ></ToTop>
     </div>
 </template>
 

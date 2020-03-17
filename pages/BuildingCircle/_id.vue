@@ -1,36 +1,36 @@
 <template>
-     <crollBox :isLast="isLast" @willReachBottom ="willReachBottom">
-        <div class="container-box">
-          <div class="container">
-            <div class="editor-jzbl">
-              <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
-            </div>
-            <template v-for="(item, index) in dataList">
-                  <ImageAndText
-                      :key="index"
-                      v-if="item.TalkType !== 2 && item.TalkType !== 6"
-                      :itemInfo="item"
-                      :index="index"
-                      @clickCollection="clickCollection"
-                      @clickMenu="clickMenu"
-                      @clickLike="clickLike"
-                  ></ImageAndText>
-                  <VideoItem
-                      :key="index"
-                      v-if="item.TalkType === 2 || item.TalkType === 6"
-                      :videoInfo="item"
-                      :index="index"
-                      @clickMenu="clickMenu"
-                      @clickCollection="clickCollection"
-                      @clickLike="clickLike" 
-                  ></VideoItem>
-              </template>
-            <Page class="page-the" v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+    <div class="container-box">
+      <div class="container">
+        <crollBox :isLast="isLast" @willReachBottom ="willReachBottom">
+          <div class="editor-jzbl">
+            <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
           </div>
-          <nominate />
-        </div>
+          <template v-for="(item, index) in dataList">
+              <ImageAndText
+                  :key="index"
+                  v-if="item.TalkType !== 2 && item.TalkType !== 6"
+                  :itemInfo="item"
+                  :index="index"
+                  @clickCollection="clickCollection"
+                  @clickMenu="clickMenu"
+                  @clickLike="clickLike"
+              ></ImageAndText>
+              <VideoItem
+                  :key="index"
+                  v-if="item.TalkType === 2 || item.TalkType === 6"
+                  :videoInfo="item"
+                  :index="index"
+                  @clickMenu="clickMenu"
+                  @clickCollection="clickCollection"
+                  @clickLike="clickLike" 
+              ></VideoItem>
+          </template>
+        </crollBox>
+        <Page class="page-the" v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
         <ToTop></ToTop>
-    </crollBox>
+      </div>
+      <nominate />
+    </div>
 </template>
 
 <script>

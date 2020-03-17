@@ -362,7 +362,7 @@
                             }
                             let msgs = await ItemOperat (qieryData);
                             if (msgs) {
-                                
+                                this.$Message.success("修改价格成功！")
                             }
                         },
                         render: (h) => {

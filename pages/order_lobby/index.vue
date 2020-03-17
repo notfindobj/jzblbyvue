@@ -442,6 +442,7 @@ export default {
                         display: inline-block;
                         &-title {
                             margin-bottom: 5px;
+                            cursor: pointer;
                             &-name {
                                 font-weight: bold;
                             }

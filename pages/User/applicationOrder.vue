@@ -2,7 +2,7 @@
     <div>
         <Title title="我收到的预约" :bottomLine="false"/>
         <div>
-            <publicTable :columns="columns" :columnsData="orderList"/>
+            <publicTable :columns="columns" :columnsData="orderList" :total="total" :pageSize="rows" @pageChange="getMsgList"/>
         </div>
     </div>
 </template>
@@ -54,22 +54,25 @@ export default {
                     ]
                 }
             ],
-            orderList: []
+            orderList: [],
+            total: 0,
+            rows: 15
         }
     },
     created () {
         this.getMsgList()
     },
     methods: {
-        async getMsgList () {
+        async getMsgList (val = 0) {
             let query = {
                 OrderStatus: "0,2",
-                Page: 1,
-                Rows: 20,
+                Page: val,
+                Rows: this.rows,
             }
             let msg = await getReceiveOrders(query);
             if (msg) {
                 this.orderList = msg.datalist;
+                this.total = msg.paginationData.records
             }
         },
         viewTribe (row) {

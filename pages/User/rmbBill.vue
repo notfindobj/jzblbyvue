@@ -17,7 +17,7 @@
                 <Button @click="getBillData">搜索</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="rmbGoods.billlist" :total="total" @pageChange="getBillData"/>
+               <publicTable :columns="columns" :columnsData="rmbGoods.billlist" :total="total" :pageSize="rows" @pageChange="getBillData"/>
            </div>
         </div>
     </div>
@@ -94,7 +94,8 @@ export default {
             ],
             rmbGoods: {},
             searchTime: [],
-            total: 0
+            total: 0,
+            rows: 15
         }
     },
     created () {
@@ -108,7 +109,8 @@ export default {
             let query = {
                 startDate: this.searchTime[0],
                 EndDate: this.searchTime[1],
-                page: val
+                page: val,
+                rows: this.rows
             }
             let msg = await getBillList(query);
             if (msg) {

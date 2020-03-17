@@ -7,7 +7,7 @@
         </div>
         <div class="bill">
            <div>
-               <publicTable :columns="columns" :columnsData="addrssList"/>
+               <publicTable :columns="columns" :columnsData="addrssList" />
            </div>
         </div>
         <setAddress :isShow="isShow" :addressData="selectionRow" @closeBtn="closeBtn" @upAddres="upAddres"/>

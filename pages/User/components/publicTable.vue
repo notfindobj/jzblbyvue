@@ -9,7 +9,7 @@
         @on-selection-change="onselectionchange"
         ></Table>
         <div class="Page">
-            <Page :total="total" @on-change="pageChange"/>
+            <Page :total="total" :page-size="pageSize" @on-change="pageChange"/>
         </div>
     </div>
 </template>
@@ -30,6 +30,10 @@ export default {
             }
         },
         total: {
+            type: Number,
+            default: 10
+        },
+        pageSize: {
             type: Number,
             default: 10
         }

@@ -7,7 +7,7 @@
                     <span>积分余额：</span>
                     <span>{{integral}}</span>
                 </div>
-                <Button>获取更多</Button>
+                <!-- <Button>获取更多</Button> -->
            </div>
            <div class="tribalBill-search">
                 <DatePicker type="daterange" :value="searchTime" @on-change="onChange" placement="bottom-end" placeholder="选择时间" style="width: 200px"></DatePicker>
@@ -17,7 +17,7 @@
                 <Button @click="getIntegral">查询</Button>
            </div>
            <div>
-               <publicTable :columns="columns" :columnsData="integralData" :total="total" @pageChange="getIntegral"/>
+               <publicTable :columns="columns" :columnsData="integralData" :total="total" :pageSize="rows" @pageChange="getIntegral"/>
            </div>
         </div>
     </div>
@@ -77,7 +77,8 @@ export default {
             searchTime: [],
             integralData: [],
             integral: 0,
-            total: 0
+            total: 1,
+            rows: 15
         }
     },
     created () {
@@ -91,7 +92,8 @@ export default {
             let query = {
                 startDate: this.searchTime[0],
                 EndDate: this.searchTime[1],
-                page: val
+                page: val,
+                rows: this.rows
             }
             let msg = await getIntegralList(query);
             if (msg) {

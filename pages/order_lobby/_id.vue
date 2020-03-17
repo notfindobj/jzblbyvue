@@ -10,7 +10,7 @@
                     </ul>
                 </div>
                 <div class="order-left-title-btn">
-                    <span>完成派单</span>
+                    <!-- <span>完成派单</span> -->
                 </div>
             </div>
             <div class="order-left-info">
@@ -33,7 +33,7 @@
                     </li>
                     <li>
                         <label>业主姓名：</label>
-                        <span>{{orderType.OrderUserName}}</span>
+                        <span>{{orderType.FullName}}</span>
                     </li>
                     <template  v-if="orderType.Status === 1">
                         <li>

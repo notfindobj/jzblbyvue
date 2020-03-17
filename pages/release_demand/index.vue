@@ -64,7 +64,6 @@ export default {
             Area: ''
         }
         const orderType = await store.dispatch('getOrderType', typeList);
-        console.log(orderType)
         return {
             orderType : [orderType.datas[1], orderType.datas[2], orderType.datas[3], orderType.datas[4]]
         }
@@ -141,7 +140,7 @@ export default {
                 BudgetId: this.orderType[3].typeId.split("|")[0],
                 BudgetName: this.orderType[3].typeId.split("|")[1],
                 WorkTypeId: this.orderType[1].typeId.split("|")[0],
-                WorkTypeName:this.orderType[1].typeId.split("|")[1],
+                WorkTypeName: this.orderType[1].typeId.split("|")[1],
                 TypeId: this.orderType[0].typeId.split("|")[0],
                 TypeName: this.orderType[0].typeId.split("|")[1],
                 Remark: this.Remark,
@@ -151,8 +150,16 @@ export default {
             if (msg) {
                 this.$Notice.success({
                     title: '提交订单成功',
-                    desc: '请等待工作人员与您联系，请保持电话畅通！'
+                    desc: '请等待工作人员与您联系，请保持电话畅通！',
+                    duration: 0
                 });
+                this.FullName = ""
+                this.CompanyArr= []
+                this.Remark = ""
+                this.Area = ""
+                for (let i=0;i<this.orderType.length ;i++) {
+                    this.orderType[i].typeId = ""
+                }
             }
         }
     },

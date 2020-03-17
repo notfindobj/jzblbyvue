@@ -9,7 +9,7 @@
             <Button>提现</Button>
         </div>
         <div>
-            <publicTable :columns="columns" :columnsData="orderList"/>
+            <publicTable :columns="columns" :columnsData="orderList"  :total="total" :pageSize="rows" @pageChange="getBillData"/>
         </div>
     </div>
 </template>
@@ -72,21 +72,24 @@ export default {
                     key: 'UsePhone',
                 }
             ],
-            orderList: []
+            orderList: [],
+            total: 0,
+            rows: 15
         }
     },
     created () {
         this.getBillData()
     },
     methods: {
-        async getBillData () {
+        async getBillData (val =1) {
             let query = {
                 Page: 1,
-                Rows: 20
+                Rows: this.rows
             }
             let msg = await getOrderList(query);
             if (msg) {
                 this.orderList = msg.datalist;
+                this.total = msg.paginationData.records
             }
         }
     },

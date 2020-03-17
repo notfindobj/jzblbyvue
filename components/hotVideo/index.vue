@@ -116,11 +116,13 @@ export default {
         }
         &-top {
             position: absolute;
-            height: 45px;
+            height: 50px;
+            line-height: 50px;
             width: 100%;
+            font-size: 16px;
             padding: 0 10px;
             color: #fff;
-            top: -45px;
+            top: -50px;
             transition: top .5s ;
         }
         &:hover &-top{

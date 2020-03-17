@@ -43,9 +43,10 @@ service.interceptors.response.use(
         }
         return res.data.Data
       } else if (res.data.Code === 6001) {
+        Message.warning(res.data.Msg);
         return res.data
       }else if (res.data.Code === 101) {
-        Message.warning(res.data.Msg);
+          Message.warning(res.data.Msg);
           $store.dispatch('LOGININ', null);
           sessionStorage.removeItem("LOGININ");
           delCookie("adminToken");

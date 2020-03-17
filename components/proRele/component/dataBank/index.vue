@@ -41,7 +41,10 @@
                 <div v-if="typeAttrList.length > 0" class="typeAttrList-box">
                     <template v-for="(items, indexs) in typeAttrList">
                         <div :key="items.ItemSubAttributeId+indexs" class="typeAttrList-item" v-if="items.ValueSource ==='SingleSel' || items.ValueSource ==='CompanyData'">
-                            <span>{{items.ItemAttributesFullName }}</span>
+                            <span>
+                                <Icon type="ios-star" />
+                                {{items.ItemAttributesFullName }}
+                            </span>
                             <Select v-model="items.ItemSubAttributeId" style="width:220px" >
                                 <Option v-for="(subItem, index) in items.ChildNode" :value="subItem.ItemAttributesId" :key="subItem.ItemAttributesId+index">
                                     {{ subItem.ItemAttributesFullName }}
@@ -49,7 +52,7 @@
                             </Select>
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs" class="typeAttrList-item" v-if="items.ValueSource === 'FileUpload' || items.ValueSource === 'PDFFileUpload'">
-                            <span>{{items.ItemAttributesFullName }}</span>
+                            <span><Icon type="ios-star" />{{items.ItemAttributesFullName }}</span>
                             <Upload
                                     ref="uploadFile"
                                     :action="baseUrl + `Upload/DataUpload?uploadType=${items.ValueSource === 'FileUpload' ? 6 : 4}`"
@@ -68,14 +71,14 @@
                               </Upload>
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs+'FileUpload'" class="typeAttrList-item" v-if="items.ValueSource === 'FileUpload'">
-                            <span>收取费用</span>
+                            <span><Icon type="ios-star" />收取费用</span>
                             <div>
                                 <Input v-model="price" :disabled="!typeFile" placeholder="请上传文件后输入价格" style="width: 210px;" />
                                 <span style="width: 20px;">元</span>
                             </div>
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs" class="typeAttrList-item" v-if="items.ValueSource ==='MapLinkage'">
-                            <span>{{items.ItemAttributesFullName }}</span>
+                            <span><Icon type="ios-star" />{{items.ItemAttributesFullName }}</span>
                             <Cascader v-model="cascaderAddress" :data="cascaderList" :load-data="loadData" style="width:225px"></Cascader>
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs+'MapLinkage'" class="typeAttrList-item" v-if="items.ValueSource ==='MapLinkage'">
@@ -512,8 +515,16 @@ export default {
         width: 50%;
         justify-content: space-around;
         margin-top: 15px;
+        position: relative;
+        .ivu-icon {
+            position: absolute;
+            top: 9px;
+            left: 15px;
+            color: #ff3c00;
+        }
         > span {
             display: inline-block;
+            text-align: left;
             width: 120px;
         }
     }
