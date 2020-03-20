@@ -16,6 +16,7 @@
                       :videoInfo.sync="item" :index="index"
                       @clickCollection="clickCollection"
                       @clickLike="clickLike"
+                      @clickMenu="clickMenu"
                       @delComments="delComments"
                   />
               </template>

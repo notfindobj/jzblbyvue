@@ -411,9 +411,21 @@ export default {
             let audioElement = new Audio(url);
             let duration;
             audioElement.addEventListener("loadedmetadata",  function (_event) {
-                duration = audioElement.duration;
-                _this.Duration = duration
+                duration = parseInt(audioElement.duration);
+                _this.Duration = _this.getTime(duration)
             });
+        },
+        getTime(duration) {
+            let hour = parseInt(duration / 3600)
+            if (duration >= 3600) {
+                duration = duration % 3600
+            }
+            let min = parseInt(duration / 60);
+            let sec = duration % 60;
+            return this.getType(hour) + ":" +this.getType(min) + ":" + this.getType(sec);
+        },
+        getType(time) {
+            return time<10 ? "0" + time : time;
         }
     }
 }

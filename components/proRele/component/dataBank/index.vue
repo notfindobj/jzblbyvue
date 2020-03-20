@@ -4,15 +4,18 @@
             <FormItem label="项目图片" prop="img" >
                 <div class="upload-img-box" :style="`background-image:url(${formValidate.img});`" @mouseenter="enteUpload(formValidate.img)" @mouseleave="leaveUpload(formValidate.img)">
                     <div :class="!isMove ? 'upload-img-wrap upload-img-ente' : 'upload-img-wrap upload-img-leave'" 
-                    :style="`display: ${!formValidate.img || isMove? 'inline-block;' : 'none;'} `" @click="uploadJeck">
-                        <div class="upload-component">
-                            <a href="javascript:" style="display:none;">
-                                <input ref="imgFile" type="file" @change="fileSelected($event)" accept="image/gif,image/jpeg,image/jpg,image/png">
-                            </a>
-                            <Icon type="ios-add-circle" size="35" color="#ff3c00"/>
-                        </div>
-                        <p>图片将会自动压缩</p>
-                        <p>图片建议不要超过20M</p>
+                    :style="`display: ${!formValidate.img || isMove? 'inline-block;' : 'none;'} `">
+                        <ossUp
+                            class="uploadc"
+                            accept="image/gif,image/jpeg,image/jpg,image/png"
+                            :fileType="1"
+                            @uploadSuccess="fileSuccess">
+                            <div class="upload-component">
+                                <Icon type="ios-add-circle" size="35" color="#ff3c00"/>
+                            </div>
+                            <p>图片将会自动压缩</p>
+                            <p>图片建议不要超过20M</p>
+                        </ossUp>
                     </div>
                 </div>
             </FormItem>
@@ -53,7 +56,17 @@
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs" class="typeAttrList-item" v-if="items.ValueSource === 'FileUpload' || items.ValueSource === 'PDFFileUpload'">
                             <span><Icon type="ios-star" />{{items.ItemAttributesFullName }}</span>
-                            <Upload
+                            <ossUp
+                                :accept="items.ValueSource === 'FileUpload'? '.zip,.rar' : '.pdf'"
+                                :showUploadList="true"
+                                :fileType="1"
+                                @onRemove="removeFile"
+                                @uploadSuccess="uploadSuccess">
+                                <div class="cloud-upload">
+                                    <Button type="text" icon="ios-cloud-upload-outline" >上传文件</Button>
+                                </div>
+                            </ossUp>
+                            <!-- <Upload
                                     ref="uploadFile"
                                     :action="baseUrl + `Upload/DataUpload?uploadType=${items.ValueSource === 'FileUpload' ? 6 : 4}`"
                                     :headers="{Authorization: 'Bearer ' + userInfo.token}"
@@ -67,8 +80,8 @@
                                     :on-exceeded-size="handleMaxSize"
                                     style="display: inline-block;width: 220px;"
                                 >
-                                  <Button icon="ios-cloud-upload-outline" >上传文件</Button>
-                              </Upload>
+                                <Button icon="ios-cloud-upload-outline" >上传文件</Button>
+                              </Upload> -->
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs+'FileUpload'" class="typeAttrList-item" v-if="items.ValueSource === 'FileUpload'">
                             <span><Icon type="ios-star" />收取费用</span>
@@ -120,9 +133,12 @@ import { getCustomizeService, getDataByTypeId, getProjectType, publishProject, u
 import { mapState, mapGetters } from 'vuex'
 import {setDemo} from '../../../../LocalAPI'
 import cusService from '../cusService'
+import ossUp from "../../../ossUp/ossUp"
+import {analogJump} from '../../../../plugins/untils/public'
 export default {
     components: {
-        cusService
+        cusService,
+        ossUp
     },
     data () {
         return {
@@ -180,7 +196,14 @@ export default {
       }
     },
     methods: {
-        protocol () {},
+        fileSuccess (res) {
+            this.$set(this.formValidate, 'img', res.smallImgUrl);
+        },
+        protocol () {
+            this.$store.dispatch('SETUP', false);
+            let routeData = this.$router.resolve({ name: 'other-id', params: { id: "12s5q58cf-ce5a-4fef-b301-0a9d37c23e22"} });
+            analogJump(routeData.href);
+        },
         // 获取发布的类型
         async getDataList () {
             let msg = await getDataByTypeId();
@@ -194,25 +217,6 @@ export default {
         },
         leaveUpload (val) {
             val ? this.isMove = false : false
-        },
-        // 选择文件
-        uploadJeck () {
-            this.$refs.imgFile.click()
-        },
-        // 选择图片
-        fileSelected(e) {
-            let file = e.target.files;
-            if (file.length > 0) {
-                let data = new FormData();
-                for (let item of file) {
-                    data.append('files', item)
-                }
-                this.spinShow = true;
-                uploadFile(data, 0).then(res => {
-                    this.spinShow = false;
-                    this.$set(this.formValidate, 'img', res.smallImgUrl);
-                })
-            }
         },
         clearEditor () {
             this.serviceList = [];
@@ -301,15 +305,9 @@ export default {
             }
             this.$refs.cusService.cancelService()
         },
-        // 上传之前清空上传列表
-        clearUpload() {
-            if (this.$refs.uploadFile[0].fileList.length > 0) {
-                this.$refs.uploadFile[0].clearFiles();
-            }
-        },
         // 上传文件组件成功回调
         uploadSuccess(res) {
-            this.typeFile = res.Data
+            this.typeFile = res
         },
         // 删除上传的文件
         removeFile() {
@@ -422,8 +420,8 @@ export default {
             if (['f7399e5e-82a6-47e0-942e-fcae1a68af40', '9626945d-6f04-4b61-9190-a273a4d94e05'].includes(this.formValidate.typeString)) {
                 Pdf = false
                 PdfModel = {
-                    ItemFileName: this.typeFile.fileName,
-                    ItemFilePath: this.typeFile.packageOrPdfUrl,
+                    ItemFileName: this.typeFile.name,
+                    ItemFilePath: this.typeFile.smallImgUrl,
                 }
             }
             let obg = {
@@ -443,8 +441,8 @@ export default {
                 }
             }
             if (Pdf && this.typeFile) {
-                obg.ItemFileName= this.typeFile.fileName,
-                obg.ItemFilePath= this.typeFile.packageOrPdfUrl
+                obg.ItemFileName= this.typeFile.name,
+                obg.ItemFilePath= this.typeFile.smallImgUrl
             }
             if (this.price) {
                 obg.Price = this.price
@@ -461,6 +459,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .cloud-upload {
+        width: 220px;
+        .ivu-btn-text:focus {
+            box-shadow:none;
+        }
+    }
     .tishi {
         color: #c3c3c3;
         line-height: 20px;
@@ -544,6 +548,12 @@ export default {
         display: flex;
         justify-content: space-between;
     }
+    .uploadc {
+        height: 150px;
+        /deep/.ivu-upload-drag {
+            height: 100%;
+        }
+    }
     .upload-img-box {
           height: 150px;
           position: relative;
@@ -598,7 +608,7 @@ export default {
           }
           .upload-img-leave {
             background-color: rgba(0,0,0,.5);
-             color: #ffffff;
+            color: #999;
           }
         }
 </style>

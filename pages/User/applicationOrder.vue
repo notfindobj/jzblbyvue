@@ -40,6 +40,7 @@ export default {
                 {
                     cut: 'state',
                     title: '订单状态',
+                    width: 90,
                     key: 'Status',
                     state: [{label: '待反馈 ', value: 0}, {label: '已同意', value: 1}, {label: '已回绝', value: 2}]
                 },

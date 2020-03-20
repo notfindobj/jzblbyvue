@@ -1,5 +1,7 @@
 <template>
-    <div class="container-box">
+  <div>
+    <loading :loading="loading"/>
+    <div  v-if="loading" class="container-box">
       <div class="container">
         <crollBox :isLast="isLast" @willReachBottom ="willReachBottom">
           <div class="editor-jzbl">
@@ -31,6 +33,7 @@
       </div>
       <nominate />
     </div>
+  </div>
 </template>
 
 <script>
@@ -47,6 +50,7 @@ export default {
     layout: 'main',
     data() {
       return {
+        loading: false,
         editorName: 'tw',
         pageNum: 1,
         dataList: [],
@@ -74,6 +78,11 @@ export default {
           dataList: getTalks.retModels || [],
           total: getTalks.paginationData ? getTalks.paginationData.total : 0
         }
+    },
+    created () {
+        this.$nextTick(function () {
+            this.loading = true
+        })
     },
     methods: {
       clickEditor (val) {

@@ -8,6 +8,7 @@
         :action="uploadHost"
         :data="uploadData"
         :before-upload="beforeUpload"
+        :on-remove="onRemove"
         :on-success="handleSuccess" >
         <slot>
           <Button icon="ios-cloud-upload-outline">Upload files</Button>
@@ -21,6 +22,10 @@ import BMF from 'browser-md5-file'
 export default{
   props: {
       accept: String,
+      fileType: {
+        type: Number,
+        default: 0
+      },
       maxsize: {
         type: Number,
         default: 10240
@@ -48,7 +53,7 @@ export default{
     // 在Upload组件的钩子before-upload中获取到生成的参数信息
     beforeUpload(file) {
       let _this = this;
-      return oss(file.name).then(res => {
+      return oss(file.name, _this.fileType).then(res => {
         this.uploadHost = res.host
         this.uploadData = res;
         this.fileName = res;
@@ -68,13 +73,16 @@ export default{
         return res
       })
     },
+    onRemove () {
+      this.$emit("onRemove")
+    },
     // 上传成功的回调函数 imgBaseUrl
     handleSuccess(res, file, filelist) {
       let obj = {
         name: file.name,
         action: false,
         key: file.key,
-        smallImgUrl: this.imgBaseUrl + '/'+ this.uploadData.key
+        smallImgUrl: this.imgBaseUrl + this.uploadData.key
       }
       this.$emit('uploadSuccess', obj);
     }

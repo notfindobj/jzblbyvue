@@ -18,6 +18,7 @@ import Big_Cards from '../../components/home/Big_Cards'
 import videoModel from '../../components/videoModel'
 import videos from '../../components/videos'
 import emotHtml from '../../components/emotHtml'
+import loading from '../../components/loading'
 const omponents = {
   install: function (Vue) {
     Vue.component('Small-Cards', Small_Cards)
@@ -25,6 +26,7 @@ const omponents = {
     Vue.component('videoModel', videoModel)
     Vue.component('videos', videos)
     Vue.component('emotHtml', emotHtml)
+    Vue.component('loading', loading)
   }
 }
 const publicComponents = {...omponents}

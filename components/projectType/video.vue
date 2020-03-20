@@ -39,7 +39,7 @@
                    <Dropdown placement="bottom-end" v-if="videoInfo.itemBindOperat">
                         <a href="javascript:void(0)"><Icon type="ios-arrow-down"></Icon></a>
                         <DropdownMenu slot="list" >
-                            <DropdownItem v-for="(items, indexs) in videoInfo.itemBindOperat.ItemOperatBtns" :key="indexs" @click.native="dropdownMenu(videoInfo, items, index)">{{items.OperatName}}</DropdownItem>
+                          <DropdownItem v-for="(items, indexs) in videoInfo.itemBindOperat.ItemOperatBtns" :key="indexs" @click.native="dropdownMenu(videoInfo, items, index)">{{items.OperatName}}</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </div>
@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="commentTool">
-          <commentTool ref="commentTool" :viewMore="5" :itemInfo="videoInfo" v-show="videoInfo.isShowComment" />
+          <commentTool ref="commentTool" :viewMore="5" :itemInfo="videoInfo" v-if="videoInfo.isShowComment" />
         </div>
         <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>

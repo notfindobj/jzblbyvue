@@ -28,12 +28,14 @@ export default {
                 {
                     cut: 'text',
                     title: '申请人',
-                    key: 'UserName'
+                    key: 'UserName',
+                    width: 100
                 },
                 {
                     cut: 'time',
                     title: '申请时间',
-                    key: 'CreateDate' 
+                    key: 'CreateDate',
+                    width: 100,
                 },
                 {
                     cut: 'btn',

@@ -72,7 +72,6 @@
     import 'viewerjs/dist/viewer.css';
     import Emotion from '../../components/Emotion/index'
     import commentTool from '../../components/commentTool'
-    import Comment from '../../components/video/comment'
     import ToTop from '../../components/toTop'
     import { setComments, setFollow, delComment} from '../../service/clientAPI'
     import { mapState } from 'vuex'
@@ -101,8 +100,7 @@
         components: {
             Emotion,
             ToTop,
-            commentTool,
-            'v-comment': Comment
+            commentTool
         },
         methods: {
             replaceImgs (val) {

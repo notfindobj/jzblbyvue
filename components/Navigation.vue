@@ -23,28 +23,29 @@
                         </div>
                         <span class="sign-btn" v-if="!auth" @click="SignIn">登录</span>
                         <span class="sign-btn" v-if="!auth" @click="register">注册</span>
-                        <Dropdown v-else >
-                            <a href="javascript:void(0)">
-                                <span @click="enterCenter">{{auth.NickName}}</span>
-                                <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
-                                <Icon type="ios-arrow-down"></Icon>
-                            </a>
-                            <DropdownMenu slot="list">
-                                <DropdownItem>
-                                    <nuxt-link to="/User/system">系统消息</nuxt-link>
-                                </DropdownItem>
-                                <DropdownItem>
-                                    <nuxt-link to="/User/comment">评论消息</nuxt-link>
-                                </DropdownItem>
-                                <DropdownItem>
-                                    <nuxt-link to="/User/customized">定制消息</nuxt-link>
-                                </DropdownItem>
-                                <DropdownItem>
-                                    <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
-                                </DropdownItem>
-                            </DropdownMenu>
-                        </Dropdown>
-                        
+                        <span v-else>
+                            <Dropdown>
+                                <a href="javascript:void(0)">
+                                    <span @click="enterCenter">{{auth.NickName}}</span>
+                                    <Icon type="ios-arrow-down"></Icon>
+                                </a>
+                                <DropdownMenu slot="list">
+                                    <DropdownItem>
+                                        <nuxt-link to="/User/system">系统消息</nuxt-link>
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        <nuxt-link to="/User/comment">评论消息</nuxt-link>
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        <nuxt-link to="/User/customized">定制消息</nuxt-link>
+                                    </DropdownItem>
+                                    <DropdownItem>
+                                        <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
+                                    </DropdownItem>
+                                </DropdownMenu>
+                            </Dropdown>
+                            <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
+                        </span>
                     </li>
                     <!-- <li class="content" @click="onlineMap">在线地图</li> -->
                     <!-- <li>

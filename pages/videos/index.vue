@@ -1,6 +1,7 @@
 <template>
     <div>
-        <div class="container-box">
+        <loading :loading="loading"/>
+        <div v-if="loading" class="container-box">
             <div class="container">
                 <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
                     <div class="editor-jzbl">
@@ -23,7 +24,6 @@
 </template>
 
 <script>
-import VideoModal from '../../components/video/videoModal'
 import VideoItem from '../../components/projectType/video'
 import ToTop from '../../components/toTop'
 import crollBox from '../../components/crollBox'
@@ -35,7 +35,6 @@ import {mapGetters, mapState} from 'vuex'
 export default {
     layout: 'main',
     components: {
-        'video-modal': VideoModal,
         'video-item': VideoItem,
         ToTop,
         crollBox,
@@ -44,6 +43,7 @@ export default {
     },
     data() {
         return {
+            loading: false,
             editorName: 'sp',
             pageNum: 1,
             videoList: [],
@@ -85,6 +85,11 @@ export default {
                 total: 0
             }
         }
+    },
+    created () {
+        this.$nextTick(function () {
+            this.loading = true
+        })
     },
     methods: {
         clickEditor (val) {

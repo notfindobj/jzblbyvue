@@ -42,7 +42,6 @@
                         <Dropdown>
                             <a href="javascript:void(0)">
                                 <span @click="enterCenter">{{auth.NickName}}</span>
-                                <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                                 <Icon type="ios-arrow-down"></Icon>
                             </a>
                             <DropdownMenu slot="list">
@@ -60,6 +59,7 @@
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
+                        <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                     </div>
                 </li>
                 <!-- <li>

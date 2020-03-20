@@ -1,40 +1,43 @@
 <template>
     <div>
-        <div class="container-box">
-            <div class="container">
-                <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
-                    <div class="editor-jzbl">
-                        <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
-                    </div>
-                    <template v-for="(item, index) in attentionList">
-                        <ImageAndText
-                            :key="index"
-                            v-if="item.TalkType !== 2 && item.TalkType !== 6"
-                            :itemInfo="item"
-                            :index="index"
-                            @clickCollection="clickCollection"
-                            @clickLike="clickLike"
-                            @clickMenu="clickMenu"
-                        ></ImageAndText>
-                        <VideoItem
-                            :key="index"
-                            v-if="item.TalkType === 2 || item.TalkType === 6"
-                            :videoInfo="item"
-                            :index="index"
-                            @clickCollection="clickCollection"
-                            @clickLike="clickLike"
-                            @clickMenu="clickMenu"
-                        ></VideoItem>
-                    </template>
-                    <div v-if="attentionList.length <= 0" class="attentionListSty">
-                        暂无关注数据
-                    </div>
-                </crollBox>
-                <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+        <loading :loading="loading"/>
+        <div v-if="loading">
+            <div class="container-box">
+                <div class="container">
+                    <crollBox :isLast="isLast" @willReachBottom ="willReachBottom" >
+                        <div class="editor-jzbl">
+                            <proRele :editorName="editorName" @clickEditor="clickEditor" @relSuccessfully="relSuccessfully"/>
+                        </div>
+                        <template v-for="(item, index) in attentionList">
+                            <ImageAndText
+                                :key="index"
+                                v-if="item.TalkType !== 2 && item.TalkType !== 6"
+                                :itemInfo="item"
+                                :index="index"
+                                @clickCollection="clickCollection"
+                                @clickLike="clickLike"
+                                @clickMenu="clickMenu"
+                            ></ImageAndText>
+                            <VideoItem
+                                :key="index"
+                                v-if="item.TalkType === 2 || item.TalkType === 6"
+                                :videoInfo="item"
+                                :index="index"
+                                @clickCollection="clickCollection"
+                                @clickLike="clickLike"
+                                @clickMenu="clickMenu"
+                            ></VideoItem>
+                        </template>
+                        <div v-if="attentionList.length <= 0" class="attentionListSty">
+                            暂无关注数据
+                        </div>
+                    </crollBox>
+                    <Page v-show="pageNum > 4" :current="pageNum"  :total="records" show-elevator @on-change="onChangePage"/>
+                </div>
+                <nominate />
             </div>
-            <nominate />
+            <ToTop ></ToTop>
         </div>
-        <ToTop ></ToTop>
     </div>
 </template>
 
@@ -54,6 +57,7 @@
         middleware: 'authenticated',
         data() {
             return {
+                loading: false,
                 editorName: 'tw',
                 pageNum: 1,
                 attentionList: [],
@@ -69,6 +73,11 @@
             ToTop,
             nominate,
             proRele
+        },
+        created () {
+            this.$nextTick(function () {
+                this.loading = true
+            })
         },
         methods: {
             clickEditor (val) {

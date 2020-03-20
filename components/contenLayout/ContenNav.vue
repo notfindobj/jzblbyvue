@@ -141,7 +141,7 @@ export default {
         initSwiper () {
             let _this = this;
             this.$nextTick(() => {
-                this.swiperBox = new Swiper (`.swiper-boxs${this.swiperKey}`,{
+                this.swiperBox = new Swiper(`.swiper-boxs${this.swiperKey}`,{
                     navigation: {
                         nextEl: '.swiper-button-next',
                         prevEl: '.swiper-button-prev',
@@ -166,6 +166,7 @@ export default {
                 this.swiperBox.el.onmouseleave = function(){
                     _this.swiperBox.autoplay.start();
                 }
+                this.swiperBox.slideTo(2);
             })
         },
         viewDetails (row) {

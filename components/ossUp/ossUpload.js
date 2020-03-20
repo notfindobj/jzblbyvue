@@ -40,12 +40,15 @@ function set_file_name(filename) {
 }
 
 // 获取后端返回的签名信息，生成oss参数
-function oss(filename = null) {
+function oss(filename = null, type = 0) {
   // 可以判断当前expire是否超过了当前时间， 如果超过了当前时间， 就重新取一下， 3 s 作为缓冲。
   now = Date.parse(new Date()) / 1000;
   if (now) {
     // 调用后端服务器接口获取签名信息，利用axios返回promise，可以链式调用
-      return getPostPolicy().then(res => {
+      let q = {
+        publishType: type
+      }
+      return getPostPolicy(q).then(res => {
         console.log('uploadjs----',res)
         /* 返回的签名策略信息包含:
         {

@@ -256,12 +256,14 @@
                     LikeType: 1,
                     IsDelete: item.islikes
                 }
+                // itemOperateData
                 let thumbsUpMsg = await setthumbsUp(queryData);
                 if (item.islikes) {
                     this.$set(item, 'likes', item.likes - 1)
                 } else {
                     this.$set(item, 'likes', item.likes + 1)
                 }
+                console.log(item)
                 this.$set(item, 'islikes', !item.islikes)
             },
             // 收藏
@@ -341,14 +343,13 @@
             },
             // 支付接口调用成功的回调
             payment(config, type, id) {
-                this.$Message.success("支付成功，正在为您加载资源...")
                 let _this = this;
                 setTimeout(async function () {
                     switch(type) {
                         case 0:
-                            this.modalConfig.isWxConfig = true;
-                            this.paymentConfig = config;
-                            this.downloadTime = setInterval(async () => {
+                            _this.modalConfig.isWxConfig = true;
+                            _this.paymentConfig = config;
+                            _this.downloadTime = setInterval(async () => {
                                 let msg = await downloadFile(id);
                                 if (typeof(msg)=='string') {
                                     clearInterval(this.downloadTime);
@@ -374,7 +375,8 @@
                             window.location.href = config.data
                             break;
                         case 2:
-                            this.detaDetails.IsPay = true;
+                            _this.$Message.success("支付成功，正在为您加载资源...")
+                            _this.detaDetails.IsPay = true;
                             let msg = await downloadFile(id);
                             if (typeof(msg)=='string') {
                                 try {
@@ -394,7 +396,8 @@
                             }
                             break;
                         case 3:
-                            this.detaDetails.IsPay = true;
+                            _this.$Message.success("支付成功，正在为您加载资源...")
+                            _this.detaDetails.IsPay = true;
                             msg = await downloadFile(id);
                             if (typeof(msg)=='string') {
                                 try {

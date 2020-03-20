@@ -7,7 +7,7 @@
         <i class="icon iconfont icon-chahao3 icon-position" @click="closeMask()"></i>
       </div>
       <p class="window-name">项目名称：{{payInfos.ItemName}}</p>
-      <p class="window-price">支付金额：{{payMoney > 0? payMoney : payInfos.Price}}</p>
+      <p class="window-price">支付金额：{{payMoney > 0? payMoney : payInfos.Price }} <span class="pre">{{setPie(currentIndex)}}</span> </p>
       <div class="window-type">
         <div class="pay-type">支付方式：</div>
         <ul>
@@ -80,7 +80,7 @@
       async payment (value) {
         let qq =
           {
-          "Money": this.payMoney,
+          "Money": this.payMoney <= 0 ? this.payInfos.Price : this.payMoney,
           "ItemId": value.ItemId,
           "IsDebug": false
         }
@@ -107,11 +107,30 @@
           }
           this.$emit('payment', pay, this.currentIndex, value.ItemId)
         }
+      },
+      setPie (val) {
+        switch(val) {
+          case 0,1:
+              return "元"
+              break;
+          case 2:
+              return "部落币"
+              break;
+          case 3:
+              return "积分"
+              break;
+          default:
+            return "元"
+        } 
       }
     }
   }
 </script>
 <style lang="less" scoped>
+  .pre {
+    color: #ababab;
+    font-size: 12px;
+  }
   .mask{
     width: 100%;
     height: 100%;

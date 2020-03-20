@@ -69,6 +69,11 @@ module.exports = {
   ** Customize the progress bar color
   */
   loading: { color: '#FF3C00' },
+  generate: {
+    minify: {
+      collapseWhitespace: false
+    }
+  },
   /*
   ** Build configuration
   */

@@ -114,6 +114,7 @@
             }
             let userItem = await store.dispatch('geOwnItemList', userId);
             return {
+                itemData,
                 searchNav,
                 userItem,
                 RspSelectMenuDatas: searchNav.RetMenuData.ChildNode, //菜单数据

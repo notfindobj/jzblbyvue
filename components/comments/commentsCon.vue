@@ -5,9 +5,9 @@
             <ul class="comments-status-info">
                 <li>
                     <span @click="thumbsUp(publish)">
-                        <i v-if="publish.itemOperateData&&publish.itemOperateData.IsLike" class="icon iconfont icon-like-b"></i>
+                        <i v-if="publish&&publish.IsLike" class="icon iconfont icon-like-b"></i>
                         <i v-else class="icon iconfont icon-dianzan1"></i>
-                        <span>{{publish.itemOperateData ? publish.itemOperateData.LikeCount : 0}}</span>
+                        <span>{{publish ? publish.likes : 0}}</span>
                     </span>
                 </li>
                 <li>

@@ -24,7 +24,7 @@
                             </template>
                         </FormItem>
                         <FormItem>
-                            <Input type="textarea" v-model="Remark" :autosize="{minRows: 2,maxRows: 5}" placeholder="备注"></Input>
+                            <Input type="textarea" v-model="Remark" :autosize="{minRows: 2, maxRows: 2}" placeholder="备注"></Input>
                         </FormItem>
                         <FormItem>
                             <Button type="error" long @click="Submission">立即提交</Button>

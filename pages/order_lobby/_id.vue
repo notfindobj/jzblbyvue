@@ -9,8 +9,11 @@
                         <li>信息编号：{{orderType.ID}}</li>
                     </ul>
                 </div>
-                <div class="order-left-title-btn">
-                    <!-- <span>完成派单</span> -->
+                <div v-if="orderType.Status === 0" class="order-left-title-btns" @click="orderLpbby(orderType)">
+                    <span>申请接单</span>
+                </div>
+                <div v-if="orderType.Status === 1 || orderType.Status === 2" class="order-left-title-btns">
+                    <span >完成派单</span>
                 </div>
             </div>
             <div class="order-left-info">
@@ -53,8 +56,15 @@
     </div>
 </template>
 <script>
+import { mapState} from 'vuex'
+import {takeOrders} from '../../service/clientAPI'
 export default {
     layout: 'main',
+    computed: {
+        ...mapState({
+            Identity: state => state.overas.auth || {}
+        })
+    },
     async asyncData({ store , params}) {
         let query = {
             Id: params.id
@@ -64,6 +74,26 @@ export default {
             orderType
         }
     },
+    methods: {
+         async orderLpbby (row) {
+            if (this.Identity.IsCertificate === 1) {
+                let query =  {
+                    Id: row.ID,
+                    Remark: "" 
+                }
+                let msg = await takeOrders(query);
+                if (msg) {
+                    this.$Notice.success({
+                        title: '订单通知',
+                        desc: '您的需求以通知甲方，待甲方同意后您可获取甲方的联系方式！'
+                    });
+                }
+                return false
+            } else {
+                this.authentication = true;
+            }
+        },
+    }
     
 }
 </script>
@@ -112,6 +142,19 @@ export default {
                     border-radius: 3px;
                     cursor: pointer;
                     color: #666;
+                    font-size: 14px;
+                }
+                &-btns {
+                    float:right;
+                    background: #ff3c00;
+                    padding: 0 20px;
+                    height: 34px;
+                    display: inline-block;
+                    line-height: 34px;
+                    border: 0;
+                    border-radius: 3px;
+                    cursor: pointer;
+                    color: #fff;
                     font-size: 14px;
                 }
             }

@@ -28,17 +28,20 @@ export default {
                 {
                     cut: 'text',
                     title: '联系人',
-                    key: 'OrderUserName'
+                    key: 'OrderUserName',
+                    width: 100
                 },
                 {
                     cut: 'text',
                     title: '联系号码',
-                    key: 'OrderPhone'
+                    key: 'OrderPhone',
+                    width: 110
                 },
                 {
                     cut: 'time',
                     title: '申请时间',
-                    key: 'CreateDate' 
+                    key: 'CreateDate' ,
+                    width: 110
                 },
                 {
                     cut: 'btn',

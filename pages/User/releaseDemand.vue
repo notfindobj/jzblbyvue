@@ -23,27 +23,32 @@ export default {
                 {
                     cut: 'text',
                     title: "地点",
-                    key: 'CityName'
+                    key: 'CityName',
+                    width: 100
                 },
                 {
                     cut: 'text',
                     title: '类型',
-                    key: 'TypeName'
+                    key: 'TypeName',
+                    width: 80
                 },
                 {
                     cut: 'text',
                     title: '规模(m²)',
-                    key: 'Area'
+                    key: 'Area',
+                    width: 85
                 },
                  {
                     cut: 'text',
                     title: '设计预算',
-                    key: 'BudgetName'
+                    key: 'BudgetName',
+                    width: 110
                 },
                 {
                     cut: 'time',
                     title: '申请时间',
-                    key: 'CreateDate' 
+                    key: 'CreateDate',
+                    width: 105
                 },
                 {
                     cut: 'text',
@@ -54,6 +59,7 @@ export default {
                     cut: 'btn',
                     title: '操作',
                     key: 'address',
+                    width: 105,
                     state: [
                         {text: '查看详情', events: 'viewOrder', style: 'info'}, 
                     ]
