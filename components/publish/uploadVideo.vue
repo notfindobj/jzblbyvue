@@ -6,7 +6,7 @@
     @uploadSuccess="uploadSuccess"
     @beforeUpload="beforeUpload">
       <div class="upload1">
-        <img v-if="previewSrc !== ''" :src="`${previewSrc}?x-oss-process=video/snapshot,t_10000,m_fast`" alt="">
+        <img v-if="previewSrc !== ''" :src="`${previewSrc}`" alt="">
         <span v-else>
             <i class="icon iconfont">&#xe613;</i>
             添加视频

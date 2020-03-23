@@ -14,7 +14,7 @@
                     <h2 v-if="detailInfo.TalkTitle" class="pictureBox-title">{{detailInfo.TalkTitle}}</h2>
                     <div v-html="detailInfo.TalkContent"></div>
                     <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TalkType !== 5" :key="index">
-                        <img :src="items.smallImgUrl" :alt="items.fileName" :data-original="replaceImgs(items.smallImgUrl)" />
+                        <img :src="items.smallImgUrl" :alt="items.fileName" :data-original="items.bigImgUrl" />
                     </div>
                 </div>
             </div> 
@@ -41,7 +41,7 @@
 <script>
 import Viewer from 'viewerjs';
 import share from '../../components/share'
-import commentsCon from '../../components/comments/commentsCon.vue'
+import commentsCon from '../../components/commentBox/commentsCon'
 import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile, delComment} from '../../service/clientAPI'
 import ToTop from '../../components/toTop'
 import { mapState, mapGetters } from 'vuex'
@@ -182,7 +182,7 @@ export default {
         async thumbsUp(item) {
             let queryData = {
                 ItemId: item.ItemId,
-                LikeType: 1,
+                LikeType: item.TalkType,
                 IsDelete: item.itemOperateData.IsLike
             }
             let thumbsUpMsg = await setthumbsUp(queryData);
@@ -193,23 +193,24 @@ export default {
                     this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
                 }
                 this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
-                console.log(item.itemOperateData)
             }
         },
         // 收藏
         async Collection(item) {
             let queryData = {
                 ItemId: item.ItemId,
-                TalkType: 4,
+                TalkType: item.TalkType,
                 IsDelete: item.iscollections
             }
             let collectionMsg = await setCollection(queryData)
-            if (item.iscollections) {
-                this.$set(item, 'collections', (item.collections) - 1)
-            } else {
-                this.$set(item, 'collections', (item.collections) + 1)
+            if (collectionMsg) {
+                if (item.itemOperateData.IsCollection) {
+                    this.$set(item.itemOperateData, 'CollectionCount', item.itemOperateData.CollectionCount - 1)
+                } else {
+                    this.$set(item.itemOperateData, 'CollectionCount', item.itemOperateData.CollectionCount + 1)
+                }
+                this.$set(item.itemOperateData, 'IsCollection', !item.itemOperateData.IsCollection)
             }
-            this.$set(item, 'iscollections', !item.iscollections)
         },
         // 关注
         async setFollow(item) {

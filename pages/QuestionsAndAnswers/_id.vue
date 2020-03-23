@@ -16,7 +16,7 @@
             </div>
             <div class="img-row" :ref="mathId">
                 <div class="img" v-for="item in detailInfo.ResourceObj" :key="item.smallImgUrl" >
-                    <img :src="item.smallImgUrl" :data-original="replaceImgs(item.smallImgUrl)" alt="" >
+                    <img :src="item.smallImgUrl" :data-original="item.bigImgUrl" alt="" >
                 </div>
             </div>
             <div class="editor-wrap">

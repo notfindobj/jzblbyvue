@@ -334,9 +334,9 @@ export default {
         uploadSuccessVideo (videoInfo) {
             let obj = videoInfo 
             obj.videoUrl = videoInfo.smallImgUrl
+            obj.smallImgUrl = videoInfo.smallImgUrl+"?x-oss-process=video/snapshot,t_2000,f_jpg"
             this.imgList = [];
             this.previewSrc = obj.smallImgUrl
-            obj.smallImgUrl = ""
             this.imgList = [obj];
         },
         // 文本域发生变化

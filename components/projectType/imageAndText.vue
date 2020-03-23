@@ -68,8 +68,8 @@
                      <!-- 其他 -->
                      <template v-if="itemInfo.TalkType !== 5" >
                        <div v-for="(item, otherIndex) in itemInfo.ResourceObj"  :class="otherIndex < textLength ? 'img' : 'img itemHide'" :key="otherIndex">
-                        <img v-if="otherIndex < textLength" v-lazy="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
-                        <img v-if="otherIndex >= textLength" :src="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
+                        <img v-if="otherIndex < textLength" v-lazy="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
+                        <img v-if="otherIndex >= textLength" :src="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
                         <div v-if="(itemInfo.ResourceObj.length - textLength) > 0 && otherIndex === (textLength - 1)" class="superLong">
                             <span>+{{itemInfo.ResourceObj.length - textLength}}</span>
                         </div>
@@ -79,8 +79,8 @@
                     <template v-if="!isUnfold">
                       <template v-if="itemInfo.TalkType === 5" >
                         <div v-for="(item, imgIndex) in itemInfo.ResourceObj"  :class="imgIndex < 3 ? 'img' : 'img itemHide'"  :key="imgIndex+item.smallImgUrl">
-                          <img v-if="imgIndex < 3" v-lazy="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
-                          <img v-if="imgIndex >= 3" :src="item.smallImgUrl" alt="" :data-original="replaceImgs(item.smallImgUrl)"/>
+                          <img v-if="imgIndex < 3" v-lazy="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
+                          <img v-if="imgIndex >= 3" :src="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
                           <div v-if=" ((itemInfo.ResourceObj.length - 3) > 0) && imgIndex === 2" class="superLong">
                             <span>+{{itemInfo.ResourceObj.length - 3}}</span>
                           </div>
@@ -254,7 +254,7 @@
             })
             analogJump(routeData.href);
         }
-        if (row.TalkType === 5) {
+        if (row.TalkType === 5 || row.TalkType === 1) {
           this.goPictureDetails(row)
         }
       },
