@@ -26,9 +26,9 @@ export default{
         type: Number,
         default: 0
       },
-      maxsize: {
+      maxSize: {
         type: Number,
-        default: 10240
+        default: 20
       },
       showUploadList: {
         type: Boolean,
@@ -52,12 +52,20 @@ export default{
   methods: {
     // 在Upload组件的钩子before-upload中获取到生成的参数信息
     beforeUpload(file) {
+      if (file.size > this.maxSize * 1024000) {
+        this.$Message.error({
+          content:`${file.name}超过了${this.maxSize}M，请压缩后重新上传！`,
+          duration: 2
+        })
+        return false
+      }
+      console.log("asdsa")
       let _this = this;
       return oss(file.name, _this.fileType).then(res => {
         this.uploadHost = res.host
         this.uploadData = res;
         this.fileName = res;
-        if (this.accept === "video/mp4") {
+        if (this.accept === "video/*") {
           _this.$refs['uploadFile'].clearFiles();
           _this.$emit('beforeUpload', file,  res)
           return false

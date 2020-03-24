@@ -7,7 +7,7 @@
                     :style="`display: ${!formValidate.img || isMove? 'inline-block;' : 'none;'} `">
                         <ossUp
                             class="uploadc"
-                            accept="image/gif,image/jpeg,image/jpg,image/png"
+                            accept="image/*"
                             :fileType="1"
                             @uploadSuccess="fileSuccess">
                             <div class="upload-component">

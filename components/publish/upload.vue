@@ -1,5 +1,7 @@
 <template>
     <ossUp
+    accept="image/*"
+    :maxSize="20"
      @uploadSuccess="uploadSuccess"
      @beforeUpload="beforeUpload">
         <div class="upload" >

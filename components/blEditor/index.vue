@@ -15,7 +15,7 @@
                             <i class=" icon iconfont">&#xe631;</i>
                             <ossUp
                                 style="display:none"
-                                accept="image/gif,image/jpeg,image/jpg,image/png"
+                                accept="image/*"
                                 @beforeUpload="fileSelected"
                                 @uploadSuccess="fileSuccess">
                                 <div ref="uploadPic" ></div>
@@ -248,13 +248,13 @@ export default {
         //  富文本上传图片
         async fileSelected (file) {
             this.editor.txt.append(`<p>
-                <div class="bl-loading loading${this.setImgClass(file.bmf)}">
-                    <img data-action="loading" src="${file.smallImgUrl}" style="max-width:100%;"></img>
-                    <div class="bl-mongolia" contenteditable="false">
-                        <span>正在上传</span>
+                    <div class="bl-loading loading${this.setImgClass(file.bmf)}">
+                        <img data-action="loading" src="${file.smallImgUrl}" style="max-width:100%;"></img>
+                        <div class="bl-mongolia" contenteditable="false">
+                            <span>正在上传</span>
+                        </div>
                     </div>
-                </div>
-            <p><br></p></p>`);
+                </p>`);
             this.imgList.push(file);
         },
         // 富文本上传图片成功
@@ -268,8 +268,10 @@ export default {
                     imgsrcs = ele.key
                 }
             })
-            $(`.loading${this.setImgClass(name)}`).replaceWith(`<p><img src="${imgsrcs}" style="max-width:100%;"></img></p>`);
-            this.imgsrc = this.getSrc(this.editor.txt.html())
+            setTimeout(() => {
+                $(`.loading${this.setImgClass(name)}`).replaceWith(`<p><img src="${imgsrcs}" style="max-width:100%;"></img></p>`);
+                this.imgsrc = this.getSrc(this.editor.txt.html())
+            }, 100)
         },
         // 图片
         uploadPic () { 
@@ -401,7 +403,11 @@ export default {
             this.$emit('editorPush',content )
         },
         setImgClass (val) {
-            return val.split('.')[0]
+            try {
+               return val.replace(/[(|)|=|$|-|@|#|%|^|&|*|/|!|,|。|?|:|;|.| ]/g,"")
+            } catch (error) {
+                return val
+            }
         },
         getTimes(content) {
             let _this = this

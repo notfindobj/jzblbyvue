@@ -64,7 +64,7 @@ export default {
     .foot {
         background: #E8E8E8;
         padding-top: 20px;
-        margin-top: 20px;
+        // margin-top: 20px;
         &-top {
             padding: 40px 0 33px;
             width: 1200px;

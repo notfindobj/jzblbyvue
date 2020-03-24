@@ -21,7 +21,7 @@ function random_string(len) {
   for (let i = 0; i < len; i++) {
     pwd += chars.charAt(Math.floor(Math.random() * maxPos));
   }
-  return pwd;
+  return pwd + (Date.parse(new Date()) / 1000);
 }
 // 获取用户上传原始文件名
 function get_file_name(filename) {

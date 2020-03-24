@@ -1,10 +1,10 @@
 <template>
   <ossUp 
-    accept="video/mp4"
-    :maxsize="maxSize"
+    accept="video/*"
+    :maxSize="100"
     :showUploadList="true"
-    @uploadSuccess="uploadSuccess"
-    @beforeUpload="beforeUpload">
+    @beforeUpload="beforeUpload"
+    @uploadSuccess="uploadSuccess">
       <div class="upload1">
         <img v-if="previewSrc !== ''" :src="`${previewSrc}`" alt="">
         <span v-else>
@@ -29,7 +29,6 @@
     },
     data() {
       return {
-        maxSize: 1024 * 50,
         baseUrl: process.env.baseUrl,
         token: ''
       }
@@ -50,7 +49,6 @@
       },
       // 上传成功
       uploadSuccess(res) {
-        debugger
         this.$emit('uploadSuccess', res)
       }
     },
