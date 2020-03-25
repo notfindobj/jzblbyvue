@@ -19,6 +19,7 @@ import videoModel from '../../components/videoModel'
 import videos from '../../components/videos'
 import emotHtml from '../../components/emotHtml'
 import loading from '../../components/loading'
+import luckDraw from '../luckDraw'
 const omponents = {
   install: function (Vue) {
     Vue.component('Small-Cards', Small_Cards)
@@ -27,6 +28,7 @@ const omponents = {
     Vue.component('videos', videos)
     Vue.component('emotHtml', emotHtml)
     Vue.component('loading', loading)
+    Vue.component('luckDraw', luckDraw)
   }
 }
 const publicComponents = {...omponents}

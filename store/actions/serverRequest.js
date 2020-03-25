@@ -144,4 +144,8 @@ export const serverRequest = {
   async getOrderDel({commit}, params) {
     return await request.get(`OrderReceiving/GetReceivingDetail`, params)
   },
+   // 获取套餐列表
+  async getCoinsList({commit}, params) {
+    return await request.get(`AllPay/GetTribalCoinsData`, params)
+  },
 }

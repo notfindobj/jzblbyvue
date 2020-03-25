@@ -118,7 +118,7 @@
                 <Checkbox v-model="IsAllowIntegral">支持积分下载</Checkbox>
                 <Checkbox v-model="IsAllowTribalCoins">支持部落币下载</Checkbox>
                 <div class="tishi">
-                    温馨提示：1元 = 10部落币 &nbsp;&nbsp; 1部落币= 10积分
+                    温馨提示：1元 = 1部落币 &nbsp;&nbsp; 1部落币= 10积分
                 </div>
             </FormItem>
             <FormItem label="项目描述">
