@@ -2,7 +2,7 @@
     <div class="baseCard">
         <div class="baseCard-top">
             <div class="baseCard-top-img">
-                <img src="http://www.pic.jzbl.com/ItemFiles/0d54bf62-e42b-460b-aab4-7e6bd1990221/d21bf365-7728-4bb3-a06e-dde38b2c7d8b/6367303797185465516606320_small.jpg" alt="">
+                <img src="http://www.pic1.jzbl.com/buildingcircle/2d0f0642-0f54-412a-a830-cb0b5828ce90/2020-03-25/i/1585147992421.png?x-oss-process=image/quality,q_90/resize,w_400" alt="">
             </div>
             <div class="baseCard-top-sub">
                 <span><i class="icon iconfont icon-chakan"></i> 查看</span>
@@ -10,37 +10,16 @@
             </div>
         </div>
         <div class="baseCard-footer">
-            <p class="baseCard-footer-name">示范区弧形坡屋顶</p>
+            <div class="baseCard-footer-name">
+                <span>示范区弧形坡屋顶</span>
+                <span>剩余：999件</span>
+            </div>
             <div class="baseCard-footer-user">
-                <Poptip trigger="hover" width="150">
-                    <div class="baseCard-footer-user-head">
-                        <img src="http://www.pic.jzbl.com/ItemFiles/UserInfoImg/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/1566125301_s.jpeg" alt="">
-                    </div>
-                    <div class="baseCard-pop" slot="content">
-                        <div class="baseCard-pop-title">
-                            <div class="baseCard-pop-title-box">
-                                <img src="http://www.pic.jzbl.com/ItemFiles/UserInfoImg/0e70e8ea-d343-4136-a2f8-0af82ebe7c67/1566125301_s.jpeg" alt="">
-                            </div>
-                            <p>嘿嘿嘿</p>
-                        </div>
-                        <div class="baseCard-pop-con">
-                            <div class="baseCard-pop-con-left">
-                                <p>项目</p>
-                                <p>0</p>
-                            </div>
-                            <div class="baseCard-pop-con-right">
-                                <p>粉丝</p>
-                                <p>0</p>
-                            </div>
-                        </div>
-                        <div class="baseCard-pop-footer">
-                            <span class="follow">关注</span>
-                            <span>私信</span>
-                        </div>
-                    </div>
-                </Poptip>
+                <div class="baseCard-footer-user-num">
+                    1056积分
+                </div>
                 <div class="baseCard-footer-user-name">
-                    服务大众
+                    立即下载
                 </div>
             </div>
         </div>
@@ -93,25 +72,43 @@
             &-name {
                 line-height: 25px;
                 font-weight: 600;
+                display: flex;
+                justify-content: space-between;
+                span {
+                    &:last-child {
+                        color: #929292;
+                    }
+                }
             }
             &-user {
-                display: flex;
                 padding-bottom: 5px;
+                display: flex;
+                justify-content: space-between;
                 &-head {
                     display: inline-block;
                     cursor: pointer;
                     width: 35px;
                     height: 35px;
                     overflow: hidden;
-                    img {
-                        width: 100%;
-                        height: 100%;
-                    }
+                }
+                &-num {
+                    line-height: 35px;
+                    color: #ff3c00;
+                    font-weight: bold;
+                    font-size: 15px;
                 }
                 &-name {
-                    flex: 1;
-                    line-height: 35px;
-                    padding-left: 10px;
+                    cursor: pointer;
+                    display: inline-block;
+                    color: #ff3c00;
+                    padding: 3px 6px;
+                    border-radius: 3px;
+                    margin: 5px 0;
+                    border: 1px solid #dd3c00;
+                    &:hover {
+                        color: #fff;
+                        background: #ff3c00;
+                    }
                 }
             }
         }

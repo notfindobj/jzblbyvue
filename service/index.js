@@ -38,7 +38,7 @@ service.interceptors.response.use(
     // 客户端
     if (process.client) {
       if (res.data.Code === 200 && res.data.Success) {
-        if (!res.data.Data) {
+        if (res.data.Data === "" || res.data.Data === false) {
           res.data.Data = 1
         }
         return res.data.Data

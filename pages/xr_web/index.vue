@@ -9,18 +9,18 @@
                 <div class="xr-box-content-left">充值套餐：</div>
                <div class="tc">
                     <ul>
-                        <li :class="priceIndex === index ? 'active-price':'active-un'" v-for="(items, index) in price" :key="index" @click="setMeal(index)" >
+                        <li :class="priceIndex === index ? 'active-price':'active-un'" v-for="(items, index) in priceList" :key="index" @click="setMeal(items, index)" >
                             <div class="price">
-                                <p>￥{{items.price}}</p>
+                                <p>￥{{items.Money}}</p>
                                 <span>{{sumMeal(items)}}</span>
                             </div>
                             <div >
                                 <p class="package-source">我选择：</p>
-                                <RadioGroup @click.native.stop="" v-model="items.packageSource" @on-change="changeRadio">
+                                <RadioGroup @click.native.stop="" v-model="items.packageSource">
                                     <Radio v-for="(item, indexs) in items.radio" :key="indexs" :label="item.value">{{item.label}}</Radio>
                                 </RadioGroup>
                                 <div class="discount">
-                                    <span>{{items.discount}}折</span>
+                                    <span>{{items.Discount}}折</span>
                                 </div>
                             </div>
                         </li>
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <payBox v-if="paymShow" @closePay="closePay"/>
+        <payBox v-if="paymShow" :setMeal="setMeals" @closePay="closePay"/>
     </div>
 </template>
 <script>
@@ -70,14 +70,14 @@ export default {
                     radio: [
                         {
                             label: "部落币",
-                            value: "blRadio"
+                            value: "1"
                         },
                     {
                             label: "积分",
-                            value: "jfRadio"
+                            value: "2"
                         }
                     ],
-                    packageSource: "blRadio",
+                    packageSource: "1",
                     discount: 9.8
                 },
                 {
@@ -112,14 +112,32 @@ export default {
                 }
             ],
             priceIndex: 0,
-            paymShow: false
+            paymShow: false,
+            setMeals: {}
         }
     },
     async asyncData({app, store}) {
         try {
             const msg = await store.dispatch('getCoinsList');
+            if (msg.length > 0) {
+                let radio = [
+                    {
+                        label: "部落币",
+                        value: "2"
+                    },
+                    {
+                        label: "积分",
+                        value: "1"
+                    }
+                ]
+                msg.forEach(ele =>{
+                    ele.packageSource = "1"
+                    ele.radio = radio
+                })
+            }
             return {
-                priceList: msg
+                priceList: msg,
+                setMeals: msg[0]
             }
         } catch (error) {}
     },
@@ -127,20 +145,18 @@ export default {
         closePay () {
             this.paymShow = !this.paymShow
         },
-        setMeal (index) {
+        setMeal (row, index) {
             this.priceIndex = index
-        },
-        changeRadio (value) {
-            console.log(value)
+            this.setMeals = row
         },
         sumMeal (row) {
             let t = ""
-            if (row.packageSource === "blRadio") {
-               t = row.price +  parseInt(row.price * ((10 * 10 - row.discount * 10) / 10)) +"部落币"
+            if (row.packageSource === "2") {
+               t = parseInt(row.Money) + row.TribalCoins+"部落币"
                return t
             }
-            if (row.packageSource === "jfRadio") {
-               t = row.price+"部落币 + "  +  parseInt(row.price * ((10 * 10 - row.discount * 10))) + "积分"
+            if (row.packageSource === "1") {
+               t = row.Money+"部落币 + "  +  row.Integral + "积分"
                return t
             }
         }
@@ -267,6 +283,7 @@ export default {
         font-size: 12px;
         text-align: left;
         margin-left: 40px;
+        margin-top: 8px;
     }
     .discount {
         text-align: center;

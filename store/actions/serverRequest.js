@@ -148,4 +148,8 @@ export const serverRequest = {
   async getCoinsList({commit}, params) {
     return await request.get(`AllPay/GetTribalCoinsData`, params)
   },
+  // 获取奖品
+  async getPrizeInfo({commit}, params) {
+    return await request.get(`UserIntegral/PrizeInfo`, params)
+  },
 }

@@ -9,7 +9,7 @@ exports.configUrl = {
             return 'https://www.api.jzbl.com/api/'
         } else {
         // 本地环境
-            // return 'http://192.168.10.15:8066/api/'
+            // return 'http://106.14.139.124:8099/api/'
              return 'https://www.api.jzbl.com/api/'
         }
     })(),
@@ -24,8 +24,8 @@ exports.configUrl = {
         } else {
         // 本地环境 
             // return 'http://192.168.10.14:8555'
-            //  return 'https://www.jzbl.com/'
-            return 'http://192.168.10.07:8889'
+             return 'https://www.jzbl.com/'
+            // return 'http://192.168.10.07:8889'
         }
     })(),
     serverPort: (() => {

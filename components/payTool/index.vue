@@ -6,24 +6,28 @@
             <div class="paym-com-right">
                 <div class="paym-com-right-item">
                     <label>充值账号：</label>
-                    <span>初九</span>
+                    <span>{{Identity.NickName}}</span>
                 </div>
                 <div class="paym-com-right-item">
                     <label>付款方式：</label>
                     <div class="paym-com-right-item-paysele">
                         <div>
-                            <span class="paysele-wei"></span>
-                            <span class="paysele-zhi"></span>
+                            <span :style="`background-position:-10px  -${isType ===1 ? 10 : 58}px;`" class="paysele" @click="paysele(1)"></span>
+                            <span :style="`background-position:-138px  -${isType ===2 ? 10 : 58}px;`" class="paysele" @click="paysele(2)"></span>
                         </div>
                        
                     </div>
                 </div>
                  <div>
-                    <p class="amount">700元</p>
+                    <p class="amount">{{setMeal.Money}}元</p>
                     <div class="amount-qr">
-                        <p><img src="../../assets/images/qr-code.jpg" alt="" width="140"></p>
+                        <p>
+                            <img v-if="isType ===1" :src="payQr" alt="" width="140">
+                            <img v-if="isType === 2 && payiframe === 1" :src="payQr" alt="" width="140">
+                            <iframe v-if="isType === 2 && payiframe === 0" :src="payQr" frameborder="0" border="0" class="payiframe" height="125" scrolling="no"></iframe>
+                        </p>
                         <span class="qr-tol">
-                            支付宝扫码支付
+                            {{isType === 1 ? "微信扫码支付" : "支付宝扫码支付"}}{{payStart === 0 ? "" : "成功"}}
                         </span>
                     </div>
                 </div>
@@ -32,10 +36,98 @@
     </div>
 </template>
 <script>
+import { mapState} from 'vuex'
+import {getOrderStatr, WXSETMEAL, ZFBSETMEAL} from "../../service/sign"
+import { requests } from '../../store/modules'
 export default {
+    props: {
+        setMeal: {
+            type: Object,
+            default: ()=> {}
+        }
+    },
+    computed: {
+        ...mapState({
+            Identity: state => state.overas.auth || {}
+        })
+    },
+    data () {
+        return {
+            isType: 1,
+            payQr: "",
+            time: null,
+            payStart: 0,
+            payiframe: 0
+        }
+    },
+    created () {
+        this.getPayQr()
+    },
     methods: {
         closePay () {
+            clearTimeout(this.time)
             this.$emit("closePay")
+        },
+        paysele (val) {
+            clearTimeout(this.time)
+            this.isType = val;
+            this.getPayQr();
+            this.payStart = 0;
+        },
+        // 支付套餐
+        getPayQr () {
+            let _this = this;
+            let q = {
+                MId: this.setMeal.ModuleId,
+                IsBase64Img: false,
+                IsDebug: true,
+                Type: this.setMeal.packageSource
+            }
+            clearTimeout(_this.time)
+            if (this.isType === 1) {
+                 WXSETMEAL(q).then(res => {
+                    if (res) {
+                        _this.payQr = res.url
+                        _this.time = setInterval(() => {
+                            let o ={
+                                orderId: res.orderId
+                            }
+                            getOrderStatr(o).then(res => {
+                                if(res === 1 ) {
+                                    clearTimeout(_this.time)
+                                    this.payQr = require("../../assets/images/pay_su.png")
+                                    setTimeout(() => {
+                                        this.$emit("closePay")
+                                    }, 1000)
+                                }
+                            }).catch(err=> {})
+                        }, 1000)
+                    }
+                }).catch(err => {})
+            }
+            if (this.isType === 2) {
+                 ZFBSETMEAL(q).then(res => {
+                    if (res) {
+                        _this.payQr = res.url
+                        _this.time = setInterval(() => {
+                            let o ={
+                                orderId: res.orderId
+                            }
+                            getOrderStatr(o).then(res => {
+                                if(res === 1 ) {
+                                    _this.payiframe = 1
+                                    _this.payiframe = 1
+                                    clearTimeout(_this.time)
+                                    _this.payQr = require("../../assets/images/pay_su.png")
+                                    setTimeout(() => {
+                                        _this.$emit("closePay")
+                                    }, 1000)
+                                }
+                            }).catch(err=> {})
+                        }, 1000)
+                    }
+                }).catch(err => {})
+            }
         }
     }
 }
@@ -72,19 +164,12 @@ export default {
         font-size: 28px;
         color: #3bc66f;
     }
-    .paysele-wei {
-        background: url(../../assets/images/paym_sprites.png) -10px  -10px;
+    .paysele {
         display: inline-block;
         width: 108px;
         height: 28px;
         cursor: pointer;
-    }
-    .paysele-zhi {
-        cursor: pointer;
-        background: url(../../assets/images/paym_sprites.png) -138px  -58px;
-        display: inline-block;
-        width: 108px;
-        height: 28px;
+        background: url(../../assets/images/paym_sprites.png);
     }
     .paym {
         position: fixed;
@@ -101,10 +186,9 @@ export default {
             position: relative;
             left: 50%;
             top: 50%;
-            transform: translate(-50% ,-50%);
+            transform: translate(-50%, -50%);
             border-radius: 3px;
             &-left {
-                display: inline-block;
                 width: 300px;
                 float: left;
                 height: 430px;
@@ -113,10 +197,8 @@ export default {
             &-right {
                 color: #333;
                 float: right;
-                position: absolute;
                 width: 500px;
                 height: 100%;
-                display: inline-block;
                 box-sizing: border-box;
                 padding: 40px 70px;
                 &-item {
@@ -127,7 +209,6 @@ export default {
                         width: 70px;
                     }
                     &-paysele {
-                        display: inline-block;
                         width: 80%;
                         height: 100%;
                         float: right;
@@ -135,5 +216,10 @@ export default {
                 }
             }
         }
+    }
+    .payiframe {
+        width: 125px;
+        height: 125px;
+        overflow: hidden;
     }
 </style>
