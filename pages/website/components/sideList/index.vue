@@ -1,16 +1,29 @@
 <template>
     <ul class="list">
-        <li>
+        <li @click="viewAbout(items)">
             <span>
-                <span class="roof">顶</span>
-                <span class="roof-tit">列表问题？？？？？？？？？？？？</span>
+                <span v-if="items.IsTop" class="roof">顶</span>
+                <span class="roof-tit">{{items.ArticleTitle}}</span>
             </span>
-            <span class="roof-time">
-                2020-3-25
-            </span>
+            <span class="roof-time">{{items.CreateDate | datefmt('YYYY-MM-DD')}}</span>
         </li>
     </ul>
 </template>
+<script>
+export default {
+    props: {
+        items:{
+            type: Object,
+            default: () => {}
+        }
+    },
+    methods: {
+        viewAbout (row) {
+            this.$emit("viewAbout", row)
+        }
+    }
+}
+</script>
 <style lang="less" scoped>
     .list{
         li {

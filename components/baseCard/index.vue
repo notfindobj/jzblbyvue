@@ -2,30 +2,49 @@
     <div class="baseCard">
         <div class="baseCard-top">
             <div class="baseCard-top-img">
-                <img src="http://www.pic1.jzbl.com/buildingcircle/2d0f0642-0f54-412a-a830-cb0b5828ce90/2020-03-25/i/1585147992421.png?x-oss-process=image/quality,q_90/resize,w_400" alt="">
+                <nuxt-link target="_blank" :to="{name: 'DataDetails', query: {id:item.ItemId, layout: true}}">
+                    <img :src="item.ItemTitleImg" alt="礼物">
+                </nuxt-link>
             </div>
-            <div class="baseCard-top-sub">
+            <!-- <div class="baseCard-top-sub">
                 <span><i class="icon iconfont icon-chakan"></i> 查看</span>
                 <span><i class="icon iconfont icon-favorite"></i> 收藏</span>
-            </div>
+            </div> -->
         </div>
         <div class="baseCard-footer">
             <div class="baseCard-footer-name">
-                <span>示范区弧形坡屋顶</span>
-                <span>剩余：999件</span>
+                <span>{{item.ItemName}}</span>
+                <span>剩余：{{item.Stock}}件</span>
+            </div>
+            <div class="baseCard-footer-time">
+                <span>兑换时间:</span>
+                <span>{{item.StartDate | datefmt('YYYY-MM-DD')}}---{{item.EndDate | datefmt('YYYY-MM-DD')}}</span>
             </div>
             <div class="baseCard-footer-user">
                 <div class="baseCard-footer-user-num">
-                    1056积分
+                    {{item.Integral}}积分
                 </div>
-                <div class="baseCard-footer-user-name">
-                    立即下载
-                </div>
+                <div class="baseCard-footer-user-name" v-if="!item.isExchange"  @click="exchangeItems(item)">立即下载</div>
+                <div class="baseCard-footer-user-nameun" v-if="item.isExchange">立即下载</div>
             </div>
         </div>
     </div>
 </template>
-
+<script>
+export default {
+    props: {
+        item: {
+            type: Object,
+            default: () => {}
+        }
+    },
+    methods: {
+        exchangeItems (row) {
+            this.$emit("exchangeItems", row)
+        }
+    }
+}
+</script>
 <style lang="less" scoped>
     .baseCard {
         background: #ffffff;
@@ -35,6 +54,7 @@
         margin-top: 15px;
         box-shadow: none;
         transition: box-shadow .5s;
+        width: 290px;
         &-top {
             position: relative;
             cursor: pointer;
@@ -69,6 +89,12 @@
         }
         &-footer {
             padding: 0 10px;
+            &-time {
+                display: flex;
+                justify-content: space-between;
+                color: #929292;
+                line-height: 30px;
+            }
             &-name {
                 line-height: 25px;
                 font-weight: 600;
@@ -109,6 +135,17 @@
                         color: #fff;
                         background: #ff3c00;
                     }
+                }
+                &-nameun {
+                    cursor: pointer;
+                    display: inline-block;
+                    color: #ff3c00;
+                    padding: 3px 6px;
+                    border-radius: 3px;
+                    margin: 5px 0;
+                    background: #ddd;
+                    color: #fff;
+                    cursor: no-drop;
                 }
             }
         }

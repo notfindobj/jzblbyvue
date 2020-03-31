@@ -10,30 +10,26 @@
         </div>
         <div class="wb-main">
             <ul class="wb-main-side">
-                <li :class="meuntIndex === index ? 'side-active': ''" v-for="(items, index) in meunt" :key="index" @click="setMeunt(items, index)">{{items.title}}</li>
+                <li :class="meuntIndex === index ? 'side-active': ''" v-for="(items, index) in meunt" :key="index" @click="getSysData(index, 's')">{{items.Name}}</li>
             </ul>
             <div class="wb-main-con">
-                <h3>{{meunt[meuntIndex].title}}</h3>
+                <h3>{{meunt[meuntIndex].Name}}</h3>
                 <div class="wb-main-con-list">
-                   <template v-if="meuntType === 1">
-                        <sideList/>
-                        <sideList/>
-                        <sideList/>
+                   <template>
+                        <sideList v-for="(items, index) in meuntConLisy"  :items="items" :key="index" @viewAbout="viewAbout"/>
                         <div class="wb-main-con-page">
-                            <Page :total="100" />
+                            <Page :total="total" @on-change="changePage" />
                         </div>
                    </template>
-                   <div v-if="meuntType === 0">
-                       建筑部落（www.jzbl.com）汇聚地产界著名建筑、景观、室内设计服务商、建筑材料商。专业提供建筑设计、景观设计、室内设计、建筑材料、建材采购、房地产招投标服务的房地产服务的房地产开发设计、房地产设计网站；以庞大的建筑设计资料搜索功能为龙头，另拥有海量建筑师用户为基础，为建筑行业产业链上的多类客户提供资讯、招聘、培训、广告等线上、线下综合性服务，建筑圈版块，为建筑师提供交流互动平台，让学习、分享、定制与设计更轻松，加快信息传播速度,降低运营成本。
-                   </div>
                 </div>
-               
             </div>
         </div>
     </div>
 </template>
 <script>
 import sideList from "./components/sideList"
+import {getSysList} from "../../service/sign"
+import {analogJump} from "../../plugins/untils/public"
 export default {
     layout: "main",
     components: {
@@ -41,32 +37,52 @@ export default {
     },
     data () {
         return {
-            meunt: [
-                {
-                    title: "信息公告",
-                    type: 1
-                },
-                {
-                    title: "规则协议",
-                    type: 1
-                },
-                {
-                    title: "常见问题",
-                    type: 1
-                },
-                {
-                    title: "关于我们",
-                    type: 0
-                }
-            ],
+            meunt: [],
             meuntIndex: 0,
-            meuntType: 0
+            meuntConLisy: [],
+            meuntType: 1,
+            total: 0
         }
     },
+    async asyncData({store}) {
+        try {
+            const msg = await store.dispatch('getSysMenu');
+            return{
+                meunt: msg
+            }
+        } catch (error) {
+            return{
+                meunt: []
+            }
+        }
+    },
+    created () {
+        this.getSysData()
+    },
     methods:{
-        setMeunt (row, index) {
-            this.meuntIndex = index,
-            this.meuntType = row.type
+        changePage (val) {
+            this.getSysData(val)
+        },
+        getSysData (index = 0, t) {
+            let that = this
+            let p = 0
+            if (t === "s") {
+                that.meuntIndex = index
+            } else {
+                p = index
+            }
+            let q = {
+                typeId: that.meunt[that.meuntIndex].Id,
+                page: p
+            }
+            getSysList(q).then(res => {
+                that.meuntConLisy = res.retModels
+                that.total = res.paginationData.records
+            }).catch(err => {})
+        },
+        viewAbout (row) {
+            let routeData = this.$router.resolve({ name: 'details-id', params: { id: row.ArticleId } });
+            analogJump(routeData.href);
         }
     }
 }

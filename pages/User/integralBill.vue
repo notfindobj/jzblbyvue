@@ -68,10 +68,9 @@ export default {
                     key: 'CreateDate'
                 },
                 {
-                    cut: 'state',
+                    cut: 'text',
                     title: '类型',
-                    key: 'ScoreType',
-                    state: [{label: '注册', value: 1}, {label: '发布', value: 2}, {label: '资源下载', value: 3}, {label: '部落币转换', value: 4}, {label: '签到', value: 5}, {label: '发布问答', value: 6}]
+                    key: 'Memo',
                 }
             ],
             searchTime: [],

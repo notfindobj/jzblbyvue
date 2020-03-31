@@ -8,7 +8,7 @@
                 <div class="user-sign">
                    <div class="user-sign-name">
                        <span>初九</span>
-                       <span><Icon type="md-clipboard" />签到</span>
+                       <span @click="signeds"><Icon type="md-clipboard" />签到</span>
                    </div>
                    <div class="user-sign-num">当前积分：<span class="user-sign-num-pir">32</span></div>
                    <div class="user-sign-num">累计积分：<span class="user-sign-num-pir">3200</span></div>
@@ -16,13 +16,13 @@
             </div>
             <div>
                 <h2>积分排行</h2>
-                <div>
-                    <div class="record-ul" v-for="(items, index) in WinerList" :key="index">
+                <!-- <div>
+                    <div class="record-ul" v-for="index in 4" :key="index">
                         <span>嘿嘿嘿</span>
                         <span>38694.0</span>
                         <span>1556</span>
                     </div>
-                </div>
+                </div> -->
             </div>
         </div>
         <div class="exchange">
@@ -30,8 +30,8 @@
                 <h2 class="exchange-title-h">积分兑换</h2>
                 <p class="exchange-title-sub">建筑部落全新资源库专区，等你来发现更多惊喜！</p>
                 <div class="exchange-title-con">
-                    <template v-for="item in 8">
-                        <baseCard :key="item"/>
+                    <template v-for="(item, index) in ExItem">
+                        <baseCard :item="item" :key="index" @exchangeItems="exchangeItems"/>
                     </template>
                 </div>
             </div>
@@ -75,153 +75,161 @@
             <div class="rule-left">
                 <p class="rule-left-title">
                     <span><Icon type="md-volume-up" />公告</span>
-                    <span>更多>></span>
+                    <span><nuxt-link to="/website">更多>></nuxt-link></span>
                 </p>
                 <ul class="rule-left-content">
-                    <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
+                    <li v-for="(items, index) in noticeList" :key="index">
+                        <div @click="viewAbout(items)">
+                            <span v-if="items.IsTop" class="roof">顶</span>
+                            <span class="roof-tit">{{items.ArticleTitle}}</span>
                         </div>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
-                        </div>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
-                        </div>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
-                        </div>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
-                        </div>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
-                        </div>
-                        <span>2020-3-25</span>
-                    </li>
-                     <li>
-                        <div>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落增套餐说明</span>
-                        </div>
-                        <span>2020-3-25</span>
+                        <span class="roof-time">{{items.CreateDate | datefmt('YYYY-MM-DD')}}</span>
                     </li>
                 </ul>
             </div>
             <div class="rule-right">
                 <p class="rule-right-title">
                     <span><Icon type="ios-paper-outline" />规则协议</span>
-                    <span>更多>></span>
+                    <span><nuxt-link to="/website">更多>></nuxt-link></span>
                 </p>
                 <ul class="rule-right-content">
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
+                    <li v-for="(items, index) in ruleList" :key="index">
+                        <span @click="viewAbout(items)">
+                            <span v-if="items.IsTop" class="roof">顶</span>
+                            <span class="roof-tit">{{items.ArticleTitle}}</span>
                         </span>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
-                        </span>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
-                        </span>
-                        <span>2020-3-25</span>
-                    </li>
-
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
-                        </span>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
-                        </span>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
-                        </span>
-                        <span>2020-3-25</span>
-                    </li>
-                    <li>
-                        <span>
-                            <span class="roof">置顶</span>
-                            <span>关于建筑部落上传审核标准</span>
-                        </span>
-                        <span>2020-3-25</span>
+                        <span class="roof-time">{{items.CreateDate | datefmt('YYYY-MM-DD')}}</span>
                     </li>
                 </ul>
             </div>
         </div>
+        <Signed v-if="isSign" @closeSign="closeSign"/>
     </div>
 </template>
 <script>
 import baseCard from '../../components/baseCard'
-import {getLottery, getWiner} from "../../service/sign"
+import {getLottery, getWiner, ExChange, getSysList} from "../../service/sign"
+import {downloadFile, addSignInData} from "../../service/clientAPI"
+import Signed from "../../components/signed"
+import {analogJump} from "../../plugins/untils/public"
 import Swiper from "swiper"
 export default {
     layout: "main",
     components: {
-        baseCard
+        baseCard,
+        Signed
     },
     data () {
         return {
             list:[],
             WinerList: [],
             prizes: 0,
+            isSign: false,
+            modal2: false,
+            modal_loading: false,
+            items: {},
+            noticeList: [],
+            ruleList: []
         }
     },
     async asyncData({store}) {
         try {
             let mg = await store.dispatch('getPrizeInfo');
+            let ite = await store.dispatch('getItemEx');
             return {
-                list: mg
+                list: mg,
+                ExItem:ite
             }
         } catch (error) {
             return {
-                list: []
+                list: [],
+                ExItem: []
             }
         }
     },
     created () {
         this.getWinerList()
+        this.getNotice()
+        this.getRule()
     },
     methods: {
+        getNotice () {
+            let q = {
+                typeId : "2c6e6fba-8d1b-4718-a646-98fb14f73442",
+                page:0
+            }
+            getSysList(q).then(res => {
+                this.noticeList = res.retModels
+            }).catch(err => {})
+        },
+        getRule () {
+            let q = {
+                typeId : "3689182c-b54d-42f5-8d65-85d8a6e78f87",
+                page:0
+            }
+            getSysList(q).then(res => {
+                this.ruleList = res.retModels
+            }).catch(err => {})
+        },
+        viewAbout (row) {
+            let routeData = this.$router.resolve({ name: 'details-id', params: { id: row.ArticleId } });
+            analogJump(routeData.href);
+        },
+        // 兑换商品
+        exchangeItems (row) {
+            let that = this;
+            this.$Modal.confirm({
+                title: `<Icon type="ios-information-circle"></Icon><span>下载提示</span>`,
+                content: `<div style="text-align:center">
+                        <p>您此次将要兑换的奖品为${row.ItemName},所需积分${row.Integral},是否确认</p>
+                    </div>`,
+                loading: true,
+                onOk: () => {
+                    if (row.isExchange === 0) {
+                        let q ={
+                            EId: row.ID
+                        }
+                        that.modal_loading = true
+                        ExChange(q).then(res => {
+                            if (res) {
+                                that.$Modal.remove();
+                                row.isExchange = 1
+                                row.Stock -= 1
+                                that.downloadFiles(row.ItemId)
+                            }
+                        }).catch(err => {})
+                    }
+                }
+            })
+        },
+        async downloadFiles (id) {
+            let msg = await downloadFile(id);
+            try {
+                let name = msg.split('&')[1]
+                var eleLink = document.createElement('a');
+                eleLink.download = '';
+                eleLink.style.display = 'none';
+                eleLink.href = msg.split('&')[0];
+                // 触发点击
+                document.body.appendChild(eleLink);
+                eleLink.click();
+                // 然后移除
+                document.body.removeChild(eleLink);
+            } catch (error) {
+                console.log('下载出错')
+            }
+        },
+        closeSign () {
+            this.isSign = false
+        },
+        async signeds () {
+            let msg = await addSignInData();
+            if (msg) {
+                // this.account.IsSignIn = true
+                this.isSign = true
+            }
+            
+        },
         // 获取中奖者接口
         getWinerList () {
             let that = this
@@ -307,6 +315,7 @@ export default {
             span {
                 line-height: 44px;
                 &:last-child {
+                    position: relative;
                     margin-right: 80px;
                     cursor: pointer;
                     width: 150px;
@@ -318,6 +327,11 @@ export default {
                     font-weight: 100;
                     background: #ff3c00;
                     color: #fff;
+                    i {
+                        position:absolute;
+                        top: 26%;
+                        left: 24%;
+                    }
                 }
             }
         }
@@ -433,6 +447,11 @@ export default {
                 display: flex;
                 justify-content: space-between;
                 line-height: 30px;
+                a {
+                    :hover {
+                        color: #ff3c00;
+                    }
+                }
             }
             &-content {
                 li {

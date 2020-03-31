@@ -24,3 +24,11 @@ export const getWiner = async (params) => {
 export const getPrizeInfo = async (params) => {
   return await request.get('UserIntegral/PrizeInfo', params)
 }
+// 获取说明列表
+export const getSysList = async (params) => {
+  return await request.get('Common/GetSysExpArticleList', params)
+}
+// 获取说明列表
+export const ExChange = async (params) => {
+  return await request.post('AllPay/IntegralExchange', params)
+}

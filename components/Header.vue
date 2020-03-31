@@ -211,7 +211,7 @@ export default {
                     this.$router.push({name: 'index'})
                 }
                 if (this.$route.name.indexOf('User') !== -1) {
-                     this.$router.push({name: 'index'})
+                    this.$router.push({name: 'index'})
                 }
             }
         },

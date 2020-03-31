@@ -152,4 +152,16 @@ export const serverRequest = {
   async getPrizeInfo({commit}, params) {
     return await request.get(`UserIntegral/PrizeInfo`, params)
   },
+  // 获取其他菜单
+  async getSysMenu({commit}, params) {
+    return await request.get(`Common/GetSysExpTypeMenu`, params)
+  },
+  // 获取详情
+  async getMenuDetail({commit}, params) {
+    return await request.get(`Common/GetSysExpDetail`, params)
+  },
+  // 获取兑换积分列表
+  async getItemEx({commit}, params) {
+    return await request.get(`UserIntegral/GetItemExchangeList`, params)
+  },
 }
