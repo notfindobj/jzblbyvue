@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "7585201",
+      "name": "文件",
+      "font_class": "wenjian",
+      "unicode": "e638",
+      "unicode_decimal": 58936
+    },
+    {
+      "icon_id": "13107307",
+      "name": "笑脸",
+      "font_class": "xiaolian",
+      "unicode": "e665",
+      "unicode_decimal": 58981
+    },
+    {
+      "icon_id": "8286489",
+      "name": "积分",
+      "font_class": "jifen",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "637804",
+      "name": "向下箭头",
+      "font_class": "xiangxiajiantou",
+      "unicode": "e634",
+      "unicode_decimal": 58932
+    },
+    {
       "icon_id": "8341725",
       "name": "箭头1_下",
       "font_class": "jiantou_xia",

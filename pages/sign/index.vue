@@ -3,19 +3,20 @@
         <div class="sg-top">
             <div class="sg-top-left">
                 <div class="user">
-                    <img src="http://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif" alt="" width="140" height="140px">
+                    <img :src="integral.HeadIcon" alt="" width="140" height="140px">
                 </div>
                 <div class="user-sign">
                    <div class="user-sign-name">
-                       <span>初九</span>
+                       <span>{{integral.NickName}}</span>
                        <span @click="signeds"><Icon type="md-clipboard" />签到</span>
                    </div>
-                   <div class="user-sign-num">当前积分：<span class="user-sign-num-pir">32</span></div>
-                   <div class="user-sign-num">累计积分：<span class="user-sign-num-pir">3200</span></div>
+                   <div class="user-sign-num">当前积分：<span class="user-sign-num-pir">{{integral.ValidInter}}</span></div>
+                   <div class="user-sign-num">累计积分：<span class="user-sign-num-pir">{{integral.allInter}}</span></div>
                 </div>
             </div>
             <div>
-                <h2>积分排行</h2>
+                <!-- <h2>积分排行</h2> -->
+                <!-- {{integral}} -->
                 <!-- <div>
                     <div class="record-ul" v-for="index in 4" :key="index">
                         <span>嘿嘿嘿</span>
@@ -43,7 +44,7 @@
                 <div class="exchange-title-con">
                     <div class="luckDraw">
                         <div class="luck">
-                            <span>当前积分：<span class="siNum">585255</span>    </span>
+                            <span>当前积分：<span class="siNum">{{integral.ValidInter}}</span></span>
                             <Tooltip theme="light">
                                 <span>抽奖规则</span>
                                 <div slot="content">
@@ -78,7 +79,7 @@
                     <span><nuxt-link to="/website">更多>></nuxt-link></span>
                 </p>
                 <ul class="rule-left-content">
-                    <li v-for="(items, index) in noticeList" :key="index">
+                    <li v-for="(items, index) in noticeList" :key="index"  v-if="index < 6">
                         <div @click="viewAbout(items)">
                             <span v-if="items.IsTop" class="roof">顶</span>
                             <span class="roof-tit">{{items.ArticleTitle}}</span>
@@ -93,7 +94,7 @@
                     <span><nuxt-link to="/website">更多>></nuxt-link></span>
                 </p>
                 <ul class="rule-right-content">
-                    <li v-for="(items, index) in ruleList" :key="index">
+                    <li v-for="(items, index) in ruleList" :key="index"  v-if="index < 6">
                         <span @click="viewAbout(items)">
                             <span v-if="items.IsTop" class="roof">顶</span>
                             <span class="roof-tit">{{items.ArticleTitle}}</span>
@@ -103,7 +104,7 @@
                 </ul>
             </div>
         </div>
-        <Signed v-if="isSign" @closeSign="closeSign"/>
+        <Signed v-if="isSign" @closeSign="closeSign" :integ="integ"/>
     </div>
 </template>
 <script>
@@ -129,21 +130,25 @@ export default {
             modal_loading: false,
             items: {},
             noticeList: [],
-            ruleList: []
+            ruleList: [],
+            integ: 0
         }
     },
     async asyncData({store}) {
         try {
             let mg = await store.dispatch('getPrizeInfo');
             let ite = await store.dispatch('getItemEx');
+            let integ = await store.dispatch('getIUserIntegral');
             return {
                 list: mg,
-                ExItem:ite
+                ExItem: ite,
+                integral: integ
             }
         } catch (error) {
             return {
                 list: [],
-                ExItem: []
+                ExItem: [],
+                integral: {}
             }
         }
     },
@@ -225,10 +230,9 @@ export default {
         async signeds () {
             let msg = await addSignInData();
             if (msg) {
-                // this.account.IsSignIn = true
+                this.integ = msg
                 this.isSign = true
             }
-            
         },
         // 获取中奖者接口
         getWinerList () {
@@ -241,11 +245,21 @@ export default {
         // 抽奖
         startLot () {
             let that = this
-            getLottery().then(res => {
-                that.prizes = res
-            }).then(res => {
-                this.$refs.luckDraw.clickStartRoll()
-            }).catch(err => {})
+            if(that.integral.ValidInter - 100 > 0) {
+                that.integral.ValidInter -= 100
+                getLottery().then(res => {
+                    that.prizes = res
+                }).then(res => {
+                    this.$refs.luckDraw.clickStartRoll()
+                }).then(res => {
+                    setTimeout(() => {
+                        that.integral.ValidInter += that.list[that.prizes].PrizeWorth
+                    }, 6000)
+                })
+                .catch(err => {})
+            } else {
+                that.$Message.error("您的积分不足!")
+            }
         },
         initSwiper () {
             let that= this;

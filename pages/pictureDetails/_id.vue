@@ -91,10 +91,6 @@ export default {
       this.initView()
     },
     methods: {
-        replaceImgs (val) {
-            let regex = "/i/s/";
-            return val.replace(regex, "/i/");
-        },
         initView() {
             const ViewerDom = document.getElementById('pictureBox');
             let _this = this;

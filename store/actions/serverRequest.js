@@ -164,4 +164,8 @@ export const serverRequest = {
   async getItemEx({commit}, params) {
     return await request.get(`UserIntegral/GetItemExchangeList`, params)
   },
+  // 获取用户积分
+  async getIUserIntegral({commit}, params) {
+    return await request.get(`UserIntegral/GetUserIntegral`, params)
+  },
 }

@@ -3,7 +3,7 @@
         <div class="si-box">
             <Icon class="si-close" @click="closeSign" type="ios-close-circle-outline" />
             <div class="si-box-tit">
-                <h3>获得1积分</h3>
+                <h3>获得{{integ}}积分</h3>
                 <p class="txt-sub">连续签到还还可兑换部落币！</p>
             </div>
             <div class="si-box-but">
@@ -19,6 +19,13 @@
 </template>
 <script>
 export default {
+    props: {
+        integ :{
+            type: Number,
+            default: 0
+        }
+       
+    },
     methods: {
         closeSign () {
             this.$emit("closeSign")

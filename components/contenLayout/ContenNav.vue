@@ -140,6 +140,17 @@ export default {
     methods: {
         initSwiper () {
             let _this = this;
+            let autoplay = false
+            let loop = false
+            let centered = false
+            if (this.userItem.length >= 8) {
+                autoplay = {
+                    delay: 2500,
+                    disableOnInteraction: true,  //触碰后自动切换停止
+            　　}
+                loop = true
+                centered = true
+            }
             this.$nextTick(() => {
                 this.swiperBox = new Swiper(`.swiper-boxs${this.swiperKey}`,{
                     navigation: {
@@ -148,17 +159,14 @@ export default {
                     },
                     slidesPerView: 4,
                     spaceBetween: 20,
-                    centeredSlides: true,
-                    loop:true,  //循环
+                    centeredSlides: centered,
+                    loop: loop,  //循环
                     loopedSlides: 2,
                     loopAdditionalSlides: 2,
                     loopFillGroupWithBlank: true,
                     observer:true,//修改swiper自己或子元素时，自动初始化swiper
             　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
-                    autoplay: {
-                        delay: 2500,
-                        disableOnInteraction: true,  //触碰后自动切换停止
-                　　}
+                    autoplay: autoplay
                 })
                 this.swiperBox.el.onmouseover = function(){ //鼠标放上暂停轮播
                     _this.swiperBox.autoplay.stop();
