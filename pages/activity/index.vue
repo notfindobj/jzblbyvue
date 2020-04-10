@@ -3,7 +3,7 @@
         <div class="ac" v-for="(item, index) in GoodList" :key="index" >
             <nuxt-link :to="`good_details/${item.ID}`">
                 <div class="ac-tit">
-                    <span class="hot"></span>
+                    <span class="hot"></span> 
                     <img width="100%" height="200" :src="item.ItemTitleImg" alt="">
                 </div>
                 <div class="la">
