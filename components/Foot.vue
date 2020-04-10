@@ -9,8 +9,8 @@
                     关于
                 </div>
                 <ul class="foot-color">
-                    <li><nuxt-link to="/other/60d70719-3567-4acc-99bd-330ebef0472d">关于我们</nuxt-link></li>
-                    <li><nuxt-link to="/other/339c4898-8e12-4b61-afb0-0c4b3442389c">联系我们</nuxt-link></li>
+                    <li><nuxt-link to="/details/60d70719-3567-4acc-99bd-330ebef0472d">关于我们</nuxt-link></li>
+                    <li><nuxt-link to="/details/339c4898-8e12-4b61-afb0-0c4b3442389c">联系我们</nuxt-link></li>
                 </ul>
             </div>
             <div style="width:450px;">
@@ -24,14 +24,18 @@
             <div style="width:150px;">
                 <div>帮助中心</div>
                 <ul class="foot-color">
-                    <li><nuxt-link to="/other/46813b6d-9534-44bd-9739-d48b6079d9c1">如何发布</nuxt-link></li>
-                    <li><nuxt-link to="/other/5c527259-a41e-44eb-aa46-6371cc86dd20">登录异常</nuxt-link></li>
+                    <li><nuxt-link to="/details/46813b6d-9534-44bd-9739-d48b6079d9c1">如何发布</nuxt-link></li>
+                    <li><nuxt-link to="/details/5c527259-a41e-44eb-aa46-6371cc86dd20">登录异常</nuxt-link></li>
                     <li><nuxt-link to="/other/feedback">意见反馈</nuxt-link></li>
                 </ul>
             </div>
             <div>
-                <!-- <img src="http://iph.href.lu/112x112?text=[自定义二维码]" alt="" width="112px" height="112px;">
-                <div class="code-img">建筑部落APP</div> -->
+                <img src="../assets/images/weixinqun.png" alt="" width="80px" height="80px;">
+                <div class="code-img">微信交流群</div>
+            </div>
+            <div>
+                <img src="../assets/images/qr-code.jpg" alt="" width="80px" height="80px;">
+                <div class="code-img">微信公众号</div>
             </div>
         </div>
         <div class="foot-buttom">
@@ -106,7 +110,7 @@ export default {
     }
     .code-img {
         text-align: center;
-        color: #333333;
-        font-size: 14px;
+        color: #666;
+        font-size: 12px;
     }
 </style>

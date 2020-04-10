@@ -168,4 +168,8 @@ export const serverRequest = {
   async getIUserIntegral({commit}, params) {
     return await request.get(`UserIntegral/GetUserIntegral`, params)
   },
+   // 获取用户积分
+  async getSaleDetails({commit}, params) {
+    return await request.get(`ItemList/GetItemSaleDetail`, params)
+  },
 }

@@ -231,7 +231,7 @@ export default {
         },
         ViewProtocol (row) {
             this.$store.dispatch('SETUP', false);
-            let routeData = this.$router.resolve({ name: 'other-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
+            let routeData = this.$router.resolve({ name: 'details-id', params: { id: "51088359-2291-4f1b-87b3-9d3920307d94"} });
             analogJump(routeData.href);
         },
         // 权限

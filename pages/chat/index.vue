@@ -16,14 +16,14 @@
                     <li :class="items.active ? 'contacts-items contacts-active': 'contacts-items '" v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent">
                         <div class="contacts-items-lf">
                             <div class="contacts-items-lf-img">
-                                <img :src="items.headIcon" alt="" width="50px" height="50px">
+                                <img :src="items.HeadIcon" alt="" width="50px" height="50px">
                             </div>
                             <div class="contacts-items-lf-user">
-                                <p class="contacts-items-lf-user-name">{{items.userName}}</p>
-                                <p class="contacts-items-lf-user-sub">{{items.firNew}}</p>
+                                <p class="contacts-items-lf-user-name">{{items.NickName}}</p>
+                                <p class="contacts-items-lf-user-sub">{{items.LatestMsg}}</p>
                             </div>
                         </div>
-                        <div class="contacts-items-time">{{items.time}}</div>
+                        <div class="contacts-items-time">{{items.MsgDateTime}}</div>
                     </li>
                 </ul>
             </div>
@@ -80,6 +80,8 @@
 </template>
 <script>
 import Viewer from 'viewerjs';
+import { mapState } from 'vuex'
+import {getChatUserList} from "../../service/sign"
 export default {
     layout: "chat",
     components: {},
@@ -289,6 +291,11 @@ export default {
     created () {
         this.beforePerson = this.contactsList[0]
     },
+     computed: {
+        ...mapState({
+            userInfo: state => state.overas.auth ? state.overas.auth: ""
+        }),
+    },
     mounted () {
         this.newWebSocket()
         document.addEventListener('click',e => {
@@ -297,8 +304,28 @@ export default {
             }
         })
         this.initView()
+        this.getUserList()
     },
     methods: {
+        async getUserList () {
+            this.contactsList = [
+                {
+                    "DialogId": "",
+                    "NickName": "666",
+                    "HeadIcon": "https://www.pic.jzbl.com/itemfiles/userinfoimg/baseimg/user.png",
+                    "LatestMsg": "在不在啊",
+                    "MsgDateTime": "1586309630",
+                    "ToUserId": "d5b4fbaa-40a0-4145-a119-88af91c3bf8f",
+                    "UserOnLine": 1,
+                    "UnreadMsg": 0
+                }
+            ]
+            // let m = await getChatUserList();
+            // if (m) {
+            //     this.contactsList = [
+            //     ]
+            // }
+        },
         initView() {
             const ViewerDom = document.getElementById('newTypeImg');
             let _this = this;
@@ -344,25 +371,39 @@ export default {
         getClient (event) {
             return {x: event.clientX, y: event.clientY}
         },
+        guid() {
+            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+                return v.toString(16);
+            })
+        },
         newWebSocket () {
+            let that = this;
             // 判断浏览器是否支持WebSocket
             var is_support = ("WebSocket" in window);
             if (is_support) {
                 // 打开一个 web socket
-                var ws = new WebSocket("ws://www.api.jzbl.com/api/LConnection/Connect?nickName=c6c67b71-9e54-404c-8811-8036f642d4ad");
+                var ws = new WebSocket(`ws://192.168.10.19:600/api/chatd2d?token=${this.userInfo.token}`);
                 //  Web Socket 已连接上
                 ws.onopen = function() {
-                    // 使用 send() 方法向服务器发送数据 数据
-                    ws.send({});
+                    // let msg = {
+                    //     MsgId: that.guid(),
+                    //     Token: that.userInfo.token,
+                    //     ToUserId: "d5b4fbaa-40a0-4145-a119-88af91c3bf8f",
+                    //     DialgId: "fd26eb84-2c1e-4082-a615-be3f9e2afc61",
+                    //     Content: "你好"
+                    // }
+                    // // 使用 send() 方法向服务器发送数据 数据
+                    ws.send(JSON.stringify({}));
                     console.log("数据发送中...");
                 };
                 //  接受服务器数据
                 ws.onmessage = function(e) {
-                    var received_msg = e.data;
-                    console.log("数据已接收...", received_msg);
+                    console.log("数据已接收...", e);
                 };
                 //  连接关闭
                 ws.onclose = function() {
+                    // that.newWebSocket()
                     // 关闭 websocket
                     console.log("连接已关闭...");
                 };

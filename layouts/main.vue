@@ -1,9 +1,10 @@
 <template>
     <div>
-        <!-- <TopAd></TopAd> -->
+        <TopAd></TopAd>
         <Header/>
         <nuxt/>
         <Foot/>
+        <floating/>
     </div>
 </template>
 
@@ -12,6 +13,7 @@
     import Header from '../components/Header';
     import TopAd from '../components/TopAd';
     import ToTop from '../components/toTop'
+    import floating from '../components/floating'
     export default {
         mounted () {
             let _hmt = _hmt || [];
@@ -26,7 +28,8 @@
             Foot,
             Header,
             TopAd,
-            ToTop
+            ToTop,
+            floating
         }
     }
 </script>

@@ -1,10 +1,11 @@
 <template>
     <div>
-        <!-- <TopAd></TopAd> -->
+        <TopAd></TopAd>
         <Navigation></Navigation>
         <nuxt/>
         <Foot></Foot>
         <ToTop/>
+        <floating/>
     </div>
 </template>
 <script>
@@ -12,6 +13,7 @@
     import Foot from '../components/Foot';
     import TopAd from '../components/TopAd';
     import ToTop from '../components/toTop'
+    import floating from '../components/floating'
     export default {
         mounted () {
             let _hmt = _hmt || [];
@@ -26,35 +28,22 @@
             Navigation,
             Foot,
             TopAd,
-            ToTop
+            ToTop,
+            floating
         }
     }
 </script>
 <style>
-    ul, li {
-        list-style: none;
+    
+    @media screen and (max-width: 360px) and (min-width: 321) {
+        html{font-size: 24px ;}
     }
-
-    html, body{
-        font-family: "微软雅黑" " Microsoft YaHei", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue" !important;
-        font-size: 16px;
-        word-spacing: 1px;
-        -ms-text-size-adjust: 100%;
-        -webkit-text-size-adjust: 100%;
-        -moz-osx-font-smoothing: grayscale;
-        -webkit-font-smoothing: antialiased;
-        box-sizing: border-box;
+    @media screen and (max-width: 320px) {
+        html {font-size: 20px;}
     }
-
     body {
         background-color: #F2F4F2;
     }
-
-    *, *:before, *:after {
-        box-sizing: border-box;
-        margin: 0;
-    }
-
     .button--green {
         display: inline-block;
         border-radius: 4px;

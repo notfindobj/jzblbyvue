@@ -43,6 +43,23 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+/deep/table {
+    width: 100%;
+    border-collapse: collapse;
+    tbody {
+        tr{
+            margin-top: -1px;
+           td {
+               border: 1px solid #ddd;
+               padding-left: 10px;
+           }
+        }
+        tr.firstRow {
+            background: #ddd;
+        }
+    }
+}
+
 .det {
     width: 1200px;
     margin: 0 auto;

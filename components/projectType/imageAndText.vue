@@ -199,7 +199,6 @@
         setTimeout(this.initView, 500);
       }
     },
-
     mounted () {
       if (this.itemInfo.ResourceObj.length > 0) {
          this.addFleg = true

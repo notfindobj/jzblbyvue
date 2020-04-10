@@ -80,7 +80,7 @@ export default {
             let q = {
                 MId: this.setMeal.ModuleId,
                 IsBase64Img: false,
-                IsDebug: true,
+                IsDebug: false,
                 Type: this.setMeal.packageSource
             }
             clearTimeout(_this.time)

@@ -201,7 +201,7 @@ export default {
         },
         protocol () {
             this.$store.dispatch('SETUP', false);
-            let routeData = this.$router.resolve({ name: 'other-id', params: { id: "12s5q58cf-ce5a-4fef-b301-0a9d37c23e22"} });
+            let routeData = this.$router.resolve({ name: 'details-id', params: { id: "12s5q58cf-ce5a-4fef-b301-0a9d37c23e22"} });
             analogJump(routeData.href);
         },
         // 获取发布的类型

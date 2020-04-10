@@ -12,7 +12,7 @@
                 </div>
                 <div style="width：800px" id="pictureBox">
                     <h2 v-if="detailInfo.TalkTitle" class="pictureBox-title">{{detailInfo.TalkTitle}}</h2>
-                    <div v-html="detailInfo.TalkContent"></div>
+                    <div v-html="detailInfo.TalkContent" class="pictureBox-con"></div>
                     <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TalkType !== 5" :key="index">
                         <img :src="items.smallImgUrl" :alt="items.fileName" :data-original="items.bigImgUrl" />
                     </div>
@@ -233,6 +233,11 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .pictureBox-con {
+        /deep/img {
+            width: 100%;
+        }
+    }
     .pictureBox-title {
         text-align: center;
     }
@@ -247,6 +252,13 @@ export default {
             #pictureBox {
                 img {
                     width: 100%;
+                } 
+                div {
+                    p {
+                        img {
+                            width: 100%;
+                        } 
+                    }
                 }
                 font-size: 14px;
                 background: #fff;

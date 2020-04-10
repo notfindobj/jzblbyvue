@@ -28,7 +28,7 @@ export default{
       },
       maxSize: {
         type: Number,
-        default: 20
+        default: 1024
       },
       showUploadList: {
         type: Boolean,

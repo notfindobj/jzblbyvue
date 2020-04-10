@@ -32,3 +32,23 @@ export const getSysList = async (params) => {
 export const ExChange = async (params) => {
   return await request.post('AllPay/IntegralExchange', params)
 }
+// 获取聊天列表
+export const getChatUserList = async (params) => {
+  return await request.get('chat/DialogueList', params)
+}
+// 创建聊天房间
+export const addChatUserList = async (params) => {
+  return await request.get('chat/AddDialogueInfo?toUserId=${params}')
+}
+// 创建商品列表   
+export const getSaleList = async (params) => {
+  return await request.get('ItemList/GetItemSaleList', params)
+}
+// 创建商品列表   
+export const buyGood = async (params) => {
+  return await request.post('AllPay/BoughtItem', params)
+}
+// 创建商品列表   
+export const getGoodStart = async (params) => {
+  return await request.get('AllPay/GetBoughtItemInfo', params)
+}

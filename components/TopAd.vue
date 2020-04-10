@@ -1,7 +1,9 @@
 <template>
-    <div class="ad" v-if="isAd">
-        <Icon class="close-icon" size="24" type="md-close" @click="closeAd" />
-    </div>
+    <nuxt-link to="/activity">
+        <div class="ad" v-if="isAd">
+            <Icon class="close-icon" size="24" type="md-close" @click="closeAd" />
+        </div>
+    </nuxt-link>
 </template>
 
 <script>
@@ -12,13 +14,13 @@
             }
         },
         mounted () {
-            this.isAd = localStorage.getItem('isAd') === 'false'? false : true;
+            // this.isAd = localStorage.getItem('isAd') === 'false'? false : true;
         },
         methods: {
             // 关闭顶部广告栏
             closeAd() {
                 this.isAd = false;
-                localStorage.setItem('isAd', false)
+                // localStorage.setItem('isAd', false)
 
             }
         }
@@ -28,13 +30,16 @@
 <style lang="less" scoped>
     .ad {
         position: relative;
-        height: 60px;
-        background: #bbbbbb;
+        height: 37px;
+        background: url(/_nuxt/assets/images/ad.jpg);
+        background-size: 100%;
+        background-repeat: no-repeat;
         .close-icon {
             position: absolute;
             right: 12px;
             top: 8px;
             cursor: pointer;
+            color: #fff;
         }
     }
 </style>

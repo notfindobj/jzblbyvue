@@ -8,7 +8,6 @@ const session = require('express-session');
 const axios = require('axios');
 const qs = require('qs');
 // Body parser，用来封装 req.body
-// app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
     parameterLimit: 100000,
     limit: 1024 * 1024 * 10
@@ -16,7 +15,8 @@ app.use(bodyParser.urlencoded({
 app.use(bodyParser.json({
     parameterLimit: 100000,
     limit: 1024 * 1024 * 10
-}));  //据需求更改limit大小
+})); 
+//据需求更改limit大小
 app.use(cookieParser());
 axios.defaults.withCredentials = true;
 
@@ -163,6 +163,7 @@ app.post('/api/logout', function (req, res) {
     axios(config).then(data => {
         if (data.data.Code === 200) {
             delete res.clearCookie('adminToken');
+            delete req.session.LOGININ
             res.json(response);
         }
     }, err => {

@@ -3,12 +3,20 @@
         <div v-if="scrollTop >= 400" class="to-top" @click="scrollToTop" v-show="isShowToTop">
             <Icon type="ios-arrow-up" color="#fff" size="30"/>
         </div>
-        <div class="code-content qr-code">
-            <img :src="qrCode" alt="" width="100%" height="100%" @mouseenter="mousemoveShowQr(true)" @mouseout="mousemoveShowQr(false)"> 
+        <div class="code-content qr-code" @mouseover="mousemoveShowQr(true)" @mouseout="mousemoveShowQr(false)">
+            <!-- <img :src="qrCode" alt="" width="100%" height="100%" >  -->
+            <i class="icon iconfont icon-erweima erweima"></i>
         </div>
-        <div class="code-content code-er" v-if="isShowQr">
+        <div class="code-content" ref="menuPanel" v-show="isShowQr" @mouseover="mousemoveShowQr(true)" @mouseout="mousemoveShowQr(false)">
             <div class="er-box">
-                <img :src="qrCode" alt="" width="100%" height="100%"> 
+                <div>
+                    <img :src="qrCode" alt="" width="100px" height="100px"> 
+                    <p class="er-p">微信公众号</p>
+                </div>
+                <div>
+                    <img :src="wxCode" alt="" width="88px" height="88px" style="margin-top: 7px;">
+                    <p class="er-p" style="margin-top: -25px;">微信交流群</p>
+                </div>
             </div>
             <i class="code-jian"></i>
         </div>
@@ -37,7 +45,8 @@ export default {
         return {
             scrollTop: '',
             isShowQr: false,
-            qrCode: require('../assets/images/qr-code.jpg')
+            qrCode: require('../assets/images/qr-code.jpg'),
+            wxCode: require('../assets/images/weixinqun.png'),
         }
     },
     mounted() {
@@ -84,7 +93,7 @@ export default {
         position: fixed;
         left: 50%;
         margin-left: 600px;
-        bottom: 110px;
+        bottom: 125px;
         width: 50px;
         height: 50px;
         background-color: #fff;
@@ -145,7 +154,7 @@ export default {
     }
     //  二维码
     .qr-code {
-        bottom: 159px;
+        bottom: 175px;
         width: 50px;
         height: 50px;
         padding: 8px;
@@ -165,6 +174,7 @@ export default {
         line-height: 50px;
         cursor: pointer;
         transition: all .1s ease-in;
+        z-index: 8888;
     }
     .code-er {
         bottom: 130px;
@@ -172,20 +182,27 @@ export default {
         margin-bottom: 1px;
         color: #fff;
         font-size: 16px;
-        left: 43%;
+        left: 36%;
         height: 120px;
         width: 120px;
         z-index: 999999;
     }
     .er-box {
-        width: 120px;
-        height: 120px;;
+        width: 260px;
+        height: 140px;;
         position: absolute;
+        justify-content: space-around;
+        display: flex;
         background: #fff;
-        left: 0;
+        left: -260px;
         top: 0;
         padding: 10px;
         z-index: 10;
+        display: flex;
+        color: #000;
+        top: -37px;
+        box-shadow: -1px 1px 10px #000;
+        border-radius: 3px;
     }
     .code-jian {
         position: absolute;
@@ -194,7 +211,20 @@ export default {
         height: 40px;
         transform: rotate(45deg);
         border-radius: 5px;
-        right: -6px;
-        top: 45px;
+        right: -3px;
+        top: 5px;
+    }
+    .er-p {
+        height: 20px;
+        margin-top: -30px;
+        font-size: 12px;
+    }
+    .erweima {
+        font-size: 40px;
+        top: 0px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        color: #ff3c00;
     }
 </style>
