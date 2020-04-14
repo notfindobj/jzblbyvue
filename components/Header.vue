@@ -41,43 +41,29 @@
                     <div class="user-name" v-else>
                         <Dropdown>
                             <a href="javascript:void(0)">
-                                <span @click="enterCenter">{{auth.NickName}}</span>
-                                <Icon type="ios-arrow-down"></Icon>
+                                <Badge :show-zero="allMessage ? true : false" dot :count="allMessage">
+                                   <span @click="enterCenter">{{auth.NickName}}</span>
+                                    <Icon type="ios-arrow-down"></Icon>
+                                </Badge >
                             </a>
                             <DropdownMenu slot="list">
                                 <DropdownItem>
-                                    <nuxt-link to="/User/system">系统消息</nuxt-link>
+                                    <nuxt-link to="/User/system">系统消息 <i v-if="getCusData.MsgCount>0">{{getCusData.MsgCount }}</i></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem>
-                                    <nuxt-link to="/User/comment">评论消息</nuxt-link>
+                                    <nuxt-link to="/User/comment">评论消息 <i v-if="getComment.MsgCount>0">{{getComment.MsgCount}}</i></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem>
-                                    <nuxt-link to="/User/customized">定制消息</nuxt-link>
+                                    <nuxt-link to="/User/customized">定制消息 <i v-if="getInviter.MsgCount>0">{{getInviter.MsgCount}}</i></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem>
-                                    <nuxt-link to="/User/Invitation">邀请消息</nuxt-link>
+                                    <nuxt-link to="/User/Invitation">邀请消息 <i v-if="getSystem.MsgCount>0">{{getSystem.MsgCount}}</i></nuxt-link>
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>
                         <span class="home-bar-content-right-out" @click="signOut">[退出]</span>
                     </div>
                 </li>
-                <!-- <li>
-                    <Dropdown class="right-select">
-                        <Badge :count="getComment.MsgCount + getCusData.MsgCount + getInviter.MsgCount " class-name="badge-sty"> <i  class="iconfont icon-xinxi bottom-start-mess"></i></Badge>
-                        <DropdownMenu slot="list">
-                            <DropdownItem >
-                                <nuxt-link to="/Message/customized">评论消息<Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>
-                            </DropdownItem>
-                            <DropdownItem >
-                                <nuxt-link to="/Message/comment">定制消息<Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
-                            </DropdownItem>
-                            <DropdownItem >
-                                <nuxt-link to="/Message/inviter">团队邀请<Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
-                            </DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </li> -->
             </ul>
         </div>
         <signPage />
@@ -97,7 +83,6 @@ export default {
         loginImg: require('../assets/images/top_logo.png'),
         searchpage: '',
         allMessage: 0,
-        Message: {}
       }
     },
     computed: {
@@ -105,7 +90,7 @@ export default {
             auth: state => state.overas.auth,
             showSign: state => state.overas.showSign,
         }),
-        ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter'])
+        ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter', 'getSystem'])
     },
     mounted () {
         if (this.isLogin) {
@@ -124,13 +109,11 @@ export default {
         async getMessage () {
             let msg = await this.$store.dispatch('getNews');
             if (msg) {
-                this.Message = msg;
                 this.$store.dispatch('ACCusData', msg.dingzhi);
                 this.$store.dispatch('ACComment', msg.pinglun);
                 this.$store.dispatch('ACInviter', msg.invite);
-                Object.keys(msg).forEach(item =>{
-                    this.allMessage += msg[item].MsgCount;
-                })
+                this.$store.dispatch('ACSystem', msg.xitong);
+                this.allMessage = msg.dingzhi.MsgCount + msg.pinglun.MsgCount + msg.invite.MsgCount + msg.xitong.MsgCount
             }
         },
         // 点击一级分类

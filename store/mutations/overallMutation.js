@@ -27,6 +27,9 @@ export const overallMutation = {
   setInviter(state, param = {}) {
     state.inviter = param
   },
+  setSystem(state, param = {}) {
+    state.system = param
+  },
   // 存储数据
   setSessionStorage (state, row) {
     state.sessionStorage[row.key] = row.value;

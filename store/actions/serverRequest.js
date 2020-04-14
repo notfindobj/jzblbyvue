@@ -110,7 +110,7 @@ export const serverRequest = {
   },
   // 获取要展示的消息
   async getNews({commit}, params) {
-    return await request.get(`LConnection/GetMessage`, params)
+    return await request.get(`LConnection/GetAppMessage`, params)
   },
   // 获取系统说明文档菜单
   async getSysExpMenu({commit}, params) {

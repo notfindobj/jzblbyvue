@@ -75,6 +75,10 @@
                                 v-if="PersonalCenter === 'mySomethingStatistical'"
                                 :followList="followList"
                             />
+                            <div class="un-com" v-if="this.dataList.length <= 0">
+                                <p>暂无资源！</p>
+                                <!-- <nuxt-link to="/publish">立即发布</nuxt-link> -->
+                            </div>
                         </crollBox>
                     </div>
                     <div class="he-and-i-con-box-content-right">
@@ -426,7 +430,7 @@
             },
             // 触底事件
             willReachBottom: _throttle (function () {
-                if (this.total === 1) {
+                if (this.total === 1 || this.total === 0) {
                     this.isLast = true
                     return false
                 }
@@ -518,6 +522,7 @@
             },
             // 获取发布数据
             getList(OneIndex, index, isScroll) {
+                this.isLast = false
                 this.$store.dispatch('getSelfOrOthertribeInfo', {
                     Page: this.pageNum,
                     Rows: 8,
@@ -525,6 +530,7 @@
                     typeId: this.currentIndex,
                     UserId: this.$route.query.id ? this.$route.query.id : this.userInfoID.UserId
                 }).then(res => {
+                    this.isLast = true
                     if (res.retModels instanceof Array) {
                         if (isScroll) {
                             this.dataList = this.dataList.concat(res.retModels);
@@ -547,6 +553,26 @@
     }
 </script>
 <style lang="less" scoped>
+    .un-com {
+        background: #fff;
+        height: 300px;
+        text-align: center;
+        padding: 30px;
+        font-size: 16px;
+        p {
+            margin: 40px 0 15px;
+            font-size: 14px;
+            color: #aba3a3;
+        }
+        a {
+            display: inline-block;
+            color: #eb4844;
+            font-weight: bold;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
+    }
     .comHome-content {
         padding: 10px 0 15px 20px;
     }

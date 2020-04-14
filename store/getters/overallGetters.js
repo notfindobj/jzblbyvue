@@ -23,5 +23,8 @@ export const overallGetters = {
     },
     getInviter (state) {
         return state.inviter
+    },
+    getSystem (state) {
+        return state.system
     }
 }

@@ -67,18 +67,18 @@
                   <template v-if="addFleg">
                      <!-- 其他 -->
                      <template v-if="itemInfo.TalkType !== 5" >
-                       <div v-for="(item, otherIndex) in itemInfo.ResourceObj"  :class="otherIndex < textLength ? 'img' : 'img itemHide'" :key="otherIndex">
-                        <img v-if="otherIndex < textLength" v-lazy="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
-                        <img v-if="otherIndex >= textLength" :src="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
-                        <div v-if="(itemInfo.ResourceObj.length - textLength) > 0 && otherIndex === (textLength - 1)" class="superLong">
-                            <span>+{{itemInfo.ResourceObj.length - textLength}}</span>
-                        </div>
+                       <div v-for="(item, otherIndex) in itemInfo.ResourceObj"  :class="otherIndex < textLength ? 'img' : 'img itemHide'" :key="otherIndex" :style="`background-image: url(${item.smallImgUrl});`">
+                          <img v-if="otherIndex < textLength" v-lazy="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
+                          <img v-if="otherIndex >= textLength" :src="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
+                          <div v-if="(itemInfo.ResourceObj.length - textLength) > 0 && otherIndex === (textLength - 1)" class="superLong">
+                              <span>+{{itemInfo.ResourceObj.length - textLength}}</span>
+                          </div>
                       </div>
                      </template>
                     <!--文章 -->
                     <template v-if="!isUnfold">
                       <template v-if="itemInfo.TalkType === 5" >
-                        <div v-for="(item, imgIndex) in itemInfo.ResourceObj"  :class="imgIndex < 3 ? 'img' : 'img itemHide'"  :key="imgIndex+item.smallImgUrl">
+                        <div v-for="(item, imgIndex) in itemInfo.ResourceObj"  :class="imgIndex < 3 ? 'img' : 'img itemHide'"  :key="imgIndex+item.smallImgUrl" :style="`background-image: url(${item.smallImgUrl});`">
                           <img v-if="imgIndex < 3" v-lazy="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
                           <img v-if="imgIndex >= 3" :src="item.smallImgUrl" alt="" :data-original="item.bigImgUrl"/>
                           <div v-if=" ((itemInfo.ResourceObj.length - 3) > 0) && imgIndex === 2" class="superLong">
@@ -119,7 +119,7 @@
             </div>
         </div>
         <div class="commentTool">
-          <commentTool ref="commentTool" :viewMore="5" :itemInfo="itemInfo" v-show="itemInfo.isShowComment" />
+          <commentTool ref="commentTool" :viewMore="5" :itemInfo="itemInfo" v-show="itemInfo.isShowComment" @SucCommentsData="SucCommentsData"/>
         </div>
         <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
@@ -208,18 +208,11 @@
       }, 10)
     },
     methods: {
+      SucCommentsData (val) {
+        this.itemInfo.itemOperateData.CommentCount+= val
+      },
       Unfold (val) {
         this.isUnfold = val;
-      },
-      getSimpleText(html){
-        // 剔除除表情后的所有标签 <img
-        var re1 = new RegExp("<(?!(img).*(data-w-e)).*?>","g");//
-        var msg = html.replace(re1,'');//执行替换成空字符
-        return msg;
-      },
-      replaceImgs (val) {
-        let regex = "/i/s/";
-        return val.replace(regex, "/i/");
       },
       dropdownMenu (row, item, index) {
         this.$emit('clickMenu', row, item, index);
@@ -562,11 +555,15 @@
         width: 700px;
         display: flex;
         flex-wrap: wrap;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center center;
         .img {
             width: 220px;
             height: 220px;
             margin: 10px 10px 0 0;
             background-color: #ccc;
+            opacity: 0;
         }
     }
     .tool-box {

@@ -13,6 +13,7 @@ export const overas = {
         dingzhi: {},// 存储定制信息
         pinglun: {},// 存储评论信息
         inviter: {},// 存储邀请信息
+        system: {},// 存储邀请信息
     },
     actions: overallActions,
     getters: overallGetters,

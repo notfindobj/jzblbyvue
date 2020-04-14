@@ -402,7 +402,7 @@ export default {
             }
             let msg = await setComments(queryData)
             if (msg) {
-                this.$emit('SucCommentsData', true)
+                this.$emit('SucCommentsData', 1)
                 this.getCommentsList();
             } else {
                 this.$emit('SucCommentsData', false)
@@ -452,6 +452,7 @@ export default {
             }
             let msg = await delComment(row.CommentsId)
             if (msg) {
+                this.$emit('SucCommentsData', -1)
                 this.getCommentsList();
             }
         },
