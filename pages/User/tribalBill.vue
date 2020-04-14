@@ -7,8 +7,8 @@
                     <span>部落币余额：</span>
                     <span>{{integral}}</span>
                 </div>
-                <Button @click="modal3 = true">提现</Button>
-                <span class="tishi">10部落币= 1元  发起提现申请后资金会在1-3个工作日内到账</span>
+                <!-- <Button @click="modal3 = true">提现</Button> -->
+                <!-- <span class="tishi">10部落币= 1元  发起提现申请后资金会在1-3个工作日内到账</span> -->
            </div>
            <div class="tribalBill-search">
                 <DatePicker type="daterange" :value="searchTime" @on-change="onChange" placement="bottom-end" placeholder="选择时间" style="width: 200px"></DatePicker>
@@ -54,12 +54,12 @@ export default {
         return {
             cityList: [
                 {
-                    value: 'New York',
-                    label: 'New York'
+                    value: '0',
+                    label: '获取'
                 },
                 {
-                    value: 'London',
-                    label: 'London'
+                    value: '1',
+                    label: '消耗'
                 }
             ],
             model1: '',
@@ -127,8 +127,10 @@ export default {
                 startDate: this.searchTime[0],
                 EndDate: this.searchTime[1],
                 page: val,
-                rows: this.rows
+                rows: this.rows,
+                
             }
+            this.model1 ? query.type = this.model1 : ''
             let msg = await getTribalCoins(query)
             if (msg) {
                 this.tribalCoinData = msg.List,

@@ -9,7 +9,7 @@
                 <div class="la">
                     <strong>{{item.ItemName}}</strong>
                     <div class="la-btn">
-                        <p>{{item.ItemTag}}</p>
+                        {{item.ItemTag}}
                     </div>
                     <div class="la-jia">
                         <span>活动价：{{item.DiscountedPrice}}元</span>
@@ -31,6 +31,13 @@ export default {
     },
     created () {
         this.getDataList()
+    },
+    mounted () {
+        if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            this.$router.push('/m_activity')
+        }else{
+            this.$router.push('/activity')
+        }
     },
     methods: {
         getDataList () {
@@ -54,6 +61,11 @@ export default {
     .la-btn {
         display: flex;
         justify-content: space-between;
+        height: 38px;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        margin-top: 10px;
     }
     .acc {
         width: 1200px;
@@ -71,8 +83,11 @@ export default {
         strong {
             width: 100%;
             display: block;
-            font-size: 20px;
+            font-size: 18px;
             color: #333333;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         &-jia {
             display: flex;

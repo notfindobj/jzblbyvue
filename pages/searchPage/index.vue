@@ -90,8 +90,8 @@ export default {
     },
     async asyncData({route, store}) {
         let btnData = await store.dispatch('getQueryBtnData');
-        let searchTop = btnData[1].Id;
-        let twoSwitch = btnData[1].TextBtnDatas;
+        let searchTop = btnData[4].Id;
+        let twoSwitch = btnData[4].TextBtnDatas;
         let searchTitle = twoSwitch[0].Id;
         let queryData = {
             TypeId: 0,

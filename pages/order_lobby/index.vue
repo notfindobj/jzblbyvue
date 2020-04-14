@@ -480,8 +480,9 @@ export default {
             &-right {
                 float: right;
                 width: 280px;
-                height: 280px;
-                background: url('../../assets/images/oder-lp.jpg');
+                height: 250px;
+                background: url('../../assets/images/lf_ad.jpg');
+                background-size: 100% 100%;
                 background-repeat: no-repeat;
                 cursor: pointer;
                 background-position-x: 100%;

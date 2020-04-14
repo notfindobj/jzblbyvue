@@ -31,8 +31,8 @@
     .ad {
         position: relative;
         height: 37px;
-        background: url(/_nuxt/assets/images/ad.jpg);
-        background-size: 100%;
+        background: url(../assets/images/ad.jpg);
+        background-size: 100% 100%;
         background-repeat: no-repeat;
         .close-icon {
             position: absolute;

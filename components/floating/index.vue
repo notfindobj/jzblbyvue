@@ -28,8 +28,15 @@ export default {
             isPannel: true
         }
     },
+    mounted () {
+        if (sessionStorage.getItem("isPannel")) {
+            this.isPannel = sessionStorage.getItem("isPannel") === "true" ? true : false 
+        }
+        
+    },
     methods: {
         closePannel () {
+            sessionStorage.setItem("isPannel", false)
             this.isPannel = false
         }
     }

@@ -72,6 +72,9 @@
                         </Button>
                     </div>
                 </div>
+                <nuxt-link to="activity"  target="_blank">
+                    <div class="lf-ad"></div>
+                </nuxt-link>
             </div>
         </div>
         <ToTop></ToTop>
@@ -283,6 +286,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .lf-ad {
+        background: url(../../assets/images/lf_ad.jpg) 100% 100%;
+        display: inline-block;
+        background-size: 100% 100%;
+        width: 340px;
+        height: 290px;
+        margin-left: -20px;
+        margin-top: 40px;
+        cursor: pointer;
+    }
     .content-box {
         display: flex;
         justify-content: space-between;
@@ -295,7 +308,7 @@ export default {
     }
     .main-left {
         width: 340px;
-        max-height: 500px;
+        max-height: 400px;
         padding: 20px;
         background: #FFFFFF;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);

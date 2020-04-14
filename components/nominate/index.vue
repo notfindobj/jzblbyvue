@@ -1,59 +1,64 @@
 <template>
 <!-- 建筑圈右侧内容 -->
-    <div class="nominate">
-        <div class="container-right" v-if="UserProAndFans">
-            <div class="user-title" @click="goPersonalCenter(userInfo)">
-                <div class="user-title-l">
-                <img :src="userInfo.HeadIcon" alt="">
+    <div class="nominate-a">
+        <div class="nominate">
+            <div class="container-right" v-if="UserProAndFans">
+                <div class="user-title" @click="goPersonalCenter(userInfo)">
+                    <div class="user-title-l">
+                    <img :src="userInfo.HeadIcon" alt="">
+                    </div>
+                    <div class="user-title-r">
+                    <p>{{userInfo.NickName}}</p>
+                    </div>
                 </div>
-                <div class="user-title-r">
-                <p>{{userInfo.NickName}}</p>
-                </div>
+                <ul class="user-cont">
+                    <li>
+                        <span>项目：</span>
+                        <span>{{UserProAndFans.proCount || 0}}</span>
+                    </li>
+                    <li>
+                        <span>粉丝：</span>
+                        <span>{{UserProAndFans.Fans || 0}}</span>
+                    </li>
+                </ul>
             </div>
-            <ul class="user-cont">
-                <li>
-                    <span>项目：</span>
-                    <span>{{UserProAndFans.proCount || 0}}</span>
-                </li>
-                <li>
-                    <span>粉丝：</span>
-                    <span>{{UserProAndFans.Fans || 0}}</span>
-                </li>
-            </ul>
+            <div class="recommend-box" v-if="answers.length > 0 || recommend.length > 0" >
+                <div class="recommend" v-if="recommend.length > 0">
+                    <span class="recommend-title">猜你喜欢</span>
+                    <span>换一换</span>
+                </div>
+                <div class="Swiper-nominate">
+                    <div class="swiper-wrapper">
+                        <template v-for="(items, index) in recommend">
+                            <div class="swiper-slide" v-if="[1,2,4].includes(items.TypeId)"  :key="index">
+                                <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
+                                    <img :src="items.ImgSrc" alt="">
+                                </nuxt-link>
+                                <nuxt-link v-else-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
+                                    <img :src="items.ImgSrc" alt="">
+                                </nuxt-link>
+                                <nuxt-link v-else target="_blank" :to="{name: 'pictureDetails-id', params: {id:items.ItemId, }}">
+                                    <img :src="items.ImgSrc" alt="">
+                                </nuxt-link>
+                            </div>
+                        </template>
+                    </div>
+                    <div class="swiper-pagination swiper-pagination-bullets"></div>
+                </div>
+                <div class="recommend" v-if="answers.length > 0">
+                    <span class="recommend-title">猜你喜欢</span>
+                    <span>换一换</span>
+                </div>
+                <ul class="recommend-problem">
+                    <li v-for="(items, index) in answers" :key="index">
+                        <nuxt-link target="_blank" :to="{name: 'QuestionsAndAnswers-id', params: {id:items.ItemId}}">{{items.Title}}</nuxt-link>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div class="recommend-box" v-if="answers.length > 0 || recommend.length > 0" >
-            <div class="recommend" v-if="recommend.length > 0">
-                <span class="recommend-title">猜你喜欢</span>
-                <span>换一换</span>
-            </div>
-            <div class="Swiper-nominate">
-                <div class="swiper-wrapper">
-                    <template v-for="(items, index) in recommend">
-                        <div class="swiper-slide" v-if="[1,2,4].includes(items.TypeId)"  :key="index">
-                            <nuxt-link v-if="items.TypeId === 2" target="_blank" :to="{name: 'videoDetails-id', params: {id:items.ItemId}}">
-                                <img :src="items.ImgSrc" alt="">
-                            </nuxt-link>
-                            <nuxt-link v-else-if="items.TypeId === 4" target="_blank" :to="{name: 'DataDetails', query: {id:items.ItemId, layout: true}}">
-                                <img :src="items.ImgSrc" alt="">
-                            </nuxt-link>
-                            <nuxt-link v-else target="_blank" :to="{name: 'pictureDetails-id', params: {id:items.ItemId, }}">
-                                <img :src="items.ImgSrc" alt="">
-                            </nuxt-link>
-                        </div>
-                    </template>
-                </div>
-                <div class="swiper-pagination swiper-pagination-bullets"></div>
-            </div>
-            <div class="recommend" v-if="answers.length > 0">
-                <span class="recommend-title">猜你喜欢</span>
-                <span>换一换</span>
-            </div>
-            <ul class="recommend-problem">
-                <li v-for="(items, index) in answers" :key="index">
-                    <nuxt-link target="_blank" :to="{name: 'QuestionsAndAnswers-id', params: {id:items.ItemId}}">{{items.Title}}</nuxt-link>
-                </li>
-            </ul>
-        </div>
+        <nuxt-link to="activity" target="_blank">
+            <div class="lf-ad"></div>
+        </nuxt-link>
     </div>
 </template>
 <script>
@@ -146,6 +151,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .nominate-a {
+        width: 330px;
+        position: sticky;
+        display: inline-block;
+        max-height: 800px;
+        top: 70px;
+    }
+    .lf-ad {
+        background: url(../../assets/images/lf_ad.jpg) 100% 100%;
+        display: inline-block;
+        background-size: 100% 100%;
+        width: 330px;
+        height: 270px;
+        margin-top: 10px;
+        cursor: pointer;
+    }
     .Swiper-nominate {
         width: 330px;
         height: 200px;
@@ -192,10 +213,10 @@ export default {
         background: #FF3C00;
     }
     .nominate {
-        position: sticky;
-        display: inline-block;
-        max-height: 800px;
-        top: 70px;
+        // position: sticky;
+        // display: inline-block;
+        // max-height: 800px;
+        // top: 70px;
     }
     .container-right {
       width: 330px;

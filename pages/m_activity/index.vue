@@ -19,11 +19,11 @@
                                 <div class="la">
                                     <strong>{{item.ItemName}}</strong>
                                     <div class="la-btn">
-                                        <p>{{item.ItemTag}}</p>
+                                        {{item.ItemTag}}
                                     </div>
                                     <div class="la-jia">
-                                        <span>活动价： {{item.DiscountedPrice}}</span>
-                                        <span>原价： {{item.OriginalPrice}}</span>
+                                        <span>活动价：￥{{item.DiscountedPrice}}</span>
+                                        <span>原价：￥{{item.OriginalPrice}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -35,17 +35,13 @@
         <div class="bl-ft">
             <p>活动咨询</p>
             <div style="text-align: center;">
-                <div style="margin-bottom: 32px;">
+                <div style="margin-bottom: 32px;display: inline-block;width: 16rem;">
                     <img src="../../assets/images/qr-code.jpg" width="50%" alt="微信公众号">
-                    <p>
-                        微信公众号
-                    </p>
+                    <p style="font-size: 1rem;">微信公众号</p>
                 </div>
-                <div>
+                <div style="display: inline-block;width: 16rem;">
                     <img src="../../assets/images/weixinqun.png" width="46%" alt="微信交流群">
-                     <p>
-                        微信交流群
-                    </p>
+                    <p style="font-size: 1rem;">微信交流群</p>
                 </div>
             </div>
         </div>
@@ -65,7 +61,14 @@ export default {
         floating
     },
     created () {
-        this.getDataList()
+        this.getDataList();
+    },
+    mounted () {
+        if ((navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i))) {
+            this.$router.push('/m_activity')
+        }else{
+            this.$router.push('/activity')
+        }
     },
     methods: {
         getDataList () {
@@ -79,6 +82,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .la-btn {
+        display: flex;
+        justify-content: space-between;
+        height: 38px;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 3;
+        overflow: hidden;
+        margin-top: 10px;
+    }
     .bl {
         background: #fff;
         padding: .8rem;
@@ -112,7 +124,10 @@ export default {
         strong {
             width: 100%;
             display: block;
-            font-size: 20px;
+            font-size: 0.7rem;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
             color: #333333;
         }
         &-jia {
