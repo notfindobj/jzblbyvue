@@ -571,7 +571,7 @@
                 text-decoration: underline;
             }
         }
-    }
+    };
     .hot-item {
         &-title {
             text-align: center;

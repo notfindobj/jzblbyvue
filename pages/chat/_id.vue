@@ -13,7 +13,7 @@
                     </div>
                 </div>
                 <ul class="contacts">
-                    <li :class="items.active ? 'contacts-items contacts-active': 'contacts-items '" v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent">
+                    <li :class="items.ToUserId === beforePerson.ToUserId ? 'contacts-items contacts-active': 'contacts-items '" v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent">
                         <div class="contacts-items-lf">
                             <div class="contacts-items-lf-img">
                                 <img :src="items.HeadIcon" alt="" width="50px" height="50px">
@@ -29,7 +29,7 @@
             </div>
             <div class="chat-box-con">
                 <div class="chat-box-con-tit">
-                    {{beforePerson.userName}}
+                    {{beforePerson.NickName}}
                 </div>
                 <div class="chat-box-con-chat">
                     <ul class="news-box" id="newTypeImg">
@@ -67,7 +67,7 @@
                         <span><i class="icon iconfont icon-tupian1"></i></span>
                         <span><i class="icon iconfont icon-wenjian"></i></span>
                     </div>
-                    <textarea cols="30" rows="4"></textarea>
+                    <textarea cols="30" rows="4" v-model="sendContent" @keyup.ctrl.enter="sendMegess" ></textarea>
                 </div>
             </div>
         </div>
@@ -81,7 +81,8 @@
 <script>
 import Viewer from 'viewerjs';
 import { mapState } from 'vuex'
-import {getChatUserList} from "../../service/sign"
+import {getChatUserList, getChatHistory} from "../../service/sign"
+import {createSocket, sendWSPush} from "./websocket"
 export default {
     layout: "chat",
     components: {},
@@ -94,140 +95,7 @@ export default {
                     firNew: "你好啊",
                     time: "18:06",
                     active: false,
-                    isSearch: true,
                     id: 1
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 2
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 3
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 4
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 5
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 6
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 7
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 8
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: true,
-                    id: 9
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 10
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 11
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 12
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 13
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 14
-                },
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "嘿嘿嘿",
-                    firNew: "在吗",
-                    time: "18:06",
-                    active: false,
-                    isSearch: true,
-                    id: 15
                 }
             ],
             beforePerson: {},
@@ -285,46 +153,52 @@ export default {
             isPannel: false,
             Client: {},
             Viewer: {},
-            seaUser: ""
+            seaUser: "",
+            sendContent: ""
         }
     },
     created () {
-        this.beforePerson = this.contactsList[0]
+        this.getUserList()
     },
-     computed: {
+    computed: {
         ...mapState({
             userInfo: state => state.overas.auth ? state.overas.auth: ""
         }),
     },
     mounted () {
-        this.newWebSocket()
+        createSocket(this.userInfo.token)
         document.addEventListener('click',e => {
             if(this.$refs.menuPanel && !this.$refs.menuPanel.contains(e.target)){
                 this.isPannel = false
             }
         })
         this.initView()
-        this.getUserList()
     },
     methods: {
+        sendMegess () {
+            let obg = {
+                MsgId: this.guid(),
+                MsgContent: this.sendContent,
+                DateTime:  (new Date()).valueOf(),
+                MsgStatus: true,
+                CreateUserId: this.userInfo.UserId,
+                ToUserId: this.beforePerson.ToUserId
+            }
+            sendWSPush(obg)
+        },
         async getUserList () {
-            this.contactsList = [
-                {
-                    "DialogId": "",
-                    "NickName": "666",
-                    "HeadIcon": "https://www.pic.jzbl.com/itemfiles/userinfoimg/baseimg/user.png",
-                    "LatestMsg": "在不在啊",
-                    "MsgDateTime": "1586309630",
-                    "ToUserId": "d5b4fbaa-40a0-4145-a119-88af91c3bf8f",
-                    "UserOnLine": 1,
-                    "UnreadMsg": 0
-                }
-            ]
-            // let m = await getChatUserList();
-            // if (m) {
-            //     this.contactsList = [
-            //     ]
-            // }
+            let m = await getChatUserList();
+            if (m) {
+                this.contactsList = m
+                this.beforePerson = m[0]
+                this.getHistory(this.beforePerson.DialogId)
+            }
+        },
+        async getHistory (id) {
+           let ms = await getChatHistory(id)
+           if (ms) {
+               this.newList = ms
+           }
         },
         initView() {
             const ViewerDom = document.getElementById('newTypeImg');
@@ -334,35 +208,16 @@ export default {
                     url: 'data-original',
                     tooltip:false,
                     zIndex: 3018,
-                    // filter: function (e) {
-                    //     if (e.getAttribute('data-w-e') !== '1') {
-                    //         return e
-                    //     }
-                    // },
-                    // button: false,
-                    // toolbar: true,
-                    // navbar: true,
-                    // title: false,
-                    // zoomRatio: 0.4,
-                    // maxZoomRatio: 3,
-                    // minZoomRatio: 0.5,
-                    // shown: function (e) {
-                    //     var that = e.target.viewer;
-                    //     $(e.target.viewer.viewer).find(".viewer-canvas").on("dblclick", "img", function () {
-                    //         // that.hide();
-                    //     });
-                    // },
                 })
             })
         },
         searUser (row) {
-            this.contactsList.filter(o => {o.id === row.id ? o.active = true : o.active = false});
+            this.contactsList.filter(o => {o.ToUserId === row.ToUserId ? o.active = true : o.active = false});
             this.beforePerson = row
         },
         openMent (event) {
             event.preventDefault();
             document.oncontextmenu= function () {return false;}
-            console.log(event)
             if (event.which === 3) {
                 this.isPannel = true
                 this.Client = this.getClient(event)
@@ -376,41 +231,6 @@ export default {
                 var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
                 return v.toString(16);
             })
-        },
-        newWebSocket () {
-            let that = this;
-            // 判断浏览器是否支持WebSocket
-            var is_support = ("WebSocket" in window);
-            if (is_support) {
-                // 打开一个 web socket
-                var ws = new WebSocket(`ws://192.168.10.19:600/api/chatd2d?token=${this.userInfo.token}`);
-                //  Web Socket 已连接上
-                ws.onopen = function() {
-                    // let msg = {
-                    //     MsgId: that.guid(),
-                    //     Token: that.userInfo.token,
-                    //     ToUserId: "d5b4fbaa-40a0-4145-a119-88af91c3bf8f",
-                    //     DialgId: "fd26eb84-2c1e-4082-a615-be3f9e2afc61",
-                    //     Content: "你好"
-                    // }
-                    // // 使用 send() 方法向服务器发送数据 数据
-                    ws.send(JSON.stringify({}));
-                    console.log("数据发送中...");
-                };
-                //  接受服务器数据
-                ws.onmessage = function(e) {
-                    console.log("数据已接收...", e);
-                };
-                //  连接关闭
-                ws.onclose = function() {
-                    // that.newWebSocket()
-                    // 关闭 websocket
-                    console.log("连接已关闭...");
-                };
-            } else {
-                // 浏览器不支持 WebSocket
-                alert("您的浏览器不支持 WebSocket!");
-            }
         }
     }
 }

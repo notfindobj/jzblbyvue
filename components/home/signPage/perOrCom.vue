@@ -13,7 +13,10 @@
 <script>
 export default {
     methods: {
-         goToRegister(val) {
+        goToRegister(val) {
+            let back = localStorage.getItem("reg").split(",")
+            back.push(val)
+            localStorage.setItem("reg", back.join(","))
             this.$store.dispatch('LOGGEDIN', val);
         },
     }

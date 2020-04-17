@@ -11,7 +11,7 @@
             class="modal-sign"
             class-name="vertical-center-modal">
             <p slot="header" class="modal-header">
-                <i v-if="isItLogged !== 'signIn' && isItLogged !== 'perOrCom'" @click="goBack(oldvals)" class="icon iconfont icon-jiantou1 modal-header-jiantou"></i>
+                <i v-if="isItLogged !== 'signIn'" @click="goBack(oldvals)" class="icon iconfont icon-jiantou1 modal-header-jiantou"></i>
                 <span>{{setTitle(isItLogged)}}</span>
             </p>
             <div :is="isItLogged" class="modal-box"></div>
@@ -69,10 +69,13 @@ export default {
             this.$store.dispatch('SETUP', val);
         },
         goBack (val) {
-            this.isItLogged = val || 'signIn';
+            let back = localStorage.getItem("reg").split(",")
+            back.pop()
+            localStorage.setItem("reg", back.join(","))
+            this.isItLogged = back.length >0 ?  back[back.length-1] : 'signIn';
             this.modalwidth = 400;
             localStorage.removeItem('entInfo');
-            this.$store.dispatch('LOGGEDIN', val);
+            this.$store.dispatch('LOGGEDIN',  back.length >0 ?  back[back.length-1] : 'signIn');
         },
         setTitle (val) {
             let title = ''

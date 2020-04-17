@@ -237,6 +237,8 @@
                 this.$store.dispatch('LOGGEDIN', 'signIn');
             },
             register() {
+                let reg = ['perOrCom']
+                localStorage.setItem("reg", reg.join(","))
                 this.$store.dispatch('SETUP', true)
                 this.$store.dispatch('LOGGEDIN', 'perOrCom');
             },

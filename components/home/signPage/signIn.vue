@@ -85,6 +85,8 @@
                 window.location.href = url
             },
             goToRegister(val) {
+                let reg = [val]
+                localStorage.setItem("reg", reg.join(","))
                 this.$store.dispatch('LOGGEDIN', val);
             },
             retrieve(val) {

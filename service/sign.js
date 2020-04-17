@@ -38,7 +38,11 @@ export const getChatUserList = async (params) => {
 }
 // 创建聊天房间
 export const addChatUserList = async (params) => {
-  return await request.get('chat/AddDialogueInfo?toUserId=${params}')
+  return await request.post(`chat/AddDialogueInfo?toUserId=${params}`)
+}
+// 创建聊天记录
+export const getChatHistory = async (params) => {
+  return await request.post(`chat/History?dialogId=${params}`)
 }
 // 创建商品列表   
 export const getSaleList = async (params) => {

@@ -3,7 +3,7 @@
         <div class="xr-box">
             <div class="xr-box-top">
                <div class="xr-box-top-left">充值账号：</div>
-               <div>初九</div>
+               <div>{{Identity.NickName}}</div>
             </div>
             <div class="xr-box-content">
                 <div class="xr-box-content-left">充值套餐：</div>
@@ -42,9 +42,9 @@
                     <br>
                     • 如您的账户内有积分，支持将其兑换为部落币使用。
                     <br>
-                     • 充值的渲点为虚拟服务，不可提现，不接受任何形式的退款，请斟酌确认。
+                     • 充值的部落币为虚拟服务，不可提现，不接受任何形式的退款，请斟酌确认。
                     <br>
-                    • 付款即表示同意《建筑部落网用户协议》
+                    • 付款即表示同意 <nuxt-link to="/other/32a258cf-ce5a-4fef-b301-0a9d37c02e22">《建筑部落网用户协议》</nuxt-link>
                     <p>
                         如支付遇到问题，请联系我们（TEL: 13621823882 ）
                     </p>
@@ -57,6 +57,7 @@
 <script>
 import {getCoinsList} from "../../service/sign"
 import payBox from "../../components/payTool"
+import { mapState} from 'vuex'
 export default {
     layout:"main",
     components: {
@@ -115,6 +116,11 @@ export default {
             paymShow: false,
             setMeals: {}
         }
+    },
+    computed: {
+        ...mapState({
+            Identity: state => state.overas.auth || {}
+        })
     },
     async asyncData({app, store}) {
         try {
@@ -249,6 +255,12 @@ export default {
                     line-height: 24px;
                     color: #AACCFF;
                     font-size: 14px;
+                    a {
+                        color: #AACCFF;
+                        &:hover {
+                            color: #ff3c00;
+                        }
+                    }
                 }
             }
         }

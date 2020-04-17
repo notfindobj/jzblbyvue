@@ -43,7 +43,8 @@
                   </div>
                   <div class="tool-box-bottom">
                     <span @click.stop="worksFocus(UserProAndFans)" :class="UserProAndFans.IsFollow ?'tool-box-unfollow': 'tool-box-follow'">{{UserProAndFans.IsFollow ? '已关注': '关注'}} </span>
-                    <span class="tool-box-private">私信</span>
+                    <!-- addChatUserList -->
+                    <span class="tool-box-private" @click="addChat(itemInfo.UserId)">私信</span>
                   </div>
                 </div>
                 <div class="block-head-right" v-if="itemInfo.itemBindOperat">
@@ -134,6 +135,7 @@
   import {getRanNum, analogJump} from '../../plugins/untils/public'
   import {setDemo} from '../../LocalAPI'
   import { setComments, setthumbsUp, getUserProAndFans, setFollow , delComment, recordFrequency} from '../../service/clientAPI'
+  import {addChatUserList} from "../../service/sign"
   import { mapGetters} from 'vuex'
   var name = getRanNum(5)
   export default {
@@ -208,6 +210,12 @@
       }, 10)
     },
     methods: {
+      addChat (id) {
+        addChatUserList(id).then(res => {
+          let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res}});
+          analogJump(routeData.href);
+        }).catch(err =>{})
+      },
       SucCommentsData (val) {
         this.itemInfo.itemOperateData.CommentCount+= val
       },
