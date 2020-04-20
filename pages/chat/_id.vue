@@ -35,16 +35,17 @@
                     <ul class="news-box" id="newTypeImg">
                         <template v-for="(items, index) in newList">
                             <li class="news-box-item" :key="index">
-                                <p class="news-box-item-time">{{items.time}}</p>
+                                <p class="news-box-item-time">{{items.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
                                 <div class="news-box-item-con">
-                                    <div :class="`news-box-item-con-img ${!items.isSelf ? ' new-lf' : 'new-rf'}`">
-                                        <img data-w-e="1" :src="items.headIcon" alt="" width="100%" height="100%">
+                                    <div :class="`news-box-item-con-img ${!items.IsSelf ? ' new-lf' : 'new-rf'}`">
+                                        <img data-w-e="0" :src="items.HeadIcon" alt="" width="100%" height="100%">
                                     </div>
-                                    <div  :class="`news-box-item-con-txt ${!items.isSelf ? ' new-lf' : 'new-rf'}`">
-                                        <div :class="`news-box-item-con-txt-lf ${!items.isSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
+                                    <div  :class="`news-box-item-con-txt ${!items.IsSelf ? ' new-lf' : 'new-rf'}`">
+                                        <div :class="`news-box-item-con-txt-lf ${!items.IsSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
                                         <div class="news-box-item-con-txt-rf">
-                                            <template v-if="items.newType === 1">
-                                                <span>{{items.content}}</span>
+                                            <span>{{items.Msg}}</span>
+                                            <!-- <template v-if="items.newType === 1">
+                                                <span>{{items.Msg}}</span>
                                             </template>
                                             <template v-if="items.newType === 2">
                                                 <img :src="items.content" :data-original="items.content" alt="" width="100%">
@@ -53,7 +54,7 @@
                                                 <div>
                                                     下载 <span>index.vue</span>
                                                 </div>
-                                            </template>
+                                            </template> -->
                                         </div>
                                     </div>
                                 </div>
@@ -82,7 +83,7 @@
 import Viewer from 'viewerjs';
 import { mapState } from 'vuex'
 import {getChatUserList, getChatHistory} from "../../service/sign"
-import {createSocket, sendWSPush} from "./websocket"
+// import {createSocket, sendWSPush, onmessageWS} from "./websocket"
 export default {
     layout: "chat",
     components: {},
@@ -159,6 +160,10 @@ export default {
     },
     created () {
         this.getUserList()
+        this.$on('onmessageWS',function(arg){
+            debugger
+            alert(arg)
+        })
     },
     computed: {
         ...mapState({
@@ -166,7 +171,7 @@ export default {
         }),
     },
     mounted () {
-        createSocket(this.userInfo.token)
+        this.createSocket(this.userInfo.token)
         document.addEventListener('click',e => {
             if(this.$refs.menuPanel && !this.$refs.menuPanel.contains(e.target)){
                 this.isPannel = false
@@ -180,18 +185,23 @@ export default {
                 MsgId: this.guid(),
                 MsgContent: this.sendContent,
                 DateTime:  (new Date()).valueOf(),
+                newType: 1,
                 MsgStatus: true,
                 CreateUserId: this.userInfo.UserId,
                 ToUserId: this.beforePerson.ToUserId
             }
-            sendWSPush(obg)
+            this.sendWSPush(obg)
+            this.sendContent =""
+        },
+        onmessageWS (e) {
+            debugger
         },
         async getUserList () {
             let m = await getChatUserList();
             if (m) {
                 this.contactsList = m
                 this.beforePerson = m[0]
-                this.getHistory(this.beforePerson.DialogId)
+                this.getHistory(this.beforePerson.RoomId)
             }
         },
         async getHistory (id) {

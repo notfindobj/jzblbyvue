@@ -48,43 +48,42 @@
                     v-if="isComment"
                     v-model="commentV"
                     @commentValue="commentValue"
+
                 />
             </div>
         </div>
         <!-- 评论信息 -->
-        <discuss
-            class="comment-scroll"
-            style="height: 240px;"
-            :discussData="comments"
-            @commentValue="discussValue"
-            @somePraise="somePraise"
-        />
+        <commentTool ref="commentTool" :isTopInput="false" :itemInfo="publish" v-show="true" :firstLoading="true"/>
     </div>
 </template>
 
 <script>
 import comment from '../comment'
-import discuss from './discuss'
+import commentTool from '../commentTool'
 export default {
     name: 'commentsCon',
     props: {
-      publish: {
-        type: Object,
-        required: true,
-        default: function () {
-          return {}
+        publish: {
+            type: Object,
+            required: true,
+            default: function () {
+            return {}
+            }
+        },
+        comments: {
+            type: Array,
+            default: function () {
+            return []
+            }
+        },
+        width: {
+            type: String,
+            default: '100%'
+        },
+        height: {
+            type: Number,
+            default: 240
         }
-      },
-      comments: {
-        type: Array,
-        default: function () {
-          return []
-        }
-      },
-      width: {
-        type: String,
-        default: '100%'
-      }
     },
     data() {
       return {
@@ -95,7 +94,7 @@ export default {
     },
     components: {
       comment,
-      discuss
+      commentTool
     },
     methods: {
       // 项目点赞
@@ -112,7 +111,8 @@ export default {
       },
       // 评论
       commentValue() {
-        this.$emit('commentValue', this.publish, this.commentV)
+        this.$refs.commentTool.setCommentsData(undefined, undefined, undefined, this.commentV)
+        // this.$emit('commentValue', this.publish, this.commentV)
       },
       discussValue(row, val) {
         this.$emit('discussValue', row, val)

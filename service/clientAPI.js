@@ -246,7 +246,7 @@ export const registerEnterprise = async params => {
 }
 // 获取要展示的消息 （1=删除，2=设置为已读）
 export const setMessage = async params => {
-  return await request.post(`LConnection/SetMessage`, params)
+  return await request.post(`LConnection/SetMessageRead`, params)
 }
 // 获取定制详情
 export const getCustomizeInfo = async params => {

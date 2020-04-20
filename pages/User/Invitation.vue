@@ -16,6 +16,9 @@
                     </msgCard>
                 </div>
             </template>
+            <div class="viewMore" v-if="!(total >= pagination.total)" @click="getMsgList(total)">
+                加载更多
+            </div>
         </div>
     </div>
 </template>
@@ -39,20 +42,35 @@ export default {
                 {path: '/User/customized', label: '定制消息'},
                 {path: '/User/Invitation', label: '邀请消息'}
             ],
-            invitationList: []
+            invitationList: [],
+            total: 0,
+            pagination: {}
         }
     },
     created () {
+        this.setMessageList()
         this.getMsgList()
     },
     methods: {
-        async getMsgList () {
+        async setMessageList () {
             let query = {
-                msgType: '3'
+               MessageType: 3
+            }
+            let msg = await setMessage(query)
+        },
+        async getMsgList (page = 0) {
+            let query = {
+                msgType: '3',
+                page: page+1
             }
             let msg = await getMessage(query);
             if (msg) {
-                this.invitationList = msg.invite.Msg;
+                if (msg.invite.Msg.length > 0) {
+                    this.invitationList.push(...msg.invite.Msg)
+                }
+                this.$store.dispatch('ACInviter', msg.invite);
+                this.pagination = msg.invite.pagination
+                this.total = msg.invite.pagination.page
             }
         },
         async handleInvite (row, dealtype) {

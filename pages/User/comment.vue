@@ -11,6 +11,9 @@
                     <comCard :content="items" @clickCom="clickCom" @delMsg="delMsg(items, index)"/>
                 </div>
             </template>
+            <div class="viewMore" v-if="!(total >= pagination.total)" @click="getMsgList(total)">
+                加载更多
+            </div>
         </div>
     </div>
 </template>
@@ -20,6 +23,7 @@ import msgTab from './components/msgTab'
 import comCard from './components/comCard'
 import {setMessage, getMessage} from '../../service/clientAPI'
 import {analogJump} from '../../plugins/untils/public'
+import { mapState, mapGetters } from 'vuex'
 export default {
     scrollToTop: true,
     components: {
@@ -35,20 +39,38 @@ export default {
                 {path: '/User/comment', label: '评论消息'},
                 {path: '/User/customized', label: '定制消息'},
                 {path: '/User/Invitation', label: '邀请消息'}
-            ]
+            ],
+            total: 0,
+            pagination: {}
         }
     },
+    computed: {
+        ...mapGetters(['getComment'])
+    },
     created () {
+        this.setMessageList()
         this.getMsgList()
     },
     methods: {
-        async getMsgList () {
+        async setMessageList () {
             let query = {
-                msgType: '0'
+               MessageType: 0
+            }
+            let msg = await setMessage(query)
+        },
+        async getMsgList (page = 0) {
+            let query = {
+                msgType: '0',
+                page: page+1
             }
             let msg = await getMessage(query);
-            if (msg) {
-                this.msgPList = msg.pinglun.Msg;
+            if (msg ) {
+                if (msg.pinglun.Msg.length > 0) {
+                    this.msgPList.push(...msg.pinglun.Msg)
+                }
+                this.$store.dispatch('ACComment', msg.pinglun);
+                this.pagination = msg.pinglun.pagination
+                this.total = msg.pinglun.pagination.page
             }
         },
         async delMsg (row, index) {
@@ -61,7 +83,7 @@ export default {
                 this.msgPList.splice(index, 1)
             }
         },
-        clickCom (item) {
+        async clickCom (item) {
             let routeData = {}
             let showLayout = true;
             switch (item.ItemType) {
@@ -73,9 +95,9 @@ export default {
                         showLayout = true
                     }
                     routeData = this.$router.resolve({
-                        name: 'DataDetails',
-                        query: {id: item.ItemId, layout: showLayout }
-                    })
+                            name: 'DataDetails',
+                            query: {id: item.ItemId, layout: showLayout }
+                        })
                     break;
                 case 1:
                     routeData = this.$router.resolve({
@@ -124,5 +146,13 @@ export default {
         width: 700px;
         text-align: center;
         margin: 20px 0;
+    }
+    .viewMore {
+        width: 700px;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 15px;
+        color: #ff3c00;
+        cursor: pointer;
     }
 </style>

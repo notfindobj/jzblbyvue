@@ -14,7 +14,7 @@
                 <Select v-model="model1" clearable style="width:200px">
                     <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
                 </Select>
-                <Button @click="getIntegral">查询</Button>
+                <Button @click="getIntegral()">查询</Button>
            </div>
            <div>
                <publicTable :columns="columns" :columnsData="integralData" :total="total" :pageSize="rows" @pageChange="getIntegral"/>
@@ -57,11 +57,6 @@ export default {
                     title: '分数',
                     key: 'Score'
                 },
-                // {
-                //     cut: 'text',
-                //     title: '剩余积分',
-                //     key: 'Score'
-                // },
                 {
                     cut: 'text',
                     title: '时间',
@@ -91,6 +86,7 @@ export default {
             let query = {
                 startDate: this.searchTime[0],
                 EndDate: this.searchTime[1],
+                type: this.model1 ? this.model1 :  "-1",
                 page: val,
                 rows: this.rows
             }

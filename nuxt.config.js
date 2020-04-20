@@ -42,7 +42,7 @@ module.exports = {
     { src: '~plugins/vMap', ssr: true },
     { src: "~plugins/iconfont.js", ssr: false },
     { src: '~/plugins/vue-lazyload.js', ssr: false },
-    { src: '~/plugins/commom.js', ssr: true } // 全局组件、方法
+    { src: '~/plugins/commom.js', ssr: true }, // 全局组件、方法
   ],
   server: {
     port: configUrl.serverPort, // default: 3000

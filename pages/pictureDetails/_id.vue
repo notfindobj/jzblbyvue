@@ -28,6 +28,7 @@
                 </div>
             </div>
             <commentsCon
+                :height= "500"
                 :publish="detailInfo"
                 @thumbsUp="thumbsUp"
                 @Collection="Collection"
@@ -266,6 +267,9 @@ export default {
             }
         }
         &-right {
+            position: sticky;
+            top: 70px;
+            height: 920px;
             width: 340px;
             margin-left: 10px;
             &-title {

@@ -75,9 +75,11 @@
                                 v-if="PersonalCenter === 'mySomethingStatistical'"
                                 :followList="followList"
                             />
-                            <div class="un-com" v-if="this.dataList.length <= 0">
+                            <div class="un-com" v-if="PersonalCenter === 'HeAndIDownload' && dataList.length <= 0">
                                 <p>暂无资源！</p>
-                                <!-- <nuxt-link to="/publish">立即发布</nuxt-link> -->
+                            </div>
+                            <div class="un-com" v-if="PersonalCenter === 'mySomethingStatistical' && followList.length <= 0">
+                                <p>暂无资源！</p>
                             </div>
                         </crollBox>
                     </div>

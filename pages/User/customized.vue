@@ -21,7 +21,9 @@
                     </msgCard>
                 </div>
             </template>
-            
+            <div class="viewMore" v-if="!(total >= pagination.total)" @click="getMsgList(total)">
+                加载更多
+            </div>
         </div>
         <Custom v-if="isCustom" :customId="customId" @dataDetailsMaskClose="dataDetailsMaskClose"/>
     </div>
@@ -51,21 +53,35 @@ export default {
             ],
             dzList: [],
             customId: {},
-            isCustom: false
+            isCustom: false,
+            total: 0,
+            pagination: {}
         }
     },
     created () {
+        this.setMessageList()
         this.getMsgList()
     },
     methods: {
-        async getMsgList () {
+        async setMessageList () {
             let query = {
-                msgType: '1'
+               MessageType: 1
+            }
+            let msg = await setMessage(query)
+        },
+        async getMsgList (page = 0) {
+            let query = {
+                msgType: '1',
+                page: page+1
             }
             let msg = await getMessage(query);
             if (msg) {
-                this.dzList = msg.dingzhi.Msg;
-                this.$store.dispatch('ACComment', msg.dingzhi.MsgCount);
+                if (msg.dingzhi.Msg.length > 0) {
+                    this.dzList.push(...msg.dingzhi.Msg)
+                }
+                this.$store.dispatch('ACCusData', msg.dingzhi);
+                this.pagination = msg.dingzhi.pagination
+                this.total = msg.dingzhi.pagination.page
             }
         },
         clickCom (row) {
@@ -97,5 +113,13 @@ export default {
         width: 550px;
         text-align: center;
         margin: 20px 0;
+    }
+    .viewMore {
+        width: 700px;
+        text-align: center;
+        margin: 20px 0;
+        font-size: 15px;
+        color: #ff3c00;
+        cursor: pointer;
     }
 </style>

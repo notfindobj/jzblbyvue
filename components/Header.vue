@@ -48,16 +48,16 @@
                             </a>
                             <DropdownMenu slot="list">
                                 <DropdownItem>
-                                    <nuxt-link to="/User/system">系统消息 <i v-if="getCusData.MsgCount>0">{{getCusData.MsgCount }}</i></nuxt-link>
+                                    <nuxt-link to="/User/system">系统消息 <Badge v-if="getSystem.MsgCount > 0" :count="getSystem.MsgCount"></Badge></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem>
-                                    <nuxt-link to="/User/comment">评论消息 <i v-if="getComment.MsgCount>0">{{getComment.MsgCount}}</i></nuxt-link>
+                                    <nuxt-link to="/User/comment">评论消息 <Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem>
-                                    <nuxt-link to="/User/customized">定制消息 <i v-if="getInviter.MsgCount>0">{{getInviter.MsgCount}}</i></nuxt-link>
+                                    <nuxt-link to="/User/customized">定制消息 <Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
                                 </DropdownItem>
                                 <DropdownItem>
-                                    <nuxt-link to="/User/Invitation">邀请消息 <i v-if="getSystem.MsgCount>0">{{getSystem.MsgCount}}</i></nuxt-link>
+                                    <nuxt-link to="/User/Invitation">邀请消息 <Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
                                 </DropdownItem>
                             </DropdownMenu>
                         </Dropdown>

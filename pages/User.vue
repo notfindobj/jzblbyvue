@@ -11,11 +11,10 @@
             </li>
             <li>
                 <p>消息中心</p>
-                <nuxt-link to="/User/system">系统消息</nuxt-link>
-                <nuxt-link to="/User/comment">评论消息{{getComment.MsgCount || ""}}</nuxt-link>
-                <nuxt-link to="/User/customized">定制消息{{getCusData.MsgCount || ""}}</nuxt-link>
-                <nuxt-link to="/User/Invitation">邀请消息{{getInviter.MsgCount || ""}}</nuxt-link>
-                
+                <nuxt-link to="/User/system">系统消息  <Badge v-if="getSystem.MsgCount > 0" :count="getSystem.MsgCount"></Badge>{{getSystem.MsgCount || ""}}</nuxt-link>
+                <nuxt-link to="/User/comment">评论消息 <Badge v-if="getComment.MsgCount > 0" :count="getComment.MsgCount"></Badge></nuxt-link>
+                <nuxt-link to="/User/customized">定制消息 <Badge v-if="getCusData.MsgCount > 0" :count="getCusData.MsgCount"></Badge></nuxt-link>
+                <nuxt-link to="/User/Invitation">邀请消息 <Badge v-if="getInviter.MsgCount > 0" :count="getInviter.MsgCount"></Badge></nuxt-link>
                 <!-- <nuxt-link to="/User/order">订单消息{{getInviter.MsgCount || ""}}</nuxt-link> -->
             </li>
             <!-- <li>
@@ -79,10 +78,10 @@ export default {
         ...mapState({
             Identity: state => state.overas.auth || {}
         }),
-        ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter'])
+        ...mapGetters(['isLogin', 'getCusData', 'getComment', 'getInviter', "getSystem"])
     },
     methods: {
-        
+        //  this.$store.dispatch('ACSystem', msg.xitong);
     },
 }
 </script>

@@ -19,7 +19,7 @@
                     <Input size="small" type="text" v-model="userInfo.RealName" :disabled="controlUser" placeholder="真实姓名"></Input>
                 </FormItem>
                 <FormItem label="所在地" prop="user">
-                    <Cascader v-model="userInfo.addresList" :data="cascaderList" :disabled="controlUser" :load-data="loadData"></Cascader>
+                    <Cascader :key="5555555555555555" v-model="userInfo.addresList" :data="cascaderList" :disabled="controlUser" :load-data="loadData"></Cascader>
                 </FormItem>
                 <FormItem label="性别" prop="user">
                     <Select v-model="userInfo.Gender" :disabled="controlUser" clearable >
@@ -71,12 +71,12 @@
                 <Row>
                     <Col span="11">
                         <FormItem label="单位名称：" prop="user">
-                            <Input size="small" type="text" v-model="items.CompanyName" :disabled="controlwork" placeholder="单位名称"></Input>
+                            <Input size="small" type="text" v-model="items.CompanyName" :disabled="items.controlwork" placeholder="单位名称"></Input>
                         </FormItem>
                     </Col>
                     <Col span="6">
                         <FormItem label="权限：" prop="user">
-                            <Select v-model="items.PrivacyId" clearable :disabled="controlwork">
+                            <Select v-model="items.PrivacyId" clearable :disabled="items.controlwork">
                                 <Option v-for="(items, index) in Jurisdiction" :key="index" :value="items.Id+'|'+items.Name">
                                     {{items.Name}}
                                 </Option>
@@ -85,14 +85,14 @@
                     </Col>
                     <Col span="6">
                         <FormItem >
-                            <Button @click="saveWork">{{controlwork? '修改工作经历' : '保存工作经历'}}</Button>
+                            <Button @click="saveWork(items)">{{items.controlwork? '修改工作经历' : '保存工作经历'}}</Button>
                         </FormItem>
                     </Col>
                 </Row>
                 <Row>
                     <Col span="11">
                         <FormItem label="部门：" prop="user">
-                            <Input size="small" type="text" :disabled="controlwork" v-model="items.DepaOrPosi" placeholder="部门"></Input>
+                            <Input size="small" type="text" :disabled="items.controlwork" v-model="items.DepaOrPosi" placeholder="部门"></Input>
                         </FormItem>
                     </Col>
                 </Row>
@@ -100,9 +100,9 @@
                     <Col span="11">
                         <FormItem label="工作时间：" prop="user">
                             <div class="operatHours">
-                                <DatePicker type="date" format="yyyy/MM/dd" v-model="items.OperatHoursStart" :disabled="controlwork"  @on-chang.native="timeChang"  clearable placeholder="工作时间" ></DatePicker>
+                                <DatePicker type="date" format="yyyy/MM/dd" v-model="items.OperatHoursStart" :disabled="items.controlwork"  @on-chang.native="timeChang"  clearable placeholder="工作时间" ></DatePicker>
                                 <span> - </span>
-                                <DatePicker type="date" format="yyyy/MM/dd" v-model="items.OperatHoursEnd" :disabled="controlwork" clearable placeholder="工作时间" ></DatePicker>
+                                <DatePicker type="date" format="yyyy/MM/dd" v-model="items.OperatHoursEnd" :disabled="items.controlwork" clearable placeholder="工作时间" ></DatePicker>
                             </div>
                         </FormItem>
                     </Col>
@@ -110,7 +110,7 @@
                 <Row>
                     <Col span="11">
                         <FormItem label="所在地：" prop="user">
-                            <Cascader v-model="items.addresList" :data="cascaderList" :disabled="controlwork" :load-data="loadData"></Cascader>
+                            <Cascader :key="index+'123'" v-model="items.addresList" :data="cascaderList" :disabled="items.controlwork" :load-data="loadData"></Cascader>
                         </FormItem>
                     </Col>
                 </Row>
@@ -151,9 +151,6 @@ export default {
             Identity: state => state.overas.auth || {}
         }),
         ...mapGetters(['isLogin'])
-    },
-    asyncData({store}) {
-        
     },
     mounted () {
         let query = {
@@ -218,6 +215,12 @@ export default {
             if (msg) {
                 this.userInfo = msg;
                 this.$set(this.userInfo, 'addresList', [msg.ProvinceAreaId + '|' + msg.ProvinceName,msg.CityAreaId + '|' + msg.CityName, msg.CountyAreaId + '|' + msg.CountyName])
+                if (msg.Jobs.length > 0 ) {
+                    msg.Jobs.forEach(ele => {
+                        this.$set(ele, "controlwork", true)
+                        this.$set(ele, 'addresList', [ele.ProvinceAreaId + '|' + ele.ProvinceName,ele.CityAreaId + '|' + ele.CityName, ele.CountyAreaId + '|' + ele.CountyName])
+                    })
+                }
             }
         },
         // 个人资料 感觉状态
@@ -315,26 +318,25 @@ export default {
             }
         },
         // 保存工作经历
-        async saveWork () {
-            if (this.controlwork) {
-                this.controlwork = false;
+        async saveWork (row) {
+            if (row.controlwork) {
+                this.$set(row, "controlwork", false)
                 return false
             }
-            if (!this.controlwork) {
-                let query = this.userInfo.Jobs[0];
-                let t = this.userInfo.Jobs[0];
+            if (!row.controlwork) {
+                let query = row;
                 try {
-                    query.ProvinceAreaId = t.addresList[0].split('|')[0];
-                    query.ProvinceName = t.addresList[0].split('|')[1];
-                    query.CityAreaId = t.addresList[1].split('|')[0];
-                    query.CityName = t.addresList[1].split('|')[1];
-                    query.CountyAreaId = t.addresList[2].split('|')[0];
-                    query.CountyName = t.addresList[2].split('|')[1];
+                    query.ProvinceAreaId = row.addresList[0].split('|')[0];
+                    query.ProvinceName = row.addresList[0].split('|')[1];
+                    query.CityAreaId = row.addresList[1].split('|')[0];
+                    query.CityName = row.addresList[1].split('|')[1];
+                    query.CountyAreaId = row.addresList[2].split('|')[0];
+                    query.CountyName = row.addresList[2].split('|')[1];
                 } catch (error) {}
                 if (query.OperatHoursEnd > query.OperatHoursStart) {
                     let msg = await SetOrAddThisUserJobInfo(query)
                     if (msg) {
-                        this.controlwork = true;
+                        this.$set(row, "controlwork", true)
                         this.$Message.success({
                             render: h => {
                                 return h('span', '信息修改成功')

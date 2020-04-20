@@ -1,8 +1,14 @@
 import Vue from 'vue'
 import moment from 'moment'
 //  时间转换格式
-Vue.filter('datefmt', function (input, fmtstring) {
-  return moment(input).format(fmtstring)
+Vue.filter('datefmt', function (input, fmtstring, type = 0) {
+  moment.locale("zh-cn"); 
+  if (type === 0) {
+    return moment(input).format(fmtstring)
+  }
+  if (type === 1) {
+    return moment(input * 1000).format(fmtstring)
+  }
 })
 //  截取|
 Vue.filter('interceptText', function (value) {
