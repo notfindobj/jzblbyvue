@@ -25,6 +25,9 @@
                                         <span>活动价：￥{{item.DiscountedPrice}}</span>
                                         <span>原价：￥{{item.OriginalPrice}}</span>
                                     </div>
+                                    <div class="la-info">
+                                        <span>联系电话: &nbsp;&nbsp;&nbsp;&nbsp;{{item.Phone}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -142,6 +145,10 @@ export default {
                     color: #5e6065;
                 }
             } 
+        }
+        &-info {
+            margin-top: .3rem;
+            font-weight: bold;
         }
         p {
             height: 15px;

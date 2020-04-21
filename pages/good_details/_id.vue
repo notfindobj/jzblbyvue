@@ -6,16 +6,27 @@
             <BreadcrumbItem to="/activity">特价商品</BreadcrumbItem>
             <BreadcrumbItem>{{SaleDetail.ItemName}}</BreadcrumbItem>
         </Breadcrumb>
+        <div class="view-left-move-del" @mouseenter="mousemoveLeft(1)"
+            @mouseleave="mousemoveRight" @click="moveLeftClick(1)">
+            <img :src="!isLeft ? isLeftPngF : isLeftPngR" width="50px" alt="">
+        </div>
+        <div class="view-right-move-del" @mouseenter="mousemoveLeft(2)"
+            @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
+            <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
+        </div>
         <div class="good">
-            <div class="good-lf" v-html="SaleDetail.ItemContent"></div>
+            <div class="good-lf" id="pictureBox" >
+                <div v-html="SaleDetail.ItemContent"></div>
+            </div>
             <div class="good-rf">
                 <div class="good-Head">
                     <img :src="SaleDetail.CreateUserHeadIcon" alt="" width="80px" height="80px">
                 </div>
                 <ul>
-                    <li><label>发布人:</label> <span>{{SaleDetail.CreateUserName}}</span></li>
-                    <li><label>商品名称:</label> <span>{{SaleDetail.ItemName}}</span></li>
-                    <li class="good-sub"><label >商品描述:</label> <span>{{SaleDetail.ItemTag}}</span></li>
+                    <li><label class="good-h">发布人:</label><span>{{SaleDetail.CreateUserName}}</span></li>
+                    <li><label class="good-h">联系电话:</label><span>{{SaleDetail.Phone}}</span></li>
+                    <li><label class="good-h">商品名称:</label> <span>{{SaleDetail.ItemName}}</span></li>
+                    <li class="good-sub"><label  class="good-h">商品描述:</label> <span>{{SaleDetail.ItemTag}}</span></li>
                     <li class="good-coun"><span>活动价：{{SaleDetail.DiscountedPrice}}元</span><span>原价：{{SaleDetail.OriginalPrice}}元</span></li>
                      <li  class="good-dwon">
                         <span><span>立即下载：</span><a :href="SaleDetail.Link" target="_blank" >{{SaleDetail.Link}}</a></span>
@@ -32,6 +43,7 @@
     </div>
 </template>
 <script>
+import Viewer from 'viewerjs';
 import play from "./component/play"
 import ToTop from '../../components/toTop'
 export default {
@@ -39,6 +51,12 @@ export default {
     data () {
         return {
             isDown: false,
+            isShowViewBox: false,
+            isLeftPngF: require('../../assets/images/leftButtonColor.png'),
+            isLeftPngR: require('../../assets/images/leftButton.png'),
+            isLeft: false,
+            isRight: false,
+            Viewer: {},
             setMeal: {
                 Money: 50
             }
@@ -63,7 +81,84 @@ export default {
             }
         }
     },
+    mounted() {
+      this.initView()
+    },
     methods: {
+        viewShowBox() {
+            document.getElementsByTagName('body')[0].className = '';
+            document.body.style.paddingRight = '0';
+            this.isShowViewBox = false;
+        },
+        moveLeftClick(val) {
+            if (!this.isBtnSile) {
+                this.$emit('pageTurning', val)
+            } else {
+                if (val === 2) {
+                    if (this.itemLength - 1 === this.itemIndex) {
+                        this.Viewer.close();
+                        this.Viewer.hide();
+                    } else {
+                        this.Viewer.next()
+                    } 
+                }
+                if (val === 1) {
+                    if (this.itemIndex === 0) {
+                        this.Viewer.close();
+                        this.Viewer.hide();
+                    } else {
+                        this.Viewer.prev()
+                    }
+                }
+            }
+        },
+        mousemoveLeft() {
+            this.isLeft = true
+            this.isRight = true
+        },
+        mousemoveRight() {
+            this.isLeft = false
+            this.isRight = false
+        },
+        initView() {
+            const ViewerDom = document.getElementById('pictureBox');
+            let _this = this;
+            _this.$nextTick(() => {
+                _this.Viewer = new Viewer(ViewerDom, {
+                    url: 'data-original',
+                    filter: function (e) {
+                        if (e.getAttribute('data-w-e') !== '1') {
+                            return e
+                        }
+                    },
+                    button: false,
+                    toolbar: true,
+                    navbar: true,
+                    title: false,
+                    zoomRatio: 0.4,
+                    maxZoomRatio: 3,
+                    minZoomRatio: 0.5,
+                    show: function (e) {
+                        _this.isShowViewBox = true;
+                    },
+                    view: function (e) {
+                        _this.itemLength = document.querySelectorAll('.viewer-list > li').length;
+                        _this.itemIndex = e.detail.index;
+                    },
+                    shown: function (e) {
+                        _this.isBtnSile = true;
+                        var that = e.target.viewer;
+                        $(e.target.viewer.viewer).find(".viewer-canvas").on("dblclick", "img", function () {
+                            that.hide();
+                        });
+                    },
+                    hidden() {
+                        _this.isBtnSile = false;
+                        _this.viewShowBox()
+                    }
+                })
+            })
+        },
         closePay (row) {
             this.isDown = !this.isDown
             if (row) {
@@ -92,6 +187,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .good-h {
+        font-weight: bold;
+    }
     .good-Head {
         text-align: center;
         img {
@@ -189,4 +287,75 @@ export default {
         white-space: pre-wrap;
     }
 }
+.view-left-move-del {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        // height: 100%;
+        background: transparent;
+        z-index: 8888;
+        top: 50%;
+        left: 0;
+        padding-left: 30px;
+
+        img {
+            width: 60px;
+        }
+    }
+    .view-right-move-del {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        background: transparent;
+        z-index: 8888;
+        top: 50%;
+        right: 0;
+        text-align: right;
+        padding-right: 30px;
+        > img {
+            width: 60px;
+        }
+    }
+    .view-left-move {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        height: 100%;
+        background: transparent;
+        z-index: 9999;
+        top: 0;
+        left: 0;
+        padding-left: 30px;
+        > img {
+            top: 50%;
+            width: 80px;
+            position: relative;
+        }
+    }
+    .view-right-move {
+        cursor: pointer;
+        position: fixed;
+        display: inline-block;
+        width: 150px;
+        height: 100%;
+        background: transparent;
+        z-index: 9999;
+        top: 0;
+        right: 0;
+        text-align: right;
+        padding-right: 30px;
+
+        > img {
+            top: 50%;
+            width: 80px;
+            position: relative;
+
+        }
+    }
+     .moveRight {
+        transform: rotate(180deg);
+    }
 </style>

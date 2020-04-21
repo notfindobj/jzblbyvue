@@ -26,7 +26,7 @@
 import Title from './components/title'
 import msgTab from './components/msgTab'
 import msgCard from './components/msgCard'
-import {getMessage, handleInviteUser} from '../../service/clientAPI'
+import {getMessage, handleInviteUser, setMessageList} from '../../service/clientAPI'
 export default {
     scrollToTop: true,
     components: {
@@ -56,7 +56,7 @@ export default {
             let query = {
                MessageType: 3
             }
-            let msg = await setMessage(query)
+            let msg = await setMessageList(query)
         },
         async getMsgList (page = 0) {
             let query = {

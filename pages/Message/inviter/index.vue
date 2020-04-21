@@ -99,7 +99,7 @@ export default {
                     title: '温馨提示',
                     content: `<p>是否要删除此消息</p>`,
                     onOk: async () => {
-                        let msg = await setMessage(queryData);
+                        let msg = await delMessage(queryData);
                         if (msg) {
                             this.getMegs();
                         }
@@ -110,7 +110,7 @@ export default {
                 });
             }
             if (type === 2) {
-                let msg = await setMessage(queryData);
+                let msg = await delMessage(queryData);
                 if (msg) {
                     this.getMegs();
                 }

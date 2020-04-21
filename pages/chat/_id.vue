@@ -83,7 +83,7 @@
 import Viewer from 'viewerjs';
 import { mapState } from 'vuex'
 import {getChatUserList, getChatHistory} from "../../service/sign"
-// import {createSocket, sendWSPush, onmessageWS} from "./websocket"
+import {createSocket, sendWSPush} from "./websocket"
 export default {
     layout: "chat",
     components: {},
@@ -155,15 +155,12 @@ export default {
             Client: {},
             Viewer: {},
             seaUser: "",
-            sendContent: ""
+            sendContent: "",
+            Socket: null
         }
     },
     created () {
         this.getUserList()
-        this.$on('onmessageWS',function(arg){
-            debugger
-            alert(arg)
-        })
     },
     computed: {
         ...mapState({
@@ -171,7 +168,7 @@ export default {
         }),
     },
     mounted () {
-        this.createSocket(this.userInfo.token)
+        this.initSocket(this.userInfo.token)
         document.addEventListener('click',e => {
             if(this.$refs.menuPanel && !this.$refs.menuPanel.contains(e.target)){
                 this.isPannel = false
@@ -180,6 +177,12 @@ export default {
         this.initView()
     },
     methods: {
+        initSocket (token) {
+            this.Socket = new createSocket(token)
+            this.Socket.onmessageWS = function (e) {
+                console.log("e>>>>>", e)
+            }
+        },
         sendMegess () {
             let obg = {
                 MsgId: this.guid(),
@@ -190,7 +193,7 @@ export default {
                 CreateUserId: this.userInfo.UserId,
                 ToUserId: this.beforePerson.ToUserId
             }
-            this.sendWSPush(obg)
+            sendWSPush(obg)
             this.sendContent =""
         },
         onmessageWS (e) {

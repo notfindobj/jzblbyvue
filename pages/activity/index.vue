@@ -17,6 +17,10 @@
                     </div>
                 </div>
             </nuxt-link>
+            <div class="la-info">
+                <span class="la-info-header" :style="`background: url(${item.CreateUserHeadIcon});`"></span>
+                <span>{{item.CreateUserName}}: {{item.Phone}}</span>
+            </div>
         </div>
     </div>
 </template>
@@ -57,6 +61,7 @@ export default {
         height: 30px;
         background-size: 100% 100%;
         display: inline-block;
+        position: absolute;
     }
     .la-btn {
         display: flex;
@@ -79,7 +84,7 @@ export default {
         }
     }
     .la {
-        padding: 15px; 
+        padding: 15px 15px 0;
         strong {
             width: 100%;
             display: block;
@@ -107,6 +112,29 @@ export default {
             margin-top: 10px;
             font-size: 12px;
             color: #666;
+        }
+        &-info {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 15px 10px;
+            &-header {
+                width: 35px;
+                height: 35px;
+                display: inline-block;
+                background-size: contain;
+                border-radius: 50%;
+                background-size: cover !important;
+                background-repeat: no-repeat !important;
+                background-position: center center !important;
+                cursor: pointer;
+            }
+            span {
+                &:last-child {
+                    align-self: center;
+                    font-weight: bold;
+                }
+            }
+            
         }
     }
     .ac {

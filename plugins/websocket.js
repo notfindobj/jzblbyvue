@@ -29,12 +29,11 @@ function onerrorWS() {
 }
 /**WS数据接收统一处理 */
 function onmessageWS(e) {
-    Vue.$emit("onmessageWS", e.data)
-    // window.dispatchEvent(new CustomEvent('onmessageWS', {
-    //   detail: {
-    //     data: e
-    //   }
-    // }))
+    window.dispatchEvent(new CustomEvent('onmessageWS', {
+      detail: {
+        data: e
+      }
+    }))
 }
 /**发送数据
  * @param eventType

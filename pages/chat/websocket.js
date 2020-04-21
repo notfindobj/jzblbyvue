@@ -2,15 +2,7 @@ const WSS_URL = `ws://www.api.jzbl.com/api/chatd2d`
 let Socket = ''
 let setIntervalWesocketPush = null
 var ping= "token:"
-export default {
-    install (Vue, options) {
-      Vue.prototype.$createSocket = createSocket(token),
-      Vue.prototype.$onopenWS = onopenWS(),
-      Vue.prototype.$onmessageWS = onmessageWS(e),
-      Vue.prototype.$sendWSPush = sendWSPush(eventTypeArr)
-    }
-  }
-
+import Vue from "vue"
 /**建立连接 */
 function createSocket(token) {
     ping += token
@@ -24,6 +16,7 @@ function createSocket(token) {
     } else {
         console.log('websocket已连接')
     }
+    return Socket
   }
 /**打开WS之后发送心跳 */
 function onopenWS() {
@@ -37,11 +30,7 @@ function onerrorWS() {
 }
 /**WS数据接收统一处理 */
 function onmessageWS(e) {
-    window.dispatchEvent(new CustomEvent('onmessageWS', {
-      detail: {
-        data: e
-      }
-    }))
+  Socket.onmessageWS(e)
 }
 /**发送数据
  * @param eventType
@@ -59,14 +48,15 @@ function sendWSPush(eventTypeArr) {
     }
 }
 /**关闭WS */
-export function oncloseWS() {
+function oncloseWS() {
     clearInterval(setIntervalWesocketPush)
     console.log('websocket已断开')
 }
   /**发送心跳 */
-export function sendPing() {
+function sendPing() {
     Socket.send(ping)
     setIntervalWesocketPush = setInterval(() => {
         Socket.send(ping)
     }, 5000)
 }
+export { createSocket, sendWSPush, onmessageWS}; 
