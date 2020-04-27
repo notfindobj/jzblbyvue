@@ -9,22 +9,22 @@
           </div>
           <template v-for="(item, index) in dataList">
               <ImageAndText
-                  :key="index"
-                  v-if="item.TalkType !== 2 && item.TalkType !== 6"
-                  :itemInfo="item"
-                  :index="index"
-                  @clickCollection="clickCollection"
-                  @clickMenu="clickMenu"
-                  @clickLike="clickLike"
+                :key="index+'tuwen'"
+                v-if="item.TalkType !== 2 && item.TalkType !== 6"
+                :itemInfo="item"
+                :index="index"
+                @clickCollection="clickCollection"
+                @clickMenu="clickMenu"
+                @clickLike="clickLike"
               ></ImageAndText>
               <VideoItem
-                  :key="index"
-                  v-if="item.TalkType === 2 || item.TalkType === 6"
-                  :videoInfo="item"
-                  :index="index"
-                  @clickMenu="clickMenu"
-                  @clickCollection="clickCollection"
-                  @clickLike="clickLike" 
+                :key="index+'video'"
+                v-if="item.TalkType === 2 || item.TalkType === 6"
+                :videoInfo="item"
+                :index="index"
+                @clickMenu="clickMenu"
+                @clickCollection="clickCollection"
+                @clickLike="clickLike" 
               ></VideoItem>
           </template>
         </crollBox>
@@ -135,10 +135,6 @@ export default {
             this.$set(row, 'IsFollow', !row.IsFollow);
             this.$set(item, 'OperatName', '关注');
             this.$set(item, 'OperatValue', 'FollowThisUser');
-            return false
-          }
-          if (item.OperatValue == "Delete") {
-            this.dataList.splice(index, 1);
             return false
           }
         }

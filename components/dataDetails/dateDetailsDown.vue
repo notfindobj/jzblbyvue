@@ -103,7 +103,7 @@
         if (msg) {
           let pay ={
             data: msg,
-            Price: this.payMoney
+            Price:this.payMoney <= 0 ? this.payInfos.Price : this.payMoney
           }
           this.$emit('payment', pay, this.currentIndex, value.ItemId)
         }

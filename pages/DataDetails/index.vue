@@ -344,11 +344,11 @@
             // 支付接口调用成功的回调
             payment(config, type, id) {
                 let _this = this;
+                _this.paymentConfig = config;
                 setTimeout(async function () {
                     switch(type) {
                         case 0:
                             _this.modalConfig.isWxConfig = true;
-                            _this.paymentConfig = config;
                             _this.downloadTime = setInterval(async () => {
                                 let msg = await downloadFile(id);
                                 if (typeof(msg)=='string') {

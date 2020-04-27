@@ -96,12 +96,12 @@
     </div>
 </template>
 <script>
-import {uploadFile, GetOperatPrivacy} from '../../service/clientAPI'
+import {uploadFile, GetOperatPrivacy, getEmoticon} from '../../service/clientAPI'
 import Upload from '../../components/publish/upload'
 import { _debounce, analogJump, getRanNum} from '../../plugins/untils/public'
 import uploadVideo from '../../components/publish/uploadVideo'
 import draggable from 'vuedraggable'
-import { sinaIcon, jzIcon} from '../../assets/Emoticon'
+import { sinaIcon} from './Emoticon'
 import ossUp from "../ossUp/ossUp"
 import { mapGetters } from 'vuex'
 export default {
@@ -157,16 +157,38 @@ export default {
             privacyList: [],
             showPlaceholder: true,
             previewSrc: '',
-            Duration: ''
+            Duration: '',
+            jzIcon: []
         }
     },
     created () {
         this.getPrivacyList();
     },
     mounted() {
+        this.getEmoticonList()
         this.initEditor();
     },
     methods: {
+        async getEmoticonList () {
+            let isEmotion = localStorage ?  localStorage.getItem('Emotions') : false;
+            let msg = []
+            if (isEmotion) {
+                msg = JSON.parse(isEmotion)
+            } else {
+                let data = await getEmoticon();
+                if (data) {
+                    localStorage.setItem('Emotions', JSON.stringify(data))
+                    msg = data
+                }
+            }
+            msg.forEach(ele => {
+                let obg ={
+                    "alt": `[${ele.content}]`,
+                    "src": ele.path
+                }
+                this.jzIcon.push(obg)
+            })
+        },
         jzEdPlac () {
             if (this.$refs.jzeditor) {
                 this.$refs.editor.focus();
@@ -200,7 +222,7 @@ export default {
                     // type -> 'emoji' / 'image'
                     type: 'image',
                     // content -> 数组
-                    content: jzIcon
+                    content: _this.jzIcon
                 },
                 {
                     // tab 的标题

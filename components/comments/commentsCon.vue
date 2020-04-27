@@ -38,7 +38,7 @@
                 />
             </div>
         </div>
-        <commentTool ref="commentTool" :isTopInput="false" :itemInfo="publish" v-show="true" :firstLoading="true"/>
+        <commentTool ref="commentTool" :height="400" :isTopInput="false" :itemInfo="publish" v-show="true" :firstLoading="true"/>
     </div>
 </template>
 

@@ -55,12 +55,12 @@
                     </div>
                 </div>
             </div>
-            <div class="search-coment-right" v-if="historyList.length > 0">
+            <div class="search-coment-right">
                 <div class="card-head">
                     <h4 class="title">搜索历史</h4>
                     <span class="s-btn-c" @click="delSearch()">清除</span>
                 </div>
-                <ul class="history">
+                <ul class="history" v-if="historyList.length > 0">
                     <li class="history-tems" v-for="(items, index) in historyList" :key="index">
                         <span>{{items.Name}}</span>
                         <i @click="delSearch(items, index)" class="iconfont icon-chahao3"></i>
@@ -143,9 +143,15 @@ export default {
                     this.historyList.splice(index, 1)
                 }
             } else {
-                msg = await delQueryData(this.historyList.join(','));
-                if (msg) {
-                    this.historyList = [];
+                if (this.historyList.length > 0) {
+                    let gh = []
+                    this.historyList.forEach(element => {
+                        gh.push(element.Id)
+                    });
+                    msg = await delQueryData(gh.join(','));
+                    if (msg) {
+                        this.historyList = [];
+                    }
                 }
             }
             
@@ -267,6 +273,7 @@ export default {
         display: flex;
         margin-top: 10px;
         justify-content: space-between;
+        margin-bottom: 15px;
         &-left {
             width: 750px;
             &-title {

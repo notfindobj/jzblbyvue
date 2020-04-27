@@ -32,7 +32,7 @@
                   </div>
                   <div class="tool-box-bottom">
                     <span @click.stop="worksFocus(UserProAndFans)" :class="UserProAndFans.IsFollow ?'tool-box-unfollow': 'tool-box-follow'">{{UserProAndFans.IsFollow ? '已关注': '关注'}}</span>
-                    <span class="tool-box-private">私信</span>
+                    <span class="tool-box-private" @click="addChat(videoInfo.UserId)">私信</span>
                   </div>
                 </div>
                 <div class="block-head-right">
@@ -83,7 +83,7 @@
             </div>
         </div>
         <div class="commentTool">
-          <commentTool ref="commentTool" :viewMore="5" :itemInfo="videoInfo" v-if="videoInfo.isShowComment" />
+          <commentTool ref="commentTool" :viewMore="5" :itemInfo="videoInfo" v-show="videoInfo.isShowComment" />
         </div>
         <share :config="configModal" :qrcodeContent="qrcodeContent"/>
     </div>
@@ -93,6 +93,7 @@
   import share from '../share'
   import commentTool from '../commentTool'
   import { analogJump } from '../../plugins/untils/public'
+  import {addChatUserList} from "../../service/sign"
   import { setComments, setthumbsUp , setCollection, getUserProAndFans, setFollow, delComment} from '../../service/clientAPI'
   import { mapGetters} from 'vuex'
   export default {
@@ -129,6 +130,12 @@
       }
     },
     methods: {
+      addChat (id) {
+        addChatUserList(id).then(res => {
+          let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res.RoomId}});
+          analogJump(routeData.href);
+        }).catch(err =>{})
+      },
       goPictureDetails (row) {
         let routeData = this.$router.resolve({
               name: 'videoDetails-id',
@@ -236,6 +243,7 @@
           this.$set(this.videoInfo, 'isShowComment', false);
           return false;
         }
+        
         this.$set(this.videoInfo, 'isShowComment', true);
         this.toolIndex = m
         this.$refs.commentTool.getCommentsList()

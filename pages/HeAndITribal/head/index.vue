@@ -30,7 +30,7 @@
                     <i v-if="!userInfo.IsFollow" class="iconfont icon-jia"></i>
                     <span>{{userInfo.IsFollow? '已关注' : '关注'}}</span>
                   </div>
-                  <div class="my-chat-btn">私聊</div>
+                  <div class="my-chat-btn" @click="addChat(userInfo.UserId)">私聊</div>
                 </div>
                 <p class="my-Introduction-con">{{ userInfo.Description }}</p>
             </div>
@@ -41,7 +41,8 @@
 <script>
 import {getALLTheme, getUserTheme, setUserTheme, setFollow} from '../../../service/clientAPI'
 import { mapState, mapGetters} from 'vuex'
-
+import { analogJump } from '../../../plugins/untils/public'
+import {addChatUserList} from "../../../service/sign"
 export default {
     name: 'Head',
     props: {
@@ -85,6 +86,12 @@ export default {
       this.getUsere()
     },
     methods: {
+      addChat (id) {
+        addChatUserList(id).then(res => {
+          let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res.RoomId}});
+          analogJump(routeData.href);
+        }).catch(err =>{})
+      },
       setLabel (str) {
         let lHtml = ''
         let labelArr = []

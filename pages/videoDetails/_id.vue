@@ -6,15 +6,11 @@
         </video>
         <commentsCon
             :publish="videoDetails"
-            :comments="commentsData.Comments"
             @thumbsUp="thumbsUp"
             @Collection="Collection"
-            @commentValue="commentValue"
-            @discussValue="discussValue"
-            @somePraise="somePraise"
             @Forward="Forward"
-            @delComment="delComments"
         />
+        <share :config="configModal" :qrcodeContent="qrcodeContent"/>
         <ToTop/>
     </div>
 </template>
@@ -22,8 +18,9 @@
 import Video from 'video.js'
 import 'video.js/dist/video-js.css'
 import {getRanNum} from '../../plugins/untils/public'
-import commentsCon from '../../components/comments/commentsCon.vue'
+import commentsCon from '../../components/commentBox/commentsCon'
 import ToTop from '../../components/toTop'
+import share from '../../components/share'
 import { setthumbsUp, setCollection, setFollow, setComments, recordFrequency, downloadFile, delComment} from '../../service/clientAPI'
 export default {
     name: "videoBox",
@@ -33,12 +30,17 @@ export default {
             videoCon: null,
             videoDetails: {},
             resourcesVideo:{},
-            commentsData: []
+            commentsData: [],
+            configModal: {
+                isModal: false
+            },
+            qrcodeContent: {}
         }
     },
     components: {
         commentsCon,
-        ToTop
+        ToTop,
+        share
     },
     async asyncData({route, store,params}) {
         const data = await store.dispatch('getQADetail', params.id);
@@ -101,20 +103,22 @@ export default {
                 }            
             );
         },
-         // 项目点赞
+        // 项目点赞
         async thumbsUp(item) {
             let queryData = {
                 ItemId: item.ItemId,
-                LikeType: 1,
-                IsDelete: item.islikes
+                LikeType: item.TalkType,
+                IsDelete: item.itemOperateData.IsLike
             }
             let thumbsUpMsg = await setthumbsUp(queryData);
-            if (item.islikes) {
-                this.$set(item, 'likes', item.likes - 1)
-            } else {
-                this.$set(item, 'likes', item.likes + 1)
+            if (thumbsUpMsg) {
+                if (item.itemOperateData.IsLike) {
+                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount - 1)
+                } else {
+                    this.$set(item.itemOperateData, 'LikeCount', item.itemOperateData.LikeCount + 1)
+                }
+                this.$set(item.itemOperateData, 'IsLike', !item.itemOperateData.IsLike)
             }
-            this.$set(item, 'islikes', !item.islikes)
         },
         async somePraise(item) {
             let queryData = {
@@ -137,16 +141,18 @@ export default {
         async Collection(item) {
             let queryData = {
                 ItemId: item.ItemId,
-                TalkType: 4,
+                TalkType: item.TalkType,
                 IsDelete: item.iscollections
             }
             let collectionMsg = await setCollection(queryData)
-            if (item.iscollections) {
-                this.$set(item, 'collections', item.collections - 1)
-            } else {
-                this.$set(item, 'collections', item.collections + 1)
+            if (collectionMsg) {
+                if (item.itemOperateData.IsCollection) {
+                    this.$set(item.itemOperateData, 'CollectionCount', item.itemOperateData.CollectionCount - 1)
+                } else {
+                    this.$set(item.itemOperateData, 'CollectionCount', item.itemOperateData.CollectionCount + 1)
+                }
+                this.$set(item.itemOperateData, 'IsCollection', !item.itemOperateData.IsCollection)
             }
-            this.$set(item, 'iscollections', !item.iscollections)
         },
         //评论
         async commentValue(row, val) {
@@ -218,8 +224,9 @@ export default {
             this.$set(item, 'IsFollow', !item.IsFollow)
         },
         // 转发
-        Forward () {
-            this.configShare.isModal = true;
+        Forward (row) {
+            this.qrcodeContent = row;
+            this.configModal.isModal = true;
         },
     },
 }

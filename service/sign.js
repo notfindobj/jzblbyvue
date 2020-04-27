@@ -34,11 +34,11 @@ export const ExChange = async (params) => {
 }
 // 获取聊天列表
 export const getChatUserList = async (params) => {
-  return await request.get('chat/DialogueRoomList', params)
+  return await request.get(`chat/DialogueRoomList?quickQuery=${params ? params : ""}`)
 }
 // 创建聊天房间
 export const addChatUserList = async (params) => {
-  return await request.post(`chat/AddDialogueInfo?toUserId=${params}`)
+  return await request.post(`chat/AddDialogueRoom?toUserId=${params}`)
 }
 // 创建聊天记录
 export const getChatHistory = async (params) => {
@@ -55,4 +55,12 @@ export const buyGood = async (params) => {
 // 创建商品列表   
 export const getGoodStart = async (params) => {
   return await request.get('AllPay/GetBoughtItemInfo', params)
+}
+// 设置聊天人关系  
+export const setShip = async (opID, opType) => {
+  return await request.post(`chat/ChatOperation?opId=${opID}&opType=${opType}`)
+}
+// 设置聊天人关系  
+export const getRoom = async (params) => {
+  return await request.get(`chat/DialogueRoom?RoomId=${params}`)
 }

@@ -217,9 +217,13 @@ export default {
                     }
                 } 
             }
-            if (this.editorName === 'sp'  && row.editortext !== '' ) {
-                if (row.editortext === ''&& row.imgList.length < 1) {
+            if (this.editorName === 'sp') {
+                if (row.editortext === '') {
                     this.$Message.warning('内容不能为空');
+                    return false
+                }
+                if (row.imgList.length < 1) {
+                    this.$Message.warning('视频不能为空');
                     return false
                 }
                 this.spinShow = true

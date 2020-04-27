@@ -115,3 +115,25 @@ export function analogJump (href) {
     document.body.appendChild(hta);
     hta.click();
 }
+
+export function Notifiy(row) {
+    if (row.BaseMsgType === 1) {
+        Notification.requestPermission(function (perm) { 
+            if (perm == "granted") {  
+                var notification = new Notification(`${row.MsgObj.NickName}给你发了一条消息`, {  
+                    dir: "auto",  
+                    lang: "hi",  
+                    tag: "testTag", 
+                    renotify: true, 
+                    icon: "https://www.jzbl.com/_nuxt/img/9f10a5e.png",  
+                    body: row.MsgObj.Msg,
+                    requireInteraction: true
+                });  
+                notification.onclick = function() {
+                    //可直接打开通知notification相关联的tab窗口
+                    window.focus();
+                }
+            } 
+        })
+    }
+}

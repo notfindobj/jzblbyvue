@@ -53,7 +53,7 @@
                             </ul>
                             <div class="btn-group-box">
                                 <div @click="focus" :class="UserProAndFans.IsFollow ?'btn-unFollow': 'btn-follow'">{{UserProAndFans.IsFollow ? '已关注': '关注'}}</div>
-                                <div @click="direct()">私信</div>
+                                <div @click="addChat(UserProAndFans.UserId)">私信</div>
                             </div>
                         </div>
                     </li>
@@ -102,7 +102,7 @@
                                 </ul>
                                 <div class="btn-group-box">
                                     <div @click="focus" :class="UserProAndFans.IsFollow ?'btn-unFollow': 'btn-follow'">{{UserProAndFans.IsFollow ? '已关注': '关注'}}</div>
-                                    <div @click="direct()">私信</div>
+                                    <div @click="addChat(UserProAndFans.UserId)">私信</div>
                                 </div>
                             </div>
                         </li>
@@ -114,9 +114,11 @@
 </template>
 
 <script>
-  import ScrollBox from '../../components/crollBox'
-  import {mapGetters } from 'vuex'
-  export default {
+import ScrollBox from '../../components/crollBox'
+import {addChatUserList} from "../../service/sign"
+import { analogJump } from '../../plugins/untils/public'
+import {mapGetters } from 'vuex'
+export default {
     name: 'conten',
     props: {
       RspItemDatas: {
@@ -185,9 +187,12 @@
         jumpRoute(item) {
             this.$emit('jumpRoute', item);
         },
-        direct() {
-            //this.currentWorks = null;
-        }
+        addChat (id) {
+            addChatUserList(id).then(res => {
+            let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res.RoomId}});
+            analogJump(routeData.href);
+            }).catch(err =>{})
+        },
     },
   }
 </script>

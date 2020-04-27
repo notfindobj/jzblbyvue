@@ -55,10 +55,10 @@
                     </li>
                 </ul>
             </div>
+            <nuxt-link to="activity" target="_blank">
+                <div class="lf-ad"></div>
+            </nuxt-link>
         </div>
-        <nuxt-link to="activity" target="_blank">
-            <div class="lf-ad"></div>
-        </nuxt-link>
     </div>
 </template>
 <script>
@@ -155,7 +155,7 @@ export default {
         width: 330px;
         position: sticky;
         display: inline-block;
-        max-height: 800px;
+        max-height: 870px;
         top: 70px;
     }
     .lf-ad {

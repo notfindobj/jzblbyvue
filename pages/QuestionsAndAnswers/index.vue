@@ -61,20 +61,22 @@
                 </crollBox>
             </div>
             <div class="main-left">
-                <Input search enter-button v-model="keyword" @on-search="searchQA" placeholder="请输入要搜索内容"/>
-                <div class="select-block" v-for="item in labelList" :key="item.ModuleId">
-                    <p class="select-title">{{ item.FullName }}</p>
-                    <div class="select-list">
-                        <Button shape="circle" size="small" v-for="subItem in item.Labels" :key="subItem.ModuleId"
-                                :class="{selected: labelId === subItem.ModuleId}"
-                                @click="clickLabel(subItem.ModuleId)">
-                            {{ subItem.FullName }}
-                        </Button>
+                <div style="po">
+                    <Input search enter-button v-model="keyword" @on-search="searchQA" placeholder="请输入要搜索内容"/>
+                    <div class="select-block" v-for="item in labelList" :key="item.ModuleId">
+                        <p class="select-title">{{ item.FullName }}</p>
+                        <div class="select-list">
+                            <Button shape="circle" size="small" v-for="subItem in item.Labels" :key="subItem.ModuleId"
+                                    :class="{selected: labelId === subItem.ModuleId}"
+                                    @click="clickLabel(subItem.ModuleId)">
+                                {{ subItem.FullName }}
+                            </Button>
+                        </div>
                     </div>
+                    <nuxt-link to="activity"  target="_blank">
+                        <div class="lf-ad"></div>
+                    </nuxt-link>
                 </div>
-                <nuxt-link to="activity"  target="_blank">
-                    <div class="lf-ad"></div>
-                </nuxt-link>
             </div>
         </div>
         <ToTop></ToTop>
@@ -308,7 +310,7 @@ export default {
     }
     .main-left {
         width: 340px;
-        max-height: 400px;
+        max-height: 699px;
         padding: 20px;
         background: #FFFFFF;
         box-shadow: 0 0 4px 0 rgba(0, 0, 0, 0.15);

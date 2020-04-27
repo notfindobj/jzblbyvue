@@ -53,6 +53,7 @@
                                     {{ subItem.ItemAttributesFullName }}
                                 </Option>
                             </Select>
+                            
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs" class="typeAttrList-item" v-if="items.ValueSource === 'FileUpload' || items.ValueSource === 'PDFFileUpload'">
                             <span><Icon type="ios-star" />{{items.ItemAttributesFullName }}</span>
@@ -66,22 +67,6 @@
                                     <Button type="text" icon="ios-cloud-upload-outline" >上传文件</Button>
                                 </div>
                             </ossUp>
-                            <!-- <Upload
-                                    ref="uploadFile"
-                                    :action="baseUrl + `Upload/DataUpload?uploadType=${items.ValueSource === 'FileUpload' ? 6 : 4}`"
-                                    :headers="{Authorization: 'Bearer ' + userInfo.token}"
-                                    :format="items.ValueSource === 'FileUpload'? ['zip', 'rar'] : ['pdf']"
-                                    :accept="items.ValueSource === 'FileUpload'? '.zip,.rar' : '.pdf'"
-                                    :max-size="102400"
-                                    :with-credentials="true"
-                                    :before-upload="clearUpload"
-                                    :on-success="uploadSuccess"
-                                    :on-remove="removeFile"
-                                    :on-exceeded-size="handleMaxSize"
-                                    style="display: inline-block;width: 220px;"
-                                >
-                                <Button icon="ios-cloud-upload-outline" >上传文件</Button>
-                              </Upload> -->
                         </div>
                         <div :key="items.ItemSubAttributeId+indexs+'FileUpload'" class="typeAttrList-item" v-if="items.ValueSource === 'FileUpload'">
                             <span><Icon type="ios-star" />收取费用</span>
@@ -298,7 +283,6 @@ export default {
                         isP = true
                     }
                 }
-                
             })
             if (!isP) {
                 this.serviceSelectList.push(row)
@@ -331,7 +315,7 @@ export default {
                 ele.children = [];
                 ele.children = [];
                 ele.level = 1;
-                ele.value = ele.ProvinceCode
+                ele.value = ele.ProvinceCode +"|"+ele.ProvinceName
                 ele.label = ele.ProvinceName
             })
             if (msg) {
@@ -341,7 +325,7 @@ export default {
         async loadData (item, callback) {
             item.loading = true;
             let queryData = {
-                ProvinceCode: item.value
+                ProvinceCode: item.value.split("|")[0]
             }
             let msg = await getProvinceList(queryData);
             if (msg.respProvince instanceof Array) {
@@ -351,7 +335,7 @@ export default {
                         ele.loading = false;
                         ele.children = [];
                     }
-                    ele.value = ele.ProvinceCode
+                    ele.value = ele.ProvinceCode +"|"+ele.ProvinceName
                     ele.label = ele.ProvinceName
                 })
             } else {
@@ -394,7 +378,6 @@ export default {
             if (isBreak) {
                 return false
             }
-            this.typeAttrList
             this.typeAttrList.forEach(ele => {
                 let obg = {
                     AttributesId: "",
@@ -404,9 +387,10 @@ export default {
                     ItemSubAttributeId: ele.ItemSubAttributeId,
                     SortCode: ele.Sort
                 }
-                if (ele.MapLinkage) {
+                if (ele.ValueSource === "MapLinkage") {
                     if (this.cascaderAddress.length > 0) {
-                        obg.MapLinkage = this.cascaderAddress[this.cascaderAddress.length - 1] + (this.address ? this.address : '');
+                        obg.ItemSubAttributeId = this.cascaderAddress[this.cascaderAddress.length - 1].split("|")[0];
+                        obg.MapAddress = this.cascaderAddress[0].split("|")[1] + this.cascaderAddress[1].split("|")[1] +this.cascaderAddress[2].split("|")[1]+ "|"+(this.address ? this.address : '');
                     } else {
                         this.$Message.warning('请选择属性： 所在地');
                         return false;
@@ -519,17 +503,18 @@ export default {
         width: 50%;
         justify-content: space-around;
         margin-top: 15px;
-        position: relative;
         .ivu-icon {
             position: absolute;
             top: 9px;
-            left: 15px;
+            left: -13px;
             color: #ff3c00;
         }
         > span {
             display: inline-block;
             text-align: left;
             width: 120px;
+            position: relative;
+            margin-left: 10px;
         }
     }
     .add-service-btn {

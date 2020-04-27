@@ -4,7 +4,8 @@
         <div class="comments-status-box">
             <div class="comments-box-status">
                 <div class="comments-box-status-left">
-                    <span>发布状态</span>
+                    <!-- <span>发布状态</span> -->
+                    <span></span>
                     <span>发布日期：{{publish.CreateDate | datefmt('YYYY-MM-DD')}}</span>
                 </div>
                 <div class="comments-box-status-right">
@@ -48,7 +49,6 @@
                     v-if="isComment"
                     v-model="commentV"
                     @commentValue="commentValue"
-
                 />
             </div>
         </div>
@@ -98,38 +98,38 @@ export default {
     },
     methods: {
       // 项目点赞
-      thumbsUp(item) {
-        this.$emit('thumbsUp', item)
-      },
-      // 转发
-      Forward(item) {
-        this.$emit('Forward', item)
-      },
-      // 收藏
-      Collection(item) {
-        this.$emit('Collection', item)
-      },
-      // 评论
-      commentValue() {
-        this.$refs.commentTool.setCommentsData(undefined, undefined, undefined, this.commentV)
-        // this.$emit('commentValue', this.publish, this.commentV)
-      },
-      discussValue(row, val) {
-        this.$emit('discussValue', row, val)
-      },
-      // 评论点赞
-      somePraise(item) {
-        this.$emit('somePraise', item)
-      },
-      goTodetails(inx) {
-        alert(inx)
-      },
-      upload() {
-        alert(1)
-      }
+        thumbsUp(item) {
+            this.$emit('thumbsUp', item)
+        },
+        // 转发
+        Forward(item) {
+            this.$emit('Forward', item)
+        },
+        // 收藏
+        Collection(item) {
+            this.$emit('Collection', item)
+        },
+        // 评论
+        commentValue() {
+            this.$refs.commentTool.setCommentsData(undefined, undefined, undefined, this.commentV)
+            // this.$emit('commentValue', this.publish, this.commentV)
+        },
+        discussValue(row, val) {
+            this.$emit('discussValue', row, val)
+        },
+        // 评论点赞
+        somePraise(item) {
+            this.$emit('somePraise', item)
+        },
+        goTodetails(inx) {
+            alert(inx)
+        },
+        upload() {
+            alert(1)
+        }
     },
     mounted() {
-      this.contentHeight = document.documentElement.clientHeight - 460 + 'px';
+        this.contentHeight = document.documentElement.clientHeight - 460 + 'px';
     }
   }
 </script>

@@ -62,7 +62,7 @@
                                 <div class="swiper-slide" v-for="(items, index) in WinerList" :key="index">
                                     <div class="record-ul">
                                         <span>{{items.CreateUserName}}</span>
-                                        <span>{{items.CreateDate | timestamp}}</span>
+                                        <span class="record-ul-c">{{items.CreateDate | timestamp}}</span>
                                         <span>{{items.PrizeName}}</span>
                                     </div>
                                 </div>
@@ -419,9 +419,20 @@ export default {
             line-height: 35px;
             justify-content: space-between;
             padding: 0 30px;
+            text-align: left;
+            &-c {
+                width: 50px;
+                display: inline-block;
+            }
             span {
+                &:first-child {
+                    display: inline-block;
+                    width: 60px;
+                }
                 &:last-child {
+                    display: inline-block;
                     color: #ff3c00;
+                    width: 60px;
                 }
             }
         }

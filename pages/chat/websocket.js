@@ -1,8 +1,8 @@
-const WSS_URL = `ws://www.api.jzbl.com/api/chatd2d`
+const WSS_URL = `wss://www.api.jzbl.com/api/chatd2d`
+// const WSS_URL = `ws://192.168.10.19:600/api/chatd2d`
 let Socket = ''
 let setIntervalWesocketPush = null
 var ping= "token:"
-import Vue from "vue"
 /**建立连接 */
 function createSocket(token) {
     ping += token
@@ -57,6 +57,6 @@ function sendPing() {
     Socket.send(ping)
     setIntervalWesocketPush = setInterval(() => {
         Socket.send(ping)
-    }, 5000)
+    }, 10000)
 }
 export { createSocket, sendWSPush, onmessageWS}; 

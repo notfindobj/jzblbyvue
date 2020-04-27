@@ -3,90 +3,168 @@
         <div class="chat-box">
             <div class="chat-box-side">
                 <div class="chat-user-title">
-                    <img src="https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif" alt="" width="50px" height="50px">
-                    <span>初九</span>
+                    <img :src="userInfo.HeadIcon" alt="" width="50px" height="50px">
+                    <span>{{userInfo.NickName}}</span>
                 </div>
                 <div class="chat-user-search">
                     <div class="chat-user-search-c">
                         <Icon type="md-search" />
-                        <input type="text" v-model="seaUser" placeholder="查找联系人" >
+                        <input type="text" v-model="seaUser" placeholder="查找联系人" @keyup.enter="getUserList">
                     </div>
                 </div>
                 <ul class="contacts">
-                    <li :class="items.ToUserId === beforePerson.ToUserId ? 'contacts-items contacts-active': 'contacts-items '" v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent">
+                    <li :class="items.ToUserId === beforePerson.ToUserId ? 'contacts-items contacts-active': 'contacts-items '" v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent(items, 0)">
                         <div class="contacts-items-lf">
                             <div class="contacts-items-lf-img">
-                                <img :src="items.HeadIcon" alt="" width="50px" height="50px">
-                            </div>
-                            <div class="contacts-items-lf-user">
-                                <p class="contacts-items-lf-user-name">{{items.NickName}}</p>
-                                <p class="contacts-items-lf-user-sub">{{items.LatestMsg}}</p>
+                                <img :src="items.HeaIcon" alt="" width="50px" height="50px">
                             </div>
                         </div>
-                        <div class="contacts-items-time">{{items.MsgDateTime}}</div>
+                        <div class="contacts-items-lf-user">
+                            <p class="contacts-items-lf-user-name">
+                                <span>{{items.NickName}}</span>
+                                <span>{{items.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</span>
+                            </p>
+                            <p class="contacts-items-lf-user-sub">
+                                <span>{{setNew(items)}}</span>
+                                <i v-if="items.OppositeStatus === 2" class="icon iconfont icon-jinzhi"></i>
+                                <span  class="shuzi" v-if="items.UnreadMsg > 0">{{items.UnreadMsg}}</span>
+                            </p>
+                        </div>
                     </li>
                 </ul>
             </div>
-            <div class="chat-box-con">
+            <div class="chat-box-con" v-if="beforePerson">
                 <div class="chat-box-con-tit">
-                    {{beforePerson.NickName}}
+                    {{beforePerson.NickName}}  
                 </div>
-                <div class="chat-box-con-chat">
+                <div class="chat-box-con-chat" id="chatBox">
+                    <div class="user-ship" v-if="beforePerson.OppositeStatus !== 0">
+                        <span >{{setUsetShip(beforePerson)}}
+                            <i @click="setUserShip" v-if="beforePerson.OppositeStatus === 1" class="icon iconfont icon-yanjing yan"></i>
+                            <span @click="setUserShip" v-if="beforePerson.OppositeStatus === 2" style="color: #ff3c00;">解除屏蔽</span>
+                        </span> 
+                    </div>
                     <ul class="news-box" id="newTypeImg">
-                        <template v-for="(items, index) in newList">
-                            <li class="news-box-item" :key="index">
-                                <p class="news-box-item-time">{{items.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
-                                <div class="news-box-item-con">
-                                    <div :class="`news-box-item-con-img ${!items.IsSelf ? ' new-lf' : 'new-rf'}`">
-                                        <img data-w-e="0" :src="items.HeadIcon" alt="" width="100%" height="100%">
-                                    </div>
-                                    <div  :class="`news-box-item-con-txt ${!items.IsSelf ? ' new-lf' : 'new-rf'}`">
-                                        <div :class="`news-box-item-con-txt-lf ${!items.IsSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
-                                        <div class="news-box-item-con-txt-rf">
-                                            <span>{{items.Msg}}</span>
-                                            <!-- <template v-if="items.newType === 1">
-                                                <span>{{items.Msg}}</span>
-                                            </template>
-                                            <template v-if="items.newType === 2">
-                                                <img :src="items.content" :data-original="items.content" alt="" width="100%">
-                                            </template>
-                                            <template v-if="items.newType === 3" >
-                                                <div>
-                                                    下载 <span>index.vue</span>
-                                                </div>
-                                            </template> -->
+                        <template v-for="item in newList" v-if="item.id === beforePerson.RoomId">
+                            <template v-for="(items, indexs) in item.list">
+                                <li class="news-box-item" :key="indexs" v-if="items.BaseMsgType === 1">
+                                    <p class="news-box-item-time">{{items.MsgObj.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
+                                    <div class="news-box-item-con">
+                                        <div :class="`news-box-item-con-img ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`">
+                                            <img data-w-e="0" :src="items.MsgObj.HeadIcon" alt="" width="100%" height="100%">
+                                        </div>
+                                        <div :class="`news-box-item-con-txt ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`"  @mousedown="openMent(items.MsgObj, 1)">
+                                            <div :class="`news-box-item-con-txt-lf ${!items.MsgObj.IsSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
+                                            <div class="news-box-item-con-txt-rf">
+                                                <template v-if="items.MsgObj.MsgType === 0">
+                                                <emotHtml v-model="items.MsgObj.Msg"></emotHtml>
+                                                </template>
+                                                <template v-if="items.MsgObj.MsgType === 1">
+                                                    <img :data-magnify="items.MsgObj.MsgSendDateTime" :data-src="items.MsgObj.Msg" :src="items.MsgObj.Msg" width="100%">
+                                                    <!-- <img  :src="items.MsgObj.Msg" :data-original="items.MsgObj.Msg" alt="" width="100%"> -->
+                                                </template>
+                                                <template v-if="items.MsgObj.MsgType === 2" >
+                                                    <div class="down-file">
+                                                        <span>{{items.MsgObj.Msg.split("|")[1]}}</span>
+                                                        <span @click="downFile(items.MsgObj.Msg.split('|')[0])">下载</span>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                            <span v-if="items.MsgObj.SendType !==1 && items.MsgObj.SendType !==2" :class="`${!items.MsgObj.IsSelf ? 'send-status-lf' : 'send-status-rf'}`">
+                                                <i class="icon iconfont icon-zhongfa"></i>
+                                            </span>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
+                                </li>
+                                <template v-if="items.BaseMsgType === 0">
+                                    <li class="news-box-item" :key="indexs">
+                                        <p class="news-box-item-time">{{items.MsgObj.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
+                                        <div class="news-box-item-con">
+                                            <div :class="`news-box-item-con-img ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`">
+                                                <img data-w-e="0" :src="items.MsgObj.HeadIcon" alt="" width="100%" height="100%">
+                                            </div>
+                                            <div :class="`news-box-item-con-txt ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`"  @mousedown="openMent(items.MsgObj, 1)">
+                                                <div :class="`news-box-item-con-txt-lf ${!items.MsgObj.IsSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
+                                                <div class="news-box-item-con-txt-rf">
+                                                    <!--  0文字 -->
+                                                    <template v-if="items.MsgObj.MsgType === 0">
+                                                        <span>{{items.MsgObj.Msg}}</span>
+                                                    </template>
+                                                    <!--  1 图片 -->
+                                                    <template v-if="items.MsgObj.MsgType === 1">
+                                                        <img @click="$().zoomify()" :src="items.MsgObj.Msg" :data-original="items.MsgObj.Msg" alt="" width="100%">
+                                                    </template>
+                                                    <!--  2 文件 -->
+                                                    <template v-if="items.MsgObj.MsgType === 2" >
+                                                        <div class="down-file">
+                                                            <span>{{items.MsgObj.Msg.split("|")[1]}}</span>
+                                                            <span @click="downFile(items.MsgObj.Msg.split('|')[0])">下载</span>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <span v-if="items.MsgObj.SendType !==1 && items.MsgObj.SendType !==2" :class="`${!items.MsgObj.IsSelf ? 'send-status-lf' : 'send-status-rf'}`">
+                                                    <i class="icon iconfont icon-zhongfa"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="ship-tips">
+                                            <span>{{items.MsgObj.SysMsg}}</span>
+                                        </div>
+                                    </li>
+                                </template>
+                            </template>
                         </template>
                     </ul>
                 </div>
                 <div class="chat-box-con-edit">
+                    <Emotion :class="'panl-emotion'" v-if="isEmotion"
+                    @closeEmotion="closeEmotion"
+                    @emotion="handleEmotion"
+                    :height="120"/>
                     <div class="chat-box-con-edit-tit">
-                        <span><i class="icon iconfont icon-xiaolian"></i></span>
-                        <span><i class="icon iconfont icon-tupian1"></i></span>
-                        <span><i class="icon iconfont icon-wenjian"></i></span>
+                        <span><i class="icon iconfont icon-xiaolian" @click="isEmotion = true"></i></span>
+                        <span><i class="icon iconfont icon-tupian1" @click="$refs.SendImg.click()"></i>
+                            <input ref="SendImg" type="file" accept="image/*"  style="display:none;" @change="loadSendImg">
+                        </span>
+                        <span><i class="icon iconfont icon-wenjian"  @click="$refs.SendFile.click()"></i>
+                            <input ref="SendFile" type="file"  accept=".js,.doc,.docx,.xls,.xlsx,.pdf" style="display:none;" @change="loadSendFile">
+                        </span>
                     </div>
-                    <textarea cols="30" rows="4" v-model="sendContent" @keyup.ctrl.enter="sendMegess" ></textarea>
+                    <textarea cols="30" rows="4" v-model="sendContent" @keydown="sendMegess" ></textarea>
+                    <div class="chat-edit">
+                        <span>按下Enter发送内容/ Ctrl+Enter换行</span>
+                        <Button @click="sendMegessBtn">发送</Button>
+                    </div>
                 </div>
             </div>
         </div>
-         <ul v-if="isPannel" ref="menuPanel" class="menuPanel menulist" :style="`left: ${Client.x}px;top: ${Client.y}px;`">
-            <li>查看部落</li>
-            <li>屏蔽此人</li>
-            <li>删除对话</li>
-        </ul>
+        <Pannel :isPannel="isPannel" :Client="Client" @Pannel="isPannel = false">
+            <template v-if="panRow.mentType === 0">
+                <li @click="viewBl">查看部落</li>
+                <li @click="ShieldAndDdel(1)"> {{panRow.OppositeStatus === 2 ? "解除屏蔽此人": "屏蔽此人"}} </li>
+                <li @click="ShieldAndDdel(2)">删除对话</li>
+            </template>
+            <template v-if="panRow.mentType === 1">
+                <li @click="delDia()">删除对话</li>
+            </template>
+        </Pannel>
     </div>
 </template>
 <script>
 import Viewer from 'viewerjs';
 import { mapState } from 'vuex'
-import {getChatUserList, getChatHistory} from "../../service/sign"
+import {uploadFile} from "../../service/clientAPI"
+import {getChatUserList, getChatHistory, setShip, getRoom} from "../../service/sign"
 import {createSocket, sendWSPush} from "./websocket"
+import Emotion from '../../components/Emotion'
+import {analogJump, Notifiy} from '../../plugins/untils/public'
+import Pannel from "./components/Pannel"
 export default {
     layout: "chat",
-    components: {},
+    components: {
+        Emotion,
+        Pannel
+    },
     data () {
         return {
             contactsList: [
@@ -100,67 +178,21 @@ export default {
                 }
             ],
             beforePerson: {},
-            newList: [
-                // 1 文本 2 图片  3 文件
-                {
-                    userName: "初九",
-                    headIcon: "",
-                    newType: 1,
-                    content: '@微公益 您关注的“疫情一线医护•守护者后盾行动” 公益项目进展已更新，请点击：http://t.cn/A6PaVOGY查看详情',
-                    time: '2020-06-08',
-                    isSelf: false
-                },
-                {
-                    userName: "初九",
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    newType: 2,
-                    content: 'https://www.pic1.jzbl.com/buildingcircle/d5b4fbaa-40a0-4145-a119-88af91c3bf8f/2020-03-24/f/cKkscczSjF1585104280.jpg?x-oss-process=image/quality,q_80/watermark,image_V2F0ZXJtYXJrL3dhdGVybWFyay5wbmc=,size_20,type_d3F5LXplbmhlaQ,text_QOWImOeDqA,color_E94743,shadow_50,order_0,align_2,interval_10,t_90,g_sw,x_20,y_20',
-                    time: '2020-06-08',
-                    isSelf: false
-                },
-                {
-                    userName: "初九",
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    newType: 1,
-                    content: '@微公益 您关注的“疫情一线医护•守护者后盾行动” 公益项目进展已更新，请点击：http://t.cn/A6PaVOGY查看详情',
-                    time: '2020-06-08',
-                    isSelf: true
-                },
-                {
-                    userName: "初九",
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    newType: 3,
-                    content: '@微公益 您关注的“疫情一线医护•守护者后盾行动” 公益项目进展已更新，请点击：http://t.cn/A6PaVOGY查看详情',
-                    time: '2020-06-08',
-                    isSelf: false
-                },
-                {
-                    userName: "初九",
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    newType: 1,
-                    content: '@微公益 您关注的“疫情一线医护•守护者后盾行动” 公益项目进展已更新，请点击：http://t.cn/A6PaVOGY查看详情',
-                    time: '2020-06-08',
-                    isSelf: true
-                },
-                {
-                    userName: "初九",
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    newType: 3,
-                    content: '@微公益 您关注的“疫情一线医护•守护者后盾行动” 公益项目进展已更新，请点击：http://t.cn/A6PaVOGY查看详情',
-                    time: '2020-06-08',
-                    isSelf: false
-                }
-            ],
+            newList: [],
             isPannel: false,
             Client: {},
             Viewer: {},
             seaUser: "",
             sendContent: "",
-            Socket: null
+            panRow: {},
+            Socket: null,
+            isEmotion: false,
+            PageAction: false
         }
     },
     created () {
         this.getUserList()
+        
     },
     computed: {
         ...mapState({
@@ -169,50 +201,291 @@ export default {
     },
     mounted () {
         this.initSocket(this.userInfo.token)
-        document.addEventListener('click',e => {
-            if(this.$refs.menuPanel && !this.$refs.menuPanel.contains(e.target)){
-                this.isPannel = false
-            }
-        })
+        this.changeEvent()
         this.initView()
     },
     methods: {
+        closeEmotion (val) {
+            this.isEmotion = val
+        },
+        handleEmotion (item) {
+            // 选择表情
+            this.sendContent += `[${item.content}]`
+        },
+        sendMegessBtn () {
+            //提交的执行函数
+            if (this.sendContent !== "") {
+                let obg = {
+                    Msg: this.sendContent,
+                    Token: this.userInfo.token,
+                    RoomId: this.beforePerson.RoomId,
+                    MsgType: 0
+                }
+                sendWSPush(obg)
+                this.sendContent =""
+            }
+        },
+        // 发送文字
+        sendMegess(){
+            if(event.keyCode == 13 && event.ctrlKey){
+                this.sendContent += "\n"; //换行
+            }else if(event.keyCode == 13){
+                //提交的执行函数
+                this.sendMegessBtn()
+                event.preventDefault();//禁止回车的默认换行
+                return false
+            }
+        },
+        // 跳转部落
+        viewBl() {
+            let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id: this.panRow.ToUserId} });
+            analogJump(routeData.href);
+        },
+        //
+        async ShieldAndDdel (type) {
+            let msg = await setShip(this.panRow.RoomId, type)
+            if (type === 1) {
+                this.panRow.OppositeStatus = msg
+                this.$Message.success(`${msg === 2 ? "屏蔽对方成功！" : "解除屏蔽"}`)
+            }
+            if (type === 2) {
+                    let RoomIdIdex = null
+                    let panIndex = null
+                    let userList = this.contactsList.length;
+                    if (userList > 1) {
+                        for (let i= 0; i < userList; i++) {
+                            if (this.contactsList[i].RoomId === this.panRow.RoomId) {
+                                panIndex = i
+                            }
+                            if (this.contactsList[i].RoomId === this.beforePerson.RoomId) {
+                                RoomIdIdex = i
+                            }
+                        }
+                        if (panIndex === RoomIdIdex) {
+                            if (RoomIdIdex + 1 >= userList) {
+                                this.beforePerson = this.contactsList[RoomIdIdex - 1]
+                            } else {
+                                this.beforePerson = this.contactsList[RoomIdIdex + 1]
+                            }
+                        } else {
+                        this.beforePerson = this.contactsList[RoomIdIdex]
+                        }
+                        this.getHistory(this.beforePerson.RoomId)
+                        this.isPannel = false
+                        this.contactsList.splice(panIndex, 1)
+                    } else {
+                        this.contactsList = []
+                        this.panRow = {}
+                        this.beforePerson = {}
+                        this.newList = []
+                    }
+            }
+            this.isPannel = false
+        },
+        // 删除一条消息
+        async delDia (type = 3) {
+            let msg = await setShip(this.panRow.MsgId, type)
+            try {
+                this.newList.forEach(ele => {
+                    if (ele.id  === this.panRow.RoomId) {
+                        ele.list.forEach((e, i) => {
+                            if (e.MsgObj.MsgId === this.panRow.MsgId) {
+                                ele.list.splice(i, 1)
+                            }
+                            
+                        })
+                    }
+                })
+                this.isPannel = false
+            } catch (error) {}
+        },
+        // 初始化链接
         initSocket (token) {
+            let that =this;
             this.Socket = new createSocket(token)
             this.Socket.onmessageWS = function (e) {
-                console.log("e>>>>>", e)
+                let isFlag = false;
+                let newFlag = false
+                try {
+                    let arr = JSON.parse(e.data)
+                    that.setStatus(arr.MsgObj.OppositeStatus)
+                    let r = []
+                    that.newList.forEach((ele, index) => {
+                        if (ele.id === arr.MsgObj.RoomId) {
+                            newFlag = true
+                            ele.list.push(arr)
+                        }
+                    })
+                    if (!newFlag) {
+                        let obg = {
+                            id: arr.MsgObj.RoomId,
+                            list: [arr]
+                        }
+                        that.newList.push(obg)
+                    }
+                    if (arr.MsgObj.IsSelf) {
+                        // 联系人置前
+                        that.contactsList.forEach((ele, index) => {
+                            if (ele.RoomId === arr.MsgObj.RoomId) {
+                                isFlag = true
+                                r = that.contactsList.splice(index, 1)[0]
+                                that.$set(r, "Msg", arr.MsgObj.Msg)
+                                that.$set(r, "MsgType", arr.MsgObj.MsgType)
+                                that.beforePerson = r
+                            }
+                        })
+                        if (that.contactsList.length > 0) {
+                            that.contactsList.unshift(r)
+                        } else {
+                            that.contactsList.push(r)
+                        }
+                    } else {
+                        // 联系人置前
+                        that.contactsList.forEach((ele, index) => {
+                            if (ele.RoomId === arr.MsgObj.RoomId) {
+                                isFlag = true
+                                that.$set(ele, "Msg", arr.MsgObj.Msg)
+                                that.$set(ele, "MsgType", arr.MsgObj.MsgType)
+                                if (that.beforePerson.RoomId !== arr.MsgObj.RoomId) {
+                                    that.$set(ele, "UnreadMsg", ele.UnreadMsg + 1 || 1)
+                                }
+                            }
+                        })
+                    }
+                    let divscll = document.getElementById('chatBox');
+                    divscll.scrollTop = divscll.scrollHeight;
+                    // 页面通知
+                    if (!that.PageAction) {
+                        console.log("通知消息")
+                        Notifiy(arr)
+                    }
+                    // 添加联系人
+                    if (!isFlag) {
+                        that.getUserRm(arr.MsgObj.RoomId);
+                        return false
+                    }
+                } catch (error) {}
             }
         },
-        sendMegess () {
-            let obg = {
-                MsgId: this.guid(),
-                MsgContent: this.sendContent,
-                DateTime:  (new Date()).valueOf(),
-                newType: 1,
-                MsgStatus: true,
-                CreateUserId: this.userInfo.UserId,
-                ToUserId: this.beforePerson.ToUserId
+        // 获取单个用户
+        getUserRm (id) {
+            let that = this
+            getRoom(id).then(res => {
+                if (res) {
+                     if (that.contactsList.length > 0) {
+                        that.contactsList.unshift(res)
+                    } else {
+                        that.contactsList.push(res)
+                    }
+                    that.beforePerson = res
+                }
+            })
+        },
+        // 发送图片
+        loadSendImg () {
+            let that = this;
+            let file = event.target.files;
+            if (file) {
+                let data = new FormData();
+                for (let item of file) {
+                    data.append('files', item)
+                }
+                uploadFile(data, 12).then(res => {
+                    let obg = {
+                        Msg: res.fileUrl,
+                        Token: that.userInfo.token,
+                        RoomId: that.beforePerson.RoomId,
+                        MsgType: 1
+                    }
+                    sendWSPush(obg)
+                }).catch(err => {
+                    console.log(err, 'uploadErr')
+                })
             }
-            sendWSPush(obg)
-            this.sendContent =""
         },
-        onmessageWS (e) {
-            debugger
+        // 发送图片
+        loadSendFile () {
+            let that = this;
+            let file = event.target.files;
+            if (file) {
+                let data = new FormData();
+                for (let item of file) {
+                    data.append('files', item)
+                }
+                uploadFile(data, 13).then(res => {
+                    let obg = {
+                        Msg: `${res.fileUrl}|${res.fileName}`,
+                        Token: that.userInfo.token,
+                        RoomId: that.beforePerson.RoomId,
+                        MsgType: 2
+                    }
+                    sendWSPush(obg)
+                }).catch(err => {
+                    console.log(err, 'uploadErr')
+                })
+            }
         },
+        // 下载文件
+        downFile (row) {
+            try {
+                var eleLink = document.createElement('a');
+                eleLink.download = '';
+                eleLink.style.display = 'none';
+                eleLink.href = row;
+                // 触发点击
+                document.body.appendChild(eleLink);
+                eleLink.click();
+                // 然后移除
+                document.body.removeChild(eleLink);
+                event.preventDefault()
+            } catch (error) {
+                console.log('下载出错');
+            }
+        },
+        // 获取聊天人列表
         async getUserList () {
-            let m = await getChatUserList();
-            if (m) {
+            let m = await getChatUserList(this.seaUser);
+            if (m && m.length > 0) {
                 this.contactsList = m
                 this.beforePerson = m[0]
                 this.getHistory(this.beforePerson.RoomId)
             }
         },
+        // 设置聊天人关系
+        async setUserShip () {
+            let msg = await setShip(this.beforePerson.RoomId, 1)
+            this.setStatus(msg)
+            this.$Message.success(`${msg === 2 ? "屏蔽对方成功！" : "解除屏蔽"}`)
+        },
+        setStatus (row) {
+            this.beforePerson.OppositeStatus = row
+            this.contactsList.forEach(element => {
+                if (element.RoomId === this.beforePerson.RoomId) {
+                    element.OppositeStatus = row
+                }
+            });
+        },
+        // 获取聊天历史
         async getHistory (id) {
            let ms = await getChatHistory(id)
            if (ms) {
-               this.newList = ms
+               let isFlag =  false
+               this.newList.forEach(ele => {
+                   if (ele.id  === this.beforePerson.RoomId) {
+                       isFlag = true
+                       ele.list = ms
+                   }
+               })
+               if (!isFlag) {
+                   let obg = {
+                        id: this.beforePerson.RoomId,
+                        list: ms
+                   }
+                   this.newList.push(obg)
+               }
            }
         },
+        // 放大图片
         initView() {
             const ViewerDom = document.getElementById('newTypeImg');
             let _this = this;
@@ -224,55 +497,138 @@ export default {
                 })
             })
         },
-        searUser (row) {
-            this.contactsList.filter(o => {o.ToUserId === row.ToUserId ? o.active = true : o.active = false});
+        // 选择聊天用户
+        searUser (row) { 
+            // 留着优化用
+            // this.contactsList.filter(o => {o.ToUserId === row.ToUserId ? o.active = true : o.active = false});
+            this.$set(row, "UnreadMsg", 0)
             this.beforePerson = row
+            this.getHistory(row.RoomId)
         },
-        openMent (event) {
+        // 打开面板
+        openMent (row, type) {
             event.preventDefault();
             document.oncontextmenu= function () {return false;}
+            row.mentType = type
             if (event.which === 3) {
                 this.isPannel = true
-                this.Client = this.getClient(event)
+                this.panRow = row
+                this.Client =  {x: event.clientX, y: event.clientY}
             }
         },
-        getClient (event) {
-            return {x: event.clientX, y: event.clientY}
+        // 
+        setNew (row) {
+            switch (row.MsgType) {
+                case 0:
+                    return row.Msg
+                    break;
+                case 1:
+                    return "【图片】"
+                    break;
+                case 2:
+                    return "【文件】"
+                    break;
+                default:
+                   return row.Msg
+            }
         },
-        guid() {
-            return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
-                return v.toString(16);
-            })
+        setUsetShip (row) {
+            switch (row.OppositeStatus) {
+                case 1:
+                    return "该对话来自于未关注人"
+                    break;
+                case 2:
+                    return "该用户已屏蔽，回复后即可解锁，或点击此处"
+                    break;
+                default:
+                   return ""
+            }
+        },
+        changeEvent () {
+            let that = this;
+            var hiddenProperty = 'hidden' in document ? 'hidden' :    
+            'webkitHidden' in document ? 'webkitHidden' :    
+            'mozHidden' in document ? 'mozHidden' : null;
+            var visibilityChangeEvent = hiddenProperty.replace(/hidden/i, 'visibilitychange');
+            var onVisibilityChange = function(){
+                if (!document[hiddenProperty]) { 
+                    console.log('页面激活');
+                    that.PageAction = true
+                    return true   
+                }else{
+                    that.PageAction = false
+                    console.log('页面未激活')
+                    return false
+                }
+            }
+            document.addEventListener(visibilityChangeEvent, onVisibilityChange);
         }
     }
 }
 </script>
 <style lang="less" scoped>
-    .menulist{
-        background: #fff;
-        border: 1px solid #f2f2f5;
-        border-bottom: none;
-        border-radius: 2px;
-        box-shadow: 0 2px 8px 1px rgba(0,0,0,.2);
-        padding: 2px;
-        li {
-            font-size: 12px;
-            cursor: pointer;
-            line-height: 12px;
-            position: relative;
-            display: block;
-            white-space: nowrap;
-            min-width: 50px;
-            padding: 14px 35px 14px 16px;
-            color: #333;
-            &:hover {
-                background: #f2f2f5;
-                color: #f5846c;
+    .panl-emotion {
+        bottom: ~"calc(100vh - (100vh - 275px))";
+        position: absolute;
+        width: 870px;
+    }
+    .chat-edit {
+        text-align: right;
+        color: #a5a5a5;
+    }
+    .down-file {
+        span {
+            &:last-child {
+                cursor: pointer;
+                color: #ff3c00;
             }
         }
     }
-    
+    .yan {
+        position: absolute;
+        top: 0px;
+        right: -20px;
+        display: none;
+    }
+    .send-status-lf {
+        position: absolute;
+        right: -20px;
+        bottom: 0;
+        color: red;
+    }
+    .send-status-rf {
+        position: absolute;
+        left: -20px;
+        bottom: 0;
+        color: red;
+    }
+    .ship-tips {
+        text-align: center;
+        font-weight: bold;
+        span {
+            padding: 5px 40px;
+            border-radius: 10px;
+            background: #b5b5b5dd;
+        }
+    }
+    .user-ship {
+        position: sticky;
+        top: 0;
+        background: #ddd;
+        text-align: center;
+        z-index: 100;
+        line-height: 35px;
+        &:hover {
+            span >i {
+                display: inline-block;
+            }
+        }
+        span {
+            cursor: pointer;
+            display: inline-block;
+            position: relative;
+        }
+    }
     .contacts {
         background-color: #33353a;
         height: ~"calc(100vh - 118px)";
@@ -298,12 +654,14 @@ export default {
             height: 80px;
             line-height: 80px;
             cursor: pointer;
+            overflow: hidden;
             border-bottom: 1px solid #2c2e31;
             &:hover {
                 background: #3a3c42;
             }
             &-lf {
                 display: flex;
+                overflow: hidden;
                 &-img {
                     width: 50px;
                     height: 50px;
@@ -316,12 +674,41 @@ export default {
                     font-size: 14px;
                     line-height: 25px;
                     margin-left: 15px;
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+                    width: 0px;
                     &-name {
                         color: #fff;
                         margin-top: 15px;
+                        display: flex;
+                        justify-content: space-between;
+                        span {
+                            &:first-child {
+                                max-width: 140px;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                            }
+                            &:last-child {
+                                font-size: 12px;
+                                color: #999999;
+                            }
+                        }
                     }
                     &-sub {
                         color: #999;
+                        line-height: 30px;
+                        display: flex;
+                        justify-content: space-between;
+                        span {
+                            &:first-child {
+                                max-width: 192px;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                white-space: nowrap;
+                            }
+                        }
                     }
                 }
             }
@@ -392,6 +779,8 @@ export default {
     }
     .news-box {
         padding: 10px 0 50px 0;
+        position: relative;
+        bottom: 40px;
         &-item {
             padding: 8px 18px;
              &::after, &::before {
@@ -406,6 +795,13 @@ export default {
                 margin: 5px 0;
             }
             &-con {
+                &::after, &::before {
+                    content: "";
+                    display: block;
+                    height: 0;
+                    clear:both;
+                    visibility: hidden;
+                }
                 &-img {
                     width: 35px;
                     height: 35px;
@@ -465,7 +861,7 @@ export default {
                     border-bottom: 1px solid #e2dddd;
                 }
                 &-chat {
-                    height: ~"calc(100vh - 205px)";
+                    height: ~"calc(100vh - 220px)";
                     background: #fff;
                     overflow-x: hidden;
                     overflow-y: auto;
@@ -474,7 +870,7 @@ export default {
                     bottom: 0;
                     position: absolute;
                     width: 870px;
-                    height: 155px;
+                    height: 170px;
                     background: #ddd;
                     &-tit {
                         line-height: 20px;
@@ -484,6 +880,11 @@ export default {
                         span {
                             margin-left: 10px;
                             cursor: pointer;
+                            i {
+                                &:hover {
+                                    color: #ff3c00;
+                                }
+                            }
                             &:first-child {
                                 margin-left: 0;
                             }
@@ -497,6 +898,11 @@ export default {
                         background: #ddd;
                         color: #333;
                         border: none;
+                        height: 100px;
+                        resize: none;
+                        overflow-x: hidden;
+                        text-align: justify;
+                        overflow-y: auto;
                         &:focus {
                             border: none;
                             outline: none;
@@ -521,5 +927,8 @@ export default {
     /*滚动条的上下两端的按钮*/
     &::-webkit-scrollbar-button {
         height: 0px;
+    }
+    .shuzi {
+        color: #ff3c00;
     }
 </style>

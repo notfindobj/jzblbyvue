@@ -1,5 +1,5 @@
 <template>
-    <div class="com">
+    <div :class="height > 0 ? 'com comBox' : 'com' " :style="`height: ${height > 0 ? height : ''}px`">
         <div class="com-one" v-if="isTopInput">
             <comment :emotionRows='1' v-model="commentVlaue" @commentValue="setCommentsData(itemInfo)"/>
         </div>
@@ -189,6 +189,10 @@ import { mapGetters} from 'vuex'
 export default {
     name: 'commentTool',
     props: {
+        height : {
+            type: Number,
+            default: 0
+        },
         itemInfo: {
             type: Object,
             default: function () {
@@ -489,6 +493,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .comBox {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
     .block {
         &-title {
             display: flex;

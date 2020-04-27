@@ -212,7 +212,7 @@
     methods: {
       addChat (id) {
         addChatUserList(id).then(res => {
-          let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res}});
+          let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res.RoomId}});
           analogJump(routeData.href);
         }).catch(err =>{})
       },

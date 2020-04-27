@@ -22,7 +22,7 @@
                       <Icon type="ios-arrow-down"></Icon>
                     </a>
                     <DropdownMenu slot="list">
-                      <DropdownItem>私信</DropdownItem>
+                      <DropdownItem @click="addChat(item.UserId)">私信</DropdownItem>
                       <DropdownItem @click.native="DropdownItem(item)">{{!item.IsFollow ? '关注' : '取消关注'}}</DropdownItem>
                     </DropdownMenu>
                   </Dropdown>
@@ -36,6 +36,7 @@
 </template>
 <script>
   import {setFollow } from '../../../service/clientAPI'
+  import {addChatUserList} from "../../../service/sign"
   import { analogJump } from '../../../plugins/untils/public'
   export default {
     layout: 'main',
@@ -60,6 +61,12 @@
         if (coll) {
           this.$set(item, 'IsFollow', !item.IsFollow)
         }
+      },
+      addChat (id) {
+        addChatUserList(id).then(res => {
+          let routeData = this.$router.resolve({ name: 'chat-id', params: {id: res.RoomId}});
+          analogJump(routeData.href);
+        }).catch(err =>{})
       },
       // 路由跳转
       jumpRoute(items) {
