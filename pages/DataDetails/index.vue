@@ -175,7 +175,7 @@
         },
         methods: {
             openMap (value) {
-                this.keywords = value.ItemSubAttributeFullName
+                this.keywords = value.ItemSubAttributeFullName.split("|")[0]
                 this.isMap = true
             },
             closeMap () {
