@@ -64,3 +64,23 @@ export const setShip = async (opID, opType) => {
 export const getRoom = async (params) => {
   return await request.get(`chat/DialogueRoom?RoomId=${params}`)
 }
+// 获取新建群组用户，删除群组用户，添加群组用户
+export const getGroupUser = async (params) => {
+  return await request.get(`chat/GetGroupUsers`, params)
+}
+// 获取新建群组用户，删除群组用户，添加群组用户
+export const CreateGroup = async (params) => {
+  return await request.post(`chat/CreateGroupRoom`, params)
+}
+// 获取群组信息
+export const getGroupInfo = async (params) => {
+  return await request.get(`chat/GetGroupInfo?roomId=${params}`)
+}
+// 删除成员
+export const delGroupUser = async (userId, roomId) => {
+  return await request.post(`Chat/RemovGroupUser?userIds=${userId}&roomId=${roomId}`)
+}
+// 添加成员
+export const addGroupUser = async (userId, roomId, type) => {
+  return await request.post(`Chat/AddGroupUser?userIds=${userId}&roomId=${roomId}&enterWay=${type}`)
+}

@@ -3,8 +3,11 @@
         <div class="chat-box">
             <div class="chat-box-side">
                 <div class="chat-user-title">
-                    <img :src="userInfo.HeadIcon" alt="" width="50px" height="50px">
-                    <span>{{userInfo.NickName}}</span>
+                    <div class="chat-user-title-lf">
+                        <img :src="userInfo.HeadIcon" alt="" width="50px" height="50px">
+                        <span>{{userInfo.NickName}}</span>
+                    </div>
+                    <div @click="openNewGroup">新建 </div>
                 </div>
                 <div class="chat-user-search">
                     <div class="chat-user-search-c">
@@ -13,7 +16,8 @@
                     </div>
                 </div>
                 <ul class="contacts">
-                    <li :class="items.ToUserId === beforePerson.ToUserId ? 'contacts-items contacts-active': 'contacts-items '" v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent(items, 0)">
+                    <li :class="items.ToUserId === beforePerson.ToUserId ? 'contacts-items contacts-active': 'contacts-items '" 
+                    v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent(items, items.IsGroup ? 2: 0)">
                         <div class="contacts-items-lf">
                             <div class="contacts-items-lf-img">
                                 <img :src="items.HeaIcon" alt="" width="50px" height="50px">
@@ -35,7 +39,11 @@
             </div>
             <div class="chat-box-con" v-if="beforePerson">
                 <div class="chat-box-con-tit">
-                    {{beforePerson.NickName}}  
+                    <span>
+                        {{beforePerson.NickName}}
+                    </span>
+                    <span v-if="beforePerson.IsGroup" @click="openGroupInfo">asd</span>
+                    <span v-if="!beforePerson.IsGroup" @click="openNewGroup">asd</span>
                 </div>
                 <div class="chat-box-con-chat" id="chatBox">
                     <div class="user-ship" v-if="beforePerson.OppositeStatus !== 0">
@@ -139,46 +147,79 @@
             </div>
         </div>
         <Pannel :isPannel="isPannel" :Client="Client" @Pannel="isPannel = false">
+            <!--  用户 -->
             <template v-if="panRow.mentType === 0">
                 <li @click="viewBl">查看部落</li>
                 <li @click="ShieldAndDdel(1)"> {{panRow.OppositeStatus === 2 ? "解除屏蔽此人": "屏蔽此人"}} </li>
                 <li @click="ShieldAndDdel(2)">删除对话</li>
             </template>
+            <!--  群组 -->
+            <template v-if="panRow.mentType === 2">
+                <li @click="openGroupInfo">查看群资料</li>
+                <!-- <li @click="ShieldAndDdel(1)"> {{panRow.OppositeStatus === 2 ? "打开群消息通知": "群消息免打扰"}} </li> -->
+                <li @click="ShieldAndDdel(2)">删除对话</li>
+            </template>
+             <!--  消息 -->
             <template v-if="panRow.mentType === 1">
                 <li @click="delDia()">删除对话</li>
             </template>
         </Pannel>
+        <!-- 新建群联 -->
+        <Modal :title="newGroup === 1 ? '新建群聊' : '新建群聊-选择联系人'" v-if="newGroup === 1 || newGroup === 2" @closeModal="newGroup= 0"> 
+            <newGrop v-if="newGroup === 1" 
+            :newGroup="newGroupInfo"
+            @nextStep="nextStep" />
+
+            <selectPerson v-if="newGroup === 2" 
+            :modalRow="beforePerson" 
+            :modalType="0" 
+            @sumAdd="sumAdd" 
+            @backStop="backStop"/>
+        </Modal>
+        <!-- 查看群信息 -->
+        <Modal :title="viewGroup === 1 ? '群信息' : '新建群聊-选择联系人'" v-if="viewGroup === 1 || viewGroup === 2" @closeModal="viewGroup= 0" > 
+            <groupInfo v-if="viewGroup === 1" 
+            :groupInfo="panRow"
+            @delUser="delUser"
+            @addUser="addUser" />
+
+            <selectPerson v-if="viewGroup === 2" 
+            :modalRow="beforePerson" 
+            :modalType="modalType" 
+            :enterText="modalType === 1 ?  '确认添加': '确认删除'"
+            @sumAdd="viewPerson" 
+            @backStop="viewGroup = 1"/>
+        </Modal>
     </div>
 </template>
 <script>
 import Viewer from 'viewerjs';
 import { mapState } from 'vuex'
 import {uploadFile} from "../../service/clientAPI"
-import {getChatUserList, getChatHistory, setShip, getRoom} from "../../service/sign"
+import {getChatUserList, getChatHistory, setShip, getRoom, getGroupUser, CreateGroup, delGroupUser, addGroupUser} from "../../service/sign"
 import {createSocket, sendWSPush} from "./websocket"
 import Emotion from '../../components/Emotion'
 import {analogJump, Notifiy} from '../../plugins/untils/public'
 import Pannel from "./components/Pannel"
+import Modal from "./components/Modal"
+import newGrop from "./components/newGrop"
+import selectPerson from "./components/selectPerson"
+import groupInfo from "./components/groupInfo"
 export default {
     layout: "chat",
     components: {
         Emotion,
-        Pannel
+        Pannel,
+        Modal,
+        newGrop,
+        selectPerson,
+        groupInfo
     },
     data () {
         return {
-            contactsList: [
-                {
-                    headIcon: "https://www.pic.jzbl.com/ItemFiles/UserInfoImg/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/1584433935_s.gif",
-                    userName: "初九",
-                    firNew: "你好啊",
-                    time: "18:06",
-                    active: false,
-                    id: 1
-                }
-            ],
+            contactsList: [], // 房间列表
             beforePerson: {},
-            newList: [],
+            newList: [], // 消息列表
             isPannel: false,
             Client: {},
             Viewer: {},
@@ -187,12 +228,19 @@ export default {
             panRow: {},
             Socket: null,
             isEmotion: false,
-            PageAction: false
+            PageAction: false,
+            userList: [],
+            newGroup: 0, // 添加群组,
+            newGroupInfo: {
+                GroupName: "",
+                GroupIntroduction: ""
+            },
+            viewGroup: 0,
+            modalType: 0
         }
     },
     created () {
         this.getUserList()
-        
     },
     computed: {
         ...mapState({
@@ -205,6 +253,72 @@ export default {
         this.initView()
     },
     methods: {
+        addUser () {
+            this.viewGroup = 2;
+            this.modalType = 1
+        },
+        delUser () {
+            this.viewGroup = 2
+            this.modalType = 2
+        },
+        openNewGroup () {
+            this.viewGroup = 0;
+            this.newGroup = 1
+            this.isPannel = false
+        },
+        openGroupInfo () {
+            this.viewGroup = 1;
+            this.newGroup = 0
+            this.isPannel = false
+        },
+        // 新建群名基础信息
+        nextStep () {
+            this.newGroup = 2;
+        },
+        backStop () {
+            this.newGroup = 1
+        },
+        // 新建群组
+        sumAdd (users) {
+            let arr = []
+            users.forEach(o => {
+                arr.push(o.UserId)
+            })
+            let q = this.newGroupInfo
+            q.UserIds = arr.join(",")
+            CreateGroup(q).then(res => {
+                if (res) {
+                    this.newGroup = 0;
+                    this.$Message.success("创建群组成功")
+                    if (this.contactsList.length > 0) {
+                        this.contactsList.unshift(res)
+                    } else {
+                        this.contactsList.push(res)
+                    }
+                    
+                }
+            }).catch(err => {err})
+        },
+        viewPerson (row) {
+            let arr = []
+            row.forEach(o => {
+                arr.push(o.UserId)
+            })
+            // 添加
+            if (this.modalType === 1) {
+                addGroupUser(arr.join(","), this.panRow.RoomId, 1).then(res => {
+                    this.viewGroup = 0;
+                    this.$Message.success("添加成功")
+                }).catch(err => {})
+            }
+            // 删除
+            if (this.modalType === 2) {
+                delGroupUser(arr.join(","),this.panRow.RoomId).then(res => {
+                    this.viewGroup = 0;
+                    this.$Message.success("删除成功")
+                }).catch(err => {})
+            }
+        },
         closeEmotion (val) {
             this.isEmotion = val
         },
@@ -726,9 +840,13 @@ export default {
             display: flex;
             line-height: 50px;
             padding: 10px 15px;
-            img {
-                border-radius: 50%;
-                margin-right: 20px;
+            justify-content: space-between;
+            &-lf {
+                display: flex;
+                img {
+                    border-radius: 50%;
+                    margin-right: 20px;
+                }
             }
         } 
         &-search{
@@ -859,6 +977,8 @@ export default {
                     font-size: 16px;
                     padding: 0 20px;
                     border-bottom: 1px solid #e2dddd;
+                    display: flex;
+                    justify-content: space-between;
                 }
                 &-chat {
                     height: ~"calc(100vh - 220px)";

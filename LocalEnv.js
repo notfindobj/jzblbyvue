@@ -1,8 +1,8 @@
 exports.configUrl = {
     baseUrl: (() => {
         // return 'http://www.api.jzbl.com:8099/api/'
-        return 'https://www.api.jzbl.com/api/'
-        // return 'http://192.168.10.19:600/api/'
+        // return 'https://www.api.jzbl.com/api/'
+        return 'http://192.168.10.19:600/api/'
     })(),
     // 本地接口
     localUrl: (() => {
@@ -23,7 +23,7 @@ exports.configUrl = {
     imgBaseUrl: (() => {
         return 'https://www.pic1.jzbl.com/'
         // return 'http://192.168.10.15:8066/'
-    })(),
+    })(), 
     /**
     h5详情页
         http://www.m.jzbl.com/#/builddetail?sid=eaa09eec-b7c1-43f7-b932-6a58410bbece&type=1
