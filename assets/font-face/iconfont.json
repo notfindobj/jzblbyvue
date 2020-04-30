@@ -6,6 +6,34 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "807373",
+      "name": "群组",
+      "font_class": "qunzu",
+      "unicode": "e617",
+      "unicode_decimal": 58903
+    },
+    {
+      "icon_id": "10421871",
+      "name": "添加",
+      "font_class": "add1",
+      "unicode": "e60e",
+      "unicode_decimal": 58894
+    },
+    {
+      "icon_id": "10982196",
+      "name": "分 享",
+      "font_class": "fenxiang",
+      "unicode": "e614",
+      "unicode_decimal": 58900
+    },
+    {
+      "icon_id": "11998594",
+      "name": "删  除",
+      "font_class": "shanchu",
+      "unicode": "e62b",
+      "unicode_decimal": 58923
+    },
+    {
       "icon_id": "11096254",
       "name": "禁止",
       "font_class": "jinzhi",

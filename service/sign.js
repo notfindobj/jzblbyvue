@@ -64,7 +64,7 @@ export const setShip = async (opID, opType) => {
 export const getRoom = async (params) => {
   return await request.get(`chat/DialogueRoom?RoomId=${params}`)
 }
-// 获取新建群组用户，删除群组用户，添加群组用户
+// 获取新建群组用户，删除群组用户，添加群组用户 ALTER USER 
 export const getGroupUser = async (params) => {
   return await request.get(`chat/GetGroupUsers`, params)
 }
@@ -80,7 +80,8 @@ export const getGroupInfo = async (params) => {
 export const delGroupUser = async (userId, roomId) => {
   return await request.post(`Chat/RemovGroupUser?userIds=${userId}&roomId=${roomId}`)
 }
-// 添加成员
+// 添加成员 分享群组
 export const addGroupUser = async (userId, roomId, type) => {
   return await request.post(`Chat/AddGroupUser?userIds=${userId}&roomId=${roomId}&enterWay=${type}`)
 }
+// 分享群组

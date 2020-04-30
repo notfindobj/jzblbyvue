@@ -35,7 +35,6 @@ export default {
         qrcode (row) {
             let content = ''
             // 图文
-            debugger
             switch(row.TalkType) {
                 case 1: 
                     content = `${process.env.h5BaseUrl}builddetail?sid=${row.ItemId}&type=1`

@@ -7,7 +7,9 @@
                         <img :src="userInfo.HeadIcon" alt="" width="50px" height="50px">
                         <span>{{userInfo.NickName}}</span>
                     </div>
-                    <div @click="openNewGroup">新建 </div>
+                    <div @click="openNewGroup">
+                        <i class="icon iconfont icon-add1 icon-size"></i>
+                    </div>
                 </div>
                 <div class="chat-user-search">
                     <div class="chat-user-search-c">
@@ -20,7 +22,7 @@
                     v-for="(items, index) in contactsList" :key="index" @click="searUser(items)" @mousedown="openMent(items, items.IsGroup ? 2: 0)">
                         <div class="contacts-items-lf">
                             <div class="contacts-items-lf-img">
-                                <img :src="items.HeaIcon" alt="" width="50px" height="50px">
+                                <img :src="items.HeadIcon" alt="" width="50px" height="50px">
                             </div>
                         </div>
                         <div class="contacts-items-lf-user">
@@ -39,11 +41,12 @@
             </div>
             <div class="chat-box-con" v-if="beforePerson">
                 <div class="chat-box-con-tit">
-                    <span>
-                        {{beforePerson.NickName}}
-                    </span>
-                    <span v-if="beforePerson.IsGroup" @click="openGroupInfo">asd</span>
-                    <span v-if="!beforePerson.IsGroup" @click="openNewGroup">asd</span>
+                    <span>{{beforePerson.NickName}}</span>
+                    <div v-if="beforePerson.IsGroup">
+                        <span @click="openGroupInfo"><i class="icon iconfont icon-qunzu icon-size"></i></span>
+                        <span @click="isShare = true"><i class="icon iconfont icon-fenxiang icon-size"></i></span>
+                    </div>
+                    <span v-if="!beforePerson.IsGroup" @click="openNewGroup"><i class="icon iconfont icon-qunzu icon-size"></i></span>
                 </div>
                 <div class="chat-box-con-chat" id="chatBox">
                     <div class="user-ship" v-if="beforePerson.OppositeStatus !== 0">
@@ -55,35 +58,37 @@
                     <ul class="news-box" id="newTypeImg">
                         <template v-for="item in newList" v-if="item.id === beforePerson.RoomId">
                             <template v-for="(items, indexs) in item.list">
-                                <li class="news-box-item" :key="indexs" v-if="items.BaseMsgType === 1">
-                                    <p class="news-box-item-time">{{items.MsgObj.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
-                                    <div class="news-box-item-con">
-                                        <div :class="`news-box-item-con-img ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`">
-                                            <img data-w-e="0" :src="items.MsgObj.HeadIcon" alt="" width="100%" height="100%">
-                                        </div>
-                                        <div :class="`news-box-item-con-txt ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`"  @mousedown="openMent(items.MsgObj, 1)">
-                                            <div :class="`news-box-item-con-txt-lf ${!items.MsgObj.IsSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
-                                            <div class="news-box-item-con-txt-rf">
-                                                <template v-if="items.MsgObj.MsgType === 0">
-                                                <emotHtml v-model="items.MsgObj.Msg"></emotHtml>
-                                                </template>
-                                                <template v-if="items.MsgObj.MsgType === 1">
-                                                    <img :data-magnify="items.MsgObj.MsgSendDateTime" :data-src="items.MsgObj.Msg" :src="items.MsgObj.Msg" width="100%">
-                                                    <!-- <img  :src="items.MsgObj.Msg" :data-original="items.MsgObj.Msg" alt="" width="100%"> -->
-                                                </template>
-                                                <template v-if="items.MsgObj.MsgType === 2" >
-                                                    <div class="down-file">
-                                                        <span>{{items.MsgObj.Msg.split("|")[1]}}</span>
-                                                        <span @click="downFile(items.MsgObj.Msg.split('|')[0])">下载</span>
-                                                    </div>
-                                                </template>
+                                <template v-if="items.BaseMsgType === 1">
+                                    <li class="news-box-item" :key="indexs">
+                                        <p class="news-box-item-time">{{items.MsgObj.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
+                                        <div class="news-box-item-con">
+                                            <div :class="`news-box-item-con-img ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`">
+                                                <img data-w-e="0" :src="items.MsgObj.HeadIcon" alt="" width="100%" height="100%">
                                             </div>
-                                            <span v-if="items.MsgObj.SendType !==1 && items.MsgObj.SendType !==2" :class="`${!items.MsgObj.IsSelf ? 'send-status-lf' : 'send-status-rf'}`">
-                                                <i class="icon iconfont icon-zhongfa"></i>
-                                            </span>
+                                            <div :class="`news-box-item-con-txt ${!items.MsgObj.IsSelf ? ' new-lf' : 'new-rf'}`"  @mousedown="openMent(items.MsgObj, 1)">
+                                                <div :class="`news-box-item-con-txt-lf ${!items.MsgObj.IsSelf ? ' triangle-lf' : 'triangle-rf'}`"></div>
+                                                <div class="news-box-item-con-txt-rf">
+                                                    <template v-if="items.MsgObj.MsgType === 0">
+                                                    <emotHtml v-model="items.MsgObj.Msg"></emotHtml>
+                                                    </template>
+                                                    <template v-if="items.MsgObj.MsgType === 1">
+                                                        <img :data-magnify="items.MsgObj.MsgSendDateTime" :data-src="items.MsgObj.Msg" :src="items.MsgObj.Msg" width="100%">
+                                                        <!-- <img  :src="items.MsgObj.Msg" :data-original="items.MsgObj.Msg" alt="" width="100%"> -->
+                                                    </template>
+                                                    <template v-if="items.MsgObj.MsgType === 2" >
+                                                        <div class="down-file">
+                                                            <span>{{items.MsgObj.Msg.split("|")[1]}}</span>
+                                                            <span @click="downFile(items.MsgObj.Msg.split('|')[0])">下载</span>
+                                                        </div>
+                                                    </template>
+                                                </div>
+                                                <span v-if="items.MsgObj.SendType !==1 && items.MsgObj.SendType !==2" :class="`${!items.MsgObj.IsSelf ? 'send-status-lf' : 'send-status-rf'}`">
+                                                    <i class="icon iconfont icon-zhongfa"></i>
+                                                </span>
+                                            </div>
                                         </div>
-                                    </div>
-                                </li>
+                                    </li>
+                                </template>
                                 <template v-if="items.BaseMsgType === 0">
                                     <li class="news-box-item" :key="indexs">
                                         <p class="news-box-item-time">{{items.MsgObj.MsgSendDateTime | datefmt("h:mm:ss a", 1)}}</p>
@@ -118,6 +123,11 @@
                                         <div class="ship-tips">
                                             <span>{{items.MsgObj.SysMsg}}</span>
                                         </div>
+                                    </li>
+                                </template>
+                                <template v-if="items.BaseMsgType === 2">
+                                    <li class="news-box-item sysMsg" :key="indexs">
+                                        {{items.MsgObj.SysMsg}}
                                     </li>
                                 </template>
                             </template>
@@ -165,7 +175,7 @@
             </template>
         </Pannel>
         <!-- 新建群联 -->
-        <Modal :title="newGroup === 1 ? '新建群聊' : '新建群聊-选择联系人'" v-if="newGroup === 1 || newGroup === 2" @closeModal="newGroup= 0"> 
+        <Modal :title="newGroup === 1 ? '新建群聊' : '新建群聊-选择联系人'" v-if="newGroup === 1 || newGroup === 2" @closeModal="closeNewGroup"> 
             <newGrop v-if="newGroup === 1" 
             :newGroup="newGroupInfo"
             @nextStep="nextStep" />
@@ -177,18 +187,27 @@
             @backStop="backStop"/>
         </Modal>
         <!-- 查看群信息 -->
-        <Modal :title="viewGroup === 1 ? '群信息' : '新建群聊-选择联系人'" v-if="viewGroup === 1 || viewGroup === 2" @closeModal="viewGroup= 0" > 
+        <!-- panRow.mentType ? panRow : beforePerson判断是在那里点击的群组 -->
+        <Modal :title="viewGroup === 1 ? '群信息' : modalType === 1 ?  '添加成员': '删除成员'" v-if="viewGroup === 1 || viewGroup === 2" @closeModal="viewGroup= 0" > 
             <groupInfo v-if="viewGroup === 1" 
-            :groupInfo="panRow"
+            :groupInfo="panRow.mentType? panRow : beforePerson"
             @delUser="delUser"
+            @dropOut="dropOut"
             @addUser="addUser" />
-
             <selectPerson v-if="viewGroup === 2" 
-            :modalRow="beforePerson" 
+            :modalRow="panRow.mentType? panRow : beforePerson" 
             :modalType="modalType" 
             :enterText="modalType === 1 ?  '确认添加': '确认删除'"
             @sumAdd="viewPerson" 
             @backStop="viewGroup = 1"/>
+        </Modal>
+        <Modal v-if="isShare" title="分享群组" @closeModal="isShare= false" > 
+            <selectPerson
+            :modalRow="beforePerson" 
+            :modalType="1" 
+            enterText="确认分享"
+            @sumAdd="sharePerson" 
+            @backStop="isShare = false"/>
         </Modal>
     </div>
 </template>
@@ -196,7 +215,7 @@
 import Viewer from 'viewerjs';
 import { mapState } from 'vuex'
 import {uploadFile} from "../../service/clientAPI"
-import {getChatUserList, getChatHistory, setShip, getRoom, getGroupUser, CreateGroup, delGroupUser, addGroupUser} from "../../service/sign"
+import {getChatUserList, getChatHistory, setShip, getRoom, CreateGroup, delGroupUser, addGroupUser} from "../../service/sign"
 import {createSocket, sendWSPush} from "./websocket"
 import Emotion from '../../components/Emotion'
 import {analogJump, Notifiy} from '../../plugins/untils/public'
@@ -236,7 +255,8 @@ export default {
                 GroupIntroduction: ""
             },
             viewGroup: 0,
-            modalType: 0
+            modalType: 0,
+            isShare: false
         }
     },
     created () {
@@ -278,6 +298,13 @@ export default {
         backStop () {
             this.newGroup = 1
         },
+        closeNewGroup () {
+            this.newGroup = 0;
+            this.newGroupInfo = {
+                GroupName: "",
+                GroupIntroduction: ""
+            }
+        },
         // 新建群组
         sumAdd (users) {
             let arr = []
@@ -290,6 +317,10 @@ export default {
                 if (res) {
                     this.newGroup = 0;
                     this.$Message.success("创建群组成功")
+                    this.newGroupInfo = {
+                        GroupName: "",
+                        GroupIntroduction: ""
+                    }
                     if (this.contactsList.length > 0) {
                         this.contactsList.unshift(res)
                     } else {
@@ -300,24 +331,69 @@ export default {
             }).catch(err => {err})
         },
         viewPerson (row) {
+            let that = this;
             let arr = []
             row.forEach(o => {
                 arr.push(o.UserId)
             })
+            let RoomId = this.panRow.RoomId ? this.panRow.RoomId : this.beforePerson.RoomId
             // 添加
             if (this.modalType === 1) {
-                addGroupUser(arr.join(","), this.panRow.RoomId, 1).then(res => {
+                addGroupUser(arr.join(","), RoomId, 1).then(res => {
                     this.viewGroup = 0;
                     this.$Message.success("添加成功")
+                    let obg = {
+                        Msg: res.CallbackInfo.msgid,
+                        Token: that.userInfo.token,
+                        RoomId: that.beforePerson.RoomId,
+                        MsgType: 3
+                    }
+                    sendWSPush(obg)
                 }).catch(err => {})
+                return false
             }
             // 删除
             if (this.modalType === 2) {
-                delGroupUser(arr.join(","),this.panRow.RoomId).then(res => {
+                delGroupUser(arr.join(","),RoomId).then(res => {
                     this.viewGroup = 0;
                     this.$Message.success("删除成功")
+                    let obg = {
+                        Msg: res.CallbackInfo.msgid,
+                        Token: that.userInfo.token,
+                        RoomId: that.beforePerson.RoomId,
+                        MsgType: 3
+                    }
+                    sendWSPush(obg)
                 }).catch(err => {})
+                return false
             }
+        },
+        // 退出
+        dropOut (row) {
+            let that = this;
+            let RoomId = this.panRow.RoomId ? this.panRow.RoomId : this.beforePerson.RoomId
+            delGroupUser(this.userInfo.UserId, RoomId).then(res => {
+                this.viewGroup = 0;
+                this.$Message.success("退出成功")
+                that.contactsList.forEach((ele, index) => {
+                    if (ele.RoomId === arr.MsgObj.RoomId) {
+                        that.contactsList.splice(index, 1)
+                    }
+                })
+            }).catch(err => {})
+        },
+        // 分享
+        sharePerson (row) {
+            let that = this;
+            let arr = []
+            row.forEach(o => {
+                arr.push(o.UserId)
+            })
+            let RoomId = this.panRow.RoomId ? this.panRow.RoomId : this.beforePerson.RoomId
+            addGroupUser(arr.join(","), RoomId , 2).then(res => {
+                this.isShare = false;
+                this.$Message.success("分享成功")
+            }).catch(err => {})
         },
         closeEmotion (val) {
             this.isEmotion = val
@@ -423,6 +499,7 @@ export default {
                 try {
                     let arr = JSON.parse(e.data)
                     that.setStatus(arr.MsgObj.OppositeStatus)
+                   
                     let r = []
                     that.newList.forEach((ele, index) => {
                         if (ele.id === arr.MsgObj.RoomId) {
@@ -441,8 +518,11 @@ export default {
                         // 联系人置前
                         that.contactsList.forEach((ele, index) => {
                             if (ele.RoomId === arr.MsgObj.RoomId) {
+                                if (arr.BaseMsgType === 2) {
+                                    ele.HeadIcon = ele.HeadIcon +"?a="+Date.parse(new  Date());
+                                }
                                 isFlag = true
-                                r = that.contactsList.splice(index, 1)[0]
+                                r = that.contactsList.splice(index, 1)[0];
                                 that.$set(r, "Msg", arr.MsgObj.Msg)
                                 that.$set(r, "MsgType", arr.MsgObj.MsgType)
                                 that.beforePerson = r
@@ -466,10 +546,8 @@ export default {
                             }
                         })
                     }
-                    let divscll = document.getElementById('chatBox');
-                    divscll.scrollTop = divscll.scrollHeight;
                     // 页面通知
-                    if (!that.PageAction) {
+                    if (!that.PageAction && !arr.MsgObj.IsSelf) {
                         console.log("通知消息")
                         Notifiy(arr)
                     }
@@ -479,6 +557,10 @@ export default {
                         return false
                     }
                 } catch (error) {}
+                that.$nextTick(function(){
+                    let divscll = document.getElementById('chatBox');
+                    divscll.scrollTop = divscll.scrollHeight;
+                });
             }
         },
         // 获取单个用户
@@ -598,6 +680,10 @@ export default {
                    this.newList.push(obg)
                }
            }
+           this.$nextTick(function(){
+                let divscll = document.getElementById('chatBox');
+                divscll.scrollTop = divscll.scrollHeight;
+            });
         },
         // 放大图片
         initView() {
@@ -614,7 +700,6 @@ export default {
         // 选择聊天用户
         searUser (row) { 
             // 留着优化用
-            // this.contactsList.filter(o => {o.ToUserId === row.ToUserId ? o.active = true : o.active = false});
             this.$set(row, "UnreadMsg", 0)
             this.beforePerson = row
             this.getHistory(row.RoomId)
@@ -681,6 +766,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .sysMsg {
+        text-align: center;
+    }
     .panl-emotion {
         bottom: ~"calc(100vh - (100vh - 275px))";
         position: absolute;
@@ -896,9 +984,8 @@ export default {
         right: -9px;
     }
     .news-box {
-        padding: 10px 0 50px 0;
+        padding: 10px 0 0 0;
         position: relative;
-        bottom: 40px;
         &-item {
             padding: 8px 18px;
              &::after, &::before {
@@ -974,6 +1061,7 @@ export default {
                 margin-left: 10px;
                 &-tit {
                     line-height: 50px;
+                    height: 50px;
                     font-size: 16px;
                     padding: 0 20px;
                     border-bottom: 1px solid #e2dddd;
@@ -1050,5 +1138,12 @@ export default {
     }
     .shuzi {
         color: #ff3c00;
+    }
+    .icon-size {
+        font-size: 25px;
+        cursor: pointer;
+        &:hover {
+            color: #ff3c00;
+        }
     }
 </style>

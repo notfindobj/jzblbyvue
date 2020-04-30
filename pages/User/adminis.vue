@@ -184,7 +184,6 @@ export default {
                 }
                 if (name === 'IDCardImgPos') {
                     this.$set(this.userInfo, 'IDCardImgPosiSrc', msg.fileUrl);
-                    debugger
                     this.userInfo.IDCardImgPosiId = msg.fileId
                 }
                 if (name === 'IDCardImgNega') {

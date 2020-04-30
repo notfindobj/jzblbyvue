@@ -7,12 +7,12 @@
         <div class="grop-user">
             <h4>群成员 ({{gInfo.Users && gInfo.Users.length > 0 ? gInfo.Users.length : 0}}/ 25)</h4>
             <ul class="user">
-                <li @click="addUser">
-                    <img src="http://www.pic1.jzbl.com/buildingcircle/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/2020-04-10/i/1586506323302.jpg" alt="">
+                <li @click="addUser" class="icon-size">
+                    <i class="icon iconfont icon-add1"></i>
                     <p>添加成员</p>
                 </li>
-                <li @click="delUser">
-                    <img src="http://www.pic1.jzbl.com/buildingcircle/4f4c16b4-8451-49de-a5ca-be1dcd5faefe/2020-04-10/i/1586506323302.jpg" alt="">
+                <li @click="delUser" class="icon-size">
+                    <i class="icon iconfont icon-shanchu"></i>
                     <p>删除成员</p>
                 </li>
                <li v-if="gInfo.Users && gInfo.Users.length > 0" v-for="(item, index) in gInfo.Users" :key="index">
@@ -26,7 +26,7 @@
             <p>{{gInfo.GroupIntroduction}}</p>
         </div>
         <div>
-            <Button type="error" long>退出群组</Button>
+            <Button type="error" long @click="dropOut">退出群组</Button>
         </div>
     </div>
 </template>
@@ -62,6 +62,9 @@ export default {
         },
         delUser () {
             this.$emit("delUser", this.gInfo, 0)
+        },
+        dropOut () {
+            this.$emit("dropOut", this.gInfo)
         }
     }
 }
@@ -112,6 +115,15 @@ export default {
             line-height: 30px;
             margin-top: 10px;
             padding-left: 10px;
+        }
+    }
+}
+.icon-size {
+    text-align: center;
+    i {
+        font-size: 37px;
+        &:hover {
+            color: #ff3c00;
         }
     }
 }
