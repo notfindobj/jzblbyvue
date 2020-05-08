@@ -10,7 +10,13 @@
                     @mouseleave="mousemoveRight" @click="moveLeftClick(2)">
                     <img class="moveRight" :src="!isRight ? isLeftPngF : isLeftPngR" width="50px" alt="">
                 </div>
+                <Breadcrumb separator=">" class="box">
+                    <BreadcrumbItem>当前位置：</BreadcrumbItem>
+                    <BreadcrumbItem to="/BuildingCircle">建筑群</BreadcrumbItem>
+                    <BreadcrumbItem>详情</BreadcrumbItem>
+                </Breadcrumb>
                 <div style="width：800px" id="pictureBox">
+                    
                     <h2 v-if="detailInfo.TalkTitle" class="pictureBox-title">{{detailInfo.TalkTitle}}</h2>
                     <div v-html="detailInfo.TalkContent" class="pictureBox-con"></div>
                     <div v-for="(items, index) in detailInfo.ResourceObj" v-if="detailInfo.TalkType !== 5" :key="index">
@@ -234,6 +240,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .box {
+        margin: 0 0 10px;
+    }
     .pictureBox-con {
         /deep/img {
             width: 100%;
@@ -269,9 +278,10 @@ export default {
         &-right {
             position: sticky;
             top: 70px;
-            height: 920px;
+            height: 800px;
             width: 340px;
             margin-left: 10px;
+            margin-top: 30px;
             &-title {
                 height: 170px;
                 background: #fff;
@@ -317,13 +327,12 @@ export default {
         top: 50%;
         left: 0;
         padding-left: 30px;
-
         img {
             width: 60px;
         }
     }
     .view-right-move-del {
-        cursor: pointer;
+        cursor: pointer;        
         position: fixed;
         display: inline-block;
         width: 150px;

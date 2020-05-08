@@ -201,6 +201,7 @@
             @sumAdd="viewPerson" 
             @backStop="viewGroup = 1"/>
         </Modal>
+        <!-- 分享群组 -->
         <Modal v-if="isShare" title="分享群组" @closeModal="isShare= false" > 
             <selectPerson
             :modalRow="beforePerson" 
@@ -697,7 +698,7 @@ export default {
                 })
             })
         },
-        // 选择聊天用户
+        // 选择聊天用户 
         searUser (row) { 
             // 留着优化用
             this.$set(row, "UnreadMsg", 0)

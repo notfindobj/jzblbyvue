@@ -38,7 +38,7 @@ function onmessageWS(e) {
 function sendWSPush(eventTypeArr) {
     if (Socket !== null && Socket.readyState === 3) {
         Socket.close()
-        createSocket() //重连
+        createSocket() //重连 
     } else if (Socket.readyState === 1) {
         Socket.send(JSON.stringify(eventTypeArr))
     } else if (Socket.readyState === 0) {

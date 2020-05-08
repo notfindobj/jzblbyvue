@@ -63,7 +63,11 @@
                 </div>
                 <Page :total="paginationData.records" @on-change="pageChange"/>
             </div>
-            <div class="order-list-right"></div>
+            <nuxt-link to="activity" target="_blank">
+                <div class="order-list-right"></div>
+            </nuxt-link>
+           
+            
         </div>
         <Modal
             title="温馨提示"
