@@ -106,15 +106,76 @@
                 <coursePanl/>
             </div>
         </div>
+        <div class="courseitem">
+            <div class="courseitem-tit">
+                <h3>室内设计</h3>
+                <span>共12564节课</span>
+            </div>
+            <div class="courseitem-boby">
+                <courseWrap/>
+                <coursePanl/>
+                <coursePanl/>
+                <coursePanl/>
+            </div>
+        </div>
+        <div class="courseitem">
+            <div class="courseitem-tit">
+                <h3>建筑景观</h3>
+                <span>共2733节课</span>
+            </div>
+            <div class="courseitem-boby">
+                <courseWrap/>
+                <coursePanl/>
+                <coursePanl/>
+                <coursePanl/>
+            </div>
+        </div>
+        <div class="courseitem">
+            <div class="courseitem-tit">
+                <h3>溜溜实力讲师</h3>
+                <span>丰富实战经验的实力讲师，为您传授全面设计方法</span>
+            </div>
+            <div class="lecturer">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <div class="swiper-slide-item" >
+                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="swiper-slide-item" >
+                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="swiper-slide-item" >
+                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
+                        </div>
+                    </div>
+                    <div class="swiper-slide">
+                        <div class="swiper-slide-item" >
+                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-button-next"></div>
+            </div>
+            <div >
+
+            </div>
+        </div>
     </div>
 </template> 
 <script>
 import Swiper from "swiper"
 import coursePanl from "./components/coursePanl"
+import courseWrap from "./components/courseWrap"
 export default {
     layout: "main",
     components:{
-        coursePanl
+        coursePanl,
+        courseWrap
     },
     data () {
         return {
@@ -146,6 +207,7 @@ export default {
     mounted () {
         this.initSwiper()
         this.initHotSwiper()
+        this.initlecturer()
     },
     methods: {
         initSwiper () {
@@ -201,6 +263,33 @@ export default {
                 }
             })
         },
+        initlecturer () {
+            let _this = this
+            this.$nextTick(() => {
+                this.swiperBox = new Swiper(`.lecturer`,{
+                    slidesPerView: 5,
+                    spaceBetween: 20,
+                    navigation: {
+                        nextEl: '.swiper-button-next',
+                        prevEl: '.swiper-button-prev',
+                    },
+                    loop: true,  //循环
+                    observer:true,//修改swiper自己或子元素时，自动初始化swiper
+            　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
+                    autoplay: {
+                        delay: 3000,
+                        disableOnInteraction: true,  //触碰后自动切换停止
+                　　}
+                })
+                this.swiperBox.el.onmouseover = function(e){ //鼠标放上暂停轮播
+                    console.log(e)
+                    _this.swiperBox.autoplay.stop();
+                }
+                this.swiperBox.el.onmouseleave = function(){
+                    _this.swiperBox.autoplay.start();
+                }
+            })
+        },
     }
 }
 </script>
@@ -220,6 +309,7 @@ export default {
         }
     }
     .courseitem {
+        margin-bottom: 20px;
         &-boby {
             display: flex;
             justify-content: space-between;
@@ -241,24 +331,31 @@ export default {
     }
     /**导航
      */
+    .lecturer {
+        position: relative;
+        overflow: hidden;
+        width: 1200px;
+        margin: 15px 0;
+        .swiper-slide-item {
+            height: 280px;
+            img{
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
     .swiper-hot {
         position: relative;
         overflow: hidden;
         width: 1200px;
         margin: 15px 0;
-        &:hover .swiper-button-prev {
-            opacity: 1;
-            transform: scale(1);
-        }
-        &:hover .swiper-button-next{
-            opacity: 1;
-            transform: scale(1);
-        }
     }
     .swiper-boxs {
         position: relative;
         overflow: hidden;
         width: 1036px;
+    }
+    .lecturer,.swiper-hot,.swiper-boxs {
         &:hover .swiper-button-prev {
             opacity: 1;
             transform: scale(1);

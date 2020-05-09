@@ -1,7 +1,7 @@
 <template >
    <div class="panl">
         <div class="panl-tit">
-            <img width="100%" src="https://img.3d66.com/soft/2019/20190530/dc7d2838269fd3539056662d63c2699d.png" alt="">
+            <img width="100%" src="https://img.3d66.com/zixue/202003/228/2020-03-16/3fa7497dc1ed1300dd15cb56541ed4fd.jpg" alt="">
             <span class="panl-tit-label">共11节课</span>
             <div class="panl-tit-hover">
                 <span class="panl-tit-hover-play"></span>
@@ -16,7 +16,7 @@
             <div class="panl-content-author">
                 <span class="panl-content-author-lf">
                     <img src="https://img.3d66.com/soft/2019/20191017/f25bfc95f9292da8316045628fbabdeb.jpg" alt="">
-                    <span>小Q老师: 37032人在学</span>
+                    <span>小Q老师</span>
                 </span>
                 <span>148人在学</span>
             </div>
@@ -78,7 +78,7 @@
                     width: 60px;
                     height: 60px;
                     transition: all .5s;
-                    transform: scale(1.5);
+                    transform: scale(1.3);
                 }
             }
             img {
@@ -87,7 +87,6 @@
                 height: 220px;
                 transition: all .5s;
                 pointer-events: none;
-              
             }
         }
         &-content {
@@ -141,6 +140,10 @@
                 }
                 
             }
+        }
+        &:hover {
+            transition: box-shadow .5s;
+            box-shadow: 0 2px 15px #999999;
         }
     }
 </style>
