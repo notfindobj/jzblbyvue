@@ -2,15 +2,17 @@
 <div class="details">
     <div class="details-titile">
         <Breadcrumb separator=">" class="box">
-            <BreadcrumbItem>当前位置：</BreadcrumbItem>
+            <BreadcrumbItem>当前位置121：</BreadcrumbItem>
             <BreadcrumbItem to="/course">课程首页</BreadcrumbItem>
             <BreadcrumbItem>全部课程</BreadcrumbItem>
         </Breadcrumb>
-        <div class="details-titile-video">
-            <div>
-                <courseVideo/>
+        <div class="details-titile-video" >
+            <div>          
+                <courseVideo :video="courseDet" width="850"/>
             </div>
-            <videoSile/>
+            <template v-if="courseDet.IsBuy === 1">
+                <videoSile/>
+            </template>
         </div>
     </div>
     <div class="details-course">
@@ -101,7 +103,7 @@ import courseVideo from "./components/courseVideo"
 import videoSile from "./components/videoSile"
 import sidle from "./components/sidle"
 export default {
-    layout: "main",
+    layout: "course",
     components: {
         courseVideo,
         videoSile,
@@ -110,10 +112,61 @@ export default {
     data () {
         return {
             slideLeft: 22,
-            slideIndex: 0
+            slideIndex: 0,
+        }
+    },
+    async asyncData({route, store, env, params, query}) {
+        let courId = params.id
+        let de = {
+            courseId: courId,
+        };
+        let olne = await store.dispatch('getCourseOutline', {courseId: courId});
+        let res = await store.dispatch('getCourseDetail', {courseId: courId});
+        let eva = await store.dispatch('getCourseEvaluation', de);
+        olne.Courselist.forEach(ele => {
+            ele.fold = true
+            ele.ChildNode.forEach(eles => {
+                eles.free = true
+            })
+        })
+        return {
+            evaluation: eva,
+            courseDet: res,
+            course: olne
         }
     },
     methods: {
+        getLecturer () {
+            let q = {
+                courseId: '5df8bd3d-674e-46f0-bfee-a0319cd0b862',
+                outlineId: "",
+                page:1,
+                rows: 4
+            }
+            getLecturerDetail(q).then(res => {
+                console.log(res)
+            }).catch(err =>{})
+        },
+        getCourse () {
+            let q = {
+                courseId: '5df8bd3d-674e-46f0-bfee-a0319cd0b862'
+            }
+            getCourseOutline(q).then(res => {
+                if (res) {
+                    this.course = res
+                }
+            }).catch(err =>{})
+        },
+        getCourseDet () {
+            let q = {
+                courseId: '5df8bd3d-674e-46f0-bfee-a0319cd0b862'
+            }
+            getCourseDetail(q).then(res => {
+                if (res) {
+                    this.courseDet = res
+                }
+            }).catch(err =>{})
+        },
         navSlideBar () {
             if (event.target.localName === "li") {
                 this.slideLeft = event.target.offsetLeft;
@@ -155,6 +208,9 @@ export default {
                 position: relative;
                 padding-bottom: 2px;
                 border-bottom: 1px solid #eee;
+                position: sticky;
+                top: 0px;
+                z-index: 1000;
                 li {
                     float: left;
                     cursor: pointer;

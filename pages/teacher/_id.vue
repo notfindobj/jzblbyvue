@@ -14,22 +14,21 @@
                 <div class="teacher-header-container-info">
                    <div class="teacher-info">
                         <div class="teacher-info-img">
-                            <img src="https://img.3d66.com/soft/2019/20191017/757446456ff612d54f101cb65d357430.jpg" alt="">
+                            <img :src="lecturerInfo.HeadIcon" :alt="lecturerInfo.FullName">
                         </div>
-                        <h3>爱知趣教育</h3>
+                        <h3>{{lecturerInfo.FullName}}</h3>
                    </div>
                    <div class="teacher-attr">
                        <div class="teacher-attr-lf">
                            <span>课程</span>
-                           <span>11</span>
+                           <span>{{courseList.length}}</span>
                        </div>
                        <div class="teacher-attr-lr">
                            <span>在学</span>
-                           <span>11w</span>
+                           <span>{{lecturerInfo.CourseCount}}</span>
                        </div>
                    </div>
-                   <div class="teacher-sub">92爱知趣教育，一家专注互联教育的公司。倾力打造首家配字幕精品公开课课程，以优质的课程为起点，倾力打造“92爱知趣”品牌。主要开设职业类教学平面设计PS、CDR 、AI、UI、EXCEL、WORD、PPT等热门教程          
-                   </div>
+                   <div class="teacher-sub">{{lecturerInfo.Description}}</div>
                 </div>
             </div>
         </div>
@@ -37,18 +36,12 @@
             <div class="teacher-content-tit">
                 <i></i>
                 老师课程
-                <span>(11)</span>
+                <span>({{courseList.length}})</span>
             </div>
             <div class="teacher-content-boby">
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
+                <template v-for="(items, index) in courseList">
+                    <coursePanl :coursePanl="items" :key="index"/>
+                </template>
             </div>
         </div>
     </div>
@@ -59,6 +52,16 @@ export default {
     layout: "main",
     components: {
         coursePanl
+    },
+    async asyncData({route, store, env, params, query}) {
+        let q = {
+            LecturerId: params.id
+        };
+        let msg = await store.dispatch('getLecturerDetail', q);
+        return {
+            lecturerInfo: msg.lecturerInfo,
+            courseList: msg.courseList,
+        }
     },
 }
 </script>
@@ -124,9 +127,14 @@ export default {
             }
             &-boby {
                 display: flex;
-                justify-content: space-between;
                 flex-wrap: wrap;
                 margin-bottom: 30px;
+                >div {
+                    margin-right: 26.6px;
+                    &:nth-child(4n) {
+                        margin-right: 0;
+                    }
+                }
             }
         }
     }

@@ -96,14 +96,14 @@
                 <span>每日更新30+节课</span>
             </div>
             <div class="courseitem-boby">
+                <!-- <coursePanl/>
                 <coursePanl/>
                 <coursePanl/>
                 <coursePanl/>
                 <coursePanl/>
                 <coursePanl/>
                 <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
+                <coursePanl/> -->
             </div>
         </div>
         <div class="courseitem">
@@ -113,9 +113,9 @@
             </div>
             <div class="courseitem-boby">
                 <courseWrap/>
+                <!-- <coursePanl/>
                 <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
+                <coursePanl/> -->
             </div>
         </div>
         <div class="courseitem">
@@ -125,9 +125,9 @@
             </div>
             <div class="courseitem-boby">
                 <courseWrap/>
+                <!-- <coursePanl/>
                 <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
+                <coursePanl/> -->
             </div>
         </div>
         <div class="courseitem">
@@ -172,7 +172,7 @@ import Swiper from "swiper"
 import coursePanl from "./components/coursePanl"
 import courseWrap from "./components/courseWrap"
 export default {
-    layout: "main",
+    layout: "course",
     components:{
         coursePanl,
         courseWrap

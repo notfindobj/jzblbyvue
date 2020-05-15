@@ -1,29 +1,45 @@
 <template >
    <div class="panl">
         <div class="panl-tit">
-            <img width="100%" src="https://img.3d66.com/zixue/202003/228/2020-03-16/3fa7497dc1ed1300dd15cb56541ed4fd.jpg" alt="">
-            <span class="panl-tit-label">共11节课</span>
-            <div class="panl-tit-hover">
-                <span class="panl-tit-hover-play"></span>
-            </div>
+            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
+                <img width="100%" :src="coursePanl.FirstImg" alt="">
+                <span class="panl-tit-label">共{{coursePanl.ClassHour}}节课</span>
+                <div class="panl-tit-hover">
+                    <span class="panl-tit-hover-play"></span>
+                </div>
+            </nuxt-link>
         </div>
         <div class="panl-content">
-            <p class="panl-content-title">C4D R20零基础到建模造渲染实战案例教程</p>
-            <p class="panl-content-label">
-                <span>案例实战</span>
-                <span>￥69.00</span>
-            </p>
+            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
+                <p class="panl-content-title">{{coursePanl.CourseName}}</p>
+                <p class="panl-content-label">
+                    <span>{{coursePanl.Level}}</span>
+                    <span v-if="coursePanl.Money">￥69.00</span>
+                </p>
+            </nuxt-link>
             <div class="panl-content-author">
+                <nuxt-link :to="`/teacher/${coursePanl.CreateUserId}`">
                 <span class="panl-content-author-lf">
                     <img src="https://img.3d66.com/soft/2019/20191017/f25bfc95f9292da8316045628fbabdeb.jpg" alt="">
-                    <span>小Q老师</span>
+                    <span>{{coursePanl.NickName}}</span>
                 </span>
-                <span>148人在学</span>
+                </nuxt-link>
+                <span>{{coursePanl.Number}}人在学</span>
             </div>
             
         </div>
     </div>
 </template>
+<script>
+export default {
+    props:{
+        coursePanl: {
+            type: Object,
+            default: () => {}
+        }
+    }
+}
+</script>
 <style lang="less" scoped>
     .panl {
         display: inline-block;

@@ -6,111 +6,123 @@
             <BreadcrumbItem>全部课程</BreadcrumbItem>
         </Breadcrumb>
         <div class="def-wrap">
-            <div class="def-wrap-item">
-                <label class="def-wrap-item-name">大类</label>
+            <div class="def-wrap-item" v-for="(item, index) in courseType" :key="index">
+                <label class="def-wrap-item-name">{{item.typename}}</label>
                 <div class="def-wrap-item-list">
-                    <ul>
-                        <li class="active">全部</li>
-                        <li>室内设计</li>
-                        <li>建筑景观</li>
-                        <li>视频制作</li>
-                        <li>平面设计</li>
-                        <li>游戏动画</li>
-                        <li>工业|产品</li>
+                    <ul :ref="`itemList${index}`"  :style="item.expand ? 'max-height:75px;':''">
+                        <li v-for="(items, ins) in item.typelist" :class="items.active ? 'active': ''" :key="ins" @click="expandItem(items, index)">{{items.Name}}</li>
                     </ul>
-                    <span v-if="false" class="def-wrap-item-list-extend icon iconfont icon-jiantouxia"></span>
-                </div>
-            </div>
-            <div class="def-wrap-item">
-                <label class="def-wrap-item-name">小类</label>
-                <div class="def-wrap-item-list">
-                    <ul ref="itemList" :style="`height: ${isShow ? 75 : 'auto' }px;`">
-                        <li>全部</li>
-                        <li>室内设计</li>
-                        <li>建筑景观</li>
-                        <li>视频制作</li>
-                        <li>平面设计</li>
-                        <li>游戏动画</li>
-                        <li>工业|产品</li>
-                        <li>全部</li>
-                        <li>室内设计</li>
-                        <li>建筑景观</li>
-                        <li>视频制作</li>
-                        <li>平面设计</li>
-                        <li>游戏动画</li>
-                        <li>工业|产品</li>
-                        <li>全部</li>
-                        <li>室内设计</li>
-                        <li>建筑景观</li>
-                        <li>视频制作</li>
-                        <li>平面设计</li>
-                        <li>游戏动画</li>
-                        <li>工业|产品</li>
-                        <li>全部</li>
-                        <li>室内设计</li>
-                        <li>建筑景观</li>
-                        <li>视频制作</li>
-                        <li>平面设计</li>
-                        <li>游戏动画</li>
-                        <li>工业|产品</li>
-                        <li>全部</li>
-                        <li>室内设计</li>
-                        <li>建筑景观</li>
-                        <li>视频制作</li>
-                        <li>平面设计</li>
-                        <li>游戏动画</li>
-                        <li>工业|产品</li>
-                    </ul>
-                    <span v-if="!isShow" class="def-wrap-item-list-extend icon iconfont icon-jiantouxia"></span>
+                    <span v-if="item.isShow" class="def-wrap-item-list-extend icon iconfont icon-jiantouxia" @click="expandWarp(item)"></span>
                 </div>
             </div>
         </div>
         <div class="def-screen">
             <label class="def-screen-name">筛选：</label>
             <ul class="def-screen-sub">
-                <li class="active">全部</li>
-                <li>免费</li>
-                <li>热门</li>
-                <li>最新</li>
+                <li :class="q.sort === 0 ? 'active' : ''"  @click="searchItem(0)">综合</li>
+                <li :class="q.sort === 1 ? 'active' : ''"  @click="searchItem(1)">热门</li>
+                <li :class="q.sort === 2 ? 'active' : ''"  @click="searchItem(2)">最新</li>
             </ul>
         </div>
         <div class="def-boby">
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
-            <coursePanl/>
+            <template v-for="(items, index) in courseList">
+                <coursePanl :key="index" :coursePanl="items"/>
+            </template>
         </div>
         <div class="def-page">
-            <Page :total="100" />
+            <Page :total="page.records" />
         </div>
     </div>
 </template>
 <script>
 import coursePanl from "../course/components/coursePanl"
+import {getCourseList} from '../../service/course'
 export default {
-    layout: "main",
+    layout: "course",
     components: {
         coursePanl
     },
     data () {
         return {
-            isShow: true
+            isShow: true,
+            courseType: [],
+            courseList: [],
+            page: {},
+            q: {
+                parentId: '',
+                typeId: '',
+                sort: 0,
+                level: -1,
+                page: 1,
+                rows: 16
+            }
         }
+    },
+    created () {
+        
     },
     mounted() {
-        if (this.$refs.itemList.offsetHeight > 75) {
-            this.isShow = true
-        } else {
-            this.isShow = false
-        }
+        this.getCourseTypeList()
     },
     methods: {
-
+        expandWarp (row) {
+            this.$set(row, "expand", !row.expand)
+        },
+        expandItem (row, index) {
+            if (index === 0) {
+                this.q.parentId = row.ID
+                this.q.typeId = ""
+            }
+            if (index === 1) {
+                this.q.typeId = row.ID
+            }
+            this.$set(row, "active", true)
+            this.getCourseTypeList()
+        },
+        searchItem (index) {
+            this.q.sort = index
+            this.getCourseTypeList()
+        },
+        getCourseTypeList () {
+            let that = this
+            getCourseList(that.q).then(res => {
+                if (res) {
+                    let parArr = res.coursetypeList[0]
+                    let childArr = res.coursetypeList[1]
+                    parArr.typelist.forEach(ele => {
+                        if (that.q.parentId === ele.ID) {
+                            ele.active = true
+                        } else {
+                            ele.active = false
+                        }
+                        
+                    })
+                    childArr.typelist.forEach(ele => {
+                        if (that.q.typeId === ele.ID) {
+                            ele.active = true
+                        } else {
+                            ele.active = false
+                        }
+                    })
+                    that.courseType = res.coursetypeList
+                    that.courseList = res.courseList
+                    that.page = res.paginationData
+                }
+            }).then(res => {
+                that.$nextTick(() => {
+                    that.courseType.forEach((ele, index) => {
+                        if (that.$refs['itemList'+index][0].offsetHeight >= 75) {
+                            that.$set(ele, "isShow", true)
+                            that.$set(ele, "expand", true)
+                        } else {
+                            that.$set(ele, "isShow", false)
+                            that.$set(ele, "expand", false)
+                        }
+                    })
+                })
+            })
+            .catch(err => {})
+        }
     }
 }
 </script>
@@ -123,8 +135,13 @@ export default {
     margin: 0 auto;
     &-boby {
         display: flex;
-        justify-content: space-between;
         flex-wrap: wrap;
+        >div   {
+            margin-right: 26.6px;
+            &:nth-child(4n) {
+                margin-right: 0;
+            }
+        }
     }
     &-wrap {
         font-size: 14px;
@@ -150,6 +167,8 @@ export default {
                     display: flex;
                     flex-wrap: wrap;
                     overflow: hidden;
+                    align-content: flex-start;
+                    transform: all .5s;
                     li {
                         display: inline-block;
                         border-radius: 4px;
@@ -191,6 +210,7 @@ export default {
                 display: inline-block;
                 padding: 3px 9px;
                 border-radius: 12px;
+                cursor: pointer;
                 margin-right: 15px;
             }
             li.active {

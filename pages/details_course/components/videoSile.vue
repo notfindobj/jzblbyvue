@@ -1,5 +1,5 @@
 <template>
-    <div class="sile-box" :style="`width: ${extend ? '0' : '270'}px;`">
+    <div class="sile-box" :style="`width: ${extend ? '0' : '350'}px;`">
         <div class="sile">
             <div class="sile-title">
                 <h3 >《15小时从0到独立掌握各类室内空间建模教程》</h3>
@@ -118,7 +118,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .sile-box {
-    width: 270px;
+    width: 350px;
     position: relative;
 }
 .sile{

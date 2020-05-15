@@ -2,24 +2,24 @@
     <div class="sile-box">
         <div class="sile">
             <div class="sile-title">
-                <span class="sile-sub">共53节课,其中免费试学共3节  (已完结)</span>
+                <span class="sile-sub">{{crouseList.OutlineDesc}}</span>
             </div>
             <ul class="sile-nav">
-                <li class="sile-nav-ext" v-for="(items, index) in crouseList" :key="index">
+                <li class="sile-nav-ext" v-for="(items, index) in crouseList.Courselist" :key="index">
                     <div :class="items.fold ? `sile-nav-ext-box sile-nav-action` :'sile-nav-ext-box '"  @click="items.fold = !items.fold">
-                        <span class="sile-nav-ext-box-title">第{{index+1}}章 {{items.chapter}} </span>
+                        <span class="sile-nav-ext-box-title">{{items.Name}} </span>
                         <i :class="`icon iconfont ${items.fold ? 'icon-jiantoushang' : 'icon-jiantouxia'} `"></i> 
                     </div>
-                    <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.children" :key="ins">
+                    <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.ChildNode" :key="ins">
                         <dd class="sile-nav-dl-dd">
                             <div class="sile-nav-dl-dd-tit">
                                 <i class="icon iconfont icon-add1"></i> 
-                                <span>{{`${index+1}-${ins+1} ${item.nema}`}} </span>
+                                <span>{{`${index+1}-${ins+1} ${item.Name}`}} </span>
                                 <span class="sile-nav-dl-dd-tit-free" v-if="item.free">免费</span>
                             </div>
                             <div class="sile-nav-dl-dd-sub">
                                 <span class="hover-btn">开始学习</span>
-                                <span class="duration">{{item.time}}</span>
+                                <span class="duration">{{item.Duration}}</span>
                             </div>
                         </dd>
                     </dl>
@@ -31,77 +31,15 @@
 <script>
 import Bus from "../../../plugins/untils/Bus"
 export default {
+    props: {
+        crouseList: {
+            type: Object,
+            default: ()=> {return {OutlineDesc: "", Courselist: []}}
+        }
+    },
     data () {
         return {
             extend: false,
-            crouseList: [
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                }
-            ]
         }
     },
     methods: {
