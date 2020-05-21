@@ -112,7 +112,6 @@ export default {
                         ItemId: _this.detaDetails.ItemId,
                         DomainType: _this.detaDetails.TalkType
                     })
-                    console.log('asd')
                     _this.isShowViewBox = !_this.isShowViewBox;
                     _this.stop()
                     _this.itemVideo.videoTime = that.currentTime();

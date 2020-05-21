@@ -2,25 +2,25 @@
     <div class="sile-box" :style="`width: ${extend ? '0' : '350'}px;`">
         <div class="sile">
             <div class="sile-title">
-                <h3 >《15小时从0到独立掌握各类室内空间建模教程》</h3>
-                <span class="sile-sub">共53节课,其中免费试学共3节  (已完结)</span>
+                <h3 >{{name}}</h3>
+                <span class="sile-sub">{{crouseList.OutlineDesc}}</span>
             </div>
             <ul class="sile-nav">
-                <li class="sile-nav-ext" v-for="(items, index) in crouseList" :key="index">
+                <li class="sile-nav-ext" v-for="(items, index) in crouseList.Courselist" :key="index">
                     <div :class="items.fold ? `sile-nav-ext-box sile-nav-action` :'sile-nav-ext-box '"  @click="items.fold = !items.fold">
-                        <span class="sile-nav-ext-box-title">第{{index+1}}章 {{items.chapter}} </span>
+                        <span class="sile-nav-ext-box-title">{{items.Name}} </span>
                         <i :class="`icon iconfont ${items.fold ? 'icon-jiantoushang' : 'icon-jiantouxia'} `"></i> 
                     </div>
-                    <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.children" :key="ins">
+                    <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.ChildNode" :key="ins">
                         <dd class="sile-nav-dl-dd">
-                            <div class="sile-nav-dl-dd-tit">
+                            <div class="sile-nav-dl-dd-tit" @click="playVideo(item)">
                                 <i class="icon iconfont icon-add1"></i> 
-                                <span>{{`${index+1}-${ins+1} ${item.nema}`}} </span>
-                                
+                                <!-- ${index+1}-${ins+1}  -->
+                                <span>{{`${item.Name}`}} </span>
                             </div>
                             <div class="sile-nav-dl-dd-sub">
-                                <span>{{item.time}}</span>
-                                <span v-if="item.free">免费</span>
+                                <span>{{item.Duration}}</span>
+                                <span>{{item.IsFree === 1 ? '免费':''}}</span>
                             </div>
                         </dd>
                     </dl>
@@ -35,83 +35,39 @@
 <script>
 import Bus from "../../../plugins/untils/Bus"
 export default {
+    props: {
+        name: {
+            type: String,
+            default: ''
+        },
+        crouseList: {
+            type: Object,
+            default: ()=> {return {OutlineDesc: "", Courselist: []}}
+        }
+    },
     data () {
         return {
             extend: false,
-            crouseList: [
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                },
-                {
-                    chapter: "3Dmax室内建模训练营",
-                    fold: true,
-                    children: [
-                        {
-                            nema: "dmax基础命令讲解（一）",
-                            time: '20.2分钟',
-                            free: true
-                        }
-                    ]
-                }
-            ]
         }
     },
     methods: {
+        playVideo (row) {
+            let q = {
+                ID: row.ID,
+                IsFree: row.IsFree,
+                IsBuy: row.IsBuy,
+                VideoImg: row.FirstImg,
+                VideoUrl: row.ResourceObj,
+            }
+            this.$emit("playVideo", q)
+            this.switchSource(q)
+        },
         extendDrag () {
             this.extend = !this.extend;
             Bus.$emit("extendDrag", this.extend)
+        },
+        switchSource (row) {
+            Bus.$emit("videoSource", row)
         }
     }
 }
@@ -151,12 +107,12 @@ export default {
     }
     &-nav {
         position: relative;
-       font-size: 14px;
+        font-size: 14px;
         width: 100%;
         color: #999;
         display: inline-block;
         box-sizing: border-box;
-        height: 510px;
+        height: 575px;
         overflow-x: hidden;
         overflow-y: auto;
         &-ext {
@@ -246,5 +202,6 @@ export default {
 .extend {
     right: 0;
     transform: rotate(180deg);
+    z-index: 100;
 }
 </style>

@@ -7,35 +7,29 @@
                     <span>全部分类</span>
                 </div>
                 <div class="menu-contetn" v-for="(items, index) in couseList" :key="index">
-                    <div class="menu-contetn-item">
-                        <span>{{items.title}}</span>
-                        <i class="icon iconfont icon-iconfontyoujiantou"></i>
-                    </div>
+                    <nuxt-link :to="`/all_course?f=${items.typeId}`">
+                        <div class="menu-contetn-item">
+                            <span>{{items.typename}}</span>
+                            <i class="icon iconfont icon-iconfontyoujiantou"></i>
+                        </div>
+                    </nuxt-link>
                     <div class="menu-contetn-panl" >
                         <h4>课程分类</h4>
                         <div class="menu-contetn-panl-sort">
-                            <div class="menu-contetn-panl-sort-item" v-for="(item, i) in items.children" :key="i">
-                                {{item.title}}
-                            </div>
+                            <nuxt-link :to="`/all_course?f=${items.typeId}&c=${item.ID}`" v-for="(item, i) in items.typelist" :key="i">
+                                <div class="menu-contetn-panl-sort-item" >
+                                    {{item.Name}}
+                                </div>
+                            </nuxt-link>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="swiper-boxs">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200421/6bbdbf43fe480536a7c85adc12b00afa.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200425/6a9e750cc17e2e45e1fbd3fba26777d3.png" alt="">
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200416/e9f11f8383f22ceeccf48064d5311877.jpg" alt="">
+                    <div class="swiper-slide" v-for="(item, index) in slidList" :key="index">
+                        <div class="swiper-slide-item">
+                            <img :src="item.CoverImgUrl" :alt="item.ItemName">
                         </div>
                     </div>
                 </div>
@@ -96,40 +90,29 @@
                 <span>每日更新30+节课</span>
             </div>
             <div class="courseitem-boby">
-                <!-- <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/>
-                <coursePanl/> -->
+                <template v-for="(items, index) in latestCourses" >
+                    <coursePanl :key="index" :coursePanl="items"/>
+                </template>
             </div>
         </div>
-        <div class="courseitem">
-            <div class="courseitem-tit">
-                <h3>室内设计</h3>
-                <span>共12564节课</span>
-            </div>
-            <div class="courseitem-boby">
-                <courseWrap/>
-                <!-- <coursePanl/>
-                <coursePanl/>
-                <coursePanl/> -->
-            </div>
+        <div class="header-txt">
+            <h3>以下根据你的学习兴趣推荐</h3>
+            <span @click="isPanel = true">更换意向></span>
         </div>
-        <div class="courseitem">
-            <div class="courseitem-tit">
-                <h3>建筑景观</h3>
-                <span>共2733节课</span>
+        <template v-for="(items, index) in quoteCourses">
+            <div class="courseitem" :key="index">
+                <div class="courseitem-tit">
+                    <h3>{{items.TypeName}}</h3>
+                    <span>共{{items.CourseCount}}节课</span>
+                </div>
+                <div class="courseitem-boby">
+                    <courseWrap :courseWrap="items"/>
+                    <template v-for="(item, inx) in items.CourseLists">
+                        <coursePanl :key="inx" :coursePanl="item"/>
+                    </template>
+                </div>
             </div>
-            <div class="courseitem-boby">
-                <courseWrap/>
-                <!-- <coursePanl/>
-                <coursePanl/>
-                <coursePanl/> -->
-            </div>
-        </div>
+        </template>
         <div class="courseitem">
             <div class="courseitem-tit">
                 <h3>溜溜实力讲师</h3>
@@ -165,51 +148,91 @@
 
             </div>
         </div>
+        <interestPanel v-if="isPanel" @closeModal="closeModal" :field="couseList" />
     </div>
 </template> 
 <script>
 import Swiper from "swiper"
 import coursePanl from "./components/coursePanl"
 import courseWrap from "./components/courseWrap"
+import interestPanel from "./components/interestPanel"
+import {getHomeCourseType, getCourseList, getHomeSelectCourse} from "../../service/course"
 export default {
     layout: "course",
     components:{
         coursePanl,
-        courseWrap
+        courseWrap,
+        interestPanel
     },
     data () {
         return {
-            couseList: [
-            {
-                title:"室内设计1",
-                id: 1,
-                children: [
-                    {title: '室内入门'},
-                    {title: '3D建模'},
-                    {title: '渲染表现'},
-                    {title: '动画漫游'},
-                ]
-            },
-            {
-                title:"建筑景观",
-                id: 1,
-                children: [
-                    { title: '建筑|景观建模'},
-                    { title: '室外渲染表现'},
-                    { title: '建筑动画'},
-                    { title: '方案规划'},
-                    { title: '建筑景观入门'},
-                ]
-            }
-            ]
+            isPanel: true,
+            couseList: [],
+            latestCourses: [],
+            quoteCourses: [],
         }
     },
+    async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
+        let msg = await store.dispatch('getSlid');
+        return {
+            slidList: msg
+        }
+    },
+    created () {
+        this.getHomeType()
+        this.getNewCourse()
+    },
     mounted () {
+        this.closeModal()
         this.initSwiper()
         this.initHotSwiper()
         this.initlecturer()
     },
     methods: {
+        closeModal(arr = []) {
+            let taht = this
+            if (localStorage.getItem("field") === "") {
+                arr = []
+            } else {
+                arr = localStorage.getItem("field")
+            }
+            if (arr !== '') {
+                this.isPanel = !this.isPanel
+            }
+            let q ={
+                typeIds: arr,
+            }
+            getHomeSelectCourse(q).then(res => {
+                if (res) {
+                    this.quoteCourses = res.RecommendDatas
+                }
+            }).catch(err => {})
+        },
+        // 最新课程
+        getNewCourse () {
+            let that = this;
+            let q = {
+                parentId: '',
+                typeId: '',
+                sort: 2,
+                level: -1,
+                page: 1,
+                rows: 8
+            }
+            getCourseList(q).then(res => {
+                if (res) {
+                    that.latestCourses = res.courseList
+                }
+            }).catch(err =>{})
+        },
+        getHomeType () {
+            let that = this
+            getHomeCourseType().then(res => {
+                if (res) {
+                    that.couseList = res
+                }
+            }).catch(err => {})
+        },
         initSwiper () {
             let _this = this
             this.$nextTick(() => {
@@ -273,7 +296,7 @@ export default {
                         nextEl: '.swiper-button-next',
                         prevEl: '.swiper-button-prev',
                     },
-                    loop: true,  //循环
+                    loop: true,  //循环  
                     observer:true,//修改swiper自己或子元素时，自动初始化swiper
             　　    observeParents:true,//修改swiper的父元素时，自动初始化swiper
                     autoplay: {
@@ -294,6 +317,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .header-txt {
+        margin: 5px 0 15px;
+        display: inline-flex;
+        align-items: flex-end;
+        h3 {
+            font-size: 22px;
+            color: #333;
+            margin-right: 20px;
+            font-weight: 400;
+        }
+        span {
+            font-size: 14px;
+            cursor: pointer;
+            color: #1abc9c;
+        }
+    }
     /**Hot
      */
     .four-textImgs-wrap {

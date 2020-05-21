@@ -14,7 +14,7 @@
                 <p class="panl-content-title">{{coursePanl.CourseName}}</p>
                 <p class="panl-content-label">
                     <span>{{coursePanl.Level}}</span>
-                    <span v-if="coursePanl.DiscountedPrice">￥{{coursePanl.DiscountedPrice}}</span>
+                    <span v-if="coursePanl.Money">￥69.00</span>
                 </p>
             </nuxt-link>
             <div class="panl-content-author">

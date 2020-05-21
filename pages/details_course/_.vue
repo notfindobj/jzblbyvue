@@ -2,12 +2,14 @@
 <div class="details">
     <div class="details-titile">
         <Breadcrumb separator=">" class="box">
-            <BreadcrumbItem>当前位置121：</BreadcrumbItem>
+            <BreadcrumbItem>当前位置：</BreadcrumbItem>
             <BreadcrumbItem to="/course">课程首页</BreadcrumbItem>
-            <BreadcrumbItem>全部课程</BreadcrumbItem>
+            <BreadcrumbItem>课程介绍</BreadcrumbItem>
         </Breadcrumb>
         <div class="details-titile-video" >
-            <div class="details-titile-video-box" @click.stop=""> 
+            <div class="details-titile-video-box">
+                <div class="video-md">
+                </div>
                 <courseVideo :video="courseDet" width="800"/>
             </div>
             <div v-if="courseDet.IsBuy === 0" class="info">
@@ -34,7 +36,7 @@
                 </div>
                 <div class="info-btn">
                     <span @click="goDetails(courseDet)">免费试看</span>
-                    <span>购买课程</span>
+                    <span @click="isBuy = true">购买课程</span>
                 </div>
                 <span class="info-des">购买后，请加小溜qq:1078523032,讲师提供售后服务哦</span>
             </div>
@@ -47,23 +49,22 @@
         <div class="details-course-lf">
             <ul class="details-course-lf-nav" @click="navSlideBar">
                 <li data-index="0" :class="slideIndex === 0 ? 'active': ''">课程介绍</li>
-                <li data-index="1" :class="slideIndex === 1 ? 'active': ''">课程大纲（83）</li>
-                <li data-index="2" :class="slideIndex === 2 ? 'active': ''">学习资料（2）</li>
-                <li data-index="3" :class="slideIndex === 3 ? 'active': ''">学员评价（88）</li>
+                <li data-index="1" :class="slideIndex === 1 ? 'active': ''">课程大纲</li>
+                <!-- <li data-index="2" :class="slideIndex === 2 ? 'active': ''">学习资料</li> -->
+                <li data-index="3" :class="slideIndex === 3 ? 'active': ''">学员评价</li>
                 <div class="details-course-lf-nav-bar" :style="`left: ${slideLeft}px`"></div>
             </ul>
-            <div v-show="slideIndex === 0">
-                {{courseDet}}
-                <sidle/>
+            <div v-show="slideIndex === 0" >
+                <div class="contents" v-html="courseDet.Contents"></div>
             </div>
             <div v-show="slideIndex === 1">
                 <sidle :crouseList="course"/>
             </div>
-            <div v-show="slideIndex === 2">
+            <!-- <div v-show="slideIndex === 2">
                 学习资料
-            </div>
+            </div> -->
             <div v-show="slideIndex === 3">
-              asd
+              <comment :evaluation="evaluation.evaluationList"/>
             </div>
         </div>
         <div class="details-course-lr">
@@ -108,34 +109,33 @@
                     <span>更多></span>
                 </div>
                 <ul class="details-course-lr-more-item">
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
-                    <li>3DMax+VRay4.1零基础教学视频教程</li>
+                    <li v-for="(items, index) in samecourseList" :key="index">{{items.CourseName}}</li>
                 </ul>
             </div>
         </div>
     </div>
+    <play :setMeal="courseDet" v-if="isBuy" @closePay="closePay"/>
 </div>
-    
 </template>
 <script>
 import courseVideo from "./components/courseVideo"
 import videoSile from "./components/videoSile"
 import sidle from "./components/sidle"
 import { getCourseDetail } from "../../service/course";
+import play from "./components/play"
+import comment from "./components/comment"
 export default {
     layout: "course",
     components: {
         courseVideo,
         videoSile,
-        sidle
+        sidle,
+        play,
+        comment
     },
     data () {
         return {
+            isBuy: false,
             slideLeft: 22,
             slideIndex: 0,
             course: {},
@@ -157,6 +157,7 @@ export default {
         let msg = await store.dispatch('getLecturerDetail', q);
         let olne = await store.dispatch('getCourseOutline', {courseId: courId});
         let res = await store.dispatch('getCourseDetail', {courseId: courId});
+        res.LecturerId = teachId
         let eva = await store.dispatch('getCourseEvaluation', de);
         olne.Courselist.forEach(ele => {
             ele.fold = true
@@ -170,11 +171,18 @@ export default {
             course: olne,
             lecturerInfo: msg.lecturerInfo,
             lecturerList: msg.courseList,
+            samecourseList: msg.samecourseList,
         }
     },
     methods: {
+        closePay (row) {
+            this.isBuy = !this.isBuy
+            if (row) {
+                this.$router.push({ name: "details_course-id", params: {id: this.courseDet.CourseID}});
+            }
+        },
         goDetails (row) {
-            this.$router.push({ name: "details_course-id", params: {id: row.CourseID}});
+            this.$router.push({ name: "details_course-id", params: {id: row.CourseID}, query: {id: row.LecturerId}});
         },
         navSlideBar () {
             if (event.target.localName === "li") {
@@ -271,7 +279,10 @@ export default {
         }
     }
 }
-
+.contents {
+    font-size: 14px;
+    margin-top: 25px;
+}
 .details {
     &-titile {
         background-color: #292929;
@@ -281,7 +292,6 @@ export default {
             display: flex;
             &-box {
                 position: relative;
-
             }
         }
     }
@@ -414,10 +424,12 @@ export default {
                         cursor: pointer;
                         font-size: 14px;
                         width: 140px;
+                        overflow: hidden;
                         display: inline-block;
                         margin-bottom: 20px;
                         img {
                             width: 100%;
+                            height: 110px;
                         }
                         p {
                             margin-top: 10px;
@@ -479,5 +491,12 @@ export default {
             }
         }
     }
+}
+.video-md {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 </style>

@@ -16,4 +16,8 @@ export const serverCourse = {
     async getCourseEvaluation({ commit, state }, params) {
       return await request.get('Course/GetCourseEvaluation', params)
     },
+    // 获取课程评价
+    async getSlid({ commit, state }, params) {
+      return await request.get('CourseIndex/SlideShow', params)
+    }
 }

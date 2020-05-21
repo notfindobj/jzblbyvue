@@ -1,13 +1,8 @@
 <template>
     <div class="paym">
         <div class="paym-com">
-            <i class="close-paym" @click="closePay">X</i>
-            <div class="paym-com-left"></div>
+            <Icon class="close-paym" @click="closePay" type="md-close-circle" />
             <div class="paym-com-right">
-                <div class="paym-com-right-item">
-                    <label>充值账号：</label>
-                    <span>{{Identity.NickName}}</span>
-                </div>
                 <div class="paym-com-right-item">
                     <label>付款方式：</label>
                     <div class="paym-com-right-item-paysele">
@@ -15,10 +10,11 @@
                             <span :style="`background-position:-10px  -${isType ===1 ? 10 : 58}px;`" class="paysele" @click="paysele(1)"></span>
                             <span :style="`background-position:-138px  -${isType ===2 ? 10 : 58}px;`" class="paysele" @click="paysele(2)"></span>
                         </div>
+                       
                     </div>
                 </div>
                  <div>
-                    <p class="amount">{{setMeal.Money}}元</p>
+                    <p class="amount">{{setMeal.DiscountedPrice}}元</p>
                     <div class="amount-qr">
                         <p>
                             <img v-if="isType ===1" :src="payQr" alt="" width="140">
@@ -36,8 +32,10 @@
 </template>
 <script>
 import { mapState} from 'vuex'
-import {getOrderStatr, WXSETMEAL, ZFBSETMEAL} from "../../service/sign"
-import { requests } from '../../store/modules'
+import {getGoodStart} from "../../../service/sign"
+import {getCourseOrder} from "../../../service/course"
+
+import { requests } from '../../../store/modules'
 export default {
     props: {
         setMeal: {
@@ -77,56 +75,40 @@ export default {
         getPayQr () {
             let _this = this;
             let q = {
-                MId: this.setMeal.ModuleId,
+                ItemId: this.setMeal.CourseID,
                 IsBase64Img: false,
-                IsDebug: false,
-                Type: this.setMeal.packageSource
+                paytype: this.isType,
+                IsDebug: false
             }
             clearTimeout(_this.time)
-            if (this.isType === 1) {
-                 WXSETMEAL(q).then(res => {
-                    if (res) {
-                        _this.payQr = res.url
-                        _this.time = setInterval(() => {
-                            let o ={
-                                orderId: res.orderId
+            getCourseOrder(q).then(res => {
+                if (res) {
+                    _this.payQr = res.url
+                    _this.time = setInterval(() => {
+                        let o ={
+                            orderId: res.orderId
+                        }
+                        getGoodStart(o).then(res => {
+                            if(res.status === 1 && this.isType === 1) {
+                                clearTimeout(_this.time)
+                                this.payQr = require("../../../assets/images/pay_su.png")
+                                setTimeout(() => {
+                                    this.$emit("closePay", res)
+                                }, 1000)
                             }
-                            getOrderStatr(o).then(res => {
-                                if(res === 1 ) {
-                                    clearTimeout(_this.time)
-                                    this.payQr = require("../../assets/images/pay_su.png")
-                                    setTimeout(() => {
-                                        this.$emit("closePay")
-                                    }, 1000)
-                                }
-                            }).catch(err=> {})
-                        }, 1000)
-                    }
-                }).catch(err => {})
-            }
-            if (this.isType === 2) {
-                 ZFBSETMEAL(q).then(res => {
-                    if (res) {
-                        _this.payQr = res.url
-                        _this.time = setInterval(() => {
-                            let o ={
-                                orderId: res.orderId
+                            if(res.status === 1 && this.isType === 2) {
+                                _this.payiframe = 1
+                                _this.payiframe = 1
+                                clearTimeout(_this.time)
+                                _this.payQr = require("../../../assets/images/pay_su.png")
+                                setTimeout(() => {
+                                    _this.$emit("closePay", res)
+                                }, 1000)
                             }
-                            getOrderStatr(o).then(res => {
-                                if(res === 1 ) {
-                                    _this.payiframe = 1
-                                    _this.payiframe = 1
-                                    clearTimeout(_this.time)
-                                    _this.payQr = require("../../assets/images/pay_su.png")
-                                    setTimeout(() => {
-                                        _this.$emit("closePay")
-                                    }, 1000)
-                                }
-                            }).catch(err=> {})
-                        }, 1000)
-                    }
-                }).catch(err => {})
-            }
+                        }).catch(err=> {})
+                    }, 1000)
+                }
+            }).catch(err => {})
         }
     }
 }
@@ -134,15 +116,17 @@ export default {
 <style lang="less" scoped>
     .close-paym {
         position: absolute;
-        right: -12px;
-        top: -12px;
+        right: 1px;
+        top: -3px;
         display: inline-block;
         width: 28px;
         height: 28px;
-        background: #ddd;
-        border: 2px solid #fff;
-        border-radius: 50%;
         cursor: pointer;
+        font-size: 32px;
+        color: #a7a4a4;
+        &:hover {
+            color: #eb4844;
+        }
     }
     .qr-tol {
         color: #C7C7C7;
@@ -168,7 +152,7 @@ export default {
         width: 108px;
         height: 28px;
         cursor: pointer;
-        background: url(../../assets/images/paym_sprites.png);
+        background: url(../../../assets/images/paym_sprites.png);
     }
     .paym {
         position: fixed;
@@ -180,7 +164,7 @@ export default {
         z-index: 9999;
         &-com {
             background: #fff;
-            width: 800px;
+            width: 500px;
             height: 430px;
             position: relative;
             left: 50%;
@@ -191,7 +175,7 @@ export default {
                 width: 300px;
                 float: left;
                 height: 430px;
-                background: url(../../assets/images/pay-left.jpg);
+                background: url(../../../assets/images/pay-left.jpg);
             }
             &-right {
                 color: #333;

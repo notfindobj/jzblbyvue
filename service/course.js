@@ -20,3 +20,19 @@ export const PublishEvaluation = async (params) => {
 export const getCourseEvaluation = async (params) => {
     return await request.post('Course/GetCourseEvaluation', params)
 }
+// 获取首页课程分类
+export const getHomeCourseType = async (params) => {
+    return await request.get('CourseIndex/GetIndexCourseType', params)
+}
+// 获取推荐
+export const getHomeSelectCourse = async (params) => {
+    return await request.get('CourseIndex/BySelectRecommend', params)
+}
+// 购买课程
+export const getCourseOrder = async (params) => {
+    return await request.post('AllPay/BoughtCourse', params)
+}
+// 记录学习时长
+export const CourseLearn = async (params) => {
+    return await request.get('CourseLearn/StartPlayLearn', params)
+}

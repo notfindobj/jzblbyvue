@@ -15,7 +15,7 @@
                             <div class="sile-nav-dl-dd-tit">
                                 <i class="icon iconfont icon-add1"></i> 
                                 <span>{{`${index+1}-${ins+1} ${item.Name}`}} </span>
-                                <span class="sile-nav-dl-dd-tit-free" v-if="item.free">免费</span>
+                                <span class="sile-nav-dl-dd-tit-free" v-if="item.IsFree">免费</span>
                             </div>
                             <div class="sile-nav-dl-dd-sub">
                                 <span class="hover-btn">开始学习</span>

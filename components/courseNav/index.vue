@@ -17,10 +17,14 @@
             <div class="course-buttom-content">
                 <ul class="course-buttom-content-lf">
                     <li>
-                        <img src="https://static.3d66.com/softv2/images/logo.png" alt="">
+                        <nuxt-link to="/course">
+                            <img src="https://www.pic.jzbl.com/logo1.png" alt="">
+                        </nuxt-link>
                     </li>
-                    <li>首页</li>
-                    <li>全部课程</li>
+                    <li><nuxt-link to="/course">首页</nuxt-link></li>
+                    <li>
+                        <nuxt-link to="/all_course">全部课程</nuxt-link>
+                    </li>
                     <li>限时免费</li>
                 </ul>
                 <ul class="course-buttom-content-lr">
@@ -30,8 +34,8 @@
                             <i class="icon iconfont icon-sousuo"></i>
                         </div>
                     </li>
-                    <li>讲师入住</li>
-                    <li>我的自学</li>
+                    <li><nuxt-link to="/teacher">讲师入住</nuxt-link></li>
+                    <li><nuxt-link to="/self_study">我的自学</nuxt-link></li>
                 </ul>
             </div>
         </div>
@@ -86,6 +90,9 @@
             &-lf {
                 display: flex;
                 li {
+                    a {
+                        color: #fff;
+                    }
                     margin-right: 30px;
                     &:first-child {
                         img {
@@ -104,7 +111,13 @@
                     &:first-child {
                         margin-right: 30px;
                     }
+                    a {
+                        color: #fff;
+                    }
                     &:last-child {
+                        a {
+                            color: #1bbc9b;
+                        }
                         margin-left: 20px;
                         position: relative;
                         color: #1bbc9b;
@@ -118,6 +131,7 @@
                             left: -10px;
                         }
                     }
+                    
                     height: 60px;
                     line-height: 60px;
                     cursor: pointer;

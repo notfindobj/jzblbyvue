@@ -1,14 +1,26 @@
 <template>
     <div class="course-wrap">
-        <h2>共2786节课</h2>
-        <p>室内设计</p>
+        <h2>共{{courseWrap.CourseCount}}节课</h2>
+        <p>{{courseWrap.TypeName}}</p>
         <span class="line"></span>
-        <div class="viewmore">
-            <div class="anim"></div>
-            查看更多
-        </div>
+        <nuxt-link :to="`/all_course?f=${courseWrap.TypeId}`">
+            <div class="viewmore">
+                <div class="anim"></div>
+                查看更多
+            </div>
+        </nuxt-link>
     </div>
 </template>
+<script>
+export default {
+    props:{
+        courseWrap: {
+            type: Object,
+            default: () => {}
+        }
+    }
+}
+</script>
 <style lang="less" scoped>
     .course-wrap {
         display: inline-block;

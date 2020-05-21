@@ -59,7 +59,11 @@ export default {
         }
     },
     created () {
-        
+        let query = this.$route.query
+        if (query) {
+            this.q.parentId = query.f
+            this.q.typeId = query.c
+        }
     },
     mounted() {
         this.getCourseTypeList()
@@ -95,7 +99,6 @@ export default {
                         } else {
                             ele.active = false
                         }
-                        
                     })
                     childArr.typelist.forEach(ele => {
                         if (that.q.typeId === ele.ID) {
