@@ -31,6 +31,9 @@
                     <nuxt-link to="/order_lobby">接单大厅</nuxt-link>
                 </li>
                 <li>
+                    <a>建筑学院（内测中）</a>
+                </li>
+                <li>
                     <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
                 </li>
             </ul>

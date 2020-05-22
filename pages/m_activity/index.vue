@@ -43,8 +43,8 @@
                     <p style="font-size: 1rem;">微信公众号</p>
                 </div>
                 <div style="display: inline-block;width: 16rem;">
-                    <img src="../../assets/images/weixinqun.png" width="46%" alt="微信交流群">
-                    <p style="font-size: 1rem;">微信交流群</p>
+                    <img src="../../assets/images/weixinqun.png" width="46%" alt="QQ交流群">
+                    <p style="font-size: 1rem;">QQ交流群</p>
                 </div>
             </div>
         </div>

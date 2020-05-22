@@ -29,10 +29,18 @@ export const getHomeSelectCourse = async (params) => {
     return await request.get('CourseIndex/BySelectRecommend', params)
 }
 // 购买课程
-export const getCourseOrder = async (params) => {
+export const allPayCourseOrder = async (params) => {
     return await request.post('AllPay/BoughtCourse', params)
 }
 // 记录学习时长
 export const CourseLearn = async (params) => {
     return await request.get('CourseLearn/StartPlayLearn', params)
+}
+// 获取课程订单
+export const getCourseOrder = async (params) => {
+    return await request.get('Course/GetCourseOrder', params)
+}
+// 获取课程订单
+export const getStudyCourseList = async (params) => {
+    return await request.get('CourseLearn/GetCourseEvaluation', params)
 }

@@ -125,6 +125,9 @@
                 <li>
                     <a target="_blank" href="https://map.51240.com/zhongguo__map/">在线地图</a>
                 </li>
+                <li>
+                    建筑学院<span>(内测中)</span>
+                </li>
             </ul>
             <!-- <div class="main-nav-publish" @click="publish">发布</div> -->
         </div>

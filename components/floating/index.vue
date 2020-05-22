@@ -12,7 +12,7 @@
                 </div>
                 <div>
                     <img :src="wxCode" alt="" height="80px">
-                    <p>微信交流群</p>
+                    <p>QQ交流群</p>
                 </div>
             </div>
         </div>

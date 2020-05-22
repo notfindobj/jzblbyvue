@@ -31,7 +31,7 @@
             </div>
             <div>
                 <img src="../assets/images/weixinqun.png" alt="" width="80px" height="80px;">
-                <div class="code-img">微信交流群</div>
+                <div class="code-img">QQ交流群</div>
             </div>
             <div>
                 <img src="../assets/images/qr-code.jpg" alt="" width="80px" height="80px;">

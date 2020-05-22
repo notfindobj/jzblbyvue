@@ -33,7 +33,7 @@
 <script>
 import { mapState} from 'vuex'
 import {getGoodStart} from "../../../service/sign"
-import {getCourseOrder} from "../../../service/course"
+import {allPayCourseOrder} from "../../../service/course"
 
 import { requests } from '../../../store/modules'
 export default {
@@ -81,7 +81,7 @@ export default {
                 IsDebug: false
             }
             clearTimeout(_this.time)
-            getCourseOrder(q).then(res => {
+            allPayCourseOrder(q).then(res => {
                 if (res) {
                     _this.payQr = res.url
                     _this.time = setInterval(() => {

@@ -7,23 +7,44 @@
                 </span>
                 <p class="header-name">初九</p>
             </div>
-            <ul class="nav">
-                <li class="active">课程订单</li>
-                <li>后台管理</li>
-                <li>我的评论</li>
+            <ul class="nav" @click="clickTab">
+                <li data-index="0" :class="indexStudy === 0 ? 'active' : ''" >我的学习</li>
+                <li data-index="1" :class="indexStudy === 1 ? 'active' : ''">我的评论</li>
+                <li data-index="2" :class="indexStudy === 2 ? 'active' : ''">课程订单</li>
+                <li data-index="3" :class="indexStudy === 3 ? 'active' : ''">后台管理</li>
             </ul>
         </div>
         <div class="study-lr">
-            <Backstage/>
+            <MyStudy v-if="indexStudy === 0" />
+            <MyComment v-if="indexStudy === 1"/>
+            <CourseOrder v-if="indexStudy === 2"/>
+            <Backstage v-if="indexStudy === 3"/>
         </div>
     </div>
 </template>
 <script>
 import Backstage from "./components/Backstage"
+import CourseOrder from "./components/CourseOrder"
+import MyStudy from "./components/MyStudy"
+import MyComment from "./components/MyComment"
 export default {
     layout: "course",
     components:{
-        Backstage
+        Backstage,
+        CourseOrder,
+        MyStudy,
+        MyComment
+    },
+    data () {
+        return {
+            indexStudy: 0
+        }
+    },
+    methods: {
+        clickTab () {
+           let index = Number(event.target.attributes["data-index"].value);
+           this.indexStudy = index;
+        }
     }
 }
 </script>
@@ -32,6 +53,7 @@ export default {
         width: 1200px;
         margin: 15px auto;
         display: flex;
+        align-items: flex-start;
         &-lf {
             width: 200px;
             margin-right: 20px;

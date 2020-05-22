@@ -10,23 +10,13 @@
             </nuxt-link>
         </div>
         <div class="panl-content">
-            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
-                <p class="panl-content-title">{{coursePanl.CourseName}}</p>
-                <p class="panl-content-label">
-                    <span>{{coursePanl.Level}}</span>
-                    <span v-if="coursePanl.Money">￥69.00</span>
-                </p>
-            </nuxt-link>
+            <p class="panl-content-title">{{coursePanl.CourseName}}</p>
             <div class="panl-content-author">
-                <nuxt-link :to="`/teacher/${coursePanl.CreateUserId}`">
                 <span class="panl-content-author-lf">
-                    <img src="https://img.3d66.com/soft/2019/20191017/f25bfc95f9292da8316045628fbabdeb.jpg" alt="">
-                    <span>{{coursePanl.NickName}}</span>
+                    已学习 <span>1</span>/10节课程
                 </span>
-                </nuxt-link>
-                <span>{{coursePanl.Number}}人在学</span>
+                <span>继续学习</span>
             </div>
-            
         </div>
     </div>
 </template>
@@ -144,17 +134,20 @@ export default {
                 &-lf{
                     align-items: flex-end;
                     display: flex;
-                    img {
-                        border-radius: 50%;
-                        width: 22px;
-                        height: 22px;
-                        margin-right: 8px;
-                        vertical-align: middle;
-                        display: inline-block;
+                    span {
+                        color: #3bc66f;
                     }
-                    
                 }
-                
+                >span{
+                    &:last-child {
+                        cursor: pointer;
+                        color: #fff;
+                        padding: 2px 5px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        background-color: #3bc66f;
+                    }
+                } 
             }
         }
         &:hover {

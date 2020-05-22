@@ -2,14 +2,16 @@
     <div class="course">
         <div class="course-top">
             <ul class="course-top-lf">
-                <li>建筑部落</li>
+                <li>
+                    <nuxt-link to="/"> 建筑部落</nuxt-link>
+                </li>
                 <li>资料库</li>
-                <li>建筑圈</li>
-                <li>视频</li>
-                <li>问答</li>
+                <li><nuxt-link to="/BuildingCircle"> 建筑圈</nuxt-link></li>
+                <li><nuxt-link to="/videos"> 视频</nuxt-link></li>
+                <li><nuxt-link to="/QuestionsAndAnswers"> 问答</nuxt-link></li>
             </ul>
             <ul class="course-top-lr">
-                <li>我的部落</li>
+                <li><nuxt-link to="/HeAndITribal"> 我的部落</nuxt-link></li>
                 <li>账号</li>
             </ul>
         </div>
@@ -34,7 +36,7 @@
                             <i class="icon iconfont icon-sousuo"></i>
                         </div>
                     </li>
-                    <li><nuxt-link to="/teacher">讲师入住</nuxt-link></li>
+                    <li><nuxt-link to="/lecturer">讲师入住</nuxt-link></li>
                     <li><nuxt-link to="/self_study">我的自学</nuxt-link></li>
                 </ul>
             </div>
@@ -58,6 +60,9 @@
         justify-content: space-between;
         color: #999;
         font-size: 12px;
+        a {
+            color: #999;
+        }
         ul {
             display: flex;
         }

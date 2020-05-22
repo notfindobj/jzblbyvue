@@ -15,7 +15,7 @@
                 </div>
                 <div>
                     <img :src="wxCode" alt="" width="88px" height="88px" style="margin-top: 7px;">
-                    <p class="er-p" style="margin-top: -25px;">微信交流群</p>
+                    <p class="er-p" style="margin-top: -25px;">QQ交流群</p>
                 </div>
             </div>
             <i class="code-jian"></i>
