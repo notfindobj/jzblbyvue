@@ -7,7 +7,7 @@
                 </span>
                 <p class="header-name">初九</p>
             </div>
-            <ul class="nav" @click="clickTab">
+            <ul class="nav" @click="clickTab()">
                 <li data-index="0" :class="indexStudy === 0 ? 'active' : ''" >我的学习</li>
                 <li data-index="1" :class="indexStudy === 1 ? 'active' : ''">我的评论</li>
                 <li data-index="2" :class="indexStudy === 2 ? 'active' : ''">课程订单</li>
@@ -42,8 +42,8 @@ export default {
     },
     methods: {
         clickTab () {
-           let index = Number(event.target.attributes["data-index"].value);
-           this.indexStudy = index;
+            let index = Number(event.target.attributes["data-index"].value);
+            this.indexStudy = index;
         }
     }
 }

@@ -1,27 +1,14 @@
 <template>
     <ul class="sys">
-        <li class="sys-item">
-            <div class="sys-item-comment"><span>土匪与绅士:</span>不错👍</div>
+        <li class="sys-item" v-for="(items, index) in commentList" :key="index">
+            <div class="sys-item-comment"><span>{{items.NickName}}:</span>{{items.MsgContext}}</div>
             <div class="sys-item-content">
                 <div class="sys-item-content-img">
-                    <img src="https://www.pic1.jzbl.com/buildingcircle/13439b33-12ac-4651-9a85-86b03a473h4qw/2020-04-20/i/1587371774137983.jpg?x-oss-process=image/quality,q_90/resize,w_400" alt="">
+                    <img :src="items.ItemTitleImg" alt="">
                 </div>
                 <div class="sys-item-content-pro">
-                    <h4>《VRay4.1极速入门教程》</h4>
-                    <p>VRay4.1基础课程介绍</p>
-                    <p></p>
-                </div>
-            </div>
-        </li>
-        <li class="sys-item">
-            <div class="sys-item-comment"><span>土匪与绅士:</span>不错👍</div>
-            <div class="sys-item-content">
-                <div class="sys-item-content-img">
-                    <img src="https://www.pic1.jzbl.com/buildingcircle/13439b33-12ac-4651-9a85-86b03a473h4qw/2020-04-20/i/1587371774137983.jpg?x-oss-process=image/quality,q_90/resize,w_400" alt="">
-                </div>
-                <div class="sys-item-content-pro">
-                    <h4>《VRay4.1极速入门教程》</h4>
-                    <p>VRay4.1基础课程介绍</p>
+                    <h4>《{{Iitems.temName}}》</h4>
+                    <p>{{Iitems.ItemContent}}</p>
                     <p></p>
                 </div>
             </div>
@@ -29,8 +16,21 @@
     </ul>
 </template>
 <script>
+import {getMyEvaluation} from "../../../service/course"
 export default {
-  
+    data () {
+        return {
+            commentList: []
+        }
+    },
+    methods: {
+        getComment () {
+            let that = this
+            getMyEvaluation().then(res => {
+                that.commentList = res
+            }).catch(err => {})
+        }
+    }
 }
 </script>
 <style lang="less" scoped>

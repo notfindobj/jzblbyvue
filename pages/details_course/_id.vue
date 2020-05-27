@@ -51,16 +51,20 @@
                </h2>
             </div>
             <div class="details-course-lr-sub">
-                <span>
-                    <img :src="lecturerInfo.HeadIcon" :alt="lecturerInfo.FullName">
-                </span>
+                <nuxt-link :to="`/teacher/${lecturerInfo.UserId}`">
+                    <span>
+                        <img :src="lecturerInfo.HeadIcon" :alt="lecturerInfo.FullName">
+                    </span>
+                </nuxt-link>
                 <p class="details-course-lr-sub-name">{{lecturerInfo.FullName}} </p>
                 <p class="details-course-lr-sub-subs">{{lecturerInfo.Description}}</p>
             </div>
             <div class="details-course-lr-other">
                 <div class="details-course-lr-other-tit">
                     <span>老师其他课程</span>
-                    <span>更多</span>
+                    <nuxt-link :to="`/teacher/${lecturerInfo.UserId}`">
+                        <span>更多</span>
+                    </nuxt-link>
                 </div>
                 <ul class="details-course-lr-other-item">
                     <template v-if="lecturerList && lecturerList.length > 0" >
@@ -85,7 +89,11 @@
                     <span>更多></span>
                 </div>
                 <ul class="details-course-lr-more-item">
-                    <li v-for="(items, index) in samecourseList" :key="index">{{items.CourseName}}</li>
+                    <template v-for="(items, index) in samecourseList">
+                        <nuxt-link to="/all_course" :key="index">
+                            <li >{{items.CourseName}}</li>
+                        </nuxt-link>
+                    </template>
                 </ul>
             </div>
         </div>
@@ -320,7 +328,6 @@ export default {
                 border-bottom: 1px solid #eee;
                 position: sticky;
                 top: 0px;
-                z-index: 1000;
                 li {
                     float: left;
                     cursor: pointer;
@@ -425,6 +432,7 @@ export default {
                     }
                 }
                 &-item {
+                    
                     display: flex;
                     justify-content: space-between;
                     flex-wrap: wrap;
@@ -432,10 +440,12 @@ export default {
                         cursor: pointer;
                         font-size: 14px;
                         width: 140px;
+                        overflow: hidden;
                         display: inline-block;
                         margin-bottom: 20px;
                         img {
                             width: 100%;
+                            height: 110px;
                         }
                         p {
                             margin-top: 10px;

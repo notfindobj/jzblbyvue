@@ -34,7 +34,7 @@ export default {
 </script>
 <style lang="less" scoped>
     .modal {
-        position: absolute;
+        position: fixed;
         min-width: 200px;
         min-height: 200px;
         top: 40%;

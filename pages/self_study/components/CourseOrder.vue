@@ -7,10 +7,10 @@
         </div>
         <ul class="sys-status">
             <li>状态：</li>
-            <li class="active">全部</li>
-            <li>已完成</li>
-            <li>待付款</li>
-            <li>已取消</li>
+            <li :class="query.status === -1 ?'active' :''" @click="getCourseOrderList(-1)">全部</li>
+            <li :class="query.status === 0 ?'active' :''" @click="getCourseOrderList(0)">已完成</li>
+            <li :class="query.status === 1 ?'active' :''" @click="getCourseOrderList(1)">待付款</li>
+            <li :class="query.status === 2 ?'active' :''" @click="getCourseOrderList(2)">已取消</li>
         </ul>
         <div class="sys-content">
             <table class="sys-content-table" >
@@ -45,17 +45,20 @@ export default {
     data () {
         return {
             OrderList: [],
-            page: {}
+            page: {},
+            query: {
+                status: -1
+            }
         }
     },
     created () {
         this.getCourseOrderList()
     },
     methods: {
-        getCourseOrderList () {
+        getCourseOrderList (type = -1) {
             let that= this
-            let q= {}
-            getCourseOrder().then(res => {
+            that.query.status = type
+            getCourseOrder(this.q).then(res => {
                 that.OrderList = res.courseOrderList
                 that.page = res.paginationData
             }).catch(err => {})

@@ -49,7 +49,7 @@
 <script>
 import coursePanl from "../course/components/coursePanl"
 export default {
-    layout: "main",
+    layout: "course",
     components: {
         coursePanl
     },

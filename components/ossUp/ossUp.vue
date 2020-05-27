@@ -59,7 +59,6 @@ export default{
         })
         return false
       }
-      console.log("asdsa")
       let _this = this;
       return oss(file.name, _this.fileType).then(res => {
         this.uploadHost = res.host
@@ -93,7 +92,7 @@ export default{
         smallImgUrl: this.imgBaseUrl + this.uploadData.key
       }
       this.$emit('uploadSuccess', obj);
-    }
+    },
   }
 }
 </script>

@@ -1,32 +1,21 @@
 <template >
    <div class="panl">
         <div class="panl-tit">
-            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
-                <img width="100%" :src="coursePanl.FirstImg" alt="">
-                <span class="panl-tit-label">共{{coursePanl.ClassHour}}节课</span>
-                <div class="panl-tit-hover">
-                    <span class="panl-tit-hover-play"></span>
-                </div>
-            </nuxt-link>
+            <!-- <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`"></nuxt-link> -->
+            <img width="100%" :src="coursePanl.FirstImg" alt="">
+            <span class="panl-tit-label">共{{coursePanl.ClassHour}}节课</span>
+            <div class="panl-tit-hover">
+                <span class="panl-tit-hover-play"></span>
+            </div>
         </div>
         <div class="panl-content">
-            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
-                <p class="panl-content-title">{{coursePanl.CourseName}}</p>
-                <p class="panl-content-label">
-                    <span>{{coursePanl.Level}}</span>
-                    <span v-if="coursePanl.DiscountedPrice">￥{{coursePanl.DiscountedPrice}}</span>
-                </p>
-            </nuxt-link>
-            <div class="panl-content-author">
-                <nuxt-link :to="`/teacher/${coursePanl.CreateUserId}`">
+            <p class="panl-content-title">{{coursePanl.CourseName}}</p>
+            <!-- <div class="panl-content-author">
                 <span class="panl-content-author-lf">
-                    <img :src="coursePanl.HeadIcon" alt="">
-                    <span>{{coursePanl.NickName}}</span>
+                    已学习 <span>1</span>/10节课程
                 </span>
-                </nuxt-link>
-                <span>{{coursePanl.Number}}人在学</span>
-            </div>
-            
+                <span>继续学习</span>
+            </div> -->
         </div>
     </div>
 </template>
@@ -46,9 +35,16 @@ export default {
         margin-top: 15px;
         background: #fff;
         width: 280px;
+        margin-right: 50px;
+        &:nth-child(3n) {
+            margin-right:0;
+        }
+        &:visited {
+            border: 1px solid red;
+        }
         &-tit {
             height: 200px;
-            width: 280px;
+            width: 278px;
             overflow: hidden;
             position: relative;
             cursor: pointer;
@@ -99,8 +95,8 @@ export default {
             }
             img {
                 display: block;
-                width: 310px;
-                height: 220px;
+                width: 280px;
+                height: 200px;
                 transition: all .5s;
                 pointer-events: none;
             }
@@ -144,17 +140,20 @@ export default {
                 &-lf{
                     align-items: flex-end;
                     display: flex;
-                    img {
-                        border-radius: 50%;
-                        width: 22px;
-                        height: 22px;
-                        margin-right: 8px;
-                        vertical-align: middle;
-                        display: inline-block;
+                    span {
+                        color: #3bc66f;
                     }
-                    
                 }
-                
+                >span{
+                    &:last-child {
+                        cursor: pointer;
+                        color: #fff;
+                        padding: 2px 5px;
+                        border-radius: 4px;
+                        font-size: 12px;
+                        background-color: #3bc66f;
+                    }
+                } 
             }
         }
         &:hover {

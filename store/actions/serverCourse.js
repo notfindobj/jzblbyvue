@@ -19,5 +19,9 @@ export const serverCourse = {
     // 获取课程评价
     async getSlid({ commit, state }, params) {
       return await request.get('CourseIndex/SlideShow', params)
+    },
+    // 获取首页课程分类
+    async getHomeCourseType({ commit, state }, params) {
+      return await request.get('CourseIndex/GetIndexCourseType', params)
     }
 }

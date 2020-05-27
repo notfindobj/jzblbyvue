@@ -13,7 +13,7 @@
             <p class="panl-content-title">{{coursePanl.CourseName}}</p>
             <div class="panl-content-author">
                 <span class="panl-content-author-lf">
-                    已学习 <span>1</span>/10节课程
+                    已学习 <span>1</span>/10节课程课程软件
                 </span>
                 <span>继续学习</span>
             </div>
@@ -36,6 +36,9 @@ export default {
         margin-top: 15px;
         background: #fff;
         width: 280px;
+        &:active {
+            border: 1px solid red;
+        }
         &-tit {
             height: 200px;
             width: 280px;

@@ -20,10 +20,6 @@ export const PublishEvaluation = async (params) => {
 export const getCourseEvaluation = async (params) => {
     return await request.post('Course/GetCourseEvaluation', params)
 }
-// 获取首页课程分类
-export const getHomeCourseType = async (params) => {
-    return await request.get('CourseIndex/GetIndexCourseType', params)
-}
 // 获取推荐
 export const getHomeSelectCourse = async (params) => {
     return await request.get('CourseIndex/BySelectRecommend', params)
@@ -42,5 +38,25 @@ export const getCourseOrder = async (params) => {
 }
 // 获取课程订单
 export const getStudyCourseList = async (params) => {
-    return await request.get('CourseLearn/GetCourseEvaluation', params)
+    return await request.get('CourseLearn/GetMyLearnCourse', params)
+}
+// 获取课程订单
+export const getMyEvaluation = async (params) => {
+    return await request.get('Course/GetMyEvaluation', params)
+}
+// 提交课程大纲
+export const addCourseOutline = async (params) => {
+    return await request.post('Course/PostCourseOutline', params)
+}
+// 提交课程数据
+export const addCourseData = async (params) => {
+    return await request.post('Course/PostCourseData', params)
+}
+// 删除课程数据
+export const delCourseData = async (params) => {
+    return await request.post('Course/DeleteCourse', params)
+}
+// 删除课程大纲
+export const delCourseOutline = async (params) => {
+    return await request.post('Course/DeleteCourseOutline', params)
 }

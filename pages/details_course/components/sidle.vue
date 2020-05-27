@@ -13,12 +13,14 @@
                     <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.ChildNode" :key="ins">
                         <dd class="sile-nav-dl-dd">
                             <div class="sile-nav-dl-dd-tit">
-                                <i class="icon iconfont icon-add1"></i> 
+                                <i class="icon iconfont icon-shipin"></i> 
                                 <span>{{`${index+1}-${ins+1} ${item.Name}`}} </span>
                                 <span class="sile-nav-dl-dd-tit-free" v-if="item.IsFree">免费</span>
                             </div>
                             <div class="sile-nav-dl-dd-sub">
-                                <span class="hover-btn">开始学习</span>
+                                <nuxt-link :to="`/details_course/${item.CourseID}?id=${LecturerId}`">
+                                    <span class="hover-btn">开始学习</span>
+                                </nuxt-link>
                                 <span class="duration">{{item.Duration}}</span>
                             </div>
                         </dd>
@@ -31,7 +33,12 @@
 <script>
 import Bus from "../../../plugins/untils/Bus"
 export default {
+    
     props: {
+        LecturerId: {
+            type: String,
+            default: ""
+        },
         crouseList: {
             type: Object,
             default: ()=> {return {OutlineDesc: "", Courselist: []}}

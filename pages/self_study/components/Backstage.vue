@@ -5,41 +5,83 @@
                 讲师后台管理
             </span>
         </div>
-        <div>
-            <span>新建课程</span>
-            <span>修改课程</span>
-            <span>上传视频</span>
-            <span>删除章节</span>
+        <div  class="sys-nav">
+            <span>
+                <nuxt-link to="/self_study/new_study?type=1">新建课程</nuxt-link>
+            </span>
+            <span><nuxt-link to="/self_study/new_study?type=2">编辑课程</nuxt-link></span>
+            <span @click="delCourse">删除课程</span>
         </div>
         <div>
-            <Panel :coursePanl="panel" />
+            <template v-for="(item, index) in courseList" >
+                <backPanl :class="courseIndex === index ? 'active' :'unactive'" @click.native="clcikCourse(index, item)" :key="index" :coursePanl="item" />
+            </template>
         </div>
     </div>
 </template>
 <script>
-import Panel from "./Panel"
+import backPanl from "./backPanl"
+import { mapState} from 'vuex'
+import {delCourseData} from "../../../service/course"
 export default {
     components: {
-        Panel,
+        backPanl,
     },
     data () {
         return {
-            panel: {
-                "CourseID": "bd763b7e-faa6-4fa7-b6d2-9a28983d5b31",
-                "CourseName": "33333333333333333333",
-                "FirstImg": "https://img.3d66.com/soft/2020/20200413/14717ef5353853638a712330640ed667.jpg",
-                "ClassHour": 3,
-                "Level": "初级",
-                "Number": 0,
-                "CreateUserId": "94749b37-12ac-4651-9a85-86b03a475c3d",
-                "NickName": "未知讲师",
-                "HeadIcon": "http://www.pic1.jzbl.com/buildingcircle/94749b37-12ac-4651-9a85-86b03a475c3d/2020-04-30/i/1588212166376909.jpg"
-            }
+            courseList: [],
+            courseIndex: null
         }
+    },
+    computed: {
+        ...mapState({
+            auth: state => state.overas.auth,
+        }),
+    },
+    created () {
+        this.getLecturer()
+    },
+    methods: {
+        clcikCourse (index, row) {
+            localStorage.setItem('courseIndex', JSON.stringify(row))
+            this.courseIndex = index;
+        },
+        async getLecturer () {
+            let q = {
+                LecturerId: this.auth.UserId
+            };
+            let msg = await this.$store.dispatch('getLecturerDetail', q);
+            if (msg) {
+                this.courseList= msg.courseList;
+            }
+        },
+        delCourse () {
+            if (this.courseIndex !== null) {
+                let row = JSON.parse(localStorage.getItem('courseIndex'))
+                let q = {
+                    CourseID: row.CourseID
+                }
+                delCourseData(q).then(res => {
+                    if (res) {
+                        this.getLecturer()
+                        this.$Message.success("视频已删除！")
+                    }
+                }).catch(err => {})
+            } else {
+                this.$Message.warning("请先选择要删除的视频")
+            }
+            
+        },
     }
 }
 </script>
 <style lang="less" scoped>
+.active {
+    border: 1px solid #1bbc9b;
+}
+.unactive {
+    border: 1px solid transparent;
+}
 .sys {
     font-size: 14px;
     &-title {
@@ -54,6 +96,25 @@ export default {
             color: #fff;
             margin-bottom: -1px;
             background-color: #3bc66f;
+        }
+    }
+    &-nav {
+        line-height: 30px;
+        margin-top: 10px;
+        &:last-child {
+            padding-left: 0;
+        }
+        span {
+            padding: 5px 10px;
+            cursor: pointer;
+            &:hover {
+                color: #3bc66f;
+            }
+            a{
+                &:hover {
+                    color: #3bc66f;
+                }
+            }
         }
     }
 }

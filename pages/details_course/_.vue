@@ -8,8 +8,9 @@
         </Breadcrumb>
         <div class="details-titile-video" >
             <div class="details-titile-video-box">
-                <div class="video-md">
-                </div>
+                <nuxt-link :to="`/details_course/${courseDet.CourseID}?id=${courseDet.LecturerId}`">
+                    <div class="video-md"></div>
+                </nuxt-link>
                 <courseVideo :video="courseDet" width="800"/>
             </div>
             <div v-if="courseDet.IsBuy === 0" class="info">
@@ -58,7 +59,7 @@
                 <div class="contents" v-html="courseDet.Contents"></div>
             </div>
             <div v-show="slideIndex === 1">
-                <sidle :crouseList="course"/>
+                <sidle :crouseList="course" :LecturerId="courseDet.LecturerId"/>
             </div>
             <!-- <div v-show="slideIndex === 2">
                 学习资料
@@ -75,16 +76,20 @@
                </h2>
             </div>
             <div class="details-course-lr-sub">
-                <span>
-                    <img :src="lecturerInfo.HeadIcon" :alt="lecturerInfo.FullName">
-                </span>
+                <nuxt-link :to="`/teacher/${lecturerInfo.UserId}`">
+                    <span>
+                        <img :src="lecturerInfo.HeadIcon" :alt="lecturerInfo.FullName">
+                    </span>
+                </nuxt-link>
                 <p class="details-course-lr-sub-name">{{lecturerInfo.FullName}} </p>
                 <p class="details-course-lr-sub-subs">{{lecturerInfo.Description}}</p>
             </div>
             <div class="details-course-lr-other">
                 <div class="details-course-lr-other-tit">
                     <span>老师其他课程</span>
-                    <span>更多</span>
+                    <nuxt-link :to="`/teacher/${lecturerInfo.UserId}`">
+                        <span>更多</span>
+                    </nuxt-link>
                 </div>
                 <ul class="details-course-lr-other-item">
                     <template v-if="lecturerList && lecturerList.length > 0" >
@@ -109,7 +114,11 @@
                     <span>更多></span>
                 </div>
                 <ul class="details-course-lr-more-item">
-                    <li v-for="(items, index) in samecourseList" :key="index">{{items.CourseName}}</li>
+                    <template v-for="(items, index) in samecourseList">
+                        <nuxt-link to="/all_course" :key="index">
+                            <li>{{items.CourseName}}</li>
+                        </nuxt-link>
+                    </template>
                 </ul>
             </div>
         </div>
@@ -498,5 +507,7 @@ export default {
     left: 0;
     right: 0;
     bottom: 0;
+    z-index: 99;
+    cursor: pointer;
 }
 </style>

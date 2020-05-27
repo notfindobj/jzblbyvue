@@ -34,11 +34,19 @@ export default {
     },
     mounted() {
         let taht = this
-        if (localStorage.getItem("field") === "") {
-            this.selectField = []
-        } else {
-            this.selectField = localStorage.getItem("field").split(",")
-        }
+        this.$nextTick(function () {
+            if (!localStorage.getItem("field")) {
+                let fl = []
+                taht.field.forEach((ele, index) => {
+                    if (index < 4) {
+                        fl.push(ele.typeId)
+                    }
+                })
+                taht.selectField = fl
+            } else {
+                taht.selectField = localStorage.getItem("field").split(",")
+            }
+        })
         document.addEventListener('click',e => {
             if(this.$refs.groupModal && !this.$refs.groupModal.contains(e.target)){
                 this.$emit("groupModal")
@@ -64,7 +72,6 @@ export default {
             } else {
                 this.selectField.splice(index, 1)
             }
-            
             localStorage.setItem("field", this.selectField)
         },
         closeModal () {

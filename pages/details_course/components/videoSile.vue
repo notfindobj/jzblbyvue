@@ -14,7 +14,7 @@
                     <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.ChildNode" :key="ins">
                         <dd class="sile-nav-dl-dd">
                             <div class="sile-nav-dl-dd-tit" @click="playVideo(item)">
-                                <i class="icon iconfont icon-add1"></i> 
+                                <i class="icon iconfont icon-shipin"></i> 
                                 <!-- ${index+1}-${ins+1}  -->
                                 <span>{{`${item.Name}`}} </span>
                             </div>

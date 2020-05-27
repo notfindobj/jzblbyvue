@@ -242,7 +242,7 @@ export default {
             .nav-list {
                 display: flex;
                 align-items: center;
-                font-size: 18px;
+                font-size: 17px;
                 a {
                     display: inline-block;
                     height: 60px;

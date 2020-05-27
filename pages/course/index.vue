@@ -145,7 +145,6 @@
                 <div class="swiper-button-next"></div>
             </div>
             <div >
-
             </div>
         </div>
         <interestPanel v-if="isPanel" @closeModal="closeModal" :field="couseList" />
@@ -174,12 +173,13 @@ export default {
     },
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
         let msg = await store.dispatch('getSlid');
+        let list = await store.dispatch('getHomeCourseType');
         return {
-            slidList: msg
+            slidList: msg,
+            couseList: list,
         }
     },
     created () {
-        this.getHomeType()
         this.getNewCourse()
     },
     mounted () {
@@ -224,14 +224,6 @@ export default {
                     that.latestCourses = res.courseList
                 }
             }).catch(err =>{})
-        },
-        getHomeType () {
-            let that = this
-            getHomeCourseType().then(res => {
-                if (res) {
-                    that.couseList = res
-                }
-            }).catch(err => {})
         },
         initSwiper () {
             let _this = this
@@ -351,8 +343,13 @@ export default {
         margin-bottom: 20px;
         &-boby {
             display: flex;
-            justify-content: space-between;
             flex-wrap: wrap;
+            >div   {
+                margin-right: 26.6px;
+                &:nth-child(4n) {
+                    margin-right: 0;
+                }
+            }
         }
         &-tit {
             display: flex;
