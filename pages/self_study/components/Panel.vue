@@ -3,7 +3,7 @@
         <div class="panl-tit">
             <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
                 <img width="100%" :src="coursePanl.FirstImg" alt="">
-                <span class="panl-tit-label">共{{coursePanl.ClassHour}}节课</span>
+                <span class="panl-tit-label">共{{coursePanl.TotalCourse}}节课</span>
                 <div class="panl-tit-hover">
                     <span class="panl-tit-hover-play"></span>
                 </div>
@@ -13,7 +13,7 @@
             <p class="panl-content-title">{{coursePanl.CourseName}}</p>
             <div class="panl-content-author">
                 <span class="panl-content-author-lf">
-                    已学习 <span>1</span>/10节课程课程软件
+                    已学习 <span>{{coursePanl.LearnedCourse}}</span>/{{coursePanl.TotalCourse}}节课程课程软件
                 </span>
                 <span>继续学习</span>
             </div>
@@ -36,6 +36,10 @@ export default {
         margin-top: 15px;
         background: #fff;
         width: 280px;
+        margin-right: 50px;
+        &:nth-child(3n) {
+            margin-right:0;
+        }
         &:active {
             border: 1px solid red;
         }

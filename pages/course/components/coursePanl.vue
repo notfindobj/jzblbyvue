@@ -1,8 +1,9 @@
 <template >
    <div class="panl">
         <div class="panl-tit">
+            <!-- ?x-oss-process=image/crop,center,center,w_100,h_100 -->
             <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
-                <img width="100%" :src="coursePanl.FirstImg" alt="">
+                <img width="100%" :src="`${coursePanl.FirstImg}`" alt="">
                 <span class="panl-tit-label">共{{coursePanl.ClassHour}}节课</span>
                 <div class="panl-tit-hover">
                     <span class="panl-tit-hover-play"></span>

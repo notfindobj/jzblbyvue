@@ -32,7 +32,7 @@ export default {
             selectField: []
         }
     },
-    mounted() {
+    created () {
         let taht = this
         this.$nextTick(function () {
             if (!localStorage.getItem("field")) {
@@ -42,11 +42,15 @@ export default {
                         fl.push(ele.typeId)
                     }
                 })
+                localStorage.setItem('field', fl)
                 taht.selectField = fl
             } else {
                 taht.selectField = localStorage.getItem("field").split(",")
             }
         })
+    },
+    mounted() {
+        let taht = this
         document.addEventListener('click',e => {
             if(this.$refs.groupModal && !this.$refs.groupModal.contains(e.target)){
                 this.$emit("groupModal")

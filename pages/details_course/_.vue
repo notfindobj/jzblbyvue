@@ -56,7 +56,7 @@
                 <div class="details-course-lf-nav-bar" :style="`left: ${slideLeft}px`"></div>
             </ul>
             <div v-show="slideIndex === 0" >
-                <div class="contents" v-html="courseDet.Contents"></div>
+                <div class="details-contents" v-html="courseDet.Contents"></div>
             </div>
             <div v-show="slideIndex === 1">
                 <sidle :crouseList="course" :LecturerId="courseDet.LecturerId"/>
@@ -288,9 +288,12 @@ export default {
         }
     }
 }
-.contents {
+.details-contents {
     font-size: 14px;
     margin-top: 25px;
+    img {
+        width: 100%;
+    }
 }
 .details {
     &-titile {

@@ -6,17 +6,16 @@
                 <span class="sile-sub">{{crouseList.OutlineDesc}}</span>
             </div>
             <ul class="sile-nav">
-                <li class="sile-nav-ext" v-for="(items, index) in crouseList.Courselist" :key="index">
+                <li class="sile-nav-ext" v-for="(items, index) in crouseList.Courselist" :key="index" v-if="items.IsApproved === 1">
                     <div :class="items.fold ? `sile-nav-ext-box sile-nav-action` :'sile-nav-ext-box '"  @click="items.fold = !items.fold">
                         <span class="sile-nav-ext-box-title">{{items.Name}} </span>
                         <i :class="`icon iconfont ${items.fold ? 'icon-jiantoushang' : 'icon-jiantouxia'} `"></i> 
                     </div>
-                    <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.ChildNode" :key="ins">
+                    <dl v-show="items.fold" class="sile-nav-dl" v-for="(item, ins) in items.ChildNode" v-if="item.IsApproved === 1" :key="ins">
                         <dd class="sile-nav-dl-dd">
                             <div class="sile-nav-dl-dd-tit" @click="playVideo(item)">
                                 <i class="icon iconfont icon-shipin"></i> 
-                                <!-- ${index+1}-${ins+1}  -->
-                                <span>{{`${item.Name}`}} </span>
+                                <span>{{`${index+1}-${ins+1}${item.Name}`}} </span>
                             </div>
                             <div class="sile-nav-dl-dd-sub">
                                 <span>{{item.Duration}}</span>

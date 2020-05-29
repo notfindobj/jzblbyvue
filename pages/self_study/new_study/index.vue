@@ -53,7 +53,23 @@
         </div>
         <div class="new-from">
             <label>课程介绍</label>
-            <textarea type="text" v-model="course.Contents" placeholder="课程介绍"></textarea>
+            <div class="ditor">
+                <div ref="toolbar" class="editor-toolbar">
+                    <div class="w-e-menu" >
+                        <ossUp 
+                        accept="image/*"
+                        :fileType="1"
+                        @uploadSuccess="editorSuccess"
+                        class="menutupian">
+                            <i class="icon iconfont icon-tupian"></i>
+                        </ossUp>
+                    </div>
+                </div>
+                <div class="jzeditor">
+                    <div class="text" ref="editor"></div>
+                </div>
+            </div>
+            <!-- <textarea type="text" v-model="course.Contents" placeholder="课程介绍"></textarea> -->
         </div>
         <div class="new-from">
             <span class="new-from-btn" @click="setCourseData()">下一步</span>
@@ -159,6 +175,8 @@
 <script>
 import Modal from "../components/Modal"
 import ossUp from "../../../components/ossUp/ossUp"
+import { sinaIcon} from '../../../components/blEditor/Emoticon'
+import {getPostPolicy} from '../../../service/clientAPI'
 import {addCourseOutline, addCourseData,getHomeCourseType, getCourseDetail, delCourseOutline} from "../../../service/course"
 export default {
     layout: "course",
@@ -213,7 +231,8 @@ export default {
                 "ChildNode": []
             },
             isCourse: false,
-            type: "1"
+            type: "1",
+            editor: null
         }
     },
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
@@ -242,14 +261,60 @@ export default {
             this.getOutlineList()
         }
     },
+    mounted () {
+        if (this.type === '1') {
+            this.initEditor()
+        }
+        
+    },
     methods: {
+        initEditor () {
+            let _this = this;
+            const Editor = process.browser ? require('wangeditor') : undefined;
+            _this.editor = new Editor(this.$refs.toolbar, this.$refs.editor);
+            _this.editor.customConfig.menus = [
+                'head', // 标题
+                'bold', // 粗体
+                'italic', // 斜体
+                'underline', // 下划线
+                'foreColor', // 文字颜色
+                'backColor', // 背景颜色
+                'list', // 列表
+                'justify', // 对齐方式
+                'quote', // 引用
+                'emoticon', // 表情
+                'undo', // 撤销
+                'redo', // 重复
+            ],
+            _this.editor.customConfig.zIndex = 400
+            // 表情面板可以有多个 tab ，因此要配置成一个数组。数组每个元素代表一个 tab 的配置
+            _this.editor.customConfig.emotions = [
+                {
+                    // tab 的标题
+                    title: '热门',
+                    // type -> 'emoji' / 'image'
+                    type: 'image',
+                    // content -> 数组
+                    content: sinaIcon
+                },
+                
+            ]
+            _this.editor.customConfig.onchange = function (html) {
+                let placeholderValue = _this.editor.txt.html();
+                _this.course.Contents = placeholderValue
+            }
+            _this.editor.create();
+        },
+        // 编辑器上传图片
+        editorSuccess (res) {
+            let img =  `<img src="${res.smallImgUrl}" style="width: 100%;"></img> <br/>`
+            this.editor.txt.html(img)
+            this.course.Contents += img
+        },
         async getOutlineList () {
             let row = JSON.parse(localStorage.getItem('courseIndex'))
             let res = await this.$store.dispatch('getCourseOutline', {courseId: row.CourseID});
             this.outlineData.CourseID = res.CourseID
-            res.Courselist.forEach(ele => {
-                ele.outlineId = ele.ID 
-            })
             this.outlineData.outlineDatas = res.Courselist
         },
         openChapter (type= 0, row) {
@@ -348,7 +413,7 @@ export default {
         },
         delCouseline (row) {
             let q = {
-                OutlineID: row.ID,
+                OutlineID: row.outlineId,
                 CourseID: row.CourseID
             }
             delCourseOutline(q).then(res => {
@@ -383,6 +448,31 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.menutupian{
+    /deep/.ivu-upload-drag {
+        border: none;
+        &:hover {
+            border: none;
+        }
+    }
+}
+.ditor {
+    border: 1px solid #eee;
+    .editor-toolbar {
+        border: 1px solid #eee;
+    }
+    .jzeditor{
+        min-height: 300px;
+        width: 600px;
+        overflow-x: hidden;
+    }
+    /deep/.w-e-text {
+        overflow-y:auto;
+        img {
+            width: 100%;
+        }
+    }
+}
 .upload-component {
     position: relative;
     height: 60px;

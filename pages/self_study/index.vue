@@ -29,6 +29,9 @@ import MyStudy from "./components/MyStudy"
 import MyComment from "./components/MyComment"
 export default {
     layout: "course",
+    head: {
+        title: '建筑学院',
+    },
     components:{
         Backstage,
         CourseOrder,
@@ -42,8 +45,14 @@ export default {
     },
     methods: {
         clickTab () {
-            let index = Number(event.target.attributes["data-index"].value);
-            this.indexStudy = index;
+            try {
+                let dataindex = event.target.attributes["data-index"]
+                let index = dataindex.value;
+                this.indexStudy = Number(index);
+            } catch (error) {
+                this.indexStudy = 0;
+            }
+            
         }
     }
 }
@@ -63,6 +72,7 @@ export default {
             width: 980px;
             background: #fff;
             padding: 10px 15px;
+            min-height: 550px;
         }
     }
     .header{
@@ -100,8 +110,12 @@ export default {
             margin: 10px 0;
             font-size: 16px;
             line-height: 30px;
+            &:hover {
+                color: #3bc66f;
+            }
         }
         li.active {
+            color: #3bc66f;
             &::before {
                 content: "";
                 display: inline-block;

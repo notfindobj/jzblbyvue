@@ -1,6 +1,6 @@
 <template>
     <div>
-        <video ref="courseVideo" :poster="videoDetail.VideoImg" class="vjs-matrix video-js vjs-fluid vjs-big-play-centered">
+        <video ref="courseVideo" :poster="videoDetail.VideoImg+`?x-oss-process=video/snapshot,t_2000,f_jpg`" class="vjs-matrix video-js vjs-fluid vjs-big-play-centered">
             <source :src="videoDetail.VideoUrl" type="video/mp4" >
         </video>
     </div>

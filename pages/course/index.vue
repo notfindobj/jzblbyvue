@@ -158,6 +158,9 @@ import interestPanel from "./components/interestPanel"
 import {getHomeCourseType, getCourseList, getHomeSelectCourse} from "../../service/course"
 export default {
     layout: "course",
+    head: {
+        title: '建筑学院',
+    },
     components:{
         coursePanl,
         courseWrap,
@@ -165,7 +168,7 @@ export default {
     },
     data () {
         return {
-            isPanel: true,
+            isPanel: false,
             couseList: [],
             latestCourses: [],
             quoteCourses: [],
@@ -189,22 +192,14 @@ export default {
         this.initlecturer()
     },
     methods: {
-        closeModal(arr = []) {
-            let taht = this
-            if (localStorage.getItem("field") === "") {
-                arr = []
-            } else {
-                arr = localStorage.getItem("field")
-            }
-            if (arr !== '') {
-                this.isPanel = !this.isPanel
-            }
+        closeModal() {
             let q ={
-                typeIds: arr,
+                typeIds: localStorage.getItem("field"),
             }
             getHomeSelectCourse(q).then(res => {
                 if (res) {
-                    this.quoteCourses = res.RecommendDatas
+                    this.quoteCourses = res.RecommendDatas;
+                    this.isPanel = false
                 }
             }).catch(err => {})
         },

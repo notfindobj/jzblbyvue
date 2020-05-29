@@ -45,7 +45,7 @@
                         <Dropdown>
                             <a href="javascript:void(0)">
                                 <Badge :show-zero="allMessage ? true : false" dot :count="allMessage">
-                                   <span @click="enterCenter">{{auth.NickName}}</span>
+                                   <span @click="enterCenter" class="maxName">{{auth.NickName}}</span>
                                     <Icon type="ios-arrow-down"></Icon>
                                 </Badge >
                             </a>
@@ -210,6 +210,13 @@ export default {
     }
     .user-info {
         display: flex;
+    }
+    .maxName {
+        max-width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        display: inline-block;
     }
     .header {
         height: 60px;
