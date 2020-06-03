@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="def-screen">
-            <label class="def-screen-name">筛选：</label>
+            <label class="def-screen-name">排序：</label>
             <ul class="def-screen-sub">
                 <li :class="q.sort === 0 ? 'active' : ''"  @click="searchItem(0)">综合</li>
                 <li :class="q.sort === 1 ? 'active' : ''"  @click="searchItem(1)">热门</li>
@@ -61,8 +61,8 @@ export default {
     created () {
         let query = this.$route.query
         if (query) {
-            this.q.parentId = query.f
-            this.q.typeId = query.c
+            this.q.parentId = query.f || "";
+            this.q.typeId = query.c || "";
         }
     },
     mounted() {

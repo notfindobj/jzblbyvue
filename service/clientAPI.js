@@ -420,3 +420,7 @@ export const getinishedOrders = async params => {
 export const getUserOrder = async params => {
   return await request.post(`OrderReceiving/GetUserOrderReceiving`, params)
 }
+// 删除已发布的订单数据
+export const delOrder = async params => {
+  return await request.post(`OrderReceiving/DeleteUserOrderReceiving`, params)
+}

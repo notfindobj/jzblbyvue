@@ -9,7 +9,7 @@
 <script>
 import Title from './components/title'
 import publicTable from './components/publicTable'
-import {getUserOrder} from '../../service/clientAPI'
+import {getUserOrder, delOrder} from '../../service/clientAPI'
 import {analogJump} from '../../plugins/untils/public'
 export default {
     scrollToTop: true,
@@ -21,10 +21,9 @@ export default {
         return {
             columns: [
                 {
-                    cut: 'text',
+                    cut: 'keys',
                     title: "地点",
-                    key: 'CityName',
-                    width: 100
+                    key: 'ProvinceName,CityName',
                 },
                 {
                     cut: 'text',
@@ -59,9 +58,9 @@ export default {
                     cut: 'btn',
                     title: '操作',
                     key: 'address',
-                    width: 105,
                     state: [
                         {text: '查看详情', events: 'viewOrder', style: 'info'}, 
+                        {text: '删除订单', events: 'remOrder', style: 'error'}, 
                     ]
                 }
             ],
@@ -84,6 +83,22 @@ export default {
                 this.orderList = msg.datalist;
                 this.total = msg.paginationData.records
             }
+        },
+        remOrder (row) {
+            this.$Modal.confirm({
+                title: '删除订单',
+                content: '<p>确定删除订单!</p>',
+                onOk: async () => {
+                    let msg = await delOrder({Ids: row.ID});
+                    if (msg) { 
+                        this.$Message.success("订单已删除！")
+                        this.getMsgList()
+                    }
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
         },
         viewTribe (row) {
             let routeData = this.$router.resolve({ name: 'HeAndITribal-id', query: {id:row.OrderUserId} });

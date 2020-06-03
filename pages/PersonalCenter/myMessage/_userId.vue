@@ -501,7 +501,7 @@
             async delUserLabel (e, name) {
                 this.$Modal.confirm({
                     title: '删除标签',
-                    content: '<p>请否确定删除标签!</p>',
+                    content: '<p>确定删除标签!</p>',
                     onOk: async () => {
                         let msg = await delUserExpertise({LabelId: name});
                         if (msg) { 

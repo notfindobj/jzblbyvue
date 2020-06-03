@@ -23,5 +23,9 @@ export const serverCourse = {
     // 获取首页课程分类
     async getHomeCourseType({ commit, state }, params) {
       return await request.get('CourseIndex/GetIndexCourseType', params)
+    },
+    // 获取推荐讲师列表
+    async GetLecturerList({ commit, state }, params) {
+      return await request.get('CourseIndex/GetLecturerList', params)
     }
 }

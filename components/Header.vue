@@ -216,7 +216,6 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
-        display: inline-block;
     }
     .header {
         height: 60px;

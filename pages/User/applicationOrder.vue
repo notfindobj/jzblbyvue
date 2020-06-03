@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Title title="我收到的预约" :bottomLine="false"/>
+        <Title title="我的接单申请" :bottomLine="false"/>
         <div>
             <publicTable :columns="columns" :columnsData="orderList" :total="total" :pageSize="rows" @pageChange="getMsgList"/>
         </div>
@@ -27,7 +27,7 @@ export default {
                 },
                 {
                     cut: 'text',
-                    title: '申请人',
+                    title: '创建人',
                     width: 100,
                     key: 'OrderUserName'
                 },

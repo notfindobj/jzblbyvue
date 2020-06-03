@@ -12,7 +12,7 @@
             </ul>
             <ul class="course-top-lr">
                 <li><nuxt-link to="/HeAndITribal"> 我的部落</nuxt-link></li>
-                <li>账号</li>
+                <li><nuxt-link to="/User/overview"> 账号</nuxt-link></li>
             </ul>
         </div>
         <div class="course-buttom">

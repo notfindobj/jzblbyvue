@@ -1,5 +1,8 @@
 <template>
     <div class="order">
+        <div class="order-text">
+            以下为测试数据
+        </div>
         <div class="order-title">
             <div class="order-title-item" v-if="searchData.length > 0">
                 <label class="order-title-item-left">选择属性：</label>
@@ -66,8 +69,6 @@
             <nuxt-link to="activity" target="_blank">
                 <div class="order-list-right"></div>
             </nuxt-link>
-           
-            
         </div>
         <Modal
             title="温馨提示"
@@ -343,6 +344,12 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .order-text {
+        text-align: center;
+        font-size: 25px;
+        margin: 15px 0;
+        color: #ff3c00;
+    }
     .bgColor {
         color: #ff3c00;
     }

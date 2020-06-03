@@ -123,7 +123,6 @@ export default {
         },
         // 删除标签
         async delUserLabel (e, name) {
-            console.log(name)
             this.$Modal.confirm({
                 title: '删除标签',
                 content: '<p>请否确定删除标签!</p>',

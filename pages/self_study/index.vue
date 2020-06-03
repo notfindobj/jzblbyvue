@@ -3,9 +3,9 @@
         <div class="study-lf">
             <div class="header">
                 <span class="header-img">
-                    <img src="https://thirdwx.qlogo.cn/mmopen/UzDKzRS1VCa9KTO83t1tmVNeiadrb2ibNvS8A57ibvxmQ4O5w0Sic7IYHY8KL9UD9pPrxsPKrcUrBQmibudxfs9h4nyCpnyLxibMg5/132" alt="">
+                    <img :src="userInfo.HeadIcon" alt="">
                 </span>
-                <p class="header-name">初九</p>
+                <p class="header-name">{{userInfo.NickName}}</p>
             </div>
             <ul class="nav" @click="clickTab()">
                 <li data-index="0" :class="indexStudy === 0 ? 'active' : ''" >我的学习</li>
@@ -18,7 +18,12 @@
             <MyStudy v-if="indexStudy === 0" />
             <MyComment v-if="indexStudy === 1"/>
             <CourseOrder v-if="indexStudy === 2"/>
-            <Backstage v-if="indexStudy === 3"/>
+            <template v-if="indexStudy === 3">
+                <div v-if="!userInfo.LecturerId">
+                    您还不是讲师，不能操作此页面
+                </div>
+                <Backstage v-if="indexStudy === 3"/>
+            </template>
         </div>
     </div>
 </template>
@@ -27,6 +32,7 @@ import Backstage from "./components/Backstage"
 import CourseOrder from "./components/CourseOrder"
 import MyStudy from "./components/MyStudy"
 import MyComment from "./components/MyComment"
+import { mapState } from 'vuex'
 export default {
     layout: "course",
     head: {
@@ -37,6 +43,11 @@ export default {
         CourseOrder,
         MyStudy,
         MyComment
+    },
+    computed: {
+        ...mapState({
+            userInfo: state => state.overas.auth ? state.overas.auth: ""
+        }),
     },
     data () {
         return {

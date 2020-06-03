@@ -35,12 +35,18 @@ export default {
                     cut: 'text',
                     title: '联系号码',
                     key: 'OrderPhone',
-                    width: 110
+                    width: 115
                 },
                 {
                     cut: 'time',
                     title: '申请时间',
                     key: 'CreateDate' ,
+                    width: 110
+                },
+                {
+                    cut: 'text',
+                    title: '备注',
+                    key: 'Remark' ,
                     width: 110
                 },
                 {

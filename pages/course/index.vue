@@ -120,26 +120,13 @@
             </div>
             <div class="lecturer">
                 <div class="swiper-wrapper">
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
+                    <template v-for="(item, index) in lecturerList">
+                        <div class="swiper-slide" :key="index">
+                            <div class="swiper-slide-item" >
+                                <img :src="item.HeadIcon" alt="">
+                            </div>
                         </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
-                        </div>
-                    </div>
-                    <div class="swiper-slide">
-                        <div class="swiper-slide-item" >
-                            <img src="https://img.3d66.com/focus/2020/20200430/e6027b4130fdfdcb3a9993e1cf62a9f0.jpg" alt="">
-                        </div>
-                    </div>
+                    </template>
                 </div>
                 <div class="swiper-button-prev"></div>
                 <div class="swiper-button-next"></div>
@@ -177,9 +164,11 @@ export default {
     async asyncData({isDev, route, store, env, params, query, req, res, redirect, error}) {
         let msg = await store.dispatch('getSlid');
         let list = await store.dispatch('getHomeCourseType');
+        let lect = await store.dispatch('GetLecturerList');
         return {
             slidList: msg,
             couseList: list,
+            lecturerList: lect
         }
     },
     created () {

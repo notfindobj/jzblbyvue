@@ -39,7 +39,7 @@
                     <span @click="goDetails(courseDet)">免费试看</span>
                     <span @click="isBuy = true">购买课程</span>
                 </div>
-                <span class="info-des">购买后，请加小溜qq:1078523032,讲师提供售后服务哦</span>
+                <span class="info-des">购买后，请加qq:773299364,讲师提供售后服务哦</span>
             </div>
             <template v-if="courseDet.IsBuy === 1">
                 <videoSile/>

@@ -44,7 +44,7 @@ export default {
                     width: 240,
                     state: [
                         {text: '查看申请人部落', events: 'viewTribe', style: 'info'}, 
-                        {text: '删除', events: 'remove', style: 'error'}, 
+                        {text: '拒绝', events: 'remove', style: 'error'}, 
                         {cut: 'state', key: 'Status', events: 'setDefault', state: [{label: '合作', value: 0, style: 'info'}, {label: '已同意', value: 1, style: 'success'}, {label: '已回绝', value: 2, style: 'text'}]}
                     ]
                 }
@@ -58,6 +58,38 @@ export default {
         this.getMsgList()
     },
     methods: {
+        remove (row) {
+            let value =""
+            this.$Modal.confirm({
+                render: (h) => {
+                    return h('Input', {
+                        props: {
+                            value: value,
+                            autofocus: true,
+                            placeholder: '请输入拒绝原因'
+                        },
+                        on: {
+                            input: (val) => {
+                                value = val;
+                            }
+                        },
+                        
+                    })
+                },
+                onOk: async () => {
+                    let query = {
+                        Id: row.ID,
+                        OpType: 2,
+                        Remark: value
+                    }
+                    let msg = await OrderReceiving(query);
+                    if (msg) {
+                        this.$Message.info('订单已拒绝！');
+                        this.getMsgList()
+                    }
+                }
+            })
+        },
         async getMsgList (val = 1) {
             let query = {
                 OrderStatus: 0,
