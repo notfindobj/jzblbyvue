@@ -52,7 +52,7 @@ export default {
     methods: {
         playVideo (row) {
             let q = {
-                ID: row.ID,
+                ID: row.outlineId,
                 IsFree: row.IsFree,
                 IsBuy: row.IsBuy,
                 VideoImg: row.FirstImg,

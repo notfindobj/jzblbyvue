@@ -1,7 +1,7 @@
 <template>
     <div class="lecturer">
         <h1>建筑学院讲师入驻表</h1>
-        <p class="lecturer-sub">请如实填写如下信息，提交即有机会作为【溜溜自学讲师】，获得高额的课酬。通过审核后，我们将在1-2个工作日内，通过电话或QQ与您联系，届时请保持联系通畅。</p>
+        <p class="lecturer-sub">请如实填写如下信息，提交即有机会作为【建筑学院讲师】，获得高额的课酬。通过审核后，我们将在1-2个工作日内，通过电话或QQ与您联系，届时请保持联系通畅。</p>
         <Form ref="lecturer" :model="lecturer" :rules="ruleLecturer" >
         <FormItem label="姓名" prop="FullName">
             <Input v-model="lecturer.FullName" placeholder="姓名"></Input>

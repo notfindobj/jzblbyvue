@@ -2,10 +2,15 @@
     <div class="study">
         <div class="study-lf">
             <div class="header">
-                <span class="header-img">
-                    <img :src="userInfo.HeadIcon" alt="">
-                </span>
-                <p class="header-name">{{userInfo.NickName}}</p>
+                <div>
+                    <span class="header-img">
+                        <img :src="userInfo.HeadIcon" alt="">
+                    </span>
+                    <p class="header-name">{{userInfo.NickName}}</p>
+                </div>
+                <!-- <div>
+                    asdasdas
+                </div> -->
             </div>
             <ul class="nav" @click="clickTab()">
                 <li data-index="0" :class="indexStudy === 0 ? 'active' : ''" >我的学习</li>
@@ -63,7 +68,6 @@ export default {
             } catch (error) {
                 this.indexStudy = 0;
             }
-            
         }
     }
 }
