@@ -8,8 +8,8 @@
         <ul class="sys-status">
             <li>状态：</li>
             <li :class="query.status === -1 ?'active' :''" @click="getCourseOrderList(-1)">全部</li>
-            <li :class="query.status === 0 ?'active' :''" @click="getCourseOrderList(0)">已完成</li>
-            <li :class="query.status === 1 ?'active' :''" @click="getCourseOrderList(1)">待付款</li>
+            <li :class="query.status === 1 ?'active' :''" @click="getCourseOrderList(1)">已完成</li>
+            <li :class="query.status === 0 ?'active' :''" @click="getCourseOrderList(0)">待付款</li>
             <li :class="query.status === 2 ?'active' :''" @click="getCourseOrderList(2)">已取消</li>
         </ul>
         <div class="sys-content">
@@ -58,7 +58,7 @@ export default {
         getCourseOrderList (type = -1) {
             let that= this
             that.query.status = type
-            getCourseOrder(this.q).then(res => {
+            getCourseOrder(this.query).then(res => {
                 that.OrderList = res.courseOrderList
                 that.page = res.paginationData
             }).catch(err => {})

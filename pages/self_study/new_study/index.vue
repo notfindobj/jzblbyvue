@@ -3,13 +3,12 @@
     <Breadcrumb separator=">" class="box">
         <BreadcrumbItem>当前位置：</BreadcrumbItem>
         <BreadcrumbItem to="/course">我的自学</BreadcrumbItem>
-        <BreadcrumbItem to="/self_study">后台管理</BreadcrumbItem>
+        <BreadcrumbItem to="/self_study/Backstage">后台管理</BreadcrumbItem>
         <BreadcrumbItem>新建课程</BreadcrumbItem>
     </Breadcrumb>
     <div class="new" v-if="type === '1'">
         <div class="new-from">
             <label>课程封面</label>
-            <!-- course.FirstImg -->
             <ossUp 
                 accept="image/*"
                 :fileType="1"

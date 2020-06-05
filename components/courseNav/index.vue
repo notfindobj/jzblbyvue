@@ -37,7 +37,7 @@
                         </div>
                     </li>
                     <li><nuxt-link to="/lecturer">讲师入住</nuxt-link></li>
-                    <li><nuxt-link to="/self_study">我的自学</nuxt-link></li>
+                    <li><nuxt-link to="/self_study/MyStudy">我的自学</nuxt-link></li>
                 </ul>
             </div>
         </div>

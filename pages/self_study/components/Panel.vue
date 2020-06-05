@@ -1,7 +1,7 @@
 <template >
    <div class="panl">
         <div class="panl-tit">
-            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.CreateUserId}`">
+            <nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.LecturerId}`">
                 <img width="100%" :src="coursePanl.FirstImg" alt="">
                 <span class="panl-tit-label">共{{coursePanl.TotalCourse}}节课</span>
                 <div class="panl-tit-hover">
@@ -15,7 +15,7 @@
                 <span class="panl-content-author-lf">
                     已学习 <span>{{coursePanl.LearnedCourse}}</span>/{{coursePanl.TotalCourse}}节课程课程软件
                 </span>
-                <span>继续学习</span>
+                <span><nuxt-link :to="`/details_course/${coursePanl.CourseID}/${coursePanl.LecturerId}`">继续学习 </nuxt-link></span>
             </div>
         </div>
     </div>
@@ -39,9 +39,6 @@ export default {
         margin-right: 50px;
         &:nth-child(3n) {
             margin-right:0;
-        }
-        &:active {
-            border: 1px solid red;
         }
         &-tit {
             height: 200px;
@@ -153,6 +150,9 @@ export default {
                         border-radius: 4px;
                         font-size: 12px;
                         background-color: #3bc66f;
+                        a {
+                            color: #fff;
+                        }
                     }
                 } 
             }

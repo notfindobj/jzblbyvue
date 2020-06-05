@@ -13,41 +13,31 @@
                 </div> -->
             </div>
             <ul class="nav" @click="clickTab()">
-                <li data-index="0" :class="indexStudy === 0 ? 'active' : ''" >我的学习</li>
-                <li data-index="1" :class="indexStudy === 1 ? 'active' : ''">我的评论</li>
-                <li data-index="2" :class="indexStudy === 2 ? 'active' : ''">课程订单</li>
-                <li data-index="3" :class="indexStudy === 3 ? 'active' : ''">后台管理</li>
+                <li :class="$route.name === 'self_study-MyStudy' ? 'active' : ''" >
+                    <nuxt-link to="/self_study/MyStudy">我的学习</nuxt-link>
+                </li>
+                <li :class="$route.name === 'self_study-MyComment' ? 'active' : ''">
+                    <nuxt-link to="/self_study/MyComment">我的评论</nuxt-link>
+                </li>
+                <li :class="$route.name === 'self_study-CourseOrder' ? 'active' : ''">
+                    <nuxt-link to="/self_study/CourseOrder">课程订单</nuxt-link>
+                </li>
+                <li :class="$route.name === 'self_study-Backstage' ? 'active' : ''">
+                    <nuxt-link to="/self_study/Backstage">后台管理</nuxt-link>
+                </li>
             </ul>
         </div>
         <div class="study-lr">
-            <MyStudy v-if="indexStudy === 0" />
-            <MyComment v-if="indexStudy === 1"/>
-            <CourseOrder v-if="indexStudy === 2"/>
-            <template v-if="indexStudy === 3">
-                <div v-if="!userInfo.LecturerId">
-                    您还不是讲师，不能操作此页面
-                </div>
-                <Backstage v-if="indexStudy === 3"/>
-            </template>
+            <nuxt-child />
         </div>
     </div>
 </template>
 <script>
-import Backstage from "./components/Backstage"
-import CourseOrder from "./components/CourseOrder"
-import MyStudy from "./components/MyStudy"
-import MyComment from "./components/MyComment"
 import { mapState } from 'vuex'
 export default {
     layout: "course",
     head: {
         title: '建筑学院',
-    },
-    components:{
-        Backstage,
-        CourseOrder,
-        MyStudy,
-        MyComment
     },
     computed: {
         ...mapState({
@@ -61,6 +51,7 @@ export default {
     },
     methods: {
         clickTab () {
+            console.log(this.$route.name)
             try {
                 let dataindex = event.target.attributes["data-index"]
                 let index = dataindex.value;

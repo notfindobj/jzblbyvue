@@ -115,7 +115,7 @@
         </template>
         <div class="courseitem">
             <div class="courseitem-tit">
-                <h3>溜溜实力讲师</h3>
+                <h3>实力讲师</h3>
                 <span>丰富实战经验的实力讲师，为您传授全面设计方法</span>
             </div>
             <div class="lecturer">

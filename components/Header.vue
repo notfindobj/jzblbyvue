@@ -193,7 +193,7 @@ export default {
                 if (['HeAndITribal-id','Message-customized','Message-comment','Message-inviter',
                 'attention','PersonalCenter-myMessage-userId','PersonalCenter-accountSecurity', 
                 'PersonalCenter-accountBinding', 'PersonalCenter-accountBinding', 'PersonalCenter-records',
-                'PersonalCenter-receivingAddress', 'User-myReport'].includes(this.$route.name)) {
+                'PersonalCenter-receivingAddress', 'User-myReport', "sign"].includes(this.$route.name)) {
                     this.$router.push({name: 'index'})
                 }
                 if (this.$route.name.indexOf('User') !== -1) {

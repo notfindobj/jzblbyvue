@@ -23,7 +23,7 @@
     </div>
 </template>
 <script>
-import Panel from "./Panel"
+import Panel from "../components/Panel"
 import {getStudyCourseList} from "../../../service/course"
 export default {
     components: {

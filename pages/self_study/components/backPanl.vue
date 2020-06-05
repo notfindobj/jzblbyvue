@@ -104,6 +104,7 @@ export default {
         &-content {
             padding: 13px 15px;
             box-sizing: border-box;
+            position: relative;
             &-title {
                 cursor: pointer;
                 max-width: 250px;
