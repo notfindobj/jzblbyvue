@@ -8,7 +8,7 @@
         </Breadcrumb>
         <div class="details-titile-video" >
             <div class="details-titile-video-box">
-                <div class="video-md" v-if="videoDetails.IsFree === 0" >
+                <div class="video-md" v-if="videoDetails.IsFree !== 1" >
                     <div class="tips-buy">
                         <h2>亲，您需要购买才能继续学习喔~</h2>
                         <p class="tips-buy-name">{{courseDet.CourseName}}</p>
@@ -40,7 +40,15 @@
                 学习资料
             </div> -->
             <div v-show="slideIndex === 3">
-                <comment :evaluation="evaluation.evaluationList"/>
+                <template v-if="evaluation && evaluation.evaluationList.length > 0">
+                    <comment :evaluation="evaluation.evaluationList"/>
+                </template>
+                <template>
+                    <div class="empty"> 
+                        <img src="../../assets/images/empty-bg.png" alt="">
+                        <p>暂无评论数据</p>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="details-course-lr">
@@ -176,37 +184,6 @@ export default {
                 VideoUrl: row.VideoUrl,
             }
         },
-        getLecturer () {
-            let q = {
-                courseId: '5df8bd3d-674e-46f0-bfee-a0319cd0b862',
-                outlineId: "",
-                page:1,
-                rows: 4
-            }
-            getLecturerDetail(q).then(res => {
-                console.log(res)
-            }).catch(err =>{})
-        },
-        getCourse () {
-            let q = {
-                courseId: '5df8bd3d-674e-46f0-bfee-a0319cd0b862'
-            }
-            getCourseOutline(q).then(res => {
-                if (res) {
-                    this.course = res
-                }
-            }).catch(err =>{})
-        },
-        getCourseDet () {
-            let q = {
-                courseId: '5df8bd3d-674e-46f0-bfee-a0319cd0b862'
-            }
-            getCourseDetail(q).then(res => {
-                if (res) {
-                    this.courseDet = res
-                }
-            }).catch(err =>{})
-        },
         navSlideBar () {
             if (event.target.localName === "li") {
                 this.slideLeft = event.target.offsetLeft;
@@ -217,6 +194,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.empty {
+    text-align: center;
+    margin: 30px 0;
+    p {
+        color: #999;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+}
 .tips-buy{
     display: inline-block;
     position: absolute;

@@ -144,6 +144,17 @@ export default {
                 &-tit {
                     margin: 5px 0;
                     cursor: pointer;
+                    white-space: nowrap;
+                    display: flex;
+                    align-items: end;
+                    span {
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        white-space: nowrap;
+                        height: 30px;
+                        line-height: 22px;
+                        margin-left: 7px;
+                    }
                     &:hover {
                         color: #1abc9c;
                     }

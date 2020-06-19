@@ -27,5 +27,9 @@ export const serverCourse = {
     // 获取推荐讲师列表
     async GetLecturerList({ commit, state }, params) {
       return await request.get('CourseIndex/GetLecturerList', params)
+    },
+    // 获取采集列表
+    async getPicturelist({ commit, state }, params) {
+      return await request.post('Picture/GetPicturelist', params)
     }
 }

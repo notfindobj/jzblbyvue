@@ -20,10 +20,10 @@
             </nuxt-link>
             <div class="panl-content-author">
                 <nuxt-link :to="`/teacher/${coursePanl.CreateUserId}`">
-                <span class="panl-content-author-lf">
-                    <img :src="coursePanl.HeadIcon" alt="">
-                    <span>{{coursePanl.NickName}}</span>
-                </span>
+                    <span class="panl-content-author-lf">
+                        <img :src="coursePanl.HeadIcon" alt="">
+                        <span>{{coursePanl.NickName}}</span>
+                    </span>
                 </nuxt-link>
                 <span>{{coursePanl.Number}}人在学</span>
             </div>

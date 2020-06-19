@@ -1,6 +1,6 @@
 <template>
     <div>
-        <video ref="courseVideo" :poster="videoDetail.VideoImg+`?x-oss-process=video/snapshot,t_2000,f_jpg`" class="vjs-matrix video-js vjs-fluid vjs-big-play-centered">
+        <video ref="courseVideo" :poster="videoDetail.VideoImg" class="vjs-matrix video-js vjs-fluid vjs-big-play-centered">
             <source :src="videoDetail.VideoUrl" type="video/mp4" >
         </video>
     </div>
@@ -85,9 +85,6 @@ export default {
                     this.on('play', function () {
                         console.log('开始播放', _this.setViewTime());
                     });
-                    this.on('play', function () {
-                        console.log('开始播放', _this.setViewTime());
-                    });
                     //结束
                     this.on('ended', function () {
                         console.log('结束播放', _this.setViewTime());
@@ -121,6 +118,7 @@ export default {
             this.videoDetail = row
             this.myVideo.src(this.videoDetail.VideoUrl);
             this.myVideo.load(this.videoDetail.VideoUrl);
+            this.myVideo.play()
         },
         setVideo (val) {
             if (val) {

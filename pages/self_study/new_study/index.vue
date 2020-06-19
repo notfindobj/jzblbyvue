@@ -386,7 +386,7 @@ export default {
         },
         videoSuccess (res) {
             this.chapter.VideoUrl = res.smallImgUrl
-            this.chapter.FirstImg= res.smallImgUrl
+            this.chapter.FirstImg= res.smallImgUrl+`?x-oss-process=video/snapshot,t_2000,f_jpg`
         },
         // 确认上传课程
         okCourse () {

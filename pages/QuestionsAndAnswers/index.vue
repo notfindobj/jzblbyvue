@@ -55,7 +55,7 @@
                             </template>
                         </div>
                         <div class="page-box" v-if="total > 5">
-                            <Page :total="total" :page-size="pageSize" @on-change="handlePageChange"/>
+                            <Page :total="records" :current="pageNum" :page-size="pageSize" @on-change="handlePageChange"/>
                         </div>
                     </div>
                 </crollBox>
@@ -120,7 +120,7 @@ export default {
             total: 0,       // 总条数
             isLast: false,
             records: 0,
-            pageSize: 5,    // 每页条数
+            pageSize: 8,    // 每页条数
         }
     },
     components: {

@@ -65,7 +65,15 @@
                 学习资料
             </div> -->
             <div v-show="slideIndex === 3">
-              <comment :evaluation="evaluation.evaluationList"/>
+                <template v-if="evaluation && evaluation.evaluationList.length > 0">
+                    <comment :evaluation="evaluation.evaluationList"/>
+                </template>
+                <template>
+                    <div class="empty">
+                        <img src="../../assets/images/empty-bg.png" alt="">
+                        <p>暂无评论数据</p>
+                    </div>
+                </template>
             </div>
         </div>
         <div class="details-course-lr">
@@ -168,7 +176,7 @@ export default {
         let res = await store.dispatch('getCourseDetail', {courseId: courId});
         res.LecturerId = teachId
         let eva = await store.dispatch('getCourseEvaluation', de);
-        olne.Courselist.forEach(ele => {
+        olne.Courselist.forEach(ele => {   
             ele.fold = true
             ele.ChildNode.forEach(eles => {
                 eles.free = true
@@ -203,6 +211,15 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.empty {
+    text-align: center;
+    margin: 30px 0;
+    p {
+        color: #999;
+        font-size: 16px;
+        margin-top: 20px;
+    }
+}
 .box {
     width: 1200px;
     margin: 0 auto;
