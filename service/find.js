@@ -11,3 +11,23 @@ export const getPictureDetail = async (params) => {
 export const getAlbumDetail = async (params) => {
     return await request.get('Picture/GetAlbumDetail', params)
 }
+// 获取图板类型
+export const getAlbumType = async (params) => {
+    return await request.get('Picture/GetAlbumType', params)
+}
+// 创建/修改图板
+export const postAlbum = async (params) => {
+    return await request.post('Picture/PostAlbum', params)
+}
+// 创建/修改采集
+export const addAlbum = async (params) => {
+    return await request.post('Picture/PostPicture', params)
+}
+// 创建/修改采集
+export const getOwnAlbum = async (params) => {
+    return await request.get('Picture/GetOwnAlbum', params)
+}
+// 创建/修改采集
+export const getOwnInfo = async (params) => {
+    return await request.get('Picture/GetOwnInfo', params)
+}

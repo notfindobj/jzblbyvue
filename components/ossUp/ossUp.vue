@@ -75,7 +75,7 @@ export default{
             smallImgUrl: window.URL.createObjectURL(file),
             bmf: file.name,
           }
-          _this.$emit('beforeUpload', obj)
+          _this.$emit('beforeUpload', obj, file)
         }
         return res
       })

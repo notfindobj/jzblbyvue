@@ -31,5 +31,9 @@ export const serverCourse = {
     // 获取采集列表
     async getPicturelist({ commit, state }, params) {
       return await request.post('Picture/GetPicturelist', params)
+    },
+    // 获取取图板列表
+    async getAlbumList({ commit, state }, params) {
+      return await request.post('Picture/GetAlbumList', params)
     }
 }

@@ -1,28 +1,28 @@
 <template>
     <crollBox @willReachBottom="willReachBottom">
         <div class="find">
-            <Pin :isPannel="isPin" @closePins="isPin = false" v-if="isPin"/>
+            <Pin :isPannel="isPin" @closePins="closeModal()" v-if="isPin" :paramsId="paramsId"/>
             <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
                 <div v-masonry-tile class="item" :key="index" v-for="(item, index) in pictureList">
                     <div class="find-box">
                         <div class="find-box-tit">
-                            <img v-lazy="item.listImg.smallImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.smallImgUrl" :style="`width: 230px;height: ${calculatedH(item.listImg)}`"/>
+                            <img v-lazy="item.listImg.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.listImg)}`"/>
                             <div class="find-box-tit-model find-box-tit-models" @click="showPins(item)">
                                 <div class="find-model">
-                                    <span class="find-btn">采集</span>
+                                    <span class="find-btn" @click.stop="clickColl(item)">采集</span>
                                 </div>
                             </div>
                         </div>
                         <div class="find-box-bottom">
                             <p class="find-box-bottom-sub">{{item.Desc}}</p>
                             <div class="find-box-bottom-footer">
-                                <a href="">
-                                    <img v-lazy="item.HeadIcon"  :data-original="item.HeadIcon" :alt="item.NickName">
-                                </a>
+                                <nuxt-link :to="`/home/info?id=${item.CreateUserId}`">
+                                    <img v-lazy="item.HeadIcon" :data-original="item.HeadIcon" :alt="item.NickName">
+                                </nuxt-link>
                                 <div class="find-box-bottom-footer-pin">
                                     <p><span>{{item.NickName}}</span><span> 采集到</span></p>
                                     <p>
-                                        <a href="">{{item.AlbumName}}</a>
+                                       <nuxt-link :to="`/home/boards/${item.AlbumID}`">{{item.AlbumName}}</nuxt-link>
                                     </p>
                                 </div>
                                 <div class="find-box-bottom-footer-num">
@@ -34,22 +34,28 @@
                 </div>
             </div>
         </div>
+        <collection :coll="coll" v-if="isColl" @closeModal="closeColl"></collection>
     </crollBox>
 </template>
 <script>
 import Pin from "./pins/_id"
 import crollBox from '../../components/crollBox'
+import collection from "./components/collection"
 export default {
-    layout: "main",
+    layout: "find",
     components: {
         Pin,
-        crollBox
+        crollBox,
+        collection
     } ,
     data () {
         return {
             findContainer: "findContainer",
             isPin:  false,
             pictureList: [],
+            paramsId: '',
+            coll: {},
+            isColl: false,
             q: {
                 "typeId":"",
                 "Page":1,
@@ -71,38 +77,59 @@ export default {
             q
         }
     },
-    created () {
-    },
     mounted () {
         if (typeof this.$redrawVueMasonry === 'function') {
             this.$redrawVueMasonry()
         }
     },
     methods: {
+        closeColl () {
+            this.isColl = false
+        },
+        // 采集
+        clickColl (row) {
+            console.log(row)
+            this.coll = {
+                AlbumID: row.AlbumID,
+                listImg: row.listImg,
+                Desc:  row.Desc,
+            }
+            this.isColl = true
+        },
         async willReachBottom () {
             if (!(this.q.Page + 1 >  this.q.total)) {
                 this.q.Page += 1;
-                let res = await this.$store.dispatch('getPicturelist', q);
+                let res = await this.$store.dispatch('getPicturelist', this.q);
                 if (res) {
-                    res
-                    this.pictureList = res.piclist
-                    this.q.total = res.pagination.total
+                    this.pictureList.push(...res.piclist)
+                    this.q.total = res.pagination.total;
+                    this.$nextTick(() => {
+                        this.$redrawVueMasonry(this.findContainer)
+                    })
                 }
             }
         },
         closeModal () {
-            // this.isPin = false
+            this.isPin = false;
+            document.body.style.overflow = "auto"
+            var stateObject = {};
+            var title = "Wow Title";
+            var newUrl = `/home`;
+            history.pushState(stateObject,title,newUrl);
+            return false
         },
         showPins (row) {
             this.isPin = true;
+            document.body.style.overflow = "hidden"
             var stateObject = {};
             var title = "Wow Title";
-            var newUrl = `/find/pins/${row.ID}`;
+            var newUrl = `/home/pins/${row.ID}`;
+            this.paramsId = row.ID
             history.pushState(stateObject,title,newUrl);
             sessionStorage.setItem("pins", row.AlbumID)
             return false
         },
-        calculatedH (imgInfo, w=256) {
+        calculatedH (imgInfo, w=232) {
             var file = {
                 w: w,
                 h: 0
@@ -117,6 +144,7 @@ export default {
 .find {
     width: 1200px;
     margin: 0 auto;
+    margin-top: 20px;
     &-box {
         cursor: pointer;
         &:hover {

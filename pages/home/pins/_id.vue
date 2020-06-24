@@ -8,7 +8,7 @@
         <div @click="closePins" v-if="!isPins">
             X
         </div>
-        <div v-cloak class="paym-content" ref="findModal" v-if="pictureDetail.listImg">
+        <div v-cloak class="paym-content" ref="findModal" v-if="pictureDetail && pictureDetail.listImg">
             <div class="paym-content-main">
                 <div class="paym-content-main-left">
                     <div class="content-main-top">
@@ -27,7 +27,9 @@
                         <div class="piece-user">
                            <div class="piece-user-info">
                                 <span>
-                                    <img :src="pictureDetail.HeadIcon" alt="" width="50px" height="50px">
+                                    <nuxt-link :to="`/home/info?id=${pictureDetail.CreateUserId}`">
+                                        <img :src="pictureDetail.HeadIcon" alt="" width="50px" height="50px">
+                                    </nuxt-link>
                                 </span>
                                 <div class="piece-user-info-name">
                                     <h3><span>{{pictureDetail.NickName}}</span><em v-if="pictureDetail.Source === 1">从<span>{{pictureDetail.CollectNickName}}</span></em></h3>
@@ -65,16 +67,20 @@
 import boardPins from "../components/boardPins"
 import {getPictureDetail, getAlbumDetail} from "../../../service/find"
 export default {
+    layout: "find",
     props: {
         isPannel: {
             type: Boolean,
             default: false
+        },
+        paramsId: {
+            type: String,
+            default: ''
         }
     },
     components: {
         boardPins
     },
-    layout: "main",
     data () {
         return {
             isPins: false,
@@ -92,7 +98,6 @@ export default {
             this.isPins = true;
             this.getDetail()
         }
-        
     },
     mounted () {
         let taht = this
@@ -102,7 +107,7 @@ export default {
             // }
         })
         this.getAlbumList()
-        if (taht.$route.params.id) {
+        if (!this.isPins) {
             taht.getDetail()
         }
     },
@@ -119,7 +124,7 @@ export default {
         },
         getDetail () {
             let query = {
-                pictureId: this.$route.params.id
+                pictureId: this.$route.params.id ||this.paramsId
             }
             getPictureDetail(query).then(res => {
                 this.pictureDetail = res;

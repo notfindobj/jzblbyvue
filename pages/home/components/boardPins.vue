@@ -117,7 +117,7 @@ export default {
         }
     },
     methods: {
-        calculatedH (imgInfo, w=256) {
+        calculatedH (imgInfo, w=76) {
             var file = {
                 w: w,
                 h: 0

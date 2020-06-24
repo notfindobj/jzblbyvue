@@ -18,9 +18,9 @@ export const setHearImg = async (params) => {
 // 微信登录获取用户信息
 export const getUserByWX = async (params) => {
     return await request.post('front/wxLogin', params)
-  }
+}
   
-  // 微信qq获取用户信息
-  export const getUserByQQ = async (params) => {
-    return await request.post("front/qqLogin", params)
-  }
+// 微信qq获取用户信息
+export const getUserByQQ = async (params) => {
+return await request.post("front/qqLogin", params)
+}
