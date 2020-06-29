@@ -22,7 +22,7 @@
             <Pin :isPannel="isPin" @closePins="isPin = false" v-if="isPin" :paramsId="paramsId"/>
             <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
                 <div class="board item" v-masonry-tile>
-                    <div class="board-add" @click="isSelf && (isPick = true)">
+                    <div class="board-add" @click="isSelf && showPick()">
                         <div class="board-add-box">
                             <Icon type="ios-add-circle-outline" />
                             <p>添加采集</p>
@@ -35,12 +35,13 @@
                             <img v-lazy="item.PicInfos.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.PicInfos.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.PicInfos)}`"/>
                             <div class="find-box-tit-model find-box-tit-models" @click="showPins(item)">
                                 <div class="find-model">
-                                    <span class="find-btn" @click.stop="isPin= false" >采集</span>
+                                    <span class="find-btn find-redbtn" @click.stop="isSelf && clickColl(item)">采集</span>
+                                    <span class="find-btn" @click.stop="isSelf && clickMining(item)">编辑</span>
                                 </div>
                             </div>
                         </div>
-                        <div class="find-box-bottom" v-if="item.PicInfos.fileName">
-                            <p class="find-box-bottom-sub">{{item.PicInfos.fileName}}</p>
+                        <div class="find-box-bottom" v-if="item.PicTitle || item.PicInfos.fileName">
+                            <p class="find-box-bottom-sub">{{item.PicTitle || item.PicInfos.fileName}}</p>
                         </div>
                     </div>
                 </div>
@@ -54,16 +55,16 @@
                         <p>每次最多可上传10张，单张文件体积不超过20MB</p>
                     </div>
                 </ossUp>
-                <select v-model="albumlInfo.ID" v-if="pickImgs.length > 0">
+                <select v-model="addPick.ID" v-if="pickImgs.length > 0">
                     <option>选择分类</option>
                     <option v-for="(items, index) in OwnAlbumList" :key="index" :value="items.AlbumID">{{items.AlbumName}}</option>
                 </select>
                 <div class="newboard-croll" v-if="pickImgs.length > 0">
                     <div class="newboard-item" v-for="(items, index) in pickImgs" :key="index">
                         <label class="newboard-item-label">
-                            <img :src="items.smallImgUrl" width="80px" height="80px" alt="">
+                            <img :src="items.listImg.smallImgUrl" width="80px" height="80px" alt="">
                         </label>
-                        <textarea cols="20" rows="3" v-model="items.Desc" placeholder="填写作品相关描述"></textarea>
+                        <textarea cols="20" rows="3" v-model="items.Title" placeholder="填写作品相关描述"></textarea>
                     </div>
                 </div>
                 <div class="newboard-footer">
@@ -102,17 +103,62 @@
                 </div>
             </div>
         </ModalBoard>
+        <!-- 编辑采集 -->
+        <ModalBoard title="编辑采集" @closeModal="closeMining" v-if="isMining">
+            <div class="coll">
+                <div class="coll-lf">
+                    <div class="coll-lf-cont">
+                        <div class="coll-lf-cont-img">
+                            <!-- <img :src="mining.listImg.bigImgUrl" alt="" width="220px"> -->
+                        </div>
+                        <p></p>
+                    </div>
+                </div>
+                <div class="coll-lr">
+                    <div class="newboard-item">
+                        <label for="">标题:</label>
+                        <input type="text" v-model="editCover.Name" placeholder="画板标题，不能超过32个字符">
+                    </div>
+                    <div class="newboard-item">
+                        <label for="">描述:</label>
+                        <textarea cols="30" rows="4" v-model="editCover.Desc" placeholder="画板简介"></textarea>
+                    </div>
+                    <div class="newboard-item">
+                        <label for="">来源:</label>
+                        <input type="text" v-model="editCover.Name" placeholder="画板标题，不能超过32个字符">
+                    </div>
+                    <div class="newboard-item">
+                        <label for="">分类:</label>
+                        <select v-model="editCover.TypeID">
+                            <option value="">分类</option>
+                            <option v-for="(items, index) in AlbumType" :key="index" :value="items.ID">{{items.Name}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="newboard">
+                <div class="newboard-footer">
+                    <span class="newboard-footer-del" @click="delBoard(editCover)">删除采集</span>
+                    <div>
+                        <span class="newboard-footer-close" @click="closeMining">取消</span>
+                        <span class="newboard-footer-hua" @click="editAlbum">确认</span>
+                    </div>
+                </div>
+            </div>
+        </ModalBoard>
     </div>
+    <collection :coll="coll" v-if="isColl" @closeModal="closeColl"></collection>
 </crollBox>
 </template>
 </template>
 
 <script>
 import ModalBoard from "../components/ModalBoard"
-import {getAlbumType, postAlbum, getAlbumDetail, addAlbum, getOwnAlbum} from "../../../service/find"
+import {getAlbumType, postAlbum, getAlbumDetail, addAlbum, getOwnAlbum, addPicture} from "../../../service/find"
 import Pin from "../pins/_id"
 import ossUp from "../../../components/ossUp/ossUp"
 import crollBox from '../../../components/crollBox'
+import collection from "../components/collection"
 import { mapState } from 'vuex'
 export default {
     //import引入的组件需要注入到对象中才能使用
@@ -121,7 +167,8 @@ export default {
         ModalBoard,
         crollBox,
         Pin,
-        ossUp
+        ossUp,
+        collection
     },
     data() {
         return {
@@ -134,18 +181,19 @@ export default {
             isPick: false,
             editBoard: false,
             pickImgs: [],
+            addPick: {},
             OwnAlbumList: [],
-            cover: {
-                Name: "",
-                TypeID: ""
-            },
             editCover: {},
+            coll: {},
+            isColl: false,
             query: {
                 "AlbumId":"",
                 "Page": 0,
                 "Rows": 30,
                 "total": 1
             },
+            isMining:false,
+            mining: {},
             isSelf: true
         };
     },
@@ -159,6 +207,28 @@ export default {
     watch: {},
     //方法集合
     methods: {
+        closeColl () {
+            this.isColl = false
+        },
+        closeMining () {
+            this.isMining = false;
+        },
+        // 编辑采集
+        clickMining (row) {
+            this.isMining = true;
+            this.mining = row;
+        },
+        // 采集
+        clickColl (row) {
+            this.coll =  {
+                "listImg": row.PicInfos,
+                "Title": row.Title,
+                "Link": row.Link,
+                "AlbumID": this.albumlInfo.ID,//
+                "ID": row.PicId
+            }
+            this.isColl = true
+        },
         // 获取列表
         willReachBottom (index) {
             if (!(this.query.Page + 1 >  this.query.total)) {
@@ -187,10 +257,13 @@ export default {
             img.src = file.smallImgUrl;
             img.onload = function() {
                 that.pickImgs.push({
-                    fileName: file.name,
-                    smallImgUrl: file.smallImgUrl,
-                    width: img.naturalWidth,
-                    height: img.naturalHeight
+                    Desc: "",
+                    listImg: {
+                        fileName: file.name,
+                        smallImgUrl: file.smallImgUrl,
+                        width: img.naturalWidth,
+                        height: img.naturalHeight
+                    }
                 })
             }
         },
@@ -217,19 +290,25 @@ export default {
         closeEditBoard () {
             this.editBoard = false
         },
+        showPick () {
+            this.isPick = true
+            this.pickImgs = []
+            this.addPick =  JSON.parse(JSON.stringify(this.albumlInfo))
+        },
         closePick () {
             this.isPick = false;
-            this.cover=  {
-                Name: "",
-                TypeID: ""
-            }
         },
         upPick () {
             let that = this;
-            postAlbum(this.cover).then(res => {
+            let query = {
+                AlbumID: this.addPick.ID,
+                list: that.pickImgs
+            }
+            addPicture(query).then(res => {
                 if (res) {
                     that.isPick = false;
-                    that.getAlbumList()
+                    this.query.Page -=1
+                    that.willReachBottom()
                 }
             }).catch(err => {})
         },
@@ -249,7 +328,8 @@ export default {
             postAlbum(query).then(res => {
                 if (res) {
                     that.editBoard = false;
-                    that.getAlbumList()
+                    this.query.Page -=1
+                    that.willReachBottom()
                 }
             }).catch(err => {})
         },
@@ -260,14 +340,14 @@ export default {
         },
         // 删除画板
         delBoard () {},
-        // 画板列表
+        // 创建/修改采集
         getOwnAlbumList () {
             let that = this;
             getOwnAlbum().then(res => {
                 that.OwnAlbumList = res;
             }).catch(err => {})
         },
-        // 
+        // 获取图板类型
         getAlbumTypeList () {
             let that = this;
             getAlbumType().then(res => {
@@ -277,7 +357,6 @@ export default {
     },
     //生命周期 - 创建完成（可以访问当前this实例）
     created() {
-        
         this.getOwnAlbumList()
         this.getAlbumTypeList()
         this.willReachBottom()
@@ -300,12 +379,14 @@ export default {
 <style lang='less' scoped>
 .upimg {
     max-height: 55px;
+    width: 500px;
     p {
         color: #666;
         line-height: 55px;
     }
 }
 .unupImg {
+    width: 500px;
     max-height: 330px;
     p {
         color: #666;
@@ -313,7 +394,7 @@ export default {
     }
 }
 .newboard {
-    width: 500px;
+    // width: 500px;
     padding: 0 20px;
     padding-bottom: 20px;
     &-croll {
@@ -480,12 +561,15 @@ input,select, option{
             background: #fff;
             position: relative;
             &-sub {
-                display: block;
+                display: inline-block;
+                width: 232px;
                 padding: 10px 16px;
                 line-height: 1.35em;
                 overflow: hidden;
                 word-wrap: break-word;
                 border-bottom: 1px solid #f2f2f2;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
             }
             &-footer {
                 margin-bottom: 10px;
@@ -527,20 +611,31 @@ input,select, option{
             }
         }
     }
+    &-model {
+        display: flex;
+        justify-content: space-between;
+        position: relative;
+        top: 5px;
+        padding: 0 5px;
+    }
 }
 .find-btn {
     height: 30px;
     line-height: 30px;
-    text-shadow: none;
-    background: #ec414d;
-    color: #fff;
+    background: #ededed;
+    color: #444;
     box-shadow: none;
-    border: 1px solid #ec414d;
+    border: 1px solid #ededed;
     display: inline-block;
     border-radius: 2px;
     font-size: 14px;
     padding: 0 12px;
     cursor: pointer;
+}
+.find-redbtn {
+    color: #fff;
+    background: #ec414d;
+    border: 1px solid #ec414d;
 }
 .board-add {
     height: 100%;
@@ -557,5 +652,92 @@ input,select, option{
         }
     }
     
+}
+.coll {
+    display: flex;
+    justify-content: space-between;
+    &-lf {
+        width: 300px;
+        padding: 0 40px 20px 40px;
+        background: #f2f2f2;
+        overflow: hidden;
+        position: relative;
+        min-height: 420px;
+        &-cont {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%,-50%);
+            &-img {
+                position: relative;
+                display: block;
+                width: 220px;
+                max-height: 350px;
+                overflow: hidden;
+                &::after {
+                    content: "";
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 20px;
+                    background-image: linear-gradient(to bottom,transparent,#f2f2f2);
+                }
+            }
+        }
+    }
+    &-lr {
+        width: 400px;
+        position: relative;
+        overflow: hidden;
+        padding: 0 30px;
+        max-height: 555px;
+        margin-top: 25px;
+        h2 {
+            margin-bottom: 25px;
+        }
+        &.active {
+            background-image: linear-gradient(to right,#ededed,#fff);
+        }
+        &-item{
+            padding-left: 10px;
+            color: #4a4a4a;
+            text-shadow: 0 1px 0 rgba(255,255,255,.5);
+            cursor: pointer;
+            line-height: 30px;
+            transition: background-color .1s,background-image .1s;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            display: flex;
+            justify-content: space-between;
+            &:hover &-btn{
+                display: inline-block;
+            }
+            &:hover {
+                background-image: linear-gradient(to right,#ededed,#fff);
+            }
+            &-btn {
+                display: none;
+                height: 28px;
+                span {
+                    display: inline-block;
+                    border-radius: 3px;
+                    font-size: 13px;
+                    padding: 0 12px;
+                    height: 28px;
+                    line-height: 28px;
+                    background: #ff3c00;
+                    border: 1px solid #ededed;
+                    cursor: pointer;
+                    text-decoration: none;
+                    color: #fff;
+                    white-space: nowrap;
+                    text-align: center;
+                }
+            }
+        }
+    }
 }
 </style>

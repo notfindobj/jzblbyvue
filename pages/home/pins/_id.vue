@@ -2,11 +2,15 @@
     <div :class="isPins ? 'payms' : 'paym'" v-if="isPannel || isPins">
         <div class="paym-close"></div>
         <div class="paym-btn" v-if="!isPins">
-            <div class="paym-btn-left">👈</div>
-            <div class="paym-btn-right">👉</div>
+            <div class="paym-btn-left" @click="movePaym(1)">
+                <i class="icon iconfont icon-jiantou2" style="transform: rotate(90deg);display: inline-block;"></i>
+            </div>
+            <div class="paym-btn-right" @click="movePaym(2)">
+                <i class="icon iconfont icon-jiantou2" style="transform: rotate(-90deg);display: inline-block;"></i>
+            </div>
         </div>
-        <div @click="closePins" v-if="!isPins">
-            X
+        <div class="paym-closePin" v-if="!isPins">
+            <i class="icon iconfont icon-chahao3" @click="closePins"></i>
         </div>
         <div v-cloak class="paym-content" ref="findModal" v-if="pictureDetail && pictureDetail.listImg">
             <div class="paym-content-main">
@@ -51,7 +55,7 @@
                             <span class="pins-btn pin-tag-tit-rf">关注</span>
                         </div>
                         <div class="pin-tag-con">
-                            <boardPins :albumList="albumList"/>
+                            <boardPins :albumList="albumList" v-if="albumList.length > 0"/>
                         </div>
                     </div>
                     <a v-if="pictureDetail.Link" class="pin-source" href="http://" target="_blank" rel="noopener noreferrer">
@@ -72,6 +76,10 @@ export default {
         isPannel: {
             type: Boolean,
             default: false
+        },
+        pannelOndex: {
+            type: Number,
+            default: 0
         },
         paramsId: {
             type: String,
@@ -112,14 +120,22 @@ export default {
         }
     },
     methods: {
+        initView () {
+            this.getDetail()
+            this.getAlbumList()
+        },
+        movePaym (type) {
+            this.$emit("movePaym", type, this.pannelOndex)
+        },
         closePins () {
             this.isPins = false;
             this.$emit("closePins")
         },
         getAlbumList (id) {
+            this.albumList = []
             this.alb.AlbumId = sessionStorage.getItem("pins")
             getAlbumDetail(this.alb).then(res => {
-                this.albumList = res.PicList
+                this.albumList = res.PicList;
             })
         },
         getDetail () {
@@ -200,6 +216,8 @@ export default {
         padding: 16px 20px;
         margin-bottom: 16px;
         background: #fff;
+        position: sticky;
+        top: 50px;
         &-tit {
             display: flex;
             justify-content: space-between;
@@ -306,8 +324,22 @@ export default {
                 }
             }
         }
+        &-closePin{
+            text-align: right;
+            padding-right: 20px;
+            position: fixed;
+            right: 20px;
+            top: 0;
+            cursor: pointer;
+            i {
+                font-size: 30px;
+                &:hover {
+                    color: #ff3c00;
+                }
+            }
+        }
         &-btn {
-            position: absolute;
+            position: fixed;
             top: 40%;
             display: flex;
             justify-content: space-between;
@@ -316,8 +348,12 @@ export default {
                 width: 60px;
                 height: 150px;
                 line-height: 150px;
+                i {
+                    font-size: 24px;
+                }
                 &:hover {
                     cursor: pointer;
+                    color: #ff3c00;
                     background: #ddd;
                 }
             }

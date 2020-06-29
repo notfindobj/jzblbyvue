@@ -31,7 +31,7 @@
     </div> 
     <div class="board-box">
         <div class="board">
-            <div class="board-add" @click="isSelf && (isBoard = true)">
+            <div class="board-add" @click="isSelf && showBoard()">
                 <div class="board-add-box">
                     <Icon type="ios-add-circle-outline" />
                     <p>添加画板</p>
@@ -115,7 +115,7 @@
             </select>
            </div>
            <div class="newboard-footer">
-               <span class="newboard-footer-del" @click="delBoard">删除画板</span>
+               <span class="newboard-footer-del" @click="delBoard(editCover)">删除画板</span>
                <div>
                     <span class="newboard-footer-close" @click="closeEditBoard">取消</span>
                     <span class="newboard-footer-hua" @click="editAlbum">确认</span>
@@ -129,7 +129,7 @@
 <script>
 import { mapState } from 'vuex'
 import ModalBoard from "../components/ModalBoard"
-import {getAlbumType, postAlbum, getOwnInfo} from "../../../service/find"
+import {getAlbumType, postAlbum, getOwnInfo, delAlbum} from "../../../service/find"
 export default {
     //import引入的组件需要注入到对象中才能使用
     layout: "find",
@@ -175,7 +175,7 @@ export default {
         async getAlbumList () {
             let that = this;
             let query = {
-                "userId": this.$route.query.id || "",
+                "userId": this.$route.query.id || that.auth.UserId,
                 "keyvalue": "",
                 "Page":1,
                 "Rows":30
@@ -187,6 +187,13 @@ export default {
         },
         closeEditBoard () {
             this.editBoard = false
+        },
+        showBoard () {
+            this.isBoard = true;
+            this.cover=  {
+                Name: "",
+                TypeID: ""
+            }
         },
         closeNewGroup () {
             this.isBoard = false;
@@ -227,7 +234,25 @@ export default {
             this.editCover = row;
             this.editBoard = true
         },
-        delBoard () {},
+        delBoard (row) {
+            let that = this;
+            let query = {
+                Ids: row.ID
+            }
+            this.$Modal.confirm({
+                title: "删除画板",
+                content: `<p>确定删除画板？</p>`,
+                onOk: async () => {
+                    delAlbum(query).then(res => {
+                        this.editBoard = false
+                        that.getAlbumList()
+                    }).catch(err => {})
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+        },
         getAlbumTypeList () {
             let that = this;
             getAlbumType().then(res => {

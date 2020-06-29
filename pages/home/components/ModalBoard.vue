@@ -45,7 +45,7 @@ export default {
         box-shadow: 0 0px 10px #000;
         &-title{
             padding-left: 20px;
-            line-height: 45px;
+            line-height: 44px;
             position: relative;
             border-bottom: 1px solid #ededed;
             margin-bottom: 10px;

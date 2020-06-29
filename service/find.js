@@ -31,3 +31,11 @@ export const getOwnAlbum = async (params) => {
 export const getOwnInfo = async (params) => {
     return await request.get('Picture/GetOwnInfo', params)
 }
+// 创建批量采集
+export const addPicture = async (params) => {
+    return await request.post('Picture/PostBatchPicture', params)
+}
+// 删除图板
+export const delAlbum = async (params) => {
+    return await request.post('Picture/DeleteAlbum', params)
+}

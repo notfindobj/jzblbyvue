@@ -16,12 +16,12 @@
                                 <img v-lazy="item.listImg.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.listImg)}`"/>
                                 <div class="find-box-tit-model find-box-tit-models" @click="showPins(item)">
                                     <div class="find-model">
-                                        <span class="find-btn">采集</span>
+                                        <span class="find-btn" @click.stop="clickColl(item)">采集</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="find-box-bottom">
-                                <p class="find-box-bottom-sub">{{item.Desc}}</p>
+                                <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
                                 <div class="find-box-bottom-footer">
                                     <nuxt-link :to="`/home/info?id=${item.CreateUserId}`">
                                         <img v-lazy="item.HeadIcon" :data-original="item.HeadIcon" :alt="item.NickName">
@@ -43,6 +43,7 @@
                     </div>
                 </div>
             </div>
+            <collection :coll="coll" v-if="isColl" @closeModal="closeColl"></collection>
         </crollBox>
     </div>
 </template>
@@ -50,11 +51,13 @@
 import Pin from "../pins/_id"
 import crollBox from '../../../components/crollBox'
 import {getAlbumType } from "../../../service/find"
+import collection from "../components/collection"
 export default {
     layout: "find",
     components: {
         Pin,
-        crollBox
+        crollBox,
+        collection
     } ,
     data () {
         return {
@@ -62,6 +65,8 @@ export default {
             isPin:  false,
             pictureList: [],
             paramsId: '',
+            coll: {},
+            isColl: false,
             AlbumType: [],
             q: {
                 "typeId":"",
@@ -93,6 +98,14 @@ export default {
         }
     },
     methods: {
+        closeColl () {
+            this.isColl = false
+        },
+        // 采集
+        clickColl (row) {
+            this.coll = JSON.parse(JSON.stringify(row))
+            this.isColl = true
+        },
         selectType (row) {
             this.q.typeId = row.ID;
             this.q.Page = 0;
@@ -209,12 +222,17 @@ export default {
             background: #fff;
             position: relative;
             &-sub {
-                display: block;
+                display: inline-block;
+                width: 232px;
                 padding: 10px 16px;
                 line-height: 1.35em;
                 overflow: hidden;
                 word-wrap: break-word;
                 border-bottom: 1px solid #f2f2f2;
+                word-wrap: break-word;
+                border-bottom: 1px solid #f2f2f2;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
             }
             &-footer {
                 margin-bottom: 10px;

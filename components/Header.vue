@@ -8,9 +8,11 @@
                  <li>
                     <nuxt-link to="/dataBase" @click.native="goList">档案库</nuxt-link>
                 </li>
-                
                 <li>
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
+                </li>
+                <li>
+                    <nuxt-link to="/home">发现</nuxt-link>
                 </li>
                 <li >
                     <nuxt-link to="/attention" >关注</nuxt-link>
@@ -25,13 +27,17 @@
                     <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
                 </li>
                 <li>
-                    <a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a>
-                </li>
-                <li>
-                    <nuxt-link to="/order_lobby">接单大厅</nuxt-link>
-                </li>
-                <li>
-                    <a>建筑学院（内测中）</a>
+                    <Dropdown>
+                        <a href="javascript:void(0)">
+                            更多...
+                            <Icon type="ios-arrow-down"></Icon>
+                        </a>
+                        <DropdownMenu slot="list">
+                            <DropdownItem>建筑学院（内测中）</DropdownItem>
+                            <DropdownItem><nuxt-link to="/order_lobby">接单大厅</nuxt-link></DropdownItem>
+                            <DropdownItem><a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a></DropdownItem>
+                        </DropdownMenu>
+                    </Dropdown>
                 </li>
                 <li>
                     <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>

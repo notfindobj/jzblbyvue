@@ -58,13 +58,18 @@ module.exports = {
     imgBaseUrl: configUrl.imgBaseUrl,
     h5BaseUrl: configUrl.h5BaseUrl
   },
+  axios: {
+    proxy: true,
+    prefix: "/api",
+    credentials: true // 表示跨域请求时是否需要使用凭证
+  },
   proxyTable: [
       '/api',
       {
-        target: 'http://106.14.139.124:8099/', // api主机
+        target: 'https://www.api.jzbl.com/', // api主机
         // withCredentials: true,
-        // changeOrigin: true,
-        pathRewrite: { '^/api': '' }
+        changeOrigin: true,
+        pathRewrite: { '^/api': '/api' }
       }
   ],
   /*

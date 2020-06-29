@@ -8,16 +8,16 @@
                         <div class="coll-lf-cont-img">
                             <img :src="coll.listImg.bigImgUrl" alt="" width="220px">
                         </div>
-                        <div>{{coll.Desc}}</div>
+                        <textarea cols="30" rows="5" v-model="coll.Title"></textarea>
                         <p></p>
                     </div>
                 </div>
                 <div class="coll-lr">
                     <h2>采集</h2>
-                    <div :class="coll.AlbumID === items.AlbumID ? 'coll-lr-item active' :'coll-lr-item ' " v-for="(items, index) in OwnAlbumList" :key="index">
+                    <div :class="coll.AlbumID === items.AlbumID ? 'coll-lr-item active' :'coll-lr-item '" v-for="(items, index) in OwnAlbumList" :key="index">
                         <span>{{items.AlbumName}}</span>
                         <div class="coll-lr-item-btn">
-                            <span >采下来</span>
+                            <span @click="addAlbum(items.AlbumID)">采下来</span>
                         </div>
                     </div>
                 </div>
@@ -28,7 +28,8 @@
 
 <script>
 import ModalBoard from "./ModalBoard"
-import {getOwnAlbum} from "../../../service/find"
+import {getOwnAlbum, addAlbum} from "../../../service/find"
+import { mapState } from 'vuex'
 export default {
     props: {
         coll: {
@@ -42,19 +43,44 @@ export default {
 components: {
     ModalBoard
 },
+
 data() {
     return {
         OwnAlbumList: []
     };
 },
 //监听属性 类似于data概念
-computed: {},
+computed: {
+    ...mapState({
+        auth: state => state.overas.auth,
+    }),
+},
 //监控data中的数据变化
 watch: {},
 //方法集合
 methods: {
     closePins () {
         this.$emit("closeModal")
+    },
+    addAlbum (id) {
+        let that = this;
+        let query = {
+            "Title": this.coll.Desc,
+            "listImg": [
+                this.coll.listImg
+            ],
+            "Link": this.coll.Link,
+            "AlbumID": id,
+            "Source": 1,
+            "CollectId": this.coll.ID,
+            "CollectUserId": this.auth.UserId
+        }
+        addAlbum(query).then(res => {
+            if (res) {
+                that.$Message.success("采集成功，可到我的画板里才看详情！")
+                that.$emit("closeModal")
+            }
+        }).catch(err =>{})
     },
     // 画板列表
     getOwnAlbumList () {
@@ -97,8 +123,9 @@ textarea {
     outline: none;
     word-break: break-all;
     border: 1px solid #ff3c00;
-    padding-left: 10px;
+    padding: 10px;
     margin-top: 10px;
+    font-size: 14px;
 }
 //@import url(); 引入公共css类
 .coll {
@@ -140,8 +167,12 @@ textarea {
         overflow: hidden;
         padding: 0 30px;
         max-height: 555px;
+        margin-top: 25px;
         h2 {
             margin-bottom: 25px;
+        }
+        &.active {
+            background-image: linear-gradient(to right,#ededed,#fff);
         }
         &-item{
             padding-left: 10px;
@@ -150,7 +181,6 @@ textarea {
             cursor: pointer;
             line-height: 30px;
             transition: background-color .1s,background-image .1s;
-           
             position: relative;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -161,9 +191,6 @@ textarea {
                 display: inline-block;
             }
             &:hover {
-                background-image: linear-gradient(to right,#ededed,#fff);
-            }
-            &.active {
                 background-image: linear-gradient(to right,#ededed,#fff);
             }
             &-btn {

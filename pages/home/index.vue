@@ -1,20 +1,20 @@
 <template>
     <crollBox @willReachBottom="willReachBottom">
         <div class="find">
-            <Pin :isPannel="isPin" @closePins="closeModal()" v-if="isPin" :paramsId="paramsId"/>
-            <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
+            <Pin :isPannel="isPin" @closePins="closeModal()" v-if="isPin" :paramsId="paramsId" :pannelOndex="pannelOndex" @movePaym="movePaym" ref="Pin"/>
+            <div v-masonry="findContainer" item-selector=".item" class="masonry-container" gutter="10">
                 <div v-masonry-tile class="item" :key="index" v-for="(item, index) in pictureList">
                     <div class="find-box">
                         <div class="find-box-tit">
                             <img v-lazy="item.listImg.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.listImg)}`"/>
-                            <div class="find-box-tit-model find-box-tit-models" @click="showPins(item)">
+                            <div class="find-box-tit-model find-box-tit-models" @click="showPins(item, index)">
                                 <div class="find-model">
                                     <span class="find-btn" @click.stop="clickColl(item)">采集</span>
                                 </div>
                             </div>
                         </div>
                         <div class="find-box-bottom">
-                            <p class="find-box-bottom-sub">{{item.Desc}}</p>
+                            <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
                             <div class="find-box-bottom-footer">
                                 <nuxt-link :to="`/home/info?id=${item.CreateUserId}`">
                                     <img v-lazy="item.HeadIcon" :data-original="item.HeadIcon" :alt="item.NickName">
@@ -56,6 +56,7 @@ export default {
             paramsId: '',
             coll: {},
             isColl: false,
+            pannelOndex: 0,
             q: {
                 "typeId":"",
                 "Page":1,
@@ -88,12 +89,7 @@ export default {
         },
         // 采集
         clickColl (row) {
-            console.log(row)
-            this.coll = {
-                AlbumID: row.AlbumID,
-                listImg: row.listImg,
-                Desc:  row.Desc,
-            }
+            this.coll = JSON.parse(JSON.stringify(row))
             this.isColl = true
         },
         async willReachBottom () {
@@ -118,13 +114,36 @@ export default {
             history.pushState(stateObject,title,newUrl);
             return false
         },
-        showPins (row) {
+        movePaym (val, index) {
+            let row = {}
+            // 左翻
+            if (val === 1) {
+               row = index- 1 >= 0 ? this.pictureList[index -1 ]: false
+            } else if (val === 2) {
+                row = index + 1 <= this.pictureList.length ? this.pictureList[index + 1]: false
+            }
+            if (row) {
+                this.isPin = true;
+                document.body.style.overflow = "hidden"
+                let stateObject = {};
+                let title = "Wow Title";
+                let newUrl = `/home/pins/${row.ID}`;
+                this.paramsId = row.ID
+                this.pannelOndex = val === 1 ? index- 1 : index + 1
+                history.pushState(stateObject,title,newUrl);
+                sessionStorage.setItem("pins", row.AlbumID)
+                this.$refs.Pin.initView()
+            }
+            return false
+        },
+        showPins (row, index) {
             this.isPin = true;
             document.body.style.overflow = "hidden"
             var stateObject = {};
             var title = "Wow Title";
             var newUrl = `/home/pins/${row.ID}`;
             this.paramsId = row.ID
+            this.pannelOndex = index
             history.pushState(stateObject,title,newUrl);
             sessionStorage.setItem("pins", row.AlbumID)
             return false
@@ -174,12 +193,15 @@ export default {
             background: #fff;
             position: relative;
             &-sub {
-                display: block;
+                display: inline-block;
+                width: 232px;
                 padding: 10px 16px;
                 line-height: 1.35em;
                 overflow: hidden;
                 word-wrap: break-word;
                 border-bottom: 1px solid #f2f2f2;
+                -webkit-line-clamp: 3;
+                overflow: hidden;
             }
             &-footer {
                 margin-bottom: 10px;
