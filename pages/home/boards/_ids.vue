@@ -21,7 +21,7 @@
         <div>
             <Pin :isPannel="isPin" @closePins="isPin = false" v-if="isPin" :paramsId="paramsId"/>
             <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
-                <div class="board item" v-masonry-tile>
+                <div class="board item" v-masonry-tile v-if="isSelf">
                     <div class="board-add" @click="isSelf && showPick()">
                         <div class="board-add-box">
                             <Icon type="ios-add-circle-outline" />
@@ -35,8 +35,8 @@
                             <img v-lazy="item.PicInfos.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.PicInfos.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.PicInfos)}`"/>
                             <div class="find-box-tit-model find-box-tit-models" @click="showPins(item)">
                                 <div class="find-model">
-                                    <span class="find-btn find-redbtn" @click.stop="isSelf && clickColl(item)">采集</span>
-                                    <span class="find-btn" @click.stop="isSelf && clickMining(item)">编辑</span>
+                                    <span class="find-btn find-redbtn" @click.stop="clickColl(item)">采集</span>
+                                    <span v-if="isSelf" class="find-btn" @click.stop="clickMining(item, albumlInfo)">编辑</span>
                                 </div>
                             </div>
                         </div>
@@ -109,7 +109,7 @@
                 <div class="coll-lf">
                     <div class="coll-lf-cont">
                         <div class="coll-lf-cont-img">
-                            <!-- <img :src="mining.listImg.bigImgUrl" alt="" width="220px"> -->
+                            <img :src="mining.PicInfos.bigImgUrl" alt="" width="220px">
                         </div>
                         <p></p>
                     </div>
@@ -117,31 +117,31 @@
                 <div class="coll-lr">
                     <div class="newboard-item">
                         <label for="">标题:</label>
-                        <input type="text" v-model="editCover.Name" placeholder="画板标题，不能超过32个字符">
+                        <input type="text" v-model="mining.PicTitle" placeholder="画板标题，不能超过32个字符">
                     </div>
                     <div class="newboard-item">
                         <label for="">描述:</label>
-                        <textarea cols="30" rows="4" v-model="editCover.Desc" placeholder="画板简介"></textarea>
+                        <textarea cols="30" rows="4" v-model="mining.Desc" placeholder="画板简介"></textarea>
                     </div>
                     <div class="newboard-item">
                         <label for="">来源:</label>
-                        <input type="text" v-model="editCover.Name" placeholder="画板标题，不能超过32个字符">
+                        <input type="text" :disabled="mining.Source === 0 ? false : true " v-model="mining.Link" placeholder="来源">
                     </div>
                     <div class="newboard-item">
-                        <label for="">分类:</label>
-                        <select v-model="editCover.TypeID">
-                            <option value="">分类</option>
-                            <option v-for="(items, index) in AlbumType" :key="index" :value="items.ID">{{items.Name}}</option>
+                        <label for="">画板:</label>
+                        <select v-model="mining.ID">
+                            <option value="">选择画板</option>
+                            <option v-for="(items, index) in OwnAlbumList" :key="index" :value="items.AlbumID">{{items.AlbumName}}</option>
                         </select>
                     </div>
                 </div>
             </div>
             <div class="newboard">
                 <div class="newboard-footer">
-                    <span class="newboard-footer-del" @click="delBoard(editCover)">删除采集</span>
+                    <span class="newboard-footer-del" @click="delMining(mining)">删除采集</span>
                     <div>
                         <span class="newboard-footer-close" @click="closeMining">取消</span>
-                        <span class="newboard-footer-hua" @click="editAlbum">确认</span>
+                        <span class="newboard-footer-hua" @click="editMining">确认</span>
                     </div>
                 </div>
             </div>
@@ -154,7 +154,7 @@
 
 <script>
 import ModalBoard from "../components/ModalBoard"
-import {getAlbumType, postAlbum, getAlbumDetail, addAlbum, getOwnAlbum, addPicture} from "../../../service/find"
+import {getAlbumType, postAlbum, getAlbumDetail, addAlbum, getOwnAlbum, addPicture, delPicture} from "../../../service/find"
 import Pin from "../pins/_id"
 import ossUp from "../../../components/ossUp/ossUp"
 import crollBox from '../../../components/crollBox'
@@ -214,9 +214,10 @@ export default {
             this.isMining = false;
         },
         // 编辑采集
-        clickMining (row) {
+        clickMining (row, con) {
             this.isMining = true;
-            this.mining = row;
+            this.mining = JSON.parse(JSON.stringify(row));
+            this.mining.ID = con.ID;
         },
         // 采集
         clickColl (row) {
@@ -228,6 +229,27 @@ export default {
                 "ID": row.PicId
             }
             this.isColl = true
+        },
+        editMining () {
+            let that = this;
+            let query = {
+                "ID": this.mining.PicId,
+                "Title": this.mining.PicTitle,
+                "Desc": this.mining.Desc,
+                "listImg": this.mining.PicInfos,
+                "Link": this.mining.Link,
+                "AlbumID": this.mining.ID,
+                "Source": this.mining.Source,
+                "CollectId": this.mining.CollectId,
+            }
+            addAlbum(query).then(res => {
+                if (res) {
+                    that.isMining = false
+                    that.query.Page -=1
+                    that.willReachBottom()
+                }
+            }).catch(err => {})
+  
         },
         // 获取列表
         willReachBottom (index) {
@@ -243,7 +265,7 @@ export default {
                     } else {
                         this.AlbumList.push(...res.PicList)
                     }
-                    this.albumlInfo = res
+                    this.albumlInfo = res;
                     this.$nextTick(() => {
                         this.$redrawVueMasonry(this.findContainer)
                     })
@@ -338,8 +360,28 @@ export default {
             this.editCover = JSON.parse(JSON.stringify(row));
             this.editBoard = true
         },
-        // 删除画板
-        delBoard () {},
+        // 删除采集
+        delMining (row) {
+            let that = this;
+            let query = {
+                Ids: row.PicId,
+                OpType: 0
+            }
+            this.$Modal.confirm({
+                title: "删除采集",
+                content: `<p>确定删除采集？</p>`,
+                onOk: async () => {
+                    delPicture(query).then(res => {
+                        that.isMining = false
+                        that.query.Page -=1
+                        that.willReachBottom()
+                    }).catch(err => {})
+                },
+                onCancel: () => {
+                    return false
+                }
+            });
+        },
         // 创建/修改采集
         getOwnAlbumList () {
             let that = this;

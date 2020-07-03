@@ -39,3 +39,7 @@ export const addPicture = async (params) => {
 export const delAlbum = async (params) => {
     return await request.post('Picture/DeleteAlbum', params)
 }
+// 删除采集
+export const delPicture = async (params) => {
+    return await request.post('Picture/DeleteOrMovePicture', params)
+}

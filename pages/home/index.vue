@@ -12,9 +12,12 @@
                                     <span class="find-btn" @click.stop="clickColl(item)">采集</span>
                                 </div>
                             </div>
+                            <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
+                            <div class="find-box-tit-pins">
+                                <sidePin :AlbumId="item.AlbumId"/>
+                            </div>
                         </div>
                         <div class="find-box-bottom">
-                            <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
                             <div class="find-box-bottom-footer">
                                 <nuxt-link :to="`/home/info?id=${item.CreateUserId}`">
                                     <img v-lazy="item.HeadIcon" :data-original="item.HeadIcon" :alt="item.NickName">
@@ -25,9 +28,7 @@
                                        <nuxt-link :to="`/home/boards/${item.AlbumID}`">{{item.AlbumName}}</nuxt-link>
                                     </p>
                                 </div>
-                                <div class="find-box-bottom-footer-num">
-                                    {{item.Number}}
-                                </div>
+                                <div class="find-box-bottom-footer-num">{{item.Number}}</div>
                             </div>
                         </div>
                     </div>
@@ -39,6 +40,7 @@
 </template>
 <script>
 import Pin from "./pins/_id"
+import sidePin from "./components/sidePins"
 import crollBox from '../../components/crollBox'
 import collection from "./components/collection"
 export default {
@@ -46,7 +48,8 @@ export default {
     components: {
         Pin,
         crollBox,
-        collection
+        collection,
+        sidePin
     } ,
     data () {
         return {
@@ -167,8 +170,11 @@ export default {
     &-box {
         cursor: pointer;
         &:hover {
-            box-shadow: 0 1px 3px rgba(0,0,0,.02), 0 16px 32px -4px rgba(0,0,0,.17);
+            box-shadow: 0 1px 3px rgba(0,0,0,.02) ;
             transform: translateY(-1px);
+        }
+        &:hover &-bottom-footer-pins{
+            bottom: 63px;
         }
         &-tit {
             background: #fff;
@@ -188,12 +194,37 @@ export default {
             &:hover &-model {
                 display: inline-block;
             }
+            &-pins {
+                display: none;
+                position: absolute;
+                top: 0;
+                background: #000;
+                left: 0;
+                right: 0;
+                bottom: -1px;
+                z-index: 99;
+                &::after {
+                    content: "";
+                    display: inline-block;
+                    position: absolute;
+                    border: 10px solid;
+                    width: 0;
+                    height: 0;
+                    background: #000;
+                    bottom: -8px;
+                    transform: rotate(45deg);
+                    right: 37px;
+                    border-top-color: transparent;
+                    border-left-color: transparent;
+                }
+            }
+           
         }
         &-bottom {
             background: #fff;
-            position: relative;
+            // position: relative;
             &-sub {
-                display: inline-block;
+                // display: inline-block;
                 width: 232px;
                 padding: 10px 16px;
                 line-height: 1.35em;
@@ -202,6 +233,7 @@ export default {
                 border-bottom: 1px solid #f2f2f2;
                 -webkit-line-clamp: 3;
                 overflow: hidden;
+               
             }
             &-footer {
                 margin-bottom: 10px;
@@ -239,6 +271,9 @@ export default {
                     color: #9e7e6b;
                     cursor: pointer;
                     margin-top: 15px;
+                    &:hover .find-box-tit-pins {
+                        display: inline-block;
+                    }
                 }
             }
         }

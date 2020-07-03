@@ -37,7 +37,7 @@
                                 </span>
                                 <div class="piece-user-info-name">
                                     <h3><span>{{pictureDetail.NickName}}</span><em v-if="pictureDetail.Source === 1">从<span>{{pictureDetail.CollectNickName}}</span></em></h3>
-                                    <p><span>转采于</span><span> 18 小时前</span></p>
+                                    <p><span>转采于</span><span>{{pictureDetail.CreateDate | timestamp}}</span></p>
                                 </div>
                            </div>
                            <div class="piece-user-des">{{pictureDetail.Desc}}</div>
@@ -52,14 +52,14 @@
                                 <p class="pin-tag-tit-lf-name">{{pictureDetail.AlbumName}}</p>
                                 <p>{{pictureDetail.Number}}采集</p>
                             </div>
-                            <span class="pins-btn pin-tag-tit-rf">关注</span>
+                            <!-- <span class="pins-btn pin-tag-tit-rf">关注</span> -->
                         </div>
                         <div class="pin-tag-con">
                             <boardPins :albumList="albumList" v-if="albumList.length > 0"/>
                         </div>
                     </div>
-                    <a v-if="pictureDetail.Link" class="pin-source" href="http://" target="_blank" rel="noopener noreferrer">
-                        <div class="pin-source-www">wwww.baidu.com</div>
+                    <a v-if="pictureDetail.Link" class="pin-source" :href="`http://${pictureDetail.Link}`" target="_blank" rel="noopener noreferrer">
+                        <div class="pin-source-www">{{pictureDetail.Link}}</div>
                         <div>来源网站</div>
                     </a>
                 </div>
@@ -159,6 +159,8 @@ export default {
         justify-content: space-between;
         background: #fff;
         color: #999;
+        position: sticky;
+        top: 451px;
         &-www {
             color: #333;
             &:hover {

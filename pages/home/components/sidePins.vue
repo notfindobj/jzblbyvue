@@ -1,6 +1,6 @@
 <template>
     <Scroll :on-reach-bottom="handleReachBottom" class="board">
-        <div v-masonry transition-duration="3s" item-selector=".item" class="masonry-container" gutter="5">
+        <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="5">
             <div v-masonry-tile class="item" :key="index" v-for="(item, index) in albumList">
                 <div class="find-box">
                     <div class="find-box-tit">
@@ -13,24 +13,39 @@
     </Scroll>
 </template>
 <script>
+import {getAlbumDetail} from "../../../service/find"
 export default {
     props: {
-        albumList: {
-            type: Array,
-            default: () => []
+        AlbumId: {
+            type: String,
+            default: ""
         }
     },
     data () {
         return {
-           
+            findContainer: "findContainer",
+            albumList: [],
+            alb: {
+                AlbumId: "",
+                Page:	1,
+                Rows: 30
+            }
         }
     },
-    mounted () {   
+    mounted () { 
+        this.getAlbumList()
         if (typeof this.$redrawVueMasonry === 'function') {
-            this.$redrawVueMasonry()
+            this.$redrawVueMasonry(this.findContainer)
         }
     },
     methods: {
+        getAlbumList (id) {
+            this.albumList = []
+            this.alb.AlbumId = this.AlbumId
+            getAlbumDetail(this.alb).then(res => {
+                this.albumList = res.PicList;
+            })
+        },
         calculatedH (imgInfo, w=76) {
             var file = {
                 w: w,
@@ -62,9 +77,12 @@ export default {
         }
     }
 }
+.board {
+    background-color: rgba(0, 0, 0,.75);
+}
 /deep/::-webkit-scrollbar {
     width: 6px;
-    background-color: #fff;
+    background-color: rgba(0, 0, 0,.75);
 }
 /* 滚动槽 */
 /deep/::-webkit-scrollbar-track {

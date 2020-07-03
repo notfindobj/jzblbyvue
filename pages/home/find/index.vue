@@ -8,13 +8,13 @@
         </div>
         <crollBox @willReachBottom="willReachBottom">
             <div class="find">
-                <Pin :isPannel="isPin" @closePins="closeModal" v-if="isPin" :paramsId="paramsId"/>
+                <Pin :isPannel="isPin" @closePins="closeModal" v-if="isPin" :paramsId="paramsId" :pannelOndex="pannelOndex" @movePaym="movePaym" ref="Pin"/>
                 <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
                     <div v-masonry-tile class="item" :key="index" v-for="(item, index) in pictureList">
                         <div class="find-box">
                             <div class="find-box-tit">
                                 <img v-lazy="item.listImg.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.listImg)}`"/>
-                                <div class="find-box-tit-model find-box-tit-models" @click="showPins(item)">
+                                <div class="find-box-tit-model find-box-tit-models" @click="showPins(item, index)">
                                     <div class="find-model">
                                         <span class="find-btn" @click.stop="clickColl(item)">采集</span>
                                     </div>
@@ -68,6 +68,7 @@ export default {
             coll: {},
             isColl: false,
             AlbumType: [],
+            pannelOndex: 0,
             q: {
                 "typeId":"",
                 "Page":1,
@@ -144,13 +145,36 @@ export default {
             history.pushState(stateObject,title,newUrl);
             return false
         },
-        showPins (row) {
+        movePaym (val, index) {
+            let row = {}
+            // 左翻
+            if (val === 1) {
+               row = index- 1 >= 0 ? this.pictureList[index -1 ]: false
+            } else if (val === 2) {
+                row = index + 1 <= this.pictureList.length ? this.pictureList[index + 1]: false
+            }
+            if (row) {
+                this.isPin = true;
+                document.body.style.overflow = "hidden"
+                let stateObject = {};
+                let title = "Wow Title";
+                let newUrl = `/home/pins/${row.ID}`;
+                this.paramsId = row.ID
+                this.pannelOndex = val === 1 ? index- 1 : index + 1
+                history.pushState(stateObject,title,newUrl);
+                sessionStorage.setItem("pins", row.AlbumID)
+                this.$refs.Pin.initView()
+            }
+            return false
+        },
+        showPins (row, index) {
             this.isPin = true;
             var stateObject = {};
             document.body.style.overflow = "hidden"
             var title = "Wow Title";
             var newUrl = `/home/pins/${row.ID}`;
             this.paramsId = row.ID
+            this.pannelOndex = index
             history.pushState(stateObject,title,newUrl);
             sessionStorage.setItem("pins", row.AlbumID)
             return false

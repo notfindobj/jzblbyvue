@@ -30,7 +30,7 @@
         </ul>
     </div> 
     <div class="board-box">
-        <div class="board">
+        <div class="board" v-if="isSelf">
             <div class="board-add" @click="isSelf && showBoard()">
                 <div class="board-add-box">
                     <Icon type="ios-add-circle-outline" />
@@ -73,8 +73,8 @@
                         </div> -->
                     </div>
                 </nuxt-link>
-                <div class="board-footer">
-                    <span class="board-footer-btn" @click="isSelf && edBoard(items)">编辑</span>
+                <div class="board-footer" v-if="isSelf">
+                    <span class="board-footer-btn" @click="edBoard(items)">编辑</span>
                 </div>
             </div>
         </template>
