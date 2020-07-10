@@ -33,9 +33,12 @@
                             <Icon type="ios-arrow-down"></Icon>
                         </a>
                         <DropdownMenu slot="list">
-                            <DropdownItem>建筑学院（内测中）</DropdownItem>
-                            <DropdownItem><nuxt-link to="/order_lobby">接单大厅</nuxt-link></DropdownItem>
-                            <DropdownItem><a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a></DropdownItem>
+                            <!-- @click.native="$router.push({name:'order_lobby'})" -->
+                            <DropdownItem >建筑学院（内测中）</DropdownItem>
+                            <!-- <DropdownItem><nuxt-link to="/order_lobby">接单大厅</nuxt-link></DropdownItem> -->
+                            <DropdownItem @click.native="$router.push({name:'order_lobby'})">接单大厅</DropdownItem>
+                            <!-- <DropdownItem><a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a></DropdownItem> -->
+                            <DropdownItem @click.native="goMytribe">我的部落</DropdownItem>
                         </DropdownMenu>
                     </Dropdown>
                 </li>
@@ -260,7 +263,6 @@ export default {
                     height: 60px;
                     margin: 0 15px;
                     line-height: 60px;
-
                 }
                 a:hover {
                     color: #FF3C00;
@@ -270,7 +272,7 @@ export default {
                     color: #FF3C00;
                     border-bottom: 2px solid #ff3c00;
                 }
-                li {
+                > li {
                     &:first-child {
                         margin-right: 30px;
                     }

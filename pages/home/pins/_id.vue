@@ -14,18 +14,18 @@
         </div>
         <div v-cloak class="paym-content" ref="findModal" v-if="pictureDetail && pictureDetail.listImg">
             <div class="paym-content-main">
-                <div class="paym-content-main-left">
+                <div :class="!isPins? 'paym-content-main-left paym-as' : 'paym-content-main-left'" >
                     <div class="content-main-top">
                         <div class="paym-content-main-left-title">
-                            <span class="find-btn">采集</span>
+                            <span class="find-btn" @click="clickColl(pictureDetail)">采集</span>
                         </div>
                         <div class="paym-content-main-left-content">
                             <img v-lazy="pictureDetail.listImg.bigImgUrl"  :data-original="pictureDetail.listImg.bigImgUrl" :alt="pictureDetail.AlbumName">
                         </div>
-                        <div class="paym-content-main-left-footer">
+                        <!-- <div class="paym-content-main-left-footer">
                             <span class="pins-btn">喜欢</span>
                             <span class="pins-btn">评论</span>
-                        </div>
+                        </div> -->
                     </div>
                     <div class="piece"> 
                         <div class="piece-user">
@@ -40,7 +40,7 @@
                                     <p><span>转采于</span><span>{{pictureDetail.CreateDate | timestamp}}</span></p>
                                 </div>
                            </div>
-                           <div class="piece-user-des">{{pictureDetail.Desc}}</div>
+                           <div class="piece-user-des">{{pictureDetail.Title}}</div>
                         </div>
                         <div></div>
                     </div>
@@ -50,12 +50,12 @@
                         <div class="pin-tag-tit">
                             <div class="pin-tag-tit-lf">
                                 <p class="pin-tag-tit-lf-name">{{pictureDetail.AlbumName}}</p>
-                                <p>{{pictureDetail.Number}}采集</p>
+                                <p>{{pictureDetail.Number}} &nbsp;&nbsp;&nbsp;采集</p>
                             </div>
                             <!-- <span class="pins-btn pin-tag-tit-rf">关注</span> -->
                         </div>
                         <div class="pin-tag-con">
-                            <boardPins :albumList="albumList" v-if="albumList.length > 0"/>
+                            <boardPins :albumList="albumList" v-if="albumList.length > 0" @silePins="silePins"/>
                         </div>
                     </div>
                     <a v-if="pictureDetail.Link" class="pin-source" :href="`http://${pictureDetail.Link}`" target="_blank" rel="noopener noreferrer">
@@ -65,10 +65,12 @@
                 </div>
             </div>
         </div>
+        <collection :coll="coll" v-if="isColl" @closeModal="closeColl"></collection>
     </div>
 </template>
 <script>
 import boardPins from "../components/boardPins"
+import collection from "../components/collection"
 import {getPictureDetail, getAlbumDetail} from "../../../service/find"
 export default {
     layout: "find",
@@ -87,13 +89,16 @@ export default {
         }
     },
     components: {
-        boardPins
+        boardPins,
+        collection
     },
     data () {
         return {
             isPins: false,
             pictureDetail: {},
             albumList: [],
+            coll: {},
+            isColl: false,
             alb: {
                 AlbumId: "",
                 Page:	1,
@@ -120,6 +125,14 @@ export default {
         }
     },
     methods: {
+        // 采集
+        clickColl (row) {
+            this.coll = JSON.parse(JSON.stringify(row))
+            this.isColl = true
+        },
+        closeColl () {
+            this.isColl = false
+        },
         initView () {
             this.getDetail()
             this.getAlbumList()
@@ -130,6 +143,9 @@ export default {
         closePins () {
             this.isPins = false;
             this.$emit("closePins")
+        },
+        silePins (row) {
+            this.$emit("silePins", row)
         },
         getAlbumList (id) {
             this.albumList = []
@@ -151,6 +167,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .paym-as {
+        margin-top: 30px;
+    }   
     .pin-source {
         position: relative;
         display: block;
@@ -163,6 +182,9 @@ export default {
         top: 451px;
         &-www {
             color: #333;
+            width: 190px;
+            overflow: hidden;
+            overflow-wrap: break-word;
             &:hover {
                 color: #9a0000;
                 text-decoration: underline;
@@ -229,6 +251,7 @@ export default {
                 &-name {
                     font-size: 14px;
                     color: #9e7e6b;
+                    margin-bottom: 3px;
                 }
             }
             &-rf{
@@ -298,7 +321,7 @@ export default {
     .paym, .payms {
         &-content {
             width: 1000px;
-            margin: 0 auto;
+            margin: 20px auto;
             &-main {
                 display: flex;
                 justify-content: space-between;

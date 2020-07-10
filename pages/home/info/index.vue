@@ -19,7 +19,7 @@
         </div>
         <div class="user-card-name">
             <div class="user-card-name-na">{{userInfo.NickName}}</div>
-            <span>设置</span>
+            <span v-if="isSelf">设置</span>
         </div>
     </div>
     <div class="user-nav">
@@ -324,10 +324,11 @@ input,select, option{
     width: 100%;
     outline: none;
     border: 0;
-    height: 30px;
+    height: 40px;
     padding-left: 10px;
     border: 1px solid #ff3c00;
-    line-height: 30px;
+    line-height: 40px;
+    border-radius: 3px;
     margin-top: 10px;
 }
 textarea {
@@ -458,6 +459,8 @@ textarea {
             border: 1px solid #dedede;
             img {
                 width: 66.66px;
+                width: 100%;
+                height: 100%;
             }
         }
         &:nth-child(3n) {

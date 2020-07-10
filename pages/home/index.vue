@@ -14,7 +14,7 @@
                             </div>
                             <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
                             <div class="find-box-tit-pins">
-                                <sidePin :AlbumId="item.AlbumId"/>
+                                <!-- <sidePin :AlbumId="item.AlbumId"/> -->
                             </div>
                         </div>
                         <div class="find-box-bottom">
@@ -23,7 +23,7 @@
                                     <img v-lazy="item.HeadIcon" :data-original="item.HeadIcon" :alt="item.NickName">
                                 </nuxt-link>
                                 <div class="find-box-bottom-footer-pin">
-                                    <p><span>{{item.NickName}}</span><span> 采集到</span></p>
+                                    <p> <nuxt-link :to="`/home/info?id=${item.CreateUserId}`"><span class="pin-name">{{item.NickName}}</span></nuxt-link><span> 采集到</span></p>
                                     <p>
                                        <nuxt-link :to="`/home/boards/${item.AlbumID}`">{{item.AlbumName}}</nuxt-link>
                                     </p>
@@ -163,6 +163,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.pin-name {
+    text-decoration: underline;
+}
 .find {
     width: 1200px;
     margin: 0 auto;
@@ -252,7 +255,6 @@ export default {
                     }
                 }
                 &-pin{
-                    margin: 0 15px; 
                     height: 51px;
                     padding: 15px 0 0 10px;
                     line-height: 1.5;

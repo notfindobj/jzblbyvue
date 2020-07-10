@@ -15,7 +15,7 @@
                     <p v-if="albumlInfo.Desc">画板简介：{{albumlInfo.Desc}}</p>
                     <p>所属分类：{{albumlInfo.TypeName}}</p>
                 </div>
-                <span @click="isSelf && edBoard(albumlInfo)">设置</span>
+                <span v-if="isSelf" @click="edBoard(albumlInfo)">设置</span>
             </div>
         </div>
         <div>
@@ -273,16 +273,17 @@ export default {
             }
         },
         // 上传图片
-        fileSuccess(file) {
+        async fileSuccess(file) {
             let that = this;
             let img = new Image();
             img.src = file.smallImgUrl;
-            img.onload = function() {
+            img.onload = await function() {
+                let data = JSON.parse(JSON.stringify(file))
                 that.pickImgs.push({
                     Desc: "",
                     listImg: {
-                        fileName: file.name,
-                        smallImgUrl: file.smallImgUrl,
+                        fileName: data.name,
+                        smallImgUrl: data.smallImgUrl,
                         width: img.naturalWidth,
                         height: img.naturalHeight
                     }
@@ -487,10 +488,11 @@ input,select, option{
     width: 100%;
     outline: none;
     border: 0;
-    height: 30px;
+    height: 40px;
     padding-left: 10px;
     border: 1px solid #ff3c00;
-    line-height: 30px;
+    line-height: 40px;
+    border-radius: 3px;
     margin-top: 10px;
 }
  textarea {

@@ -51,7 +51,6 @@ export default {
             margin-bottom: 10px;
             span {
                 font-size: 18px;
-                font-weight: bold;
             }
             i {
                 position: absolute;

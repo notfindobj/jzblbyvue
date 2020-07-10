@@ -182,6 +182,10 @@ export default {
     },
     methods: {
         closeModal() {
+            if (!localStorage.getItem("field")) {
+                this.isPanel = true
+                return false
+            }
             let q ={
                 typeIds: localStorage.getItem("field"),
             }

@@ -19,7 +19,8 @@
                             </div>
                             <div class="sile-nav-dl-dd-sub">
                                 <span>{{item.Duration}}</span>
-                                <span>{{item.IsFree === 1 ? '免费':''}}</span>
+                                <span v-if="!(item.outlineId === playing)">{{item.IsFree === 1 ? '免费':''}}</span>
+                                <span v-if="item.outlineId === playing" class="playing">正在播放</span>
                             </div>
                         </dd>
                     </dl>
@@ -47,6 +48,7 @@ export default {
     data () {
         return {
             extend: false,
+            playing: ''
         }
     },
     methods: {
@@ -58,6 +60,7 @@ export default {
                 VideoImg: row.FirstImg,
                 VideoUrl: row.ResourceObj,
             }
+            this.playing = row.outlineId
             this.$emit("playVideo", q)
             this.switchSource(q)
         },
@@ -72,6 +75,9 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.playing {
+    color: #1bbc9b !important;
+}
 .sile-box {
     width: 350px;
     position: relative;

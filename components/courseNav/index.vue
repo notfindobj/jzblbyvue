@@ -5,7 +5,12 @@
                 <li>
                     <nuxt-link to="/"> 建筑部落</nuxt-link>
                 </li>
-                <li>资料库</li>
+                <li>
+                    <nuxt-link to="/home">发现</nuxt-link>
+                </li>
+                <li>
+                    <a @click.stop="goSearch">档案库</a>
+                </li>
                 <li><nuxt-link to="/BuildingCircle"> 建筑圈</nuxt-link></li>
                 <li><nuxt-link to="/videos"> 视频</nuxt-link></li>
                 <li><nuxt-link to="/QuestionsAndAnswers"> 问答</nuxt-link></li>
@@ -43,6 +48,39 @@
         </div>
     </div>
 </template>
+import {setDemo} from '../../LocalAPI'
+export default {
+    methods: {
+        async goSearch () {
+            // 搜索页导航数据
+            let baseSearchNav = {
+                key: 'baseSearchNav',
+                value: {
+                    ClassTypeArrList: [{AttrKey: 'e5082f90-f590-4107-8d42-2d37897ef261', AttrValue: 'DesignLib'}],
+                    title: '示范区',
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchNav);
+            let msgs = await setDemo('baseSearchNav', baseSearchNav);
+            // 搜索页项目数据
+            let baseSearchItem = {
+                key: 'baseSearchItem',
+                value: {
+                    Pagination: {
+                        SortType: '1',
+                        KeyWords: "",
+                        Order: true,
+                        Page: 1,
+                        Rows: 32
+                    }
+                }
+            }
+            this.$store.dispatch('Serverstorage', baseSearchItem);
+            let msgss = await setDemo('baseSearchItem', baseSearchItem);
+            this.$router.push({ name: "dataBase"});
+        }
+    }
+}
 <style lang="less" scoped>
 .course {
         position: sticky;

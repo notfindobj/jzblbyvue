@@ -241,10 +241,11 @@ input,select, option{
     width: 100%;
     outline: none;
     border: 0;
-    height: 30px;
+    height: 40px;
     padding-left: 10px;
     border: 1px solid #ff3c00;
-    line-height: 30px;
+    line-height: 40px;
+    border-radius: 3px;
     margin-top: 10px;
 }
 textarea {

@@ -103,6 +103,9 @@
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                 </li>
                 <li>
+                    <nuxt-link to="/home">发现</nuxt-link>
+                </li>
+                <li>
                     <nuxt-link to="/attention">关注</nuxt-link>
                 </li>
                 <!-- <li @click="goRecommend">推荐</li> -->
@@ -118,7 +121,7 @@
                 <li>
                     <a href="javasrcipt:(0)"  @click="goMytribe">我的部落</a>
                     <!-- <nuxt-link to="/HeAndITribal"></nuxt-link> -->
-                </li>
+                </li>  
                 <li>
                     <nuxt-link to="/order_lobby">接单大厅</nuxt-link>
                 </li>
@@ -128,6 +131,7 @@
                 <li>
                     建筑学院<span>(内测中)</span>
                 </li>
+
             </ul>
             <!-- <div class="main-nav-publish" @click="publish">发布</div> -->
         </div>
@@ -450,18 +454,17 @@
         background: #F2F4F2;
         border-bottom: 1px solid #FF3C00;
         position: relative;
-
         &-tab {
             font-size: 16px;
             color: #FF3C00;
             display: flex;
             width: 1200px;
             margin: 0 auto;
-
             > li {
-                padding: 8px 30px;
+                padding: 8px 25px;
                 cursor: pointer;
-                font-size: 20px;
+                font-size: 16px;
+                height: 41px;
             }
         }
 
@@ -492,7 +495,6 @@
                 margin-left: 90px;
             }
         }
-
         &-logo {
             width: 137px;
             img {
@@ -512,7 +514,7 @@
 
         .banner-nav {
             position: absolute;
-            top: 43px;
+            top: 38px;
             left: 0;
             z-index: 99;
         }

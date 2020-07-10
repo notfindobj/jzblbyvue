@@ -49,7 +49,6 @@ function oss(filename = null, type = 0) {
         publishType: type
       }
       return getPostPolicy(q).then(res => {
-        console.log('uploadjs----',res)
         /* 返回的签名策略信息包含:
         {
           accessid: "LTAI*******UPPr", // 用户请求的accessid
