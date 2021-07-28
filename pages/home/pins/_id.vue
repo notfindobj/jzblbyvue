@@ -42,8 +42,8 @@
                            </div>
                            <div class="piece-user-des">{{pictureDetail.Title}}</div>
                         </div>
-                        <div></div>
                     </div>
+                    
                 </div>
                 <div class="paym-content-main-right">
                     <div class="pin-tag">
@@ -65,13 +65,53 @@
                 </div>
             </div>
         </div>
+        <crollBox @willReachBottom="willReachBottom">
+            <div class="find">
+                <div class="find-name">
+                    <span>为您推荐</span>
+                </div>
+                <div v-masonry="findContainer" item-selector=".item" class="masonry-container" gutter="10">
+                    <div v-masonry-tile class="item" :key="index" v-for="(item, index) in samePicture">
+                        <div class="find-box">
+                            <div class="find-box-tit">
+                                <img v-lazy="item.listImg.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.listImg)}`"/>
+                                <div class="find-box-tit-model find-box-tit-models" @click="showPins(item, index)">
+                                    <div class="find-model">
+                                        <span class="find-btn" @click.stop="clickColl(item)">采集</span>
+                                    </div>
+                                </div>
+                                <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
+                                <div class="find-box-tit-pins">
+                                    <!-- <sidePin :AlbumId="item.AlbumId"/> -->
+                                </div>
+                            </div>
+                            <div class="find-box-bottom">
+                                <div class="find-box-bottom-footer">
+                                    <nuxt-link :to="`/home/info?id=${item.CreateUserId}`">
+                                        <img v-lazy="item.HeadIcon" :data-original="item.HeadIcon" :alt="item.NickName">
+                                    </nuxt-link>
+                                    <div class="find-box-bottom-footer-pin">
+                                        <p> <nuxt-link :to="`/home/info?id=${item.CreateUserId}`"><span class="pin-name">{{item.NickName}}</span></nuxt-link><span> 采集到</span></p>
+                                        <p>
+                                        <nuxt-link :to="`/home/boards/${item.AlbumID}`">{{item.AlbumName}}</nuxt-link>
+                                        </p>
+                                    </div>
+                                    <div class="find-box-bottom-footer-num">{{item.Number}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </crollBox>
         <collection :coll="coll" v-if="isColl" @closeModal="closeColl"></collection>
     </div>
 </template>
 <script>
+import crollBox from '../../../components/crollBox'
 import boardPins from "../components/boardPins"
 import collection from "../components/collection"
-import {getPictureDetail, getAlbumDetail} from "../../../service/find"
+import {getPictureDetail, getAlbumDetail, getSamePicture} from "../../../service/find"
 export default {
     layout: "find",
     props: {
@@ -83,17 +123,21 @@ export default {
             type: Number,
             default: 0
         },
-        paramsId: {
-            type: String,
-            default: ''
-        }
+        // paramsId: {
+        //     type: String,
+        //     default: ''
+        // }
     },
     components: {
         boardPins,
-        collection
+        collection,
+        crollBox
     },
     data () {
         return {
+            paramsId: this.value,
+            findContainer:"findContainer",
+            isPin: false,
             isPins: false,
             pictureDetail: {},
             albumList: [],
@@ -103,28 +147,86 @@ export default {
                 AlbumId: "",
                 Page:	1,
                 Rows: 15
-            }
+            },
+            query: {
+                pictureId: "",
+                total: 0,
+                "Page":1,
+                "Rows":30
+            },
+            samePicture: []
         }
     },
     created () {
         if (this.$route.params.id) {
             this.isPins = true;
             this.getDetail()
+            this.getSameList()
         }
     },
     mounted () {
         let taht = this
-        document.addEventListener('click', e => {
-            // if(this.$refs.findModal && !this.$refs.findModal.contains(e.target)){
-            //     this.$emit("closeModal", false)
-            // }
-        })
         this.getAlbumList()
         if (!this.isPins) {
             taht.getDetail()
+            taht.getSameList()
         }
     },
     methods: {
+        showPins (row, index) {
+            var stateObject = {};
+            var title = "Wow Title";
+            var newUrl = `/home/pins/${row.ID}`;
+            history.pushState(stateObject,title,newUrl);
+            this.paramsId = row.ID;
+            this.$emit('input', row.ID);
+            sessionStorage.setItem("pins", row.AlbumID);
+            (function smoothscroll(){
+                var currentScroll = document.documentElement.scrollTop || document.body.scrollTop;
+                if (currentScroll > 0) {
+                    window.requestAnimationFrame(smoothscroll);
+                    window.scrollTo (0,currentScroll - (currentScroll/5));
+                }
+            })();
+            this.getAlbumList()
+            this.getDetail()
+            this.getSameList()
+        },
+        async willReachBottom () {
+            if (!(this.query.Page + 1 >  this.query.total)) {
+                this.query.Page += 1;
+                this.query.pictureId = this.$route.params.id ||this.paramsId,
+                getSamePicture(this.query).then(res => {
+                    this.samePicture.push(...res.piclist)
+                    this.query.total = res.pagination.total;
+                    this.$nextTick(() => {
+                        this.$redrawVueMasonry(this.findContainer)
+                    })
+                }).catch(err => {})
+            }
+        },
+        calculatedH (imgInfo, w=232) {
+            var file = {
+                w: w,
+                h: 0
+            }
+            file.h = parseInt(imgInfo.height * w / imgInfo.width)
+            return file.h+"px"
+        },
+        getSameList () {
+            let query = {
+                pictureId: this.$route.params.id ||this.paramsId,
+                "Page":1,
+                "Rows":30
+            }
+            getSamePicture(query).then(res => {
+                this.samePicture = res.piclist;
+                this.query.total = res.pagination.total;
+                this.$nextTick(() => {
+                    this.$redrawVueMasonry(this.findContainer)
+                })
+            }).catch(err => {})
+        },
         // 采集
         clickColl (row) {
             this.coll = JSON.parse(JSON.stringify(row))
@@ -156,7 +258,7 @@ export default {
         },
         getDetail () {
             let query = {
-                pictureId: this.$route.params.id ||this.paramsId
+                pictureId: this.$route.params.id || this.paramsId
             }
             getPictureDetail(query).then(res => {
                 this.pictureDetail = res;
@@ -167,6 +269,128 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+    .find {
+        width: 1200px;
+        margin: 0 auto;
+        margin-top: 20px;
+        &-name {
+            font-size: 20px;
+            color: #666;
+            line-height: 40px;
+            border-bottom: 1px solid #d6d6d6;
+            margin-bottom: 10px;
+        }
+        &-box {
+            cursor: pointer;
+            &:hover {
+                box-shadow: 0 1px 3px rgba(0,0,0,.02) ;
+                transform: translateY(-1px);
+            }
+            &:hover &-bottom-footer-pins{
+                bottom: 63px;
+            }
+            &-tit {
+                background: #fff;
+                position: relative;
+                &-models {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 5px;
+                    z-index: 11;
+                    background: #ffffff14;
+                }
+                &-model {
+                    display: none;
+                }
+                &:hover &-model {
+                    display: inline-block;
+                }
+                &-pins {
+                    display: none;
+                    position: absolute;
+                    top: 0;
+                    background: #000;
+                    left: 0;
+                    right: 0;
+                    bottom: -1px;
+                    z-index: 99;
+                    &::after {
+                        content: "";
+                        display: inline-block;
+                        position: absolute;
+                        border: 10px solid;
+                        width: 0;
+                        height: 0;
+                        background: #000;
+                        bottom: -8px;
+                        transform: rotate(45deg);
+                        right: 37px;
+                        border-top-color: transparent;
+                        border-left-color: transparent;
+                    }
+                }
+            
+            }
+            &-bottom {
+                background: #fff;
+                // position: relative;
+                &-sub {
+                    // display: inline-block;
+                    width: 232px;
+                    padding: 10px 16px;
+                    line-height: 1.35em;
+                    overflow: hidden;
+                    word-wrap: break-word;
+                    border-bottom: 1px solid #f2f2f2;
+                    -webkit-line-clamp: 3;
+                    overflow: hidden;
+                
+                }
+                &-footer {
+                    margin-bottom: 10px;
+                    display: flex;
+                    padding: 0 16px;
+                    >a {
+                        display: inline-block;
+                        width: 34px;
+                        height: 34px;
+                        margin: 16px 0;
+                        img {
+                            display: block;
+                            width: 34px;
+                            height: 34px;
+                            border-radius: 50%;
+                        }
+                    }
+                    &-pin{
+                        height: 51px;
+                        padding: 15px 0 0 10px;
+                        line-height: 1.5;
+                    }
+                    &-num{
+                        display: block;
+                        min-width: 20px;
+                        margin: 0 auto;
+                        padding: 0 5px;
+                        height: 24px;
+                        line-height: 24px;
+                        text-align: center;
+                        white-space: nowrap;
+                        border-radius: 2px;
+                        border: 1px solid #e6e6e6;
+                        color: #9e7e6b;
+                        cursor: pointer;
+                        margin-top: 15px;
+                        &:hover .find-box-tit-pins {
+                            display: inline-block;
+                        }
+                    }
+                }
+            }
+        }
+    }
     .paym-as {
         margin-top: 30px;
     }   
@@ -194,7 +418,6 @@ export default {
     .piece {
         background: #fff;
         padding: 16px 20px;
-        margin-bottom: 16px;
         margin-top: 20px;
         box-shadow: 0 1px 3px 0 rgba(0,0,0,.02), 0 4px 8px 0 rgba(0,0,0,.02);
         &-user {
@@ -321,13 +544,12 @@ export default {
     .paym, .payms {
         &-content {
             width: 1000px;
-            margin: 20px auto;
+            margin: 20px auto 0;
             &-main {
                 display: flex;
                 justify-content: space-between;
                 &-left {
                     width: 700px;
-                    margin-bottom: 16px;
                     &-title {
                         margin-bottom: 16px;
                         position: relative;

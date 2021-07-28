@@ -52,6 +52,7 @@
 </template>
 <script>
 import { LecturerApply } from "../../service/course";
+import {validatePassCheck} from '../../plugins/untils/Verify'
 export default {
     layout: "course",
     data () {
@@ -75,7 +76,7 @@ export default {
                     { required: true, message: '姓名不能为空', trigger: 'blur' }
                 ],
                 Phone: [
-                    { required: true, message: '手机号码不能为空', trigger: 'blur' }
+                    { required: true, validator: validatePassCheck, trigger: 'blur' }
                 ],
                 WeChatID: [
                     { required: true, message: '微信号不能为空', trigger: 'blur' }
@@ -116,8 +117,6 @@ export default {
                         this.$Message.success('申请成功，请等待审核！');
                         this.$refs[name].resetFields();
                     }).catch(err => {})
-                } else {
-                    this.$Message.error('Fail!');
                 }
             })
         },

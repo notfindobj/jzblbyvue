@@ -37,7 +37,7 @@ export default {
         position: fixed;
         min-width: 200px;
         min-height: 200px;
-        top: 40%;
+        top: 43%;
         left: 50%;
         transform: translate(-50%, -50%);
         z-index: 99;

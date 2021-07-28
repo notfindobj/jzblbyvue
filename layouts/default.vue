@@ -1,19 +1,19 @@
 <template>
     <div>
-        <TopAd></TopAd>
+        <!-- <TopAd></TopAd> -->
         <Navigation></Navigation>
         <nuxt/>
         <Foot></Foot>
         <ToTop/>
-        <floating/>
+        <!-- <floating/> -->
     </div>
 </template>
 <script>
     import Navigation from '../components/Navigation';
     import Foot from '../components/Foot';
-    import TopAd from '../components/TopAd';
+    // import TopAd from '../components/TopAd';
     import ToTop from '../components/toTop'
-    import floating from '../components/floating'
+    // import floating from '../components/floating'
     export default {
         mounted () {
             let _hmt = _hmt || [];
@@ -27,9 +27,9 @@
         components: {
             Navigation,
             Foot,
-            TopAd,
+            // TopAd,
             ToTop,
-            floating
+            // floating
         }
     }
 </script>

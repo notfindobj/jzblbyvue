@@ -43,7 +43,7 @@ module.exports = {
     { src: '~plugins/vMap', ssr: true },
     { src: "~plugins/iconfont.js", ssr: false },
     { src: '~/plugins/vue-lazyload.js', ssr: false },
-    { src: '~/plugins/vue-masonry', ssr: false }, // 瀑布流组件
+    // { src: '~/plugins/vue-masonry', ssr: false }, // 瀑布流组件
     { src: '~/plugins/commom.js', ssr: true }, // 全局组件、方法
   ],
   server: {

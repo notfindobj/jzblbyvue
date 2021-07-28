@@ -26,7 +26,7 @@
         <ul>
             <li>{{userInfo.Albums}}画板</li>
             <li>{{userInfo.Pictures}}采集</li>
-            <li>喜欢</li>
+            <!-- <li>喜欢</li> -->
         </ul>
     </div> 
     <div class="board-box">
@@ -203,6 +203,14 @@ export default {
             }
         },
         createAlbum () {
+            if (!this.cover.Name) {
+                this.$Message.warning("画板标题不能为空")
+                return false
+            }
+            if (!this.cover.TypeID && this.cover.TypeID !== "选择分类") {
+                this.$Message.warning("请选择画板类型")
+                return false
+            }
             let that = this;
             postAlbum(this.cover).then(res => {
                 if (res) {

@@ -19,7 +19,7 @@
             </div>
         </div>
         <div>
-            <Pin :isPannel="isPin" @closePins="isPin = false" v-if="isPin" :paramsId="paramsId"/>
+            <Pin :isPannel="isPin" @closePins="isPin = false" v-if="isPin" v-model="paramsId"/>
             <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
                 <div class="board item" v-masonry-tile v-if="isSelf">
                     <div class="board-add" @click="isSelf && showPick()">
@@ -121,11 +121,11 @@
                     </div>
                     <div class="newboard-item">
                         <label for="">描述:</label>
-                        <textarea cols="30" rows="4" v-model="mining.Desc" placeholder="画板简介"></textarea>
+                        <textarea cols="30" rows="4" v-model="mining.Desc" placeholder="#描述#古典#效果图#总图"></textarea>
                     </div>
                     <div class="newboard-item">
                         <label for="">来源:</label>
-                        <input type="text" :disabled="mining.Source === 0 ? false : true " v-model="mining.Link" placeholder="来源">
+                        <input type="text" :disabled="mining.Source === 0 ? false : true " v-model="mining.Link" placeholder="来源网站链接">
                     </div>
                     <div class="newboard-item">
                         <label for="">画板:</label>
@@ -323,6 +323,13 @@ export default {
         },
         upPick () {
             let that = this;
+            if (that.pickImgs.length <= 0) {
+                return false
+            }
+            if (this.addPick.ID === "选择分类") {
+                this.$Message.warning("请选择分类")
+                return false
+            }
             let query = {
                 AlbumID: this.addPick.ID,
                 list: that.pickImgs

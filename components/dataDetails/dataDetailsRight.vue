@@ -36,7 +36,7 @@
                     </li>
                     <li v-for="(item,index) in attribute" :key="index" v-if="item.ItemAttributesFullName">
                         <span>{{item.ItemAttributesFullName}}:</span>
-                        <span v-if="item.ItemSubAttributeId.length < 10">{{item.ItemSubAttributeFullName}} <syIcon syHref="ditudaohang" @openMap="openMap(item)"/></span>
+                        <span v-if="item.ItemSubAttributeId.length < 10"><span class="data-name" :title="item.ItemSubAttributeFullName">{{item.ItemSubAttributeFullName}}</span> <syIcon syHref="ditudaohang" @openMap="openMap(item)"/></span>
                         <span v-else>{{item.ItemSubAttributeFullName}}</span>
                     </li>
                 </ul>
@@ -353,5 +353,15 @@
         color: #ff3c00;
         font-weight: 100;
       }
+    }
+    .data-name {
+      display: inline-block;
+      width: 230px;
+      height: 18px;
+      overflow: hidden;
+      text-emphasis: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      line-height: 18px !important;
     }
 </style>

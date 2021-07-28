@@ -1,6 +1,7 @@
 exports.configUrl = {
     baseUrl: (() => {
         // return 'http://www.api.jzbl.com:8099/api/'
+        // return 'https://www.api.jzbl.com/api/'
         return 'https://www.api.jzbl.com/api/'
         // return 'http://192.168.10.19:600/api/'
     })(),

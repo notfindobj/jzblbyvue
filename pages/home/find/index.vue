@@ -1,6 +1,7 @@
 <template>
     <div>
         <div class="find-nav">
+            <div class="find-nav-kong"></div>
             <ul>
                 <li :class="q.typeId === '' ? 'action': ''" @click="selectType({})">全部</li>
                 <li :class="q.typeId === items.ID ? 'action': ''" v-for="(items, index) in AlbumType" :key="index" @click="selectType(items)">{{items.Name}}</li>
@@ -8,7 +9,10 @@
         </div>
         <crollBox @willReachBottom="willReachBottom">
             <div class="find">
-                <Pin :isPannel="isPin" @closePins="closeModal" v-if="isPin" :paramsId="paramsId" :pannelOndex="pannelOndex" @movePaym="movePaym" ref="Pin"/>
+                <Pin :isPannel="isPin" @closePins="closeModal" v-if="isPin" v-model="paramsId" :pannelOndex="pannelOndex" @movePaym="movePaym" ref="Pin"/>
+                <div v-if="pictureList.length <= 0" style="text-align: center;">
+                    暂无数据
+                </div>
                 <div v-masonry="findContainer" transition-duration="3s" item-selector=".item" class="masonry-container" gutter="10">
                     <div v-masonry-tile class="item" :key="index" v-for="(item, index) in pictureList">
                         <div class="find-box">
@@ -61,7 +65,7 @@ export default {
     } ,
     data () {
         return {
-            findContainer: "findContainer",
+            findContainer: "findCon",
             isPin:  false,
             pictureList: [],
             paramsId: '',
@@ -196,7 +200,14 @@ export default {
     top: 60px;
     z-index: 99;
     border-top: 1px solid #ddd;
+    background: #f2f4f2;
+    &-kong {
+        margin: 0 10px;
+        height: 1px;
+        display: inline-block;
+    }
     ul {
+        background: #fff;
         display: flex;
         line-height: 40px;
         width: 1200px;

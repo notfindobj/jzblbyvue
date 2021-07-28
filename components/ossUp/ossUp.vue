@@ -51,7 +51,7 @@ export default{
   },
   methods: {
     // 在Upload组件的钩子before-upload中获取到生成的参数信息
-    beforeUpload(file) {
+    async beforeUpload(file) {
       let _this = this;
       if (file.size > this.maxSize * 1024000) {
         this.$Message.error({
@@ -60,7 +60,8 @@ export default{
         })
         return false
       }
-      return oss(file.name, _this.fileType).then(res => {
+      return await oss(file.name, _this.fileType).then(res => {
+        console.log('beforeUpload', res)
         this.uploadHost = res.host
         this.uploadData = res;
         this.fileName = res;
@@ -85,13 +86,13 @@ export default{
     },
     // 上传成功的回调函数 imgBaseUrl
     handleSuccess(res, file, filelist) {
+      console.log('handleSuccess', res)
       let obj = {
         name: file.name,
         action: false,
         key: file.key,
         smallImgUrl: this.imgBaseUrl + this.uploadData.key
       }
-      console.log(this.uploadData.key)
       this.$emit('uploadSuccess', obj);
     },
   }

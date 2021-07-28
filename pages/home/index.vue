@@ -1,7 +1,7 @@
 <template>
     <crollBox @willReachBottom="willReachBottom">
         <div class="find">
-            <Pin :isPannel="isPin" @closePins="closeModal()" v-if="isPin" :paramsId="paramsId" :pannelOndex="pannelOndex" @movePaym="movePaym" ref="Pin"/>
+            <Pin :isPannel="isPin" @closePins="closeModal()" v-if="isPin" v-model="paramsId" :pannelOndex="pannelOndex" @movePaym="movePaym" ref="Pin"/>
             <div v-masonry="findContainer" item-selector=".item" class="masonry-container" gutter="10">
                 <div v-masonry-tile class="item" :key="index" v-for="(item, index) in pictureList">
                     <div class="find-box">
@@ -9,7 +9,7 @@
                             <img v-lazy="item.listImg.bigImgUrl" referrer="no-referrer|origin|unsafe-url" alt="" :data-original="item.listImg.bigImgUrl" :style="`width: 232px;height: ${calculatedH(item.listImg)}`"/>
                             <div class="find-box-tit-model find-box-tit-models" @click="showPins(item, index)">
                                 <div class="find-model">
-                                    <span class="find-btn" @click.stop="clickColl(item)">采集</span>
+                                    <span class="find-btn" @click.stop="clickColl(item)">采集</span> 
                                 </div>
                             </div>
                             <p class="find-box-bottom-sub" v-if="item.Title">{{item.Title}}</p>
@@ -53,7 +53,7 @@ export default {
     } ,
     data () {
         return {
-            findContainer: "findContainer",
+            findContainer: "findPins",
             isPin:  false,
             pictureList: [],
             paramsId: '',
@@ -126,7 +126,7 @@ export default {
                 row = index + 1 <= this.pictureList.length ? this.pictureList[index + 1]: false
             }
             if (row) {
-                this.isPin = true;
+                this.isPin = true; 
                 document.body.style.overflow = "hidden"
                 let stateObject = {};
                 let title = "Wow Title";

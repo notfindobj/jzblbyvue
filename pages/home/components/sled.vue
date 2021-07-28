@@ -121,6 +121,9 @@ export default {
         },
         upPick () {
             let that = this;
+            if (that.pickImgs.length <= 0) {
+                return false
+            }
             if (!this.addPick.ID) {
                 this.$Message.error("请选择分类！")
                 return false
@@ -157,6 +160,14 @@ export default {
             }
         },
         createAlbum () {
+            if (!this.cover.Name) {
+                this.$Message.warning("画板标题不能为空")
+                return false
+            }
+            if (!this.cover.TypeID  && this.cover.TypeID !== "选择分类") {
+                this.$Message.warning("请选择画板类型")
+                return false
+            }
             let that = this;
             postAlbum(this.cover).then(res => {
                 if (res) {

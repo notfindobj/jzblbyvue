@@ -193,14 +193,14 @@
                 this.searchData = sessionStorage.getItem('searchKeyWords');
             }   
             this.isIndex = this.$route.name === 'index';
-            let LOGGEDTome = setInterval(() => {
-                if (!this.isLogin && !this.showSign) {
-                    this.$store.dispatch('SETUP', true);
-                    this.$store.dispatch('LOGGEDIN', 'signIn');
-                } else {
-                    clearInterval(LOGGEDTome)
-                }
-            }, 100)
+            // let LOGGEDTome = setInterval(() => {
+            //     if (!this.isLogin && !this.showSign) {
+            //         this.$store.dispatch('SETUP', true);
+            //         this.$store.dispatch('LOGGEDIN', 'signIn');
+            //     } else {
+            //         clearInterval(LOGGEDTome)
+            //     }
+            // }, 100)
         },
         watch: {
             $route(to, from) {
