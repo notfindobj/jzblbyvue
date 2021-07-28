@@ -11,37 +11,15 @@
                 <li>
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                 </li>
-                <li>
-                    <nuxt-link to="/home">发现</nuxt-link>
-                </li>
+ 
                 <li >
                     <nuxt-link to="/attention" >关注</nuxt-link>
                 </li>
-                <!-- <li>
-                    <nuxt-link to="/recommend">推荐</nuxt-link>
-                </li> -->
+      
                 <li>
                     <nuxt-link to="/videos">视频</nuxt-link>
                 </li>
-                <li>
-                    <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
-                </li>
-                <li>
-                    <Dropdown>
-                        <a href="javascript:void(0)">
-                            更多...
-                            <Icon type="ios-arrow-down"></Icon>
-                        </a>
-                        <DropdownMenu slot="list">
-                            <!-- @click.native="$router.push({name:'order_lobby'})" -->
-                            <DropdownItem >建筑学院（内测中）</DropdownItem>
-                            <!-- <DropdownItem><nuxt-link to="/order_lobby">接单大厅</nuxt-link></DropdownItem> -->
-                            <DropdownItem @click.native="$router.push({name:'order_lobby'})">接单大厅</DropdownItem>
-                            <!-- <DropdownItem><a href="javasrcipt:(0)" :class="$route.name === 'HeAndITribal-id' ? 'nuxt-link-exact-active nuxt-link-active' : ''" @click="goMytribe">我的部落</a></DropdownItem> -->
-                            <DropdownItem @click.native="goMytribe">我的部落</DropdownItem>
-                        </DropdownMenu>
-                    </Dropdown>
-                </li>
+               
                 <li>
                     <Input icon="ios-search" v-model="searchpage" placeholder="搜索问答、找人" style="width: auto" @keydown.enter.native="goSearchPage" @on-click="goSearchPage"/>
                 </li>
