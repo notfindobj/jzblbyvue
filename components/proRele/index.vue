@@ -84,7 +84,7 @@ export default {
                 {name:'发布文章', value: 'tz', isShow: true, placeholders: '分享建筑动态！'},
                 {name:'发布视频', value: 'sp', isShow: true, placeholders: '分享建筑动态！'},
                 {name:'发布项目', value: 'xm', isShow: true, placeholders: '项目详情！'},
-                {name:'发布问答', value: 'wd', isShow: true, placeholders: '分享建筑动态！'},
+                // {name:'发布问答', value: 'wd', isShow: true, placeholders: '分享建筑动态！'},
             ],
             placeholders: '分享建筑动态！',
             auxi: {}
@@ -104,7 +104,7 @@ export default {
                 {name:'发布文章', value: 'tz', title: '请输入文章标题', content: '请输入正文...', isShow: true},
                 {name:'发布视频', value: 'sp', title: '', content: '有什么新鲜事想告诉大家？', isShow: true},
                 {name:'发布项目', value: 'xm', title: '项目名称', content: '有什么新鲜事想告诉大家？', isShow: true},
-                {name:'发布问答', value: 'wd', title: '请输入问题标题（4-40字）', content: '添加问题背景描述（选填，0-40字）', isShow: true},
+                // {name:'发布问答', value: 'wd', title: '请输入问题标题（4-40字）', content: '添加问题背景描述（选填，0-40字）', isShow: true},
             ]
             for (let i=0;i<editorTool.length; i++) {
                 if (editorTool[i].value === this.editorName) {

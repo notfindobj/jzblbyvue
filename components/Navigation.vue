@@ -102,9 +102,7 @@
                 <li>
                     <nuxt-link to="/BuildingCircle">建筑圈</nuxt-link>
                 </li>
-                <li>
-                    <nuxt-link to="/home">发现</nuxt-link>
-                </li>
+              
                 <li>
                     <nuxt-link to="/attention">关注</nuxt-link>
                 </li>
@@ -112,24 +110,9 @@
                 <li>
                     <nuxt-link to="/videos">视频</nuxt-link>
                 </li>
-                
-                <li>
-                    <nuxt-link to="/QuestionsAndAnswers">问答</nuxt-link>
-                </li>
-                <!-- <li @click="goHeAndI">建筑游学</li> -->
-                <!-- <li @click="goAboutUs">建筑书店</li> -->
-                <li>
-                    <a href="javasrcipt:(0)"  @click="goMytribe">我的部落</a>
-                    <!-- <nuxt-link to="/HeAndITribal"></nuxt-link> -->
-                </li>  
-                <li>
-                    <nuxt-link to="/order_lobby">接单大厅</nuxt-link>
-                </li>
+             
                 <li>
                     <a target="_blank" href="https://map.51240.com/zhongguo__map/">在线地图</a>
-                </li>
-                <li>
-                    建筑学院<span>(内测中)</span>
                 </li>
 
             </ul>

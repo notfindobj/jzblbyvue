@@ -55,9 +55,6 @@
                     </li>
                 </ul>
             </div>
-            <nuxt-link to="activity" target="_blank">
-                <div class="lf-ad"></div>
-            </nuxt-link>
         </div>
     </div>
 </template>
@@ -158,15 +155,7 @@ export default {
         max-height: 870px;
         top: 70px;
     }
-    .lf-ad {
-        background: url(../../assets/images/lf_ad.jpg) 100% 100%;
-        display: inline-block;
-        background-size: 100% 100%;
-        width: 330px;
-        height: 270px;
-        margin-top: 10px;
-        cursor: pointer;
-    }
+    
     .Swiper-nominate {
         width: 330px;
         height: 200px;

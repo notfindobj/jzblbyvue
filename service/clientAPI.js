@@ -17,6 +17,10 @@ export const loginByWX = async () => {
 export const getMobileCode = async (params) => {
   return await request.post('Account/GetMobileCode', params)
 }
+// 获取邮件验证码
+export const getEmailCode = async (params) => {
+  return await request.post('Account/GetEmailCode', params)
+}
 // 注册
 export const registerUser = async (params) => {
   return await request.post('Account/RegisterUser', params)

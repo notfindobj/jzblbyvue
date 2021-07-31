@@ -42,13 +42,13 @@
                     </FormItem> -->
                 </Col>
             </Row>
-            <Row>
+            <!-- <Row>
                 <Col span="16" style="padding-right:10px">
                     <FormItem label="门牌号:" prop="CompanyAddress">  
                         <Input v-model="companyAttr.CompanyAddress"  placeholder="公司详细地址"></Input>
                     </FormItem>
                 </Col>
-            </Row>
+            </Row> -->
             <Row>
                 <Col span="12" style="padding-right:10px">
                     <FormItem label="营业执照:" prop="BusLicImgId">
@@ -77,7 +77,7 @@
                     </FormItem> -->
                 </Col>
             </Row>
-            <FormItem label="经办人身份证:" prop="IDCardImgNegaId">
+            <!-- <FormItem label="经办人身份证:" prop="IDCardImgNegaId">
                 <div @click="changeFile('card')"
                 :class="companyAttr.IDCardImgPosiId ? 'updataFile-cameras iconfont icon-shenfenzhengzhengmian' : 'updataFile-camera iconfont icon-shenfenzhengzhengmian'" :style="`background-image: url('${companyAttr.IDCardImgPosi}');`"
                  >
@@ -87,19 +87,36 @@
                 :class="companyAttr.IDCardImgNegaId ? 'updataFile-cameras iconfont icon-shenfenzhengfanmian' : 'updataFile-camera iconfont icon-shenfenzhengfanmian'" :style="`background-image: url('${companyAttr.IDCardImgNega}');`">
                     <input ref="unCard" type="file" @change="changeUpFile('unCard', 9)" style="display: none;">
                 </div>
-            </FormItem>
+            </FormItem> -->
             <Row>
                 <Col span="12" style="padding-right:10px">
-                    <FormItem label="手机号:" prop="CellphoneNumber">
+                    <FormItem label="经办人手机号:" prop="CellphoneNumber">
                         <Input v-model="companyAttr.CellphoneNumber"></Input>
+                    </FormItem>
+                </Col>
+                <!-- <Col span="12">
+                   
+                    <FormItem label="验证码:" prop="Authcode">
+                        <Input v-model="companyAttr.Authcode" placeholder="请输入短信验证码">
+                            <Button :disabled="isDisabled" :class="!isDisabled ? 'getMobile' : 'defMobile'" slot="append"
+                                   type="primary" @click="getMobile">{{enterButtonText}}
+                            </Button>
+                        </Input>
+                    </FormItem>
+                </Col> -->
+            </Row>
+                        <Row>
+                <Col span="12" style="padding-right:10px">
+                    <FormItem label="邮箱:" prop="Email">
+                        <Input v-model="companyAttr.Email"  placeholder="企业登录使用"></Input>
                     </FormItem>
                 </Col>
                 <Col span="12">
                    
-                    <FormItem label="验证码:" prop="Authcode">
-                        <Input v-model="companyAttr.Authcode" placeholder="请输入验证码">
+                    <FormItem label="验证码:" prop="EmailAuthcode">
+                        <Input v-model="companyAttr.EmailAuthcode" placeholder="请输入邮箱验证码">
                             <Button :disabled="isDisabled" :class="!isDisabled ? 'getMobile' : 'defMobile'" slot="append"
-                                   type="primary" @click="getMobile">{{enterButtonText}}
+                                   type="primary" @click="getEmail">{{enterButtonText}}
                             </Button>
                         </Input>
                     </FormItem>
@@ -108,7 +125,7 @@
             <Row>
                 <Col span="16" style="padding-right:10px">
                     <FormItem label="登陆密码:" prop="Password">
-                        <Input v-model="companyAttr.Password"></Input>
+                        <Input v-model="companyAttr.Password"  placeholder="企业登录使用"></Input>
                     </FormItem>
                 </Col>
             </Row>
@@ -130,7 +147,7 @@
      </div>
 </template>
 <script>
-import {getEntType, registerEnterprise , uploadFile, getMobileCode, getProvinceList} from '../../../service/clientAPI'
+import {getEntType, registerEnterprise , uploadFile, getMobileCode,getEmailCode, getProvinceList} from '../../../service/clientAPI'
 import {validatePassCheck, validateIdentity} from '../../../plugins/untils/Verify'
 export default {
     layout: 'main',
@@ -162,13 +179,15 @@ export default {
                 "CompanyCityId": "", // 市区ID,
                 "CompanyAreaId": "", // 地区Id,
                 "CompanyAddress": "", // 详细地址,
+                "Email":"", //邮箱
+                "EmailAuthcode":"" //邮箱验证码
             },
             CompanyArr: [], // 省市区
             entTypeList: [],
             rules: {
-                IDCardImgNegaId:[
-                    {required: true, message: '身份证必须上传', trigger: 'blur'}
-                ],
+                // IDCardImgNegaId:[
+                //     {required: true, message: '身份证必须上传', trigger: 'blur'}
+                // ],
                 BusLicImgId:[
                     {required: true, message: '营业执照必须上传', trigger: 'blur'}
                 ],
@@ -202,14 +221,20 @@ export default {
                 CellphoneNumber: [
                     {required: true, validator: validatePassCheck, trigger: 'blur' }
                 ],
-                IDCordId: [
-                    {required: true, validator: validateIdentity, trigger: 'blur' }
-                ],
-                CompanyAddress: [
-                    {required: true, message: '选项不能为空！', trigger: 'blur'}
-                ],
+                // IDCordId: [
+                //     {required: true, validator: validateIdentity, trigger: 'blur' }
+                // ],
+                // CompanyAddress: [
+                //     {required: true, message: '选项不能为空！', trigger: 'blur'}
+                // ],
                 CompanyArr: [
                     {required: true, message: '选项不能为空！', trigger: 'blur'}
+                ],
+                Email:[
+                    {required:true,trigger: 'blur'}
+                ],
+                 EmailAuthcode:[
+                    {required:true, message: '选项不能为空！',trigger: 'blur'}
                 ]
             },
             isDisabled: false,
@@ -244,6 +269,8 @@ export default {
                 CompanyImg: entInfo.CompanyImgSrc,
                 Password: '',
                 Authcode: '',
+                Email:entInfo.Email,
+                EmailAuthcode:''
             }
 
         }
@@ -307,6 +334,39 @@ export default {
             let mobile = await getMobileCode(queruys)// 倒计时
             if (mobile) {
                 this.$Message.success('信息已发送，请注意查收！');
+                // 倒计时
+                if (!this.enterButtonTime) {
+                    let enterButton = 60;
+                    this.isDisabled = true;
+                    this.enterButtonTime = setInterval(() => {
+                        enterButton = enterButton - 1
+                        this.enterButtonText = enterButton + 'S'
+                        if (enterButton <= 0) {
+                        clearInterval(this.enterButtonTime)
+                        this.enterButtonTime = ''
+                        this.isDisabled = false;
+                        this.enterButtonText = '获取验证码'
+                        };
+                    }, 1000)
+                }
+            }
+        },
+
+          // 获取邮件验证码
+        async getEmail() {
+            let queruys = {
+                OperationType: 3,
+                SendType: 0,
+                Email: this.companyAttr.Email
+            };
+            if (!this.companyAttr.Email) {
+                this.$Message.warning('请输入邮箱');
+                return false
+            }
+
+            let email = await getEmailCode(queruys)// 倒计时
+            if (email) {
+                this.$Message.success('邮件已发送，请注意查收！');
                 // 倒计时
                 if (!this.enterButtonTime) {
                     let enterButton = 60;

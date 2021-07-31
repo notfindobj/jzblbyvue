@@ -73,9 +73,9 @@
                             </Button>
                         </div>
                     </div>
-                    <nuxt-link to="activity"  target="_blank">
+                    <!-- <nuxt-link to="activity"  target="_blank">
                         <div class="lf-ad"></div>
-                    </nuxt-link>
+                    </nuxt-link> -->
                 </div>
             </div>
         </div>
@@ -288,16 +288,16 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-    .lf-ad {
-        background: url(../../assets/images/lf_ad.jpg) 100% 100%;
-        display: inline-block;
-        background-size: 100% 100%;
-        width: 340px;
-        height: 290px;
-        margin-left: -20px;
-        margin-top: 40px;
-        cursor: pointer;
-    }
+    // .lf-ad {
+    //     background: url(../../assets/images/lf_ad.jpg) 100% 100%;
+    //     display: inline-block;
+    //     background-size: 100% 100%;
+    //     width: 340px;
+    //     height: 290px;
+    //     margin-left: -20px;
+    //     margin-top: 40px;
+    //     cursor: pointer;
+    // }
     .content-box {
         display: flex;
         justify-content: space-between;

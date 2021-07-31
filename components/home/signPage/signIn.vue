@@ -2,7 +2,7 @@
     <div>
         <Form ref="formInline" :model="userItem" :rules="ruleInline"  :label-width="0">
             <FormItem prop="mobile">
-                <Input v-model="userItem.mobile" size="large" type="text" placeholder="请输入手机号码"/>
+                <Input v-model="userItem.mobile" size="large" type="text" placeholder="请输入手机号码或邮箱（企业用户）"/>
             </FormItem>
             <FormItem prop="password">
                 <Input v-model="userItem.password" size="large" type="password" placeholder="请输入密码" @keyup.enter.native="handleSubmit"/>
