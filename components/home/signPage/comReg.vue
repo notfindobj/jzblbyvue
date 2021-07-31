@@ -107,7 +107,7 @@
             </Row>
                         <Row>
                 <Col span="12" style="padding-right:10px">
-                    <FormItem label="邮箱:" prop="Email">
+                    <FormItem label="注册邮箱:" prop="Email">
                         <Input v-model="companyAttr.Email"  placeholder="企业登录使用"></Input>
                     </FormItem>
                 </Col>
